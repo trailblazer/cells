@@ -1,0 +1,21 @@
+- trunk
+  * Remove dependency on Engines
+  * Improved support for helpers
+
+- cells-1.0
+  * view rendering rewritten, we now use a separate ActionView::Base instance 
+    that fixes bug #1
+  * introduced view inheritance, so derived cells inherit view files from their
+    superclass
+  * introduced automatic view file finding, Cell::Base#path is no longer needed
+  * added support for helpers in cell views
+  * removed Cell::Registry in favor or a new cells autoloading mechanism
+  
+- zells-0.1
+  * partly fixed bug #1 where cell instance variables could not be accessed 
+    when calling #render_cell under special circumstances
+  * added lots of tests
+  * tests use #assert_select now
+
+- zells-0.1-rc1
+  * first release into an unsuspecting world

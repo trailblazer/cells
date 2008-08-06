@@ -1,0 +1,331 @@
+module Cell
+  # == Basic overview
+  #
+  # A Cell is the central notion of the cells plugin.  A cell acts as a
+  # lightweight controller in the sense that it will assign variables and
+  # render a view.  Cells can be rendered from other cells as well as from
+  # regular controllers and views (see ActionView::Base#render_cell and
+  # ControllerMethods#render_cell_to_string)
+  #
+  # A cell is a completely autonomous object and it should not know or have to know
+  # from what controller it is being rendered.  For this reason, the controller's
+  # instance variables and params hash are not directly available from the cell or
+  # its views. This is not a bug, this is a feature!  It means cells are truly
+  # reusable components which can be plugged in at any point in your application
+  # without having to think about what information is available at that point.
+  # When rendering a cell, you can explicitly pass variables to the cell in the
+  # extra opts argument hash, just like you would pass locals in partials.
+  # This hash is then available inside the cell as the @opts instance variable.
+  #
+  # == Directory hierarchy
+  #
+  # To get started creating your own cells, you can simply create a new directory
+  # structure under your <tt>app</tt> directory called <tt>cells</tt>.  Cells are
+  # ruby classes which end in the name Cell.  So for example, if you have a
+  # cell which manages all user information, it would be called <tt>UserCell</tt>.
+  # A cell which manages a shopping cart could be called <tt>ShoppingCartCell</tt>.
+  #
+  # The directory structure of this example would look like this:
+  #   app/
+  #     models/
+  #       ..
+  #     views/
+  #       ..
+  #     helpers/
+  #       application_helper.rb
+  #       product_helper.rb
+  #       ..
+  #     controllers/
+  #       ..
+  #     cells/
+  #       shopping_cart_cell.rb
+  #       shopping_cart/
+  #         status.rhtml
+  #         product_list.rhtml
+  #         empty_prompt.rhtml
+  #       user_cell.rb
+  #       user/
+  #         login.rhtml
+  #     ..
+  #
+  # The directory with the same name as the cell contains views for the
+  # cell's <em>states</em>.  A state is an executed method along with a
+  # rendered view, resulting in content. This means that states are to
+  # cells as actions are to controllers, so each state has its own view.
+  # The use of partials is deprecated with cells, it is better to just
+  # render a different state on the same cell (which also works recursively).
+  #
+  # As can be seen above, Cells also can make use of helpers.  All Cells
+  # include ApplicationHelper by default, but you can add additional helpers
+  # as well with the Cell::Base.helper class method:
+  #   class ShoppingCartCell < Cell::Base
+  #     helper :product
+  #     ...
+  #   end
+  #
+  # This will make the <tt>ProductHelper</tt> from <tt>app/helpers/product_helper.rb</tt>
+  # available from all state views from our <tt>ShoppingCartCell</tt>.
+  #
+  # == Cell inheritance
+  #
+  # Unlike controllers, Cells can form a class hierarchy.  When a cell class
+  # is inherited by another cell class, its states are inherited as regular
+  # methods are, but also its views are inherited.  Whenever a view is looked up,
+  # the view finder first looks for a file in the directory belonging to the
+  # current cell class, but if this is not found in the application or any
+  # engine, the superclass' directory is checked.  This continues all the
+  # way up until it stops at Cell::Base.
+  #
+  # For instance, when you have two cells:
+  #   class MenuCell < Cell::Base
+  #     def show
+  #     end
+  #
+  #     def edit
+  #     end
+  #   end
+  #
+  #   class MainMenuCell < MenuCell
+  #     .. # no need to redefine show/edit if they do the same!
+  #   end
+  # and the following directory structure in <tt>app/cells</tt>:
+  #   app/cells/
+  #     menu/
+  #       show.rhtml
+  #       edit.rhtml
+  #     main_menu/
+  #       show.rhtml
+  # then when you call
+  #   render_cell :main_menu, :show
+  # the main menu specific show.rhtml (<tt>app/cells/main_menu/show.rhtml</tt>)
+  # is rendered, but when you call
+  #   render_cell :main_menu, :edit
+  # cells notices that the main menu does not have a specific view for the
+  # <tt>edit</tt> state, so it will render the view for the parent class,
+  # <tt>app/cells/menu/edit.rhtml</tt>
+  class Base
+    attr_accessor :controller
+    attr_accessor :state_name
+    
+    # Forgery protection for forms
+    cattr_accessor :request_forgery_protection_token
+    class_inheritable_accessor :allow_forgery_protection
+    self.allow_forgery_protection = true
+    
+    
+    def initialize(controller, cell_name=nil, options={})
+      @controller = controller
+      @cell_name  = cell_name ### TODO: currently we don't use this.
+      @opts       = options
+      self.allow_forgery_protection = true
+    end
+
+    # Access the current controller's params hash. This is only to be used
+    # in exceptional situations because it greatly increases coupling between
+    # the Cell and the Controller from which it is rendered.
+    def params
+      @controller.params
+    end
+
+    # Access the session
+    def session
+      @controller.session
+    end
+
+    # Access the current controller's request object. This should only be
+    # used when you really need it.
+    def request
+      @controller.request
+    end
+
+    # Render the given state.  You can pass the name as either a symbol or
+    # a string.
+    def render_state(state)
+      @cell = self
+      state = state.to_s
+      self.state_name = state
+
+      content = send(state)
+
+      if content.class == String
+        return content
+      end
+
+      return self.render_view_for_state(state)
+    end
+
+    # Render the view belonging to the given state.  This can be called
+    # from other states as well, when you need to render the same view file
+    # from two states.
+    def render_view_for_state(state)
+      view_class  = Class.new(ActionView::Base)
+
+      # We cheat a little bit by providing the view class with a known-good views dir
+      action_view = view_class.new("#{RAILS_ROOT}/app/views", {}, @controller)
+
+      # Now override the finder in the view_class with our own (we can't use Rails' finder because it's braindead)
+      action_view.send(:instance_variable_set, '@finder', Cell::TemplateFinder.new(self, state, action_view))
+
+      # Make helpers and instance vars available
+      include_helpers_in_class(view_class)
+      clone_ivars_to(action_view)
+      
+      begin
+        action_view.render_file("#{self.cell_name}/#{state}", true) # path that is passed to finder.path_and_extension
+      rescue ActionView::MissingTemplate
+        ### TODO: introduce error method.
+        return "ATTENTION: cell view for #{cell_name}##{state} is not readable/existing.
+                Further on, your cell method did not return a String."
+      end
+    end
+
+    # Find the file that belongs to the state.  This first tries the cell's
+    # <tt>#view_for_state</tt> method and if that returns a true value, it
+    # will accept that value as a string and interpret it as a pathname for
+    # the view file. If it returns a falsy value, it will call the Cell's class
+    # method find_class_view_for_state to determine the file to check.
+    #
+    # You can override the Cell::Base#view_for_state method for a particular
+    # cell if you wish to make it decide dynamically what file to render.
+    def find_view_file_for_state(action_view, state)
+      ### DISCUSS: check for existence here?
+      if view_file = view_for_state(state) # instance.  (not passing action_view)
+        return view_file
+      end
+
+      return self.class.find_class_view_for_state(action_view, state)
+    end
+
+    # Find the template for a cell's current state.  It tries to find a
+    # template file with the name of the state under a subdirectory
+    # with the name of the cell under the <tt>app/cells</tt> directory.
+    # If this file cannot be found, it will try to call this method on
+    # the superclass.  This way you only have to write a state template
+    # once when a more specific cell does not need to change anything in
+    # that view.
+    def self.find_class_view_for_state(action_view, state)
+      class_view_file = self.view_for_state(action_view, state)
+
+      if class_view_file && File.readable?(class_view_file) ### DISCUSS: check for existence here?
+        class_view_file
+      elsif superclass != Cell::Base  # Stop here
+        superclass.find_class_view_for_state(action_view, state)
+      else
+        nil
+      end
+    end
+
+    # Empty method.  Returns nil.  You can override this method
+    # in individual cell classes if you want them to determine the
+    # view file dynamically.
+    #
+    # If a view filename is returned here, we assume it really exists
+    # and don't invoke the superclass view finding chain.
+    def view_for_state(state)
+      nil
+    end
+
+    # Return the default view for the given state on this cell subclass.
+    # This is a file with the name of the state under a directory with the
+    # name of the cell followed by a template extension.
+    def self.view_for_state(action_view, state)
+      template_path = "app/cells/#{cell_name}/#{state}"
+      # Don't go through pick_template_extension because it will cache and
+      # this cache may interfere with actual views for controllers.
+      # XXX This will make Cells slower than normal views, so we may have to
+      # hack around this.
+      # XXX Still valid?
+      begin
+        Template.new(self, template_path, true, {}).set_extension_and_filename
+#      rescue MissingTemplate
+      end
+      puts "TRYING: #{template_path} returns #{action_view.finder.file_exists?(template_path).inspect}"
+      return action_view.finder.file_exists?(template_path) && template_path
+    end
+
+    # Get the name of this cell's class as an underscored string,
+    # with _cell removed.
+    #
+    # Example:
+    #  UserCell.cell_name
+    #  => "user"
+    def self.cell_name
+      self.name.underscore.sub(/#{name_suffix}/, '')
+    end
+
+    # Get the name of the current cell as a string.
+    #
+    # Example:
+    #  my_user_cell.class.name
+    #  => "UserCell"
+    #  my_user_cell.cell_name
+    #  => "user"
+    def cell_name
+      # XXX Why is this needed?  Can there be cells which have a different
+      # @cell_name from their class's name?
+      @cell_name || self.class.cell_name
+    end
+
+    # The name suffix of a cell.  Always '_cell'.
+    def self.name_suffix
+      # XXX Why is this needed?  Seems like superfluous "abstraction"
+      '_cell'
+    end
+
+    # Given a cell name, find the class that belongs to it.
+    #
+    # Example:
+    # Cell::Base.class_from_cell_name(:user)
+    # => UserCell
+    def self.class_from_cell_name(cell_name)
+      "#{cell_name}#{name_suffix}".classify.constantize
+    end
+
+    # Render the given view file to a string.  This will
+    # make the helpers defined using Cell::Base#helper available
+    # from that view and copy the instance variables from the
+    # Cell to the view.
+    def render_string_from_view(view_file)
+    end
+
+    # When passed a copy of the ActionView::Base class, it
+    # will mix in all helper classes for this cell in that class.
+    def include_helpers_in_class(view_klass)
+      view_klass.send(:include, self.class.master_helper_module)
+    end
+
+    ### template variables assigning --------------------------------------------
+
+    # Clone the instance variables on the current cell to an ActionView object.
+    def clone_ivars_to(obj)
+      (self.instance_variables - self.ivars_to_ignore).each do |var|
+        obj.instance_variable_set(var, instance_variable_get(var))
+      end
+    end
+
+    # Defines the instance variables that Cell::Base#clone_ivars_to should
+    # <em>not</em> copy.
+    def ivars_to_ignore
+      ['@controller', '@_already_rendered']
+    end
+
+    # This is a little scary, as Rails' internals are a mess
+    include ActionController::Helpers
+    include ActionController::RequestForgeryProtection
+    
+    
+    # Declare a controller method as a helper.  For example,
+    #   helper_method :link_to
+    #   def link_to(name, options) ... end
+    # makes the link_to controller method available in the view.
+    def self.helper_method(*methods)
+      methods.flatten.each do |method|
+        master_helper_module.module_eval <<-end_eval
+          def #{method}(*args, &block)
+            @cell.send(%(#{method}), *args, &block)
+          end
+        end_eval
+      end
+    end
+  end
+end

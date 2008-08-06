@@ -1,0 +1,67 @@
+= Overview
+
+Cells is a rails plugin for a new concept of code organization. Instead of
+pushing everything into the ApplicationControllers, logic and views are
+encapsulated in flexible cells.
+
+Cells can be described best as "lightweight controllers" - they are classes
+that implement the business logic in methods and can render views.
+Cells can be called in controllers or within views and plug themselfs into
+any part of the page.
+
+
+= Documentation
+
+The documentation is currently being worked upon.  You will find basic
+reference documentation in here.  You can probably best start looking
+at the documentation of the Cell::Base class.
+
+See http://cells.rubyforge.org for documentation targeted at cells
+newbies, including an overview of what you can do with cells and a
+tutorial.
+
+== Installation
+
+To install, simply put Cells in your vendor/plugin directory and add
+the following line to your <tt>environment.rb</tt> file:
+
+  require File.join(File.dirname(__FILE__), '../vendor/plugins/cells/boot')
+
+If you're using the Engines plugin from http://www.rails-engines.org,
+you should put the cells boot file after the engines one.  If you're
+just using Cells without Engines, you can put it right after Rails's
+own <tt>boot.rb</tt> line.
+
+If you define <tt>config.plugins</tt> in your environment, make sure
+to put all plugins that depend on Cells after Cells, and Cells after
+Engines if you're using Engines.
+
+Cells will only work with trunk Engines or tags/rel_2.1.0
+(or a later branch or tag).  This tag is available at:
+http://svn.rails-engines.org/engines/tags/rel_2.1.0
+
+= LICENSE
+
+Copyright (c) 2007-2008, Nick Sutterer
+Copyright (c) 2007-2008, Solide ICT by Peter Bex
+
+The MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+

@@ -1,0 +1,17 @@
+<div style="">
+
+<h4>Loaded cells:</h4>
+
+<ul>
+<% @registry.each do |cell, conf| %>
+  <li><%= cell %> <%= conf.inspect %>
+  
+  <br>
+  <%= Cell::Registry.class_file(cell) %>
+  
+  </li>
+  
+<% end %>
+</ul>
+
+</div>

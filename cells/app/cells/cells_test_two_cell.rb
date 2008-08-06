@@ -1,0 +1,2 @@
+class CellsTestTwoCell < CellsTestOneCell
+end
