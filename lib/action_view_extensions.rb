@@ -36,31 +36,7 @@ class ActionView::Base
 
     return cell.render_state(state)
   end
-
-  ### DISCUSS: to stay for- and backward compatible i decided to introduce the
-  #   cells_render method, so we don't have to hurt rails too much.
-  #   currently this method hurts rails: it simply prepends a string to the
-  #   template path and extends #full_template_path to detect this and set
-  #   the appropriate path. i hope someone will rewrite this clean so we don't
-  #   have to fiddle around in rails.
-  #   thanks to james adam from whom i stole the #full_template_path trick :-)
-  def cells_render(options = {})
-    return render(options)
-
-    if (template_path = options[:partial])  ### TODO: what about other tpl types?
-                                            ### TODO: :template, :cell, ...
-
-      options[:partial] = "cells/"+template_path
-    end
-    if (template_path = options[:template])
-                                            ### TODO: :template, :cell, ...
-      options[:template] = "cells/"+template_path
-    elsif (template_path = options[:file])
-      options[:file] = "cells/"+template_path
-    end
-
-    return render(options)
-  end
+  
 
   # Let the ActionView class know that this is being instantiated for cells.
   # This is a hack, but it is required because the assumption that views are
