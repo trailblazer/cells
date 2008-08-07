@@ -129,63 +129,21 @@ class JustOneViewCell < Cell::Base
   end
 
   def view_for_state(state)
-    CellsTest.path_to_test_views + "just_one_view.html.erb"
+    CellsTestMethods.views_path + "just_one_view.html.erb"
   end
 end
 
-module CellsTestHelper
 
-  def a_mysterious_helper_method
-    "mysterious"
-  end
-end
 
-class HelperUsingCell < Cell::Base
 
-  helper CellsTestHelper
-
-  def state_with_helper_invocation
-  end
-
-  def state_with_automatic_helper_invocation
-  end
-
-  def state_with_helper_method_invocation
-  end
-
-  def view_for_state(state)
-    CellsTest.path_to_test_views + "#{state}.html.erb"
-  end
-
-protected
-
-  def my_helper_method
-    "helped by a method"
-  end
-
-  helper_method :my_helper_method
-end
-
-class HelperUsingSubCell < HelperUsingCell
-  def another_state_with_helper_invocation
-  end
-
-  def view_for_state(state)
-    CellsTest.path_to_test_views + "state_with_helper_invocation.html.erb"
-  end
-end
 
 class CellContainedInPlugin < Cell::Base
   def some_view
   end
 end
 
-class CellsTest < Test::Unit::TestCase
-
-  def self.path_to_test_views
-    RAILS_ROOT + "/vendor/plugins/cells/test/views/"
-  end
-
+module CellsTestMethods
+  
   def assert_selekt(content, *args)
     assert_select(HTML::Document.new(content).root, *args)
   end
@@ -196,11 +154,17 @@ class CellsTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
     @controller.request = @request
     @controller.response = @response
-
-    # load test application cells defined in a plugin:
-    Dependencies.load_paths << RAILS_ROOT+"/vendor/plugins/cells/app/cells"
   end
+  
+  def self.views_path
+    File.dirname(__FILE__) + '/views/'
+  end
+end
 
+
+class CellsTest < Test::Unit::TestCase
+  include CellsTestMethods
+  
   def test_factory
     puts "XXX factory"
     cell = Cell::Factory.create(@controller, :test)
@@ -239,12 +203,6 @@ class CellsTest < Test::Unit::TestCase
     #assert_tag :tag => "h9"                       # render_cell(:test, :direct_output)
     #assert_tag :tag => "span", :child => /^yeah$/ # render_cell(:test, :rendering_state)
 
-  end
-
-  def DONT_test_assert_template
-    puts "XXX DONT_test_assert_template"
-    get :call_render_cell_with_state_view
-    assert_template "rendering_state.html.erb"
   end
 
   def test_init
@@ -416,58 +374,7 @@ class CellsTest < Test::Unit::TestCase
     assert_select "#happyStateView"
   end
 
-  def test_helper
-    puts "XXX test_helper"
-    cell = HelperUsingCell.new(@controller)
-
-    content = cell.render_state(:state_with_helper_invocation)
-    assert_selekt content, "p#stateWithHelperInvocation", "mysterious"
-  end
-
-  def test_auto_helper
-    puts "XXX test_auto_helper"
-    cell = HelperUsingCell.new(@controller)
-
-    content = cell.render_state(:state_with_automatic_helper_invocation)
-    assert_selekt content, "p#stateWithAutomaticHelperInvocation", "automatic"
-  end
-
-  def test_helper_method
-    puts "XXX test_helper_method"
-    cell = HelperUsingCell.new(@controller)
-
-    content = cell.render_state(:state_with_helper_method_invocation)
-    assert_selekt content, "p#stateWithHelperMethodInvocation", "helped by a method"
-  end
-
-  def test_helper_with_subclassing
-    puts "XXX test_helper_with_subclassing"
-    subclassedcell = HelperUsingSubCell.new(@controller)
-    content = subclassedcell.render_state(:state_with_helper_invocation)
-    assert_selekt content, "p#stateWithHelperInvocation", "mysterious"
-
-    content = subclassedcell.render_state(:another_state_with_helper_invocation)
-    assert_selekt content, "p#stateWithHelperInvocation", "mysterious"
-  end
-
-  def test_helper_including_and_cleanup
-    puts "XXX test_helper_including_and_cleanup"
-    # this cell includes a helper, and uses it:
-    cell = HelperUsingCell.new(@controller)
-
-    content = cell.render_state(:state_with_helper_invocation)
-    assert_selekt content, "p#stateWithHelperInvocation", "mysterious"
-
-    # this cell doesn't include the helper, but uses it anyway, which should
-    # produce an error:
-
-    cell = TestCell.new(@controller)
-
-#    assert_raises (NameError) do
-     assert_raises (ActionView::TemplateError) do
-      cell.render_state(:state_with_not_included_helper_method)
-    end
-  end
+  
 
   ### functional tests: ---------------------------------------------------------
 
