@@ -313,6 +313,7 @@ module Cell
     include ActionController::Helpers
     include ActionController::RequestForgeryProtection
     
+    helper ApplicationHelper
     
     # Declare a controller method as a helper.  For example,
     #   helper_method :link_to
