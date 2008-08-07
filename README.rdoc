@@ -20,10 +20,14 @@ See http://cells.rubyforge.org for documentation targeted at cells
 newbies, including an overview of what you can do with cells and a
 tutorial.
 
+
 == Installation
 
-To install, simply put Cells in your vendor/plugin directory and add
-the following line to your <tt>environment.rb</tt> file:
+To install, simply cd to your rails app directory and run
+
+  script/plugin install git://github.com/apotonick/cells.git
+  
+Add the following line to your <tt>environment.rb</tt> file:
 
   require File.join(File.dirname(__FILE__), '../vendor/plugins/cells/boot')
 
@@ -43,7 +47,7 @@ http://svn.rails-engines.org/engines/tags/rel_2.1.0
 = LICENSE
 
 Copyright (c) 2007-2008, Nick Sutterer
-Copyright (c) 2007-2008, Solide ICT by Peter Bex
+Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
 The MIT License
 
