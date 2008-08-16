@@ -75,6 +75,8 @@ end
 class TestCell < Cell::Base
 
   def view_for_state(state)
+    return super(state) if state =~ /translation/
+    
     RAILS_ROOT+"/vendor/plugins/cells/test/views/#{state}.html.erb"
   end
 
@@ -115,7 +117,10 @@ class TestCell < Cell::Base
 
   def view_with_cells_render_invocation
   end
-
+  
+  def view_with_explicit_english_translation
+  end
+  
 end
 
 module Some
@@ -374,8 +379,23 @@ class CellsTest < Test::Unit::TestCase
     assert_select "#happyStateView"
   end
 
+  # Thanks to Fran Pena who made us aware of this bug and contributed a patch.
+  def test_gettext_support
+    ### FIXME: how to set "en" as gettext's default language?
+    
+    t = TestCell.new(@controller)
+    c = t.render_state(:view_with_explicit_english_translation)
+    
+    # the view "view_with_explicit_english_translation_en" exists, check if
+    # gettext/rails found it:
+    if Object.const_defined?(:GetText)
+      assert_selekt c, "#defaultTranslation", 0
+      assert_selekt c, "#explicitEnglishTranslation"
+    else
+      assert_selekt c, "#defaultTranslation"
+    end
+  end
   
-
   ### functional tests: ---------------------------------------------------------
 
   def test_link_to_in_view
