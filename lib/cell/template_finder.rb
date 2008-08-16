@@ -51,7 +51,8 @@ module Cell
       
       while resolve_cell != Cell::Base
         possible_cell_paths.each do |path|
-          template_handler_extensions.each do |ext|            
+          template_handler_extensions.each do |ext|         
+            #puts "trying #{path_for_cell_template_with_type_extension(path, resolve_cell.cell_name, state, type_ext) +'.'+ext}"   
             if File.exists?(path_for_cell_template_with_type_extension(path, resolve_cell.cell_name, state, type_ext) +'.'+ext)
               return [path_for_cell_template_with_type_extension(path, resolve_cell.cell_name, state, type_ext), ext]
             end

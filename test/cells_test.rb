@@ -1,4 +1,13 @@
 require File.dirname(__FILE__) + '/../../../../test/test_helper'
+require File.dirname(__FILE__) + '/testing_helper'
+
+# this would usually happen by rails' autoloading -
+# anyway, we don't test loading but rendering in this file.
+require File.dirname(__FILE__) + '/cells/cells_test_one_cell'
+require File.dirname(__FILE__) + '/cells/cells_test_two_cell'
+require File.dirname(__FILE__) + '/cells/simple_cell'
+require File.dirname(__FILE__) + '/cells/test_cell'
+
 
 class MyTPLHandler
   def initialize(view)
@@ -17,111 +26,6 @@ end
 
 ActionView::Template.register_default_template_handler("mytpl", MyTPLHandler)
 
-class CellTestController < ApplicationController
-  def rescue_action(e) raise e end
-
-  def render_cell_state
-    cell  = params[:cell]
-    state = params[:state]
-
-    render :text => render_cell_to_string(cell, state)
-  end
-
-  def call_render_cell_with_strings
-    static = render_cell_to_string("test", "direct_output")
-    render :text => static
-  end
-
-  def call_render_cell_with_syms
-    static = render_cell_to_string(:test, :direct_output)
-    render :text => static
-  end
-
-  def call_render_cell_with_state_view
-    render :text => render_cell_to_string(:test, :rendering_state)
-    return
-  end
-
-  def render_view_with_render_cell_invocation
-    render :file => "#{RAILS_ROOT}/vendor/plugins/cells/test/views/view_with_render_cell_invocation.html.erb"
-    return
-  end
-
-  def render_just_one_view_cell
-    static = render_cell_to_string("just_one_view", "some_state")
-    render :text => static
-  end
-
-  def render_reset_bug
-    static = render_cell_to_string("test", "setting_state")
-    static += render_cell_to_string("test", "reset_state")
-    render :text => static
-  end
-
-
-  def cells_render_invocation
-    render :template => "../../vendor/plugins/cells/test/views/view_with_cells_render_invocation"
-    return
-  end
-
-  def render_state_with_link_to
-    static = render_cell_to_string("test", "state_with_link_to")
-    render :text => static
-  end
-
-end
-
-
-class TestCell < Cell::Base
-
-  def view_for_state(state)
-    return super(state) if state =~ /translation/
-    
-    RAILS_ROOT+"/vendor/plugins/cells/test/views/#{state}.html.erb"
-  end
-
-  def direct_output
-    "<h9>this state method doesn't render a template but returns a string, which is great!</h9>"
-  end
-
-  def rendering_state
-    @instance_variable_one = "yeah"
-
-    return
-  end
-
-  def another_rendering_state
-    @instance_variable_one = "go"
-
-    return
-  end
-
-  def setting_state
-    @reset_me = '<p id="ho">ho</p>'
-    return
-  end
-
-  def reset_state
-    return
-  end
-
-  def state_with_link_to
-    return
-  end
-
-  def state_with_not_included_helper_method
-  end
-
-  def broken_partial
-  end
-
-  def view_with_cells_render_invocation
-  end
-  
-  def view_with_explicit_english_translation
-  end
-  
-end
 
 module Some
   class Cell < Cell::Base
@@ -144,31 +48,38 @@ end
 
 class CellContainedInPlugin < Cell::Base
   def some_view
+  end  
+end
+
+
+# views are located in cells/test/cells/my_test/.
+class MyTestCell < Cell::Base
+  def view_in_local_test_views_dir
+  end
+  
+  def view_with_explicit_english_translation
   end
 end
 
-module CellsTestMethods
-  
-  def assert_selekt(content, *args)
-    assert_select(HTML::Document.new(content).root, *args)
-  end
-
-  def setup
-    @controller = CellTestController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-    @controller.request = @request
-    @controller.response = @response
-  end
-  
-  def self.views_path
-    File.dirname(__FILE__) + '/views/'
+module ReallyModule
+  class NestedCell < Cell::Base
+    # view: cells/test/cells/really_module/nested_cell/happy_state.html.erb
+    def happy_state
+    end
   end
 end
 
 
 class CellsTest < Test::Unit::TestCase
   include CellsTestMethods
+  
+  # normally #possible_cell_paths points to "app/cells" or, with engines, additionally
+  # to "vendor/plugins/*/app/cells".
+  Cell::TemplateFinder.class_eval do
+    def possible_cell_paths
+      File.dirname(__FILE__) + '/cells'
+    end
+  end
   
   def test_factory
     puts "XXX factory"
@@ -287,20 +198,15 @@ class CellsTest < Test::Unit::TestCase
     #assert_select "div#BrokenPartialDiv>p#BrokenPartialP"
   end
 
-  # cell_one explicitly returns a view file in #view_for_state
-  # for the state :instance_view. so we test if view finding in instance
-  # context still works:
-  #
-  def test_state_view_set_statically_in_VIEW_FOR_FILE_in_instance
-    puts "XXX test_state_view_set_statically_in_VIEW_FOR_FILE_in_instance"
-    cell_one = CellsTestOneCell.new(@controller, nil)
-    view_one = cell_one.render_state(:instance_view)
-
-    assert_selekt view_one, "p#instanceView", "InstanceViewInCellsTestOneCell"
+  
+  # view for :instance_view is provided directly by #view_for_state.
+  def test_view_for_state
+    t = CellsTestOneCell.new(@controller)
+    c = t.render_state(:instance_view)
+    assert_selekt c, "#renamedInstanceView"
   end
 
   def test_state_view_existing_in_my_view_directory
-    puts "XXX test_state_view_existing_in_my_view_directory"
     cell_one = CellsTestOneCell.new(@controller, nil)
     view_one = cell_one.render_state(:super_state)
 
@@ -328,8 +234,6 @@ class CellsTest < Test::Unit::TestCase
 
     assert_match /Written using my own spiffy templating system/, simple_view
   end
-
-  #require RAILS_ROOT + "/vendor/plugins/cells/app/cells/cells_test_one_cell.rb"
 
   ### API test (unit) -----------------------------------------------------------
   def test_cell_name
@@ -383,7 +287,7 @@ class CellsTest < Test::Unit::TestCase
   def test_gettext_support
     ### FIXME: how to set "en" as gettext's default language?
     
-    t = TestCell.new(@controller)
+    t = MyTestCell.new(@controller)
     c = t.render_state(:view_with_explicit_english_translation)
     
     # the view "view_with_explicit_english_translation_en" exists, check if
@@ -394,6 +298,15 @@ class CellsTest < Test::Unit::TestCase
     else
       assert_selekt c, "#defaultTranslation"
     end
+  end
+  
+  
+  def test_modified_view_finding_for_testing
+    
+    
+    t = MyTestCell.new(@controller)
+    c = t.render_state(:view_in_local_test_views_dir)
+    assert_selekt c, "#localView"
   end
   
   ### functional tests: ---------------------------------------------------------

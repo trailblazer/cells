@@ -1,4 +1,9 @@
 require File.dirname(__FILE__) + '/../../../../test/test_helper'
+require File.dirname(__FILE__) + '/testing_helper'
+
+# usually done by rails' autoloading:
+require File.dirname(__FILE__) + '/cells/test_cell'
+#require File.dirname(__FILE__) + '/helpers/helper_using_cell_helper'
 
 
 class CellsHelperTest < Test::Unit::TestCase
