@@ -15,7 +15,7 @@ class ActionView::Base
   #
   # If you have a <tt>UserCell</tt> cell in <tt>app/cells/user_cell.rb</tt>, which has a
   # <tt>UserCell#login_prompt</tt> method, this will call that method and then will
-  # find the view <tt>app/cells/user/login_prompt.rhtml</tt> and render it. This is 
+  # find the view <tt>app/cells/user/login_prompt.html.erb</tt> and render it. This is 
   # called the <tt>:login_prompt</tt> <em>state</em> in Cells terminology.
   #
   # If this view file looks like this:
