@@ -35,11 +35,5 @@ class TestCell < Cell::Base
 
   def state_with_not_included_helper_method
   end
-
-  def broken_partial
-  end
-
-  def view_with_cells_render_invocation
-  end
   
 end

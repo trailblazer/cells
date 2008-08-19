@@ -59,6 +59,15 @@ class MyTestCell < Cell::Base
   
   def view_with_explicit_english_translation
   end
+  
+  def view_containing_partial
+  end
+  
+  def view_containing_nonexistant_partial
+  end
+  
+  def view_containing_broken_partial
+  end
 end
 
 module ReallyModule
@@ -166,38 +175,30 @@ class CellsTest < Test::Unit::TestCase
     assert_select "div#AnotherRenderingView>span", "go", :count => 1
 
   end
-
-  ### FIXME: why do partials not work?
-  def dont_test_render_partial
-    puts "XXX test_cells_render_partial"
-    #get :cells_render_invocation
-    #assert_response :success
-
-    content = TestCell.new(@controller).render_state(:view_with_cells_render_invocation)
-
-    # test cells_render :partial ------------------------------------------------
-
-    assert_selekt content, "ul#TestList>li", 3
-    assert_selekt content, "ul#TestList>li", "one"
-    assert_selekt content, "ul#TestList>li", "two"
-    assert_selekt content, "ul#TestList>li", "three"
-
-    # test cells_render :template -----------------------------------------------
-    #assert_select "div#ACellTemplate"
-
-    #assert_select "div#ACellTemplateFile"
-  end
-
-  def test_cells_render_with_broken_partial
-    puts "XXX test_cells_render_with_broken_partial"
+  
+  # test partial rendering ------------------------------------------------------
+  
+  def test_not_existing_partial
+    t = MyTestCell.new(@controller)
     assert_raises ActionView::TemplateError do
-      get :render_cell_state, :cell => 'test', :state => 'broken_partial'
+      t.render_state(:view_containing_nonexistant_partial)
     end
-
-    #assert_response :success
-    #assert_select "div#BrokenPartialDiv>p#BrokenPartialP"
   end
-
+  
+  def test_broken_partial
+    t = MyTestCell.new(@controller)
+    assert_raises ActionView::TemplateError do
+      t.render_state(:view_containing_broken_partial)
+    end
+  end
+  
+  def test_render_partial_in_state_view
+    t = MyTestCell.new(@controller)
+    c = t.render_state(:view_containing_partial)
+    assert_selekt c, "#partialContained>#partial"
+  end
+  
+  
   
   # view for :instance_view is provided directly by #view_for_state.
   def test_view_for_state
@@ -328,21 +329,5 @@ class CellsTest < Test::Unit::TestCase
     content = cell.render_state(:state_with_link_to)
     assert_select HTML::Document.new(content).root, "div#linkTo"
   end
-
-  # XXX FIXME
-  # In state_view :some_view - the call to #render :partial => <...> - does trigger an exception.
-  # However this couldn't be handled and freaks out (loop/recurrence caller-exceptionhandler-caller-...).
-  # 1. Solve this Exception handling: 
-  # Suggestion: see whether/how ActionView::Base does handle the #render Exception (assuming a TemplateError).
-  # 2. Assure that this tests does trigger the Exceptionhandler and raises some usefull info.  Now why doesn't it find it's partial?
-  # 3. Add a test for this case: trying to render a non-existing partial.
-#   def test_view_and_partial_in_plugin
-#     puts "XXX test_view_and_partial_in_plugin"
-#     content = CellContainedInPlugin.new(@controller)
-
-#     content = CellContainedInPlugin.new(@controller).render_state(:some_view)
-#     assert_selekt content, "p#someView", 1  # state view.
-#     assert_selekt content, "p#partialContainedInPlugin", 1
-#   end
 
 end

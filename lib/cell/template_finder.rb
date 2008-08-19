@@ -52,9 +52,11 @@ module Cell
       while resolve_cell != Cell::Base
         possible_cell_paths.each do |path|
           template_handler_extensions.each do |ext|         
-            #puts "trying #{path_for_cell_template_with_type_extension(path, resolve_cell.cell_name, state, type_ext) +'.'+ext}"   
-            if File.exists?(path_for_cell_template_with_type_extension(path, resolve_cell.cell_name, state, type_ext) +'.'+ext)
-              return [path_for_cell_template_with_type_extension(path, resolve_cell.cell_name, state, type_ext), ext]
+            local_template_path = path_for_cell_template_with_type_extension(path, resolve_cell.cell_name, state, type_ext)
+            #puts "trying #{local_template_path +'.'+ext}"   
+            
+            if File.exists?(local_template_path+'.'+ext)
+              return [local_template_path, ext]
             end
           end
         end
@@ -63,7 +65,8 @@ module Cell
       return ["", ""]
     end
 
-    # To see if the template can be found, make list of possible cells paths, according to:
+    # To see if the template can be found, make list of possible cells paths, according
+    # to:
     # If Engines loaded: then append paths in order so that more recently started plugins 
     # will take priority and RAILS_ROOT/app/cells with highest prio.
     # Engines not-loaded: then only RAILS_ROOT/app/cells
