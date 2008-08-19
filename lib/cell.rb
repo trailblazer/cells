@@ -40,12 +40,12 @@ module Cell
   #     cells/
   #       shopping_cart_cell.rb
   #       shopping_cart/
-  #         status.rhtml
-  #         product_list.rhtml
-  #         empty_prompt.rhtml
+  #         status.html.erb
+  #         product_list.html.erb
+  #         empty_prompt.html.erb
   #       user_cell.rb
   #       user/
-  #         login.rhtml
+  #         login.html.erb
   #     ..
   #
   # The directory with the same name as the cell contains views for the
@@ -54,6 +54,9 @@ module Cell
   # cells as actions are to controllers, so each state has its own view.
   # The use of partials is deprecated with cells, it is better to just
   # render a different state on the same cell (which also works recursively).
+  #
+  # Anyway, <tt>render :partial </tt> in a cell view will work, if the 
+  # partial is contained in the cell's view directory.
   #
   # As can be seen above, Cells also can make use of helpers.  All Cells
   # include ApplicationHelper by default, but you can add additional helpers
@@ -91,18 +94,18 @@ module Cell
   # and the following directory structure in <tt>app/cells</tt>:
   #   app/cells/
   #     menu/
-  #       show.rhtml
-  #       edit.rhtml
+  #       show.html.erb
+  #       edit.html.erb
   #     main_menu/
-  #       show.rhtml
+  #       show.html.erb
   # then when you call
   #   render_cell :main_menu, :show
-  # the main menu specific show.rhtml (<tt>app/cells/main_menu/show.rhtml</tt>)
+  # the main menu specific show.html.erb (<tt>app/cells/main_menu/show.html.erb</tt>)
   # is rendered, but when you call
   #   render_cell :main_menu, :edit
   # cells notices that the main menu does not have a specific view for the
   # <tt>edit</tt> state, so it will render the view for the parent class,
-  # <tt>app/cells/menu/edit.rhtml</tt>
+  # <tt>app/cells/menu/edit.html.erb</tt>
   class Base
     attr_accessor :controller
     attr_accessor :state_name
@@ -327,6 +330,11 @@ module Cell
           end
         end_eval
       end
+    end
+    
+    # Creates a cell instance of the class <tt>name</tt>Cell.
+    def self.create_cell_for(controller, name, opts={})
+      class_from_cell_name(name).new(controller, name, opts)
     end
   end
 end

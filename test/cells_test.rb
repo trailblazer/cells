@@ -89,21 +89,6 @@ class CellsTest < Test::Unit::TestCase
       File.dirname(__FILE__) + '/cells'
     end
   end
-  
-  def test_factory
-    puts "XXX factory"
-    cell = Cell::Factory.create(@controller, :test)
-
-    assert cell.kind_of?(Cell::Base)
-
-    #assert_equal cell.path, @my_path
-
-    #assert_equal Cell::Factory.create(@controller, :some_more).path, @my_path
-
-    ### FIXME: this gives an error due to some unprepared controller:
-    #assert_equal cell.render_state("rendering_state").class, String
-    assert_equal cell.render_state("direct_output").class, String
-  end
 
 
   def test_controller_render_methods
@@ -150,8 +135,6 @@ class CellsTest < Test::Unit::TestCase
 
   def test_view_for_state_overwriting
     puts "XXX test_view_for_state_overwriting"
-    #cell = Cell::Registry[:just_one_view].new(@controller, @path)
-    #cell = Cell::Factory.create(@controller, :just_one_view)
 
     get :render_just_one_view_cell
     assert_response :success
