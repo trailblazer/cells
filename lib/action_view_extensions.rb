@@ -14,9 +14,9 @@ class ActionView::Base
   #   </div>
   #
   # If you have a <tt>UserCell</tt> cell in <tt>app/cells/user_cell.rb</tt>, which has a
-  # <tt>UserCell#login_prompt</tt> method (this is called the <tt>login_prompt</tt>
-  # <em>state</em> in Cells terminology), this will call that method and then will
-  # find the view <tt>app/cells/user/login_prompt.rhtml</tt> and render it.
+  # <tt>UserCell#login_prompt</tt> method, this will call that method and then will
+  # find the view <tt>app/cells/user/login_prompt.rhtml</tt> and render it. This is 
+  # called the <tt>:login_prompt</tt> <em>state</em> in Cells terminology.
   #
   # If this view file looks like this:
   #   <h1><%= @opts[:message] %></h1>
@@ -30,7 +30,7 @@ class ActionView::Base
   #     <label>password: <input name="user[password]" /></label>
   #   </div>
   def render_cell(name, state, opts = {})
-    cell = Cell::Factory.create(controller, name, opts);
+    cell = Cell::Base.create_cell_for(@controller, name, opts)
 
     @controller.send :forget_variables_added_to_assigns   # this fixes bug #1, PARTLY.
 
