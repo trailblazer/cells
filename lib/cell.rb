@@ -106,6 +106,17 @@ module Cell
   # cells notices that the main menu does not have a specific view for the
   # <tt>edit</tt> state, so it will render the view for the parent class,
   # <tt>app/cells/menu/edit.html.erb</tt>
+  #
+  #
+  # == Gettext support
+  #
+  # Cells support gettext, just name your views accordingly. It works exactly equivalent
+  # to controller views.
+  #
+  #   cells/user/user_form.html.erb
+  #   cells/user/user_form_de.html.erb
+  #
+  # If gettext is set to DE_de, the latter view will be chosen.
   class Base
     attr_accessor :controller
     attr_accessor :state_name
