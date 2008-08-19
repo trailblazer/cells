@@ -1,20 +1,15 @@
 = Overview
 
-Cells is a rails plugin for a new concept of code organization. Instead of
-pushing everything into the ApplicationControllers, logic and views are
-encapsulated in flexible cells.
-
-Cells can be described best as "lightweight controllers" - they are classes
-that implement the business logic in methods and can render views.
-Cells can be called in controllers or within views and plug themselfs into
-any part of the page.
+Cells are like controllers in Rails. They have methods and views.
+They have almost all the capabilities a controller has, plus its modularity: you can have
+as many cells on a page as you want. That's as if you had multiple controllers in one 
+page, where each "controller" renders only a certain part of the page.
+As if this wasn't enough, Cells are superfast and lightweight.
 
 
 = Documentation
 
-The documentation is currently being worked upon.  You will find basic
-reference documentation in here.  You can probably best start looking
-at the documentation of the Cell::Base class.
+You will find basic reference documentation in here. Best start is probably the documentation of the Cell::Base class.
 
 See http://cells.rubyforge.org for documentation targeted at cells
 newbies, including an overview of what you can do with cells and a
