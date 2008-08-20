@@ -7,6 +7,24 @@ module Cell
   # regular controllers and views (see ActionView::Base#render_cell and
   # ControllerMethods#render_cell_to_string)
   #
+  # == A render_cell() cycle
+  #
+  # A typical <tt>render_cell</tt> state rendering cycle looks like this:
+  #   render_cell :blog, :newest_article, {...}
+  # - an instance of the class <tt>BlogCell</tt> is created, and a hash containing
+  #   arbitrary parameters is passed
+  # - the <em>state method</em> <tt>newest_article</tt> is executed and assigns instance 
+  #   variables to be used in the view
+  # - if the method returns a string, the cycle ends, rendering the string
+  # - otherwise, the corresponding <em>state view</em> is searched. 
+  #   Usually the cell will first look for a view template in
+  #   <tt>app/cells/blog/newest_article.html. [erb|haml|...]</tt>
+  # - after the view has been found, it is rendered and returned
+  #
+  # It is common to simply return <tt>nil</tt> in state methods to advice the cell to
+  # render the corresponding template.
+  #
+  # == Design Principles
   # A cell is a completely autonomous object and it should not know or have to know
   # from what controller it is being rendered.  For this reason, the controller's
   # instance variables and params hash are not directly available from the cell or
@@ -343,7 +361,8 @@ module Cell
       end
     end
     
-    # Creates a cell instance of the class <tt>name</tt>Cell.
+    # Creates a cell instance of the class <tt>name</tt>Cell, passing through 
+    # <tt>opts</tt>.
     def self.create_cell_for(controller, name, opts={})
       class_from_cell_name(name).new(controller, name, opts)
     end

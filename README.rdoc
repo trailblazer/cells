@@ -1,22 +1,75 @@
 = Overview
 
-Cells are like controllers in Rails. They have methods and views.
-They have almost all the capabilities a controller has, plus its modularity: you can have
+Cells are like controllers in Rails - they have methods and corresponding views.
+But their big advantage to controllers is their <em>modularity</em>: you can have
 as many cells on a page as you want. That's as if you had multiple controllers in one 
 page, where each "controller" renders only a certain part of the page.
-As if this wasn't enough, Cells are superfast and lightweight.
+As if this wasn't enough, cells are superfast and lightweight.
 
+== Give me code!
+
+A cell class located in <tt>app/cells/article_cell.rb</tt> could look like this:
+
+  class ArticleCell < Cell::Base
+    helper :my_formatting_and_escaping_helper   # you can use helpers in cell views!
+    
+    def newest
+      @articles = Article.get_newest
+      nil   # returning nil says "render the view named newest.html.[erb|haml|...]".
+    end
+    
+    def top_article
+      @article = Article.top_article
+      nil
+    end
+  end
+
+The corresponding views would be in <tt>app/cells/article/newest.html.erb</tt>:
+
+  <h2>Hot stuff!</h2>
+  <ul>
+  <% @articles.each do |article| %>
+    <li><%= article.title</li>
+  <% end %>
+  </ul>
+
+The other view could be in <tt>app/cells/article/top_article.html.haml</tt>:
+
+  %h2
+    = @article.title
+    = format_and_escape(@article.text)
+
+You already know that from controllers, don't you? Speaking of controllers, here's
+how you could plug the cells into the page. In <tt>app/controllers/blog_controller.rb</tt>
+there could be an action
+  
+  class BlogController < ApplicationController
+    def top_page
+      ...
+    end
+  end
+
+where the rendered action view could be <tt>app/views/blog/top_page.html.erb</tt>:
+  
+  <%= yield %>
+  
+  <div><%= render_cell(:article, :newest)</div>
+  <div><%= render_cell(:article, :top_article)</div>
+    
+The "top page" would consist of the controller action's content, and two additional 
+independent boxes with interesting content. These two boxes are <em>cells</em> and could
+be used on another page, too.
 
 = Documentation
 
-You will find basic reference documentation in here. Best start is probably the documentation of the Cell::Base class.
+Reference documentation is found in the documentation of the Cell::Base class.
 
 See http://cells.rubyforge.org for documentation targeted at cells
 newbies, including an overview of what you can do with cells and a
 tutorial.
 
 
-== Installation
+= Installation
 
 To install, simply cd to your rails app directory and run
 
@@ -42,6 +95,7 @@ http://svn.rails-engines.org/engines/tags/rel_2.1.0
 = LICENSE
 
 Copyright (c) 2007-2008, Nick Sutterer
+
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
 The MIT License
