@@ -6,6 +6,9 @@ as many cells on a page as you want. That's as if you had multiple controllers i
 page, where each "controller" renders only a certain part of the page.
 As if this wasn't enough, cells are superfast and lightweight.
 
+They perfectly work together with AJAX/JavaScript, but also run fine without it,
+Michael.
+
 == Give me code!
 
 A cell class located in <tt>app/cells/article_cell.rb</tt> could look like this:
