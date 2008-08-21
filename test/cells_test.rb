@@ -246,7 +246,9 @@ class CellsTest < Test::Unit::TestCase
     assert_equal Cell::Base.class_from_cell_name("cells_test_one"), CellsTestOneCell
   end
 
+  # currently UnknownCell resides in app/cells/, which sucks.
   def test_class_autoloading
+    return unless Cell.engines_available?
     puts "XXX test_class_autoloading"
     Dependencies.log_activity = true
 

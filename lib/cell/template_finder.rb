@@ -71,7 +71,7 @@ module Cell
     # will take priority and RAILS_ROOT/app/cells with highest prio.
     # Engines not-loaded: then only RAILS_ROOT/app/cells
     def possible_cell_paths
-      if Object.const_defined?(:Engines)
+      if Cell.engines_available?
         Rails.plugins.by_precedence.map {|plugin| plugin.directory + '/app/cells'}.unshift(RAILS_ROOT + '/app/cells')
       else
         RAILS_ROOT + '/app/cells'

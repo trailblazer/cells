@@ -21,8 +21,10 @@ class CellsHelperTest < Test::Unit::TestCase
     content = cell.render_state(:state_with_helper_invocation)
     assert_selekt content, "p#stateWithHelperInvocation", "mysterious"
   end
-
+  
+  # currently HelperUsingCellHelper resides in app/helpers/, which sucks.
   def test_auto_helper
+    return unless Cell.engines_available?
     puts "XXX test_auto_helper"
     cell = HelperUsingCell.new(@controller)
 
