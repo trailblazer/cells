@@ -1,0 +1,13 @@
+Description:
+	Stubs out a new cell and its views. Pass the cell name, either
+	CamelCased or under_scored, and a list of views as arguments.
+	
+	This generates a cell class in app/cells and view templates in
+	app/cells/cell_name.
+
+Example:
+	'./script/generate cell Announcements index'
+	
+	This will create an Announcements cell:
+		Cell: app/cells/announcements_cell.rb
+		Views: app/cells/announcements/index.html.erb
