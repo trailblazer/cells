@@ -145,6 +145,8 @@ module Cell
     self.allow_forgery_protection = true
     
     
+    
+    
     def initialize(controller, cell_name=nil, options={})
       @controller = controller
       @cell_name  = cell_name ### TODO: currently we don't use this.
@@ -179,13 +181,17 @@ module Cell
 
       content = send(state)
 
-      if content.class == String
+      if content.kind_of? String
         return content
       end
 
       return self.render_view_for_state(state)
     end
-
+    
+    ### FIXME: we alias_method_chain in Caching, so we need to include it here. sucks.
+    ###   better include it in boot.rb or so.
+    include Caching
+    
     # Render the view belonging to the given state.  This can be called
     # from other states as well, when you need to render the same view file
     # from two states.
