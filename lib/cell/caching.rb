@@ -18,10 +18,21 @@ module Cell::Caching
  
  
  
-  module ClassMethods  
+  module ClassMethods
+    # Proc must return a Hash, a String or nil, which is appended to the cell cache key.
+    #
+    # Example:
+    #   class CachingCell < Cell::Base
+    #     cache :versioned_cached_state, Proc.new{ {:version => 0} }
+    # would result in the complete cache key
+    #   cells/CachingCell/versioned_cached_state/version=0
+    #--
+    ### TODO: implement for string and nil.
+    ### DISCUSS: introduce return method #sweep ? so the Proc can explicitly
+    ###   delegate re-rendering to the outside.
+    #--
     def cache(state, version_proc = Proc.new{Hash.new})
       #return unless ActionController::Base.cache_configured?
-      
       version_procs[state] = version_proc
     end
     
@@ -36,8 +47,9 @@ module Cell::Caching
   def render_state_with_caching(state)
     return render_state_without_caching(state) unless state_cached?(state) 
     
-    
     key = cache_key(state, call_version_proc_for_state(state))
+    ### DISCUSS: see sweep discussion at #call_version_proc_for_state.
+    
     # cache hit:
     if content = read_fragment(key)
       return content 
@@ -63,8 +75,8 @@ module Cell::Caching
   def state_cached?(state);           version_proc_for_state(state);  end
   def version_proc_for_state(state);  self.class.version_procs[state];  end
   
+  
   # Call the versioning Proc for the respective state.
-  # Must return an Array, a String or nil.
   def call_version_proc_for_state(state)
     version_proc = version_proc_for_state(state)
     version_proc.call(self) if version_proc

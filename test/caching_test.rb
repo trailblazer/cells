@@ -31,7 +31,7 @@ class CellsCachingTest < Test::Unit::TestCase
     assert ! @cc.version_proc_for_state(:not_cached_state)
   end
   
-  def test_caching
+  def test_if_caching_works
     c = @cc.render_state(:cached_state)
     assert_equal c, "1 should remain the same forever!"
     
@@ -50,6 +50,33 @@ class CellsCachingTest < Test::Unit::TestCase
   def test_render_state_without_caching
     c = @cc.render_state(:not_cached_state)
     assert_equal c, "i'm really static"
+    c = @cc.render_state(:not_cached_state)
+    assert_equal c, "i'm really static"
+  end
+  
+  def test_caching_with_version_proc
+    @controller.session[:version] = 0
+    # render state, as it's not cached:
+    c = @cc.render_state(:versioned_cached_state)
+    assert_equal c, "0 should change every third call!"
+    
+    @controller.session[:version] = -1
+    c = @cc.render_state(:versioned_cached_state)
+    assert_equal c, "0 should change every third call!"
+    
+    
+    @controller.session[:version] = 1
+    c = @cc.render_state(:versioned_cached_state)
+    assert_equal c, "1 should change every third call!"
+    
+    
+    @controller.session[:version] = 2
+    c = @cc.render_state(:versioned_cached_state)
+    assert_equal c, "2 should change every third call!"
+    
+    @controller.session[:version] = 3
+    c = @cc.render_state(:versioned_cached_state)
+    assert_equal c, "3 should change every third call!"
   end
 end
 
@@ -66,5 +93,15 @@ class CachingCell < Cell::Base
   
   def not_cached_state
     "i'm really static"
+  end
+  
+  cache :versioned_cached_state, Proc.new { |cell|
+      if (v = cell.session[:version]) > 0
+        {:version=>v}  
+      else
+        {:version=>0}; end
+    }
+  def versioned_cached_state
+    "#{session[:version].inspect} should change every third call!"
   end
 end
