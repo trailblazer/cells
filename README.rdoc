@@ -1,7 +1,7 @@
 = Overview
 
 Cells are like controllers in Rails - they have methods and corresponding views.
-But their big advantage to controllers is their <em>modularity</em>: you can have
+However, their big advantage to controllers is their <em>modularity</em>: you can have
 as many cells on a page as you want. That's as if you had multiple controllers in one 
 page, where each "controller" renders only a certain part of the page.
 As if this wasn't enough, cells are superfast and lightweight.
@@ -69,13 +69,17 @@ The "top page" would consist of the controller action's content, and two additio
 independent boxes with interesting content. These two boxes are <em>cells</em> and could
 be used on another page, too.
 
-= Documentation
+= Caching
 
-Reference documentation is found in the documentation of the Cell::Base class.
+To improve performance rendered state views can be cached using Rails' caching mechanism.
+If this it configured (e.g. using our fast friend memcached) all you have to do is to 
+tell Cells which state you want to cache. You can further attach a proc for deciding
+versions or to instruct re-rendering.
 
-See http://cells.rubyforge.org for documentation targeted at cells
-newbies, including an overview of what you can do with cells and a
-tutorial.
+  cache :my_cached_state, Proc.new{|cell| Version.for(User.find(1)}
+
+This would result in re-rendering the state <tt>:my_cached_state</tt> only if the
+version of the user instance changes. 
 
 
 = Installation
@@ -87,6 +91,11 @@ To install, simply cd to your rails app directory and run
 Add the following line to your <tt>environment.rb</tt> file:
 
   require File.join(File.dirname(__FILE__), '../vendor/plugins/cells/boot')
+
+This release is tested and runs with Rails 2.1 and 2.1.1.
+
+
+=== Engines
 
 If you're using the Engines plugin from http://www.rails-engines.org,
 you should put the cells boot file after the engines one.  If you're
@@ -100,6 +109,15 @@ Engines if you're using Engines.
 Cells will only work with trunk Engines or tags/rel_2.1.0
 (or a later branch or tag).  This tag is available at:
 http://svn.rails-engines.org/engines/tags/rel_2.1.0
+
+
+= Documentation
+
+Reference documentation is found in the documentation of the Cell::Base class.
+
+See http://cells.rubyforge.org for documentation targeted at cells
+newbies, including an overview of what you can do with cells and a
+tutorial.
 
 = LICENSE
 
