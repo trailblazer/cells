@@ -34,10 +34,14 @@ module Cell::Caching
   
   
   def render_state_with_caching(state)
-    key = cache_key(state, self.class.version_procs[state].call)
+    return render_state_without_caching(state) unless state_cached?(state) 
     
+    
+    key = cache_key(state, call_version_proc_for_state(state))
     # cache hit:
-    return content if content = read_fragment(key)
+    if content = read_fragment(key)
+      return content 
+    end
     # re-render:
     return write_fragment(key, render_state_without_caching(state))
   end
@@ -56,6 +60,15 @@ module Cell::Caching
   end
   
   
+  def state_cached?(state);           version_proc_for_state(state);  end
+  def version_proc_for_state(state);  self.class.version_procs[state];  end
+  
+  # Call the versioning Proc for the respective state.
+  # Must return an Array, a String or nil.
+  def call_version_proc_for_state(state)
+    version_proc = version_proc_for_state(state)
+    version_proc.call(self) if version_proc
+  end
   
   def cache_key(state, args = {}) #:nodoc:
     key_pieces = [self.class, state]
