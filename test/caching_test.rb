@@ -45,6 +45,7 @@ class CellsCachingTest < Test::Unit::TestCase
   def test_cache_key
     assert_equal "cells/CachingCell/some_state", @cc.cache_key(:some_state)
     assert_equal "cells/CachingCell/some_state/param=9", @cc.cache_key(:some_state, :param => 9)
+    assert_equal "cells/CachingCell/some_state/a=1/b=2", @cc.cache_key(:some_state, :a => 1, :b => 2)
   end
   
   def test_render_state_without_caching
@@ -78,6 +79,20 @@ class CellsCachingTest < Test::Unit::TestCase
     c = @cc.render_state(:versioned_cached_state)
     assert_equal c, "3 should change every third call!"
   end
+  
+  def test_caching_with_instance_version_proc
+    CachedCell.class_eval do
+      cache :versioned_cached_state, :my_version_proc
+    end
+    @controller.session[:version] = 0
+    c = @cc.render_state(:versioned_cached_state)
+    assert_equal c, "0 should change every third call!" 
+    
+    @controller.session[:version] = 1
+    c = @cc.render_state(:versioned_cached_state)
+    assert_equal c, "1 should change every third call!"
+  end
+  
 end
 
 class CachingCell < Cell::Base
@@ -104,4 +119,15 @@ class CachingCell < Cell::Base
   def versioned_cached_state
     "#{session[:version].inspect} should change every third call!"
   end
+  
+  
+  def my_version_proc
+    if (v = session[:version]) > 0
+        {:version=>v}  
+      else
+        {:version=>0}; end
+  end
+  #def cached_state_with_symbol_proc
+  #  
+  #end
 end
