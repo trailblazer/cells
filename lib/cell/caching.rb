@@ -1,3 +1,9 @@
+# To improve performance rendered state views can be cached using Rails' caching
+# mechanism.
+# If this it configured (e.g. using our fast friend memcached) all you have to do is to 
+# tell Cells which state you want to cache. You can further attach a proc for deciding
+# versions or to instruct re-rendering.
+#
 # As always I stole a lot of code, this time from Lance Ivy <cainlevy@gmail.com> and
 # his fine components plugin at http://github.com/cainlevy/components.
 
@@ -19,13 +25,33 @@ module Cell::Caching
  
  
   module ClassMethods
-    # Proc must return a Hash, a String or nil, which is appended to the cell cache key.
+    # Activate caching for the state <tt>state</tt>. If <tt>version_proc</tt> is omitted,
+    # the view will be cached forever.
+    # Otherwise you may either directly pass a Proc or provide a Symbol,
+    # which is treated as an instance method of the cell.
+    # This method is called every time the state is rendered, and is expected to return a
+    # Hash containing the cache key ingredients.
     #
     # Example:
     #   class CachingCell < Cell::Base
     #     cache :versioned_cached_state, Proc.new{ {:version => 0} }
     # would result in the complete cache key
     #   cells/CachingCell/versioned_cached_state/version=0
+    #
+    # If you provide a symbol, you can access the cell instance directly in the versioning
+    # method:
+    #
+    #   class CachingCell < Cell::Base
+    #     cache :cached_state, :my_cache_version
+    #
+    #     def my_cache_version
+    #       { :user     => current_user.id,
+    #         :item_id  => params[:item] }
+    #       }
+    #     end
+    # results in a very specific cache key, for customized caching:
+    #   cells/CachingCell/cached_state/user=18/item_id=1
+    #
     #--
     ### TODO: implement for string, nil.
     ### DISCUSS: introduce return method #sweep ? so the Proc can explicitly
