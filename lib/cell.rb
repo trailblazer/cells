@@ -176,17 +176,21 @@ module Cell
     # a string.
     def render_state(state)
       @cell = self
-      state = state.to_s
+      #state = state.to_s ### DISCUSS: why convert?
       self.state_name = state
 
-      content = send(state)
+      content = dispatch_state(state)
 
-      if content.kind_of? String
-        return content
-      end
+      return content if content.kind_of? String
 
       return self.render_view_for_state(state)
     end
+    
+    # Call the state method.
+    def dispatch_state(state)
+      send(state)
+    end
+    
     
     ### FIXME: we alias_method_chain in Caching, so we need to include it here. sucks.
     ###   better include it in boot.rb or so.
