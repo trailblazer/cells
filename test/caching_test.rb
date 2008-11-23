@@ -81,7 +81,7 @@ class CellsCachingTest < Test::Unit::TestCase
   end
   
   def test_caching_with_instance_version_proc
-    CachedCell.class_eval do
+    CachingCell.class_eval do
       cache :versioned_cached_state, :my_version_proc
     end
     @controller.session[:version] = 0

@@ -227,6 +227,12 @@ module Cell
       ### TODO: cache family_view for this cell_name/state in production mode.
       
       
+      
+      if template.nil?
+        return "ATTENTION: cell view for #{cell_name}##{state} is not readable/existing.
+                Further on, your cell method did not return a String." end
+
+      
       begin
         action_view.render(:file => template)
       rescue ActionView::MissingTemplate
@@ -243,6 +249,8 @@ module Cell
           return view
         end
       end
+      
+      nil
     end
     
     

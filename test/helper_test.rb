@@ -15,7 +15,6 @@ class CellsHelperTest < Test::Unit::TestCase
   
   
   def test_helper
-    puts "XXX test_helper"
     cell = HelperUsingCell.new(@controller)
 
     content = cell.render_state(:state_with_helper_invocation)
@@ -33,7 +32,6 @@ class CellsHelperTest < Test::Unit::TestCase
   end
 
   def test_helper_method
-    puts "XXX test_helper_method"
     cell = HelperUsingCell.new(@controller)
 
     content = cell.render_state(:state_with_helper_method_invocation)
@@ -41,17 +39,12 @@ class CellsHelperTest < Test::Unit::TestCase
   end
 
   def test_helper_with_subclassing
-    puts "XXX test_helper_with_subclassing"
     subclassedcell = HelperUsingSubCell.new(@controller)
     content = subclassedcell.render_state(:state_with_helper_invocation)
-    assert_selekt content, "p#stateWithHelperInvocation", "mysterious"
-
-    content = subclassedcell.render_state(:another_state_with_helper_invocation)
     assert_selekt content, "p#stateWithHelperInvocation", "mysterious"
   end
 
   def test_helper_including_and_cleanup
-    puts "XXX test_helper_including_and_cleanup"
     # this cell includes a helper, and uses it:
     cell = HelperUsingCell.new(@controller)
 
@@ -61,7 +54,7 @@ class CellsHelperTest < Test::Unit::TestCase
     # this cell doesn't include the helper, but uses it anyway, which should
     # produce an error:
 
-    cell = TestCell.new(@controller)
+    cell = MyTestCell.new(@controller)
 
 #    assert_raises (NameError) do
      assert_raises (ActionView::TemplateError) do
@@ -127,7 +120,7 @@ class HelperUsingCell < Cell::Base
   def state_using_application_helper
   end
   
-  def view_for_state(state)
+  def view_for_state_2brm(state)
     CellsTestMethods.views_path + "#{state}.html.erb"
   end
 
@@ -150,10 +143,4 @@ end
 
 
 class HelperUsingSubCell < HelperUsingCell
-  def another_state_with_helper_invocation
-  end
-
-  def view_for_state(state)
-    CellsTestMethods.views_path + "state_with_helper_invocation.html.erb"
-  end
 end

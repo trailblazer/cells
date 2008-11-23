@@ -56,6 +56,14 @@ end
 # fixture for various tests -----------------------------------
 # views are located in cells/test/cells/my_test/
 class MyTestCell < Cell::Base
+  def direct_output
+    "<h9>this state method doesn't render a template but returns a string, which is great!</h9>"
+  
+  end
+  
+  def state_with_link_to
+  end
+  
   def view_in_local_test_views_dir
   end
   
@@ -130,7 +138,6 @@ class CellsTest < Test::Unit::TestCase
 
 
   def test_controller_render_methods
-    puts "XXX test_controller_render_methods"
     get :call_render_cell_with_strings  # render_cell("test", "state")
     assert_response :success
     assert_tag :tag => "h9"
@@ -140,17 +147,7 @@ class CellsTest < Test::Unit::TestCase
     assert_tag :tag => "h9"
 
     get :call_render_cell_with_state_view
-    #assert_response :success
-    #assert_tag :tag => "h9", :child => /^begin of view/
-
-#    assert_tag :tag => "span", :child => /^yeah$/
-    assert_select "div#RenderingView>span", /^yeah$/
-
-    #get :render_view_with_render_cell_invocation
-    #assert_response :success
-    #assert_tag :tag => "h9"                       # render_cell(:test, :direct_output)
-    #assert_tag :tag => "span", :child => /^yeah$/ # render_cell(:test, :rendering_state)
-
+    assert_select "#view_with_instance_var"
   end
   
   
@@ -158,7 +155,7 @@ class CellsTest < Test::Unit::TestCase
   
   # ok
   def test_render_state_which_returns_a_string
-    cell = TestCell.new(@controller)
+    cell = MyTestCell.new(@controller)
     
     c= cell.render_state(:direct_output)
     assert_kind_of String, c
@@ -244,39 +241,6 @@ class CellsTest < Test::Unit::TestCase
     tpl = t.find_family_view_for_state(:bye, Cell::View.new(["#{RAILS_ROOT}/vendor/plugins/cells/test/cells"], {}, @controller))
     assert_equal "my_mother/bye.html.erb", tpl.path
   end
-
-
-
-
-  def test_view_for_state_overwriting
-    puts "XXX test_view_for_state_overwriting"
-
-    get :render_just_one_view_cell
-    assert_response :success
-    assert_tag :tag => "p", :content => "Great!"
-  end
-
-  def test_reset_bug
-    puts "XXX test_reset_bug"
-    get :render_reset_bug
-
-    assert_response :success
-    assert_select "p#ho", 1
-  end
-
-  def test_bug_no_1
-    puts "XXX test_bug_1"
-    get :render_view_with_render_cell_invocation
-
-    ### FIXME: if this line is uncommented, we have bug #1 again:
-    assert_select "span", /^yeah$/, :count => 1
-    assert_select "div#AnotherRenderingView>span", "go", :count => 1
-
-  end
-  
-  
-  
-  
   
   
   
@@ -286,22 +250,7 @@ class CellsTest < Test::Unit::TestCase
     c = t.render_state(:instance_view)
     assert_selekt c, "#renamedInstanceView"
   end
-
-  def test_state_view_existing_in_my_view_directory
-    cell_one = CellsTestOneCell.new(@controller, nil)
-    view_one = cell_one.render_state(:super_state)
-
-    assert_selekt view_one, "p#superStateView", "CellsTestOneCell"
-  end
-
-  def test_state_view_existing_in_super_cell_view_directory
-    puts "XXX test_state_view_existing_in_super_cell_view_directory"
-    cell_two = CellsTestTwoCell.new(@controller, nil)
-    view_two = cell_two.render_state(:super_state)
-
-    assert_selekt view_two, "p#superStateView", "CellsTestTwoCell"
-  end
-
+  
   
 
   def test_templating_systems
@@ -313,7 +262,6 @@ class CellsTest < Test::Unit::TestCase
 
   ### API test (unit) -----------------------------------------------------------
   def test_cell_name
-    puts "XXX test_cell_name"
     cell_one = CellsTestOneCell.new(@controller, nil)
 
     assert_equal cell_one.cell_name, "cells_test_one"
@@ -321,7 +269,6 @@ class CellsTest < Test::Unit::TestCase
   end
 
   def test_cell_name_set_in_constructor
-    puts "XXX test_cell_name_set_in_constructor"
     cell_one = CellsTestOneCell.new(@controller, "sophisticated_extra_name")
 
     assert_equal cell_one.cell_name, "sophisticated_extra_name"
@@ -329,19 +276,16 @@ class CellsTest < Test::Unit::TestCase
   end
 
   def test_cell_name_suffix
-    puts "XXX test_cell_name_suffix"
     assert_equal Cell::Base.name_suffix, "_cell"
   end
 
   def test_class_from_cell_name
-    puts "XXX test_class_from_cell_name"
     assert_equal Cell::Base.class_from_cell_name("cells_test_one"), CellsTestOneCell
   end
 
   # currently UnknownCell resides in app/cells/, which sucks.
   def test_class_autoloading
     return unless Cell.engines_available?
-    puts "XXX test_class_autoloading"
     Dependencies.log_activity = true
 
     assert UnknownCell.new(@controller, nil) 
@@ -353,7 +297,6 @@ class CellsTest < Test::Unit::TestCase
   end
 
   def test_new_directory_hierarchy
-    puts "XXX test_new_directory_hierarchy"
     cell = ReallyModule::NestedCell.new(@controller)
     view = cell.render_state(:happy_state)
     @response.body = view
@@ -390,21 +333,10 @@ class CellsTest < Test::Unit::TestCase
   ### functional tests: ---------------------------------------------------------
 
   def test_link_to_in_view
-    puts "XXX test_link_to_in_view"
     get :render_state_with_link_to
 
     assert_response :success
     assert_select "a", "bla"
-  end
-
-  def ERROR_test_link_to_in_view
-    puts "XXX ERROR_test_link_to_in_view"
-    @controller.params = {}
-    @controller.send :initialize_current_url
-
-    cell = TestCell.new(@controller, nil)
-    content = cell.render_state(:state_with_link_to)
-    assert_select HTML::Document.new(content).root, "div#linkTo"
   end
 
 end

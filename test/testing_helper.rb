@@ -30,17 +30,17 @@ class CellTestController < ApplicationController
   end
 
   def call_render_cell_with_strings
-    static = render_cell_to_string("test", "direct_output")
+    static = render_cell_to_string("my_test", "direct_output")
     render :text => static
   end
 
   def call_render_cell_with_syms
-    static = render_cell_to_string(:test, :direct_output)
+    static = render_cell_to_string(:my_test, :direct_output)
     render :text => static
   end
 
   def call_render_cell_with_state_view
-    render :text => render_cell_to_string(:test, :rendering_state)
+    render :text => render_cell_to_string(:my_test, :view_with_instance_var)
     return
   end
 
@@ -53,16 +53,10 @@ class CellTestController < ApplicationController
     static = render_cell_to_string("just_one_view", "some_state")
     render :text => static
   end
-
-  def render_reset_bug
-    static = render_cell_to_string("test", "setting_state")
-    static += render_cell_to_string("test", "reset_state")
-    render :text => static
-  end
   
   
   def render_state_with_link_to
-    static = render_cell_to_string("test", "state_with_link_to")
+    static = render_cell_to_string("my_test", "state_with_link_to")
     render :text => static
   end
 
