@@ -24,7 +24,8 @@ class MyTPLHandler
   end
 end
 
-ActionView::Template.register_default_template_handler("mytpl", MyTPLHandler)
+### TODO: test custom template handlers:
+###@ ActionView::Template.register_default_template_handler("mytpl", MyTPLHandler)
 
 
 module Some
@@ -52,7 +53,8 @@ class CellContainedInPlugin < Cell::Base
 end
 
 
-# views are located in cells/test/cells/my_test/.
+# fixture for various tests -----------------------------------
+# views are located in cells/test/cells/my_test/
 class MyTestCell < Cell::Base
   def view_in_local_test_views_dir
   end
@@ -68,7 +70,43 @@ class MyTestCell < Cell::Base
   
   def view_containing_broken_partial
   end
+  
+  def view_with_instance_var
+    @instance_variable_one = "yeah"
+    @instance_variable_two = "wow"
+    nil
+  end
+  
+  def missing_view
+  end
 end
+
+# fixtures for view inheritance -------------------------------
+# views are located in cells/test/cells/my_mother_cell/
+class MyMotherCell < Cell::Base
+  def hello
+    @message = "hello, kid!"
+    nil
+  end
+  def bye
+    @message = "bye, you!"
+    nil
+  end
+end
+
+# views are located in cells/test/cells/my_child_cell/
+class MyChildCell < MyMotherCell
+  def hello
+    @message = "hello, mom!"
+    nil
+  end
+  # view is inherited and located in cells/test/cells/my_mother_cell/bye.html.erb
+  def bye
+    @message = "bye, mom!"
+    nil
+  end
+end
+
 
 module ReallyModule
   class NestedCell < Cell::Base
@@ -114,24 +152,101 @@ class CellsTest < Test::Unit::TestCase
     #assert_tag :tag => "span", :child => /^yeah$/ # render_cell(:test, :rendering_state)
 
   end
+  
+  
+  # test simple rendering cycle -------------------------------------------------
+  
+  # ok
+  def test_render_state_which_returns_a_string
+    cell = TestCell.new(@controller)
+    
+    c= cell.render_state(:direct_output)
+    assert_kind_of String, c
+    assert_selekt c, "h9"
+    
+    #assert_raises (NoMethodError) { cell.render_state("non_existing_state") }
+  end
+  
+  # ok
+  def test_render_state_which_needs_a_view
+    cell = MyTestCell.new(@controller)
+    
+    c= cell.render_state(:view_with_instance_var)
+    assert_selekt c, "#one", "yeah"
+    assert_selekt c, "#two", "wow"
+  end
+  
+  # ok
+  def test_render_state_with_missing_view
+    cell = MyTestCell.new(@controller)
+    ### TODO: production <-> development/test context.
+    c = cell.render_state(:missing_view)
 
-  def test_init
-    puts "XXX test_init"
-    cell = TestCell.new(@controller, @my_path)
-
-    assert cell.kind_of?(Cell::Base)
+    assert_match /^ATTENTION/, c
+  end
+  
+  
+  # test partial rendering ------------------------------------------------------
+  
+  # ok
+  def test_not_existing_partial
+    t = MyTestCell.new(@controller)
+    assert_raises ActionView::TemplateError do
+      t.render_state(:view_containing_nonexistant_partial)
+    end
+  end
+  
+  # ok
+  def test_broken_partial
+    t = MyTestCell.new(@controller)
+    assert_raises ActionView::TemplateError do
+      t.render_state(:view_containing_broken_partial)
+    end
+  end
+  
+  # ok
+  def test_render_state_with_partial
+    cell = MyTestCell.new(@controller)
+    c = cell.render_state(:view_containing_partial)
+    assert_selekt c, "#partialContained>#partial"
+  end
+  
+  
+  # test view inheritance -------------------------------------------------------
+  
+  def test_possible_paths_for_state
+    t = MyChildCell.new(@controller)
+    p = t.possible_paths_for_state(:bye)
+    assert_equal "my_child/bye", p.first
+    assert_equal "my_mother/bye", p.last
+  end
+  
+  
+  def test_render_state_on_child_where_child_view_exists
+    cell = MyChildCell.new(@controller)
+    c = cell.render_state(:hello)
+    assert_selekt c, "#childHello", "hello, mom!"
+  end
+  
+  def test_render_state_on_child_where_view_is_inherited_from_mother
+    cell = MyChildCell.new(@controller)
+    puts "  rendering cell!"
+    c = cell.render_state(:bye)
+    assert_selekt c, "#motherBye", "bye, mom!"
+  end
+  
+  
+  # test Cell::View -------------------------------------------------------------
+  
+  # ok
+  def test_find_family_view_for_state
+    t = MyChildCell.new(@controller)
+    tpl = t.find_family_view_for_state(:bye, Cell::View.new(["#{RAILS_ROOT}/vendor/plugins/cells/test/cells"], {}, @controller))
+    assert_equal "my_mother/bye.html.erb", tpl.path
   end
 
-  def test_render
-    puts "XXX test_render"
-    ###@ cell = Cell::Registry[:test].new(@controller, @path)
-    cell = TestCell.new(@controller, @path)
 
-    assert_equal cell.render_state("direct_output").class, String
-    #assert_equal cell.render_state("rendering_state").class, String
-    assert_raises (NoMethodError) { cell.render_state("non_existing_state") }
 
-  end
 
   def test_view_for_state_overwriting
     puts "XXX test_view_for_state_overwriting"
@@ -159,27 +274,9 @@ class CellsTest < Test::Unit::TestCase
 
   end
   
-  # test partial rendering ------------------------------------------------------
   
-  def test_not_existing_partial
-    t = MyTestCell.new(@controller)
-    assert_raises ActionView::TemplateError do
-      t.render_state(:view_containing_nonexistant_partial)
-    end
-  end
   
-  def test_broken_partial
-    t = MyTestCell.new(@controller)
-    assert_raises ActionView::TemplateError do
-      t.render_state(:view_containing_broken_partial)
-    end
-  end
   
-  def test_render_partial_in_state_view
-    t = MyTestCell.new(@controller)
-    c = t.render_state(:view_containing_partial)
-    assert_selekt c, "#partialContained>#partial"
-  end
   
   
   
@@ -205,12 +302,7 @@ class CellsTest < Test::Unit::TestCase
     assert_selekt view_two, "p#superStateView", "CellsTestTwoCell"
   end
 
-  def test_state_view_not_existing
-    cell_one = CellsTestOneCell.new(@controller, nil)
-    view_one = cell_one.render_state(:state_with_no_view)
-
-    assert_match /ATTENTION/, view_one
-  end
+  
 
   def test_templating_systems
     simple_cell = SimpleCell.new(@controller, nil)

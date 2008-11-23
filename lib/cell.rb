@@ -200,27 +200,61 @@ module Cell
     # from other states as well, when you need to render the same view file
     # from two states.
     def render_view_for_state(state)
-      view_class  = Class.new(ActionView::Base)
-
-      # We cheat a little bit by providing the view class with a known-good views dir
-      action_view = view_class.new("#{RAILS_ROOT}/app/views", {}, @controller)
-
-      # Now override the finder in the view_class with our own (we can't use Rails' finder because it's braindead)
-      action_view.send(:instance_variable_set, '@finder', Cell::TemplateFinder.new(self, state, action_view))
-
+      Cell::View.warn_cache_misses = true
+      view_class  = Class.new(Cell::View)
+      
+      ### DISCUSS: we don't need app/views/ here.
+      cell_view_paths = ["#{RAILS_ROOT}/vendor/plugins/cells/test/cells"]
+      
+      action_view = view_class.new(cell_view_paths, {}, @controller)
+      ### TODO: cache cell_view_paths in production mode.
       # Make helpers and instance vars available
       include_helpers_in_class(view_class)
-      clone_ivars_to(action_view)
+      
+      assigns = {}
+      (self.instance_variables - ivars_to_ignore).each do |k|
+       assigns[k[1..-1]] = instance_variable_get(k)
+      end
+      
+      action_view.assigns = assigns
+      
+      
+
+      
+      
+      
+      template = find_family_view_for_state(state, action_view)
+      ### TODO: cache family_view for this cell_name/state in production mode.
+      
       
       begin
-        action_view.render_file("#{self.cell_name}/#{state}", true) # path that is passed to finder.path_and_extension
+        action_view.render(:file => template)
       rescue ActionView::MissingTemplate
         ### TODO: introduce error method.
         return "ATTENTION: cell view for #{cell_name}##{state} is not readable/existing.
                 Further on, your cell method did not return a String."
       end
     end
-
+    
+    # Returns ActionView::Template on success.
+    def find_family_view_for_state(state, action_view)
+      possible_paths_for_state(state).each do |template_path|
+        if view = action_view.try_picking_template_for_path(template_path)
+          return view
+        end
+      end
+    end
+    
+    
+    # find view, instance -> hierarchy
+    def possible_paths_for_state(state)
+      if view_file = view_for_state(state) # instance.
+        return [view_file]
+      end
+      
+      self.class.find_class_view_for_state(state).reverse!
+      #find_class_view_for_state(state).reverse!
+    end
     # Find the file that belongs to the state.  This first tries the cell's
     # <tt>#view_for_state</tt> method and if that returns a true value, it
     # will accept that value as a string and interpret it as a pathname for
@@ -229,15 +263,16 @@ module Cell
     #
     # You can override the Cell::Base#view_for_state method for a particular
     # cell if you wish to make it decide dynamically what file to render.
-    def find_view_file_for_state(action_view, state)
-      ### DISCUSS: check for existence here?
-      if view_file = view_for_state(state) # instance.  (not passing action_view)
-        return view_file
+    ### 2BRM:
+    def find_view_file_for_state_2brm(action_view, state)
+      if view_file = view_for_state(state) # instance.
+        return [view_file]
       end
 
-      return self.class.find_class_view_for_state(action_view, state)
+      return self.class.find_class_view_for_state(action_view, state) << view_file
     end
-
+    
+    
     # Find the template for a cell's current state.  It tries to find a
     # template file with the name of the state under a subdirectory
     # with the name of the cell under the <tt>app/cells</tt> directory.
@@ -245,16 +280,10 @@ module Cell
     # the superclass.  This way you only have to write a state template
     # once when a more specific cell does not need to change anything in
     # that view.
-    def self.find_class_view_for_state(action_view, state)
-      class_view_file = self.view_for_state(action_view, state)
-
-      if class_view_file && File.readable?(class_view_file) ### DISCUSS: check for existence here?
-        class_view_file
-      elsif superclass != Cell::Base  # Stop here
-        superclass.find_class_view_for_state(action_view, state)
-      else
-        nil
-      end
+    def self.find_class_view_for_state(state)
+      return [view_for_state(state)] if superclass == Cell::Base
+      
+       superclass.find_class_view_for_state(state) << self.view_for_state(state)
     end
 
     # Empty method.  Returns nil.  You can override this method
@@ -270,19 +299,8 @@ module Cell
     # Return the default view for the given state on this cell subclass.
     # This is a file with the name of the state under a directory with the
     # name of the cell followed by a template extension.
-    def self.view_for_state(action_view, state)
-      template_path = "app/cells/#{cell_name}/#{state}"
-      # Don't go through pick_template_extension because it will cache and
-      # this cache may interfere with actual views for controllers.
-      # XXX This will make Cells slower than normal views, so we may have to
-      # hack around this.
-      # XXX Still valid?
-      begin
-        Template.new(self, template_path, true, {}).set_extension_and_filename
-#      rescue MissingTemplate
-      end
-      puts "TRYING: #{template_path} returns #{action_view.finder.file_exists?(template_path).inspect}"
-      return action_view.finder.file_exists?(template_path) && template_path
+    def self.view_for_state(state)
+      "#{cell_name}/#{state}"
     end
 
     # Get the name of this cell's class as an underscored string,
