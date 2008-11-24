@@ -128,14 +128,9 @@ end
 class CellsTest < Test::Unit::TestCase
   include CellsTestMethods
   
-  # normally #possible_cell_paths points to "app/cells" or, with engines, additionally
-  # to "vendor/plugins/*/app/cells".
-  Cell::TemplateFinder.class_eval do
-    def possible_cell_paths
-      File.dirname(__FILE__) + '/cells'
-    end
-  end
-
+  Cell::Base.view_paths << "#{RAILS_ROOT}/vendor/plugins/cells/test/cells"
+  Cell::View.warn_cache_misses = true
+  
 
   def test_controller_render_methods
     get :call_render_cell_with_strings  # render_cell("test", "state")

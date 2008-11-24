@@ -30,3 +30,10 @@ require 'action_view_extensions'
 ActionController::Base.class_eval do
   include Cell::ControllerMethods
 end
+
+puts "cells init.rb is executed"
+puts "right before initializer::load_view_paths"
+#Cell::Base.view_paths=(["#{RAILS_ROOT}/vendor/plugins/cells/test/cells"])
+Cell::Base.view_paths=(["#{RAILS_ROOT}/app/cells"])
+Cell::Base.view_paths.reload!
+### TODO: add engine paths.

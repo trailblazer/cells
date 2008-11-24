@@ -199,47 +199,36 @@ module Cell
     # Render the view belonging to the given state.  This can be called
     # from other states as well, when you need to render the same view file
     # from two states.
+    @@view_paths = nil
+    def self.view_paths=(value)
+      @@view_paths = ActionView::Base.process_view_paths(value)
+    end
+    cattr_reader :view_paths
+      
     def render_view_for_state(state)
-      Cell::View.warn_cache_misses = true
       view_class  = Class.new(Cell::View)
+      action_view = view_class.new(@@view_paths, {}, @controller)
       
-      ### DISCUSS: we don't need app/views/ here.
-      cell_view_paths = ["#{RAILS_ROOT}/vendor/plugins/cells/test/cells"]
-      
-      action_view = view_class.new(cell_view_paths, {}, @controller)
-      ### TODO: cache cell_view_paths in production mode.
       # Make helpers and instance vars available
       include_helpers_in_class(view_class)
       
-      assigns = {}
-      (self.instance_variables - ivars_to_ignore).each do |k|
-       assigns[k[1..-1]] = instance_variable_get(k)
-      end
-      
-      action_view.assigns = assigns
-      
-      
-
-      
+      action_view.assigns = assigns_for_view
       
       
       template = find_family_view_for_state(state, action_view)
-      ### TODO: cache family_view for this cell_name/state in production mode.
+      ### TODO: cache family_view for this cell_name/state in production mode,
+      ###   so we can save the call to possible_paths_for_state.
       
       
       
+      ### DISCUSS: throw exception?
       if template.nil?
-        return "ATTENTION: cell view for #{cell_name}##{state} is not readable/existing.
-                Further on, your cell method did not return a String." end
-
-      
-      begin
-        action_view.render(:file => template)
-      rescue ActionView::MissingTemplate
-        ### TODO: introduce error method.
         return "ATTENTION: cell view for #{cell_name}##{state} is not readable/existing.
                 Further on, your cell method did not return a String."
       end
+
+      
+      action_view.render(:file => template)      
     end
     
     # Returns ActionView::Template on success.
@@ -261,7 +250,6 @@ module Cell
       end
       
       self.class.find_class_view_for_state(state).reverse!
-      #find_class_view_for_state(state).reverse!
     end
     # Find the file that belongs to the state.  This first tries the cell's
     # <tt>#view_for_state</tt> method and if that returns a true value, it
@@ -310,7 +298,15 @@ module Cell
     def self.view_for_state(state)
       "#{cell_name}/#{state}"
     end
-
+    
+    def assigns_for_view
+      assigns = {}
+      (self.instance_variables - ivars_to_ignore).each do |k|
+       assigns[k[1..-1]] = instance_variable_get(k)
+      end
+      assigns
+    end
+      
     # Get the name of this cell's class as an underscored string,
     # with _cell removed.
     #
