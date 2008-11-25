@@ -10,7 +10,7 @@ class CellsTestOneCell < Cell::Base
 
   def view_for_state(state)
     if state.to_s == 'instance_view'
-      return File.dirname(__FILE__) + '/cells_test_one/renamed_instance_view.html.erb'
+      return 'cells_test_one/renamed_instance_view'
     end
   end
 

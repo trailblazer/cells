@@ -196,18 +196,21 @@ module Cell
     ###   better include it in boot.rb or so.
     include Caching
     
-    # Render the view belonging to the given state.  This can be called
-    # from other states as well, when you need to render the same view file
-    # from two states.
+    
     @@view_paths = nil
     def self.view_paths=(value)
+      # this just creates a ActionView::PathSet.
       @@view_paths = ActionView::Base.process_view_paths(value)
     end
     cattr_reader :view_paths
-      
+    
+    # Render the view belonging to the given state.  This can be called
+    # from other states as well, when you need to render the same view file
+    # from two states.
     def render_view_for_state(state)
       view_class  = Class.new(Cell::View)
       action_view = view_class.new(@@view_paths, {}, @controller)
+      action_view.cell = self ### DISCUSS: is this needed?
       
       # Make helpers and instance vars available
       include_helpers_in_class(view_class)

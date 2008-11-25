@@ -73,6 +73,9 @@ class MyTestCell < Cell::Base
   def view_containing_partial
   end
   
+  def view_containing_partial_without_cell_name
+  end
+  
   def view_containing_nonexistant_partial
   end
   
@@ -200,6 +203,12 @@ class CellsTest < Test::Unit::TestCase
   def test_render_state_with_partial
     cell = MyTestCell.new(@controller)
     c = cell.render_state(:view_containing_partial)
+    assert_selekt c, "#partialContained>#partial"
+  end
+  
+  def test_render_state_with_partial_without_cell_name
+    cell = MyTestCell.new(@controller)
+    c = cell.render_state(:view_containing_partial_without_cell_name)
     assert_selekt c, "#partialContained>#partial"
   end
   
