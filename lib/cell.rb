@@ -210,7 +210,9 @@ module Cell
     def render_view_for_state(state)
       view_class  = Class.new(Cell::View)
       action_view = view_class.new(@@view_paths, {}, @controller)
-      action_view.cell = self ### DISCUSS: is this needed?
+      action_view.cell = self
+      ### FIXME/DISCUSS: 
+      action_view.template_format = :html # otherwise it's set to :js in AJAX context!
       
       # Make helpers and instance vars available
       include_helpers_in_class(view_class)

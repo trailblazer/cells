@@ -6,6 +6,7 @@ module Cell
     
     def try_picking_template_for_path(template_path)
       puts "checking #{template_path}"
+      # partly stolen from ActionView::Base#_pick_template.
         
       path = template_path.sub(/^\//, '')
       if m = path.match(/(.*)\.(\w+)$/)
