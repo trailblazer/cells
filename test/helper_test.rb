@@ -24,7 +24,6 @@ class CellsHelperTest < Test::Unit::TestCase
   # currently HelperUsingCellHelper resides in app/helpers/, which sucks.
   def test_auto_helper
     return unless Cell.engines_available?
-    puts "XXX test_auto_helper"
     cell = HelperUsingCell.new(@controller)
 
     content = cell.render_state(:state_with_automatic_helper_invocation)
@@ -118,10 +117,6 @@ class HelperUsingCell < Cell::Base
   end
   
   def state_using_application_helper
-  end
-  
-  def view_for_state_2brm(state)
-    CellsTestMethods.views_path + "#{state}.html.erb"
   end
 
 protected

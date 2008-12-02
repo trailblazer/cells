@@ -204,9 +204,7 @@ module Cell
     end
     cattr_reader :view_paths
     
-    # Render the view belonging to the given state.  This can be called
-    # from other states as well, when you need to render the same view file
-    # from two states.
+    # Render the view belonging to the given state.
     def render_view_for_state(state)
       view_class  = Class.new(Cell::View)
       action_view = view_class.new(@@view_paths, {}, @controller)
@@ -236,7 +234,10 @@ module Cell
       action_view.render(:file => template)      
     end
     
-    # Returns ActionView::Template on success.
+    # Climbs up the inheritance hierarchy of the Cell, looking for a view 
+    # for the current <tt>state</tt> in each level.
+    # As soon as a view file is found it is returned as an ActionView::Template 
+    # instance.
     def find_family_view_for_state(state, action_view)
       possible_paths_for_state(state).each do |template_path|
         if view = action_view.try_picking_template_for_path(template_path)
@@ -248,15 +249,7 @@ module Cell
     end
     
     
-    # find view, instance -> hierarchy
-    def possible_paths_for_state(state)
-      if view_file = view_for_state(state) # instance.
-        return [view_file]
-      end
-      
-      self.class.find_class_view_for_state(state).reverse!
-    end
-    # Find the file that belongs to the state.  This first tries the cell's
+    # Find possible files that belong to the state.  This first tries the cell's
     # <tt>#view_for_state</tt> method and if that returns a true value, it
     # will accept that value as a string and interpret it as a pathname for
     # the view file. If it returns a falsy value, it will call the Cell's class
@@ -264,17 +257,16 @@ module Cell
     #
     # You can override the Cell::Base#view_for_state method for a particular
     # cell if you wish to make it decide dynamically what file to render.
-    ### 2BRM:
-    def find_view_file_for_state_2brm(action_view, state)
+    def possible_paths_for_state(state)
       if view_file = view_for_state(state) # instance.
         return [view_file]
       end
-
-      return self.class.find_class_view_for_state(action_view, state) << view_file
+      
+      self.class.find_class_view_for_state(state).reverse!
     end
     
     
-    # Find the template for a cell's current state.  It tries to find a
+    # Find a possible template for a cell's current state.  It tries to find a
     # template file with the name of the state under a subdirectory
     # with the name of the cell under the <tt>app/cells</tt> directory.
     # If this file cannot be found, it will try to call this method on
@@ -304,6 +296,7 @@ module Cell
       "#{cell_name}/#{state}"
     end
     
+    # Instance variables that are to be copied to the ActionView template.
     def assigns_for_view
       assigns = {}
       (self.instance_variables - ivars_to_ignore).each do |k|

@@ -290,7 +290,7 @@ class CellsTest < Test::Unit::TestCase
   # currently UnknownCell resides in app/cells/, which sucks.
   def test_class_autoloading
     return unless Cell.engines_available?
-    Dependencies.log_activity = true
+    #Dependencies.log_activity = true
 
     assert UnknownCell.new(@controller, nil) 
 
