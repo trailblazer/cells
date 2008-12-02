@@ -31,11 +31,21 @@ ActionController::Base.class_eval do
   include Cell::ControllerMethods
 end
 
-Cell::Base.view_paths=(["#{RAILS_ROOT}/app/cells"])
-### TODO: add engine paths.
-# Engines.plugins.each {|plugin| puts plugin}
 
-# calls Dispatcher#to_prepare
+Cell::Base.view_paths=(["#{RAILS_ROOT}/app/cells"])
+
+# add engine cells paths, once at server start.
+config.after_initialize do
+  Engines.plugins.each do |plugin|
+    engine_cells_dir = File.join([plugin.directory, "app/cells"])
+    Cell::Base.view_paths << engine_cells_dir if File.exists?(engine_cells_dir)
+  end
+end
+
+
+# calls Dispatcher#to_prepare, so the views get reloaded after each request 
+# in development mode.
 config.to_prepare do
   Cell::Base.view_paths.reload!
 end
+
