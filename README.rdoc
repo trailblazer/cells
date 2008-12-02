@@ -92,7 +92,7 @@ Add the following line to your <tt>environment.rb</tt> file:
 
   require File.join(File.dirname(__FILE__), '../vendor/plugins/cells/boot')
 
-This release is tested and runs with Rails 2.1 and 2.1.1.
+This release is tested and runs with Rails 2.2.
 
 
 === Engines
@@ -106,9 +106,8 @@ If you define <tt>config.plugins</tt> in your environment, make sure
 to put all plugins that depend on Cells after Cells, and Cells after
 Engines if you're using Engines.
 
-Cells will only work with trunk Engines or tags/rel_2.1.0
-(or a later branch or tag).  This tag is available at:
-http://svn.rails-engines.org/engines/tags/rel_2.1.0
+Cells will only work with Engines tagged 2.2.2. This tag is available 
+at: http://github.com/lazyatom/engines/tree/2.2.2
 
 
 = Documentation
