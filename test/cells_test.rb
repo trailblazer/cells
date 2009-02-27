@@ -132,7 +132,8 @@ class CellsTest < Test::Unit::TestCase
   include CellsTestMethods
   
   Cell::Base.view_paths << "#{RAILS_ROOT}/vendor/plugins/cells/test/cells"
-  Cell::View.warn_cache_misses = true
+  ### FIXME:
+  #Cell::View.warn_cache_misses = true
   
 
   def test_controller_render_methods

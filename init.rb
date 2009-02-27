@@ -1,4 +1,4 @@
-# Copyright (c) 2007-2008 Nick Sutterer <apotonick@gmail.com>
+# Copyright (c) 2007-2009 Nick Sutterer <apotonick@gmail.com>
 # Copyright (c) 2007-2008 Solide ICT by Peter Bex <peter.bex@solide-ict.nl> 
 # and Bob Leers <bleers@fastmail.fm>
 # Some portions and ideas stolen ruthlessly from Ezra Zygmuntowicz <ezmobius@gmail.com>
@@ -32,6 +32,7 @@ ActionController::Base.class_eval do
 end
 
 # add APP_CELLS_PATH to $LOAD_PATH:
+### DISCUSS: look at Loader#add_plugin_load_paths
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT+"/app/cells"
 
 # add APP_CELLS_PATH to view_paths:
@@ -39,25 +40,28 @@ Cell::Base.view_paths=([RAILS_ROOT+"/app/cells"])
 
 
 # add engine-cells view/code paths, once at server start.
-if Cell.engines_available?
-  config.after_initialize do
-    Engines.plugins.each do |plugin|
-      engine_cells_dir = File.join([plugin.directory, "app/cells"])
-      
-      # add view paths:
-      if File.exists?(engine_cells_dir)
-        Cell::Base.view_paths << engine_cells_dir 
-        # add code path:
-        ActiveSupport::Dependencies.load_paths << engine_cells_dir
-      end
+config.after_initialize do
+    #puts config.plugins.inspect
+    
+  config.plugins.each do |plugin|
+    plugin = Plugin.new(plugin.to_s) ### FIXME: how do we get the loaded_plugins object list?
+    next unless plugin.engine?
+    
+    engine_cells_dir = File.join([plugin.directory, "app/cells"])
+
+    # add view paths:
+    if File.exists?(engine_cells_dir)
+      Cell::Base.view_paths << engine_cells_dir 
+      # add code path:
+      ### DISCUSS: look at Loader#add_plugin_load_paths
+      ActiveSupport::Dependencies.load_paths << engine_cells_dir
     end
   end
-  
 end
 
 # calls Dispatcher#to_prepare, so the views get reloaded after each request 
 # in development mode.
 config.to_prepare do
-  Cell::Base.view_paths.reload!
+  ###@ Cell::Base.view_paths.reload!
 end
 

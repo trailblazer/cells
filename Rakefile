@@ -21,3 +21,5 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('init.rb')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+# rdoc -m "README.rdoc" init.rb lib/ generators/ README.rdoc

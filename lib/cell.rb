@@ -221,7 +221,7 @@ module Cell
       template = find_family_view_for_state(state, action_view)
       ### TODO: cache family_view for this cell_name/state in production mode,
       ###   so we can save the call to possible_paths_for_state.
-      
+      puts "found template: #{template.inspect}"
       
       
       ### DISCUSS: throw exception?
