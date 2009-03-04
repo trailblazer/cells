@@ -204,7 +204,10 @@ module Cell
     end
     cattr_reader :view_paths
     
-    # Render the view belonging to the given state.
+    
+    # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
+    # if it can not find one of the requested view template. Note that this behaviour was
+    # introduced in cells 2.3 and replaces the former warning message.
     def render_view_for_state(state)
       view_class  = Class.new(Cell::View)
       action_view = view_class.new(@@view_paths, {}, @controller)
@@ -221,15 +224,6 @@ module Cell
       template = find_family_view_for_state(state, action_view)
       ### TODO: cache family_view for this cell_name/state in production mode,
       ###   so we can save the call to possible_paths_for_state.
-      puts "found template: #{template.inspect}"
-      
-      
-      ### DISCUSS: throw exception?
-      if template.nil?
-        return "ATTENTION: cell view for #{cell_name}##{state} is not readable/existing.
-                Further on, your cell method did not return a String."
-      end
-
       
       action_view.render(:file => template)      
     end
@@ -239,13 +233,20 @@ module Cell
     # As soon as a view file is found it is returned as an ActionView::Template 
     # instance.
     def find_family_view_for_state(state, action_view)
+      missing_template_exception = nil
+      
       possible_paths_for_state(state).each do |template_path|
-        if view = action_view.try_picking_template_for_path(template_path)
-          return view
+        # we need to catch MissingTemplate, since we want to try for all possible
+        # family views.
+        begin
+          if view = action_view.try_picking_template_for_path(template_path)
+            return view
+          end
+        rescue ActionView::MissingTemplate => missing_template_exception
         end
       end
       
-      nil
+      raise missing_template_exception
     end
     
     

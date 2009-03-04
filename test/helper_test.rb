@@ -6,7 +6,7 @@ require File.dirname(__FILE__) + '/cells/test_cell'
 #require File.dirname(__FILE__) + '/helpers/helper_using_cell_helper'
 
 
-class CellsHelperTest < Test::Unit::TestCase
+class CellsHelperTest < ActionController::TestCase
   include CellsTestMethods
   
   def self.path_to_test_views

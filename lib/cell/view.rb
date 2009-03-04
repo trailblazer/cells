@@ -6,6 +6,7 @@ module Cell
     
     def try_picking_template_for_path(template_path)
       ### DISCUSS: how to pass template_format?
+      ### FIXME: rails 2.3 will throw a MissingTemplate here.
       if template = self.view_paths.find_template(template_path, template_format)
         return template
       end

@@ -9,25 +9,6 @@ require File.dirname(__FILE__) + '/cells/simple_cell'
 require File.dirname(__FILE__) + '/cells/test_cell'
 
 
-class MyTPLHandler
-  def initialize(view)
-    @view = view
-  end
-
-  def render(template, local_assigns={})
-    template.source
-  end
-  
-  # We only test whether this MyTPLHandler can render. Don't finalize i.e. compile it.
-  def compilable?
-    false
-  end
-end
-
-### TODO: test custom template handlers:
-###@ ActionView::Template.register_default_template_handler("mytpl", MyTPLHandler)
-
-
 module Some
   class Cell < Cell::Base
   end
@@ -128,7 +109,7 @@ module ReallyModule
 end
 
 
-class CellsTest < Test::Unit::TestCase
+class CellsTest < ActionController::TestCase
   include CellsTestMethods
   
   Cell::Base.view_paths << "#{RAILS_ROOT}/vendor/plugins/cells/test/cells"
@@ -172,13 +153,14 @@ class CellsTest < Test::Unit::TestCase
     assert_selekt c, "#two", "wow"
   end
   
-  # ok
+  
   def test_render_state_with_missing_view
     cell = MyTestCell.new(@controller)
     ### TODO: production <-> development/test context.
-    c = cell.render_state(:missing_view)
-
-    assert_match /^ATTENTION/, c
+    
+    assert_raises ActionView::MissingTemplate do
+      c = cell.render_state(:missing_view)
+    end
   end
   
   
@@ -256,14 +238,6 @@ class CellsTest < Test::Unit::TestCase
     assert_selekt c, "#renamedInstanceView"
   end
   
-  
-
-  def test_templating_systems
-    simple_cell = SimpleCell.new(@controller, nil)
-    simple_view = simple_cell.render_state(:two_templates_state)
-
-    assert_match /Written using my own spiffy templating system/, simple_view
-  end
 
   ### API test (unit) -----------------------------------------------------------
   def test_cell_name
@@ -310,20 +284,19 @@ class CellsTest < Test::Unit::TestCase
   end
 
   # Thanks to Fran Pena who made us aware of this bug and contributed a patch.
-  def test_gettext_support
-    ### FIXME: how to set "en" as gettext's default language?
+  def test_i18n_support
+    orig_locale = I18n.locale
+    I18n.locale = :en
     
     t = MyTestCell.new(@controller)
     c = t.render_state(:view_with_explicit_english_translation)
     
-    # the view "view_with_explicit_english_translation_en" exists, check if
-    # gettext/rails found it:
-    if Object.const_defined?(:GetText)
-      assert_selekt c, "#defaultTranslation", 0
-      assert_selekt c, "#explicitEnglishTranslation"
-    else
-      assert_selekt c, "#defaultTranslation"
-    end
+    I18n.locale = orig_locale   # cleanup before we mess up!
+    
+    # the view "view_with_explicit_english_translation.en" exists, check if
+    # rails' i18n found it:
+    assert_selekt c, "#defaultTranslation", 0
+    assert_selekt c, "#explicitEnglishTranslation"
   end
   
   
