@@ -241,16 +241,9 @@ class CellsTest < ActionController::TestCase
 
   ### API test (unit) -----------------------------------------------------------
   def test_cell_name
-    cell_one = CellsTestOneCell.new(@controller, nil)
+    cell_one = CellsTestOneCell.new(@controller)
 
     assert_equal cell_one.cell_name, "cells_test_one"
-    assert_equal CellsTestOneCell.cell_name, "cells_test_one"
-  end
-
-  def test_cell_name_set_in_constructor
-    cell_one = CellsTestOneCell.new(@controller, "sophisticated_extra_name")
-
-    assert_equal cell_one.cell_name, "sophisticated_extra_name"
     assert_equal CellsTestOneCell.cell_name, "cells_test_one"
   end
 
@@ -262,18 +255,6 @@ class CellsTest < ActionController::TestCase
     assert_equal Cell::Base.class_from_cell_name("cells_test_one"), CellsTestOneCell
   end
 
-  # currently UnknownCell resides in app/cells/, which sucks.
-  def test_class_autoloading
-    return unless Cell.engines_available?
-    #Dependencies.log_activity = true
-
-    assert UnknownCell.new(@controller, nil) 
-
-
-    assert_kind_of Module, ReallyModule
-    assert_kind_of Class, ReallyModule::NestedCell
-    #Really::NestedCell.new(@controller, nil)
-  end
 
   def test_new_directory_hierarchy
     cell = ReallyModule::NestedCell.new(@controller)
@@ -300,12 +281,18 @@ class CellsTest < ActionController::TestCase
   end
   
   
-  def test_modified_view_finding_for_testing
-    
-    
+  def test_modified_view_finding_for_testing    
     t = MyTestCell.new(@controller)
     c = t.render_state(:view_in_local_test_views_dir)
     assert_selekt c, "#localView"
+  end
+  
+  
+  def test_params_in_a_cell_state
+    @controller.params = {:my_param => "value"}
+    t = MyTestCell.new(@controller)
+    c = t.render_state(:state_using_params)
+    assert_equal c, "value"
   end
   
   ### functional tests: ---------------------------------------------------------

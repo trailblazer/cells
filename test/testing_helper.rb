@@ -10,6 +10,7 @@ module CellsTestMethods
     @response   = ActionController::TestResponse.new
     @controller.request = @request
     @controller.response = @response
+    @controller.params = {}
   end
   
   def self.views_path

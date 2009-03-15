@@ -1,7 +1,8 @@
-module Cells
-  # The Cells plugin defines a number of new methods for ActionView::Base.  These allow
-  # you to render cells from within normal controller views as well as from Cell state views.
-  class ActionView
+# The Cells plugin defines a number of new methods for ActionView::Base.  These allow
+# you to render cells from within normal controller views as well as from Cell state views.
+module Cell
+
+  module ActionView
     # Let the ActionView class know that this is being instantiated for cells.
     # This is a hack, but it is required because the assumption that views are
     # located in a 'views' directory is pretty much hardcoded in Rails.
@@ -39,12 +40,12 @@ module Cells
   
   # These ControllerMethods are automatically added to all Controllers when
   # the cells plugin is loaded.
-  module ApplicationController
+  module ActionController
 
     # Equivalent to ActionController#render_to_string, except it renders a cell
     # rather than a regular templates.
     def render_cell_to_string(name, state, opts={})
-      cell = Base.create_cell_for(self, name, opts)
+      cell = Cell::Base.create_cell_for(self, name, opts)
 
       return cell.render_state(state)
     end

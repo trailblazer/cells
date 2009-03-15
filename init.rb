@@ -23,28 +23,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'cell'
-require 'cell_extensions'
-require 'action_view_extensions'
+# load the baby:
+Cell::Base
+require 'rails_extensions'
 
-ActionController::Base.class_eval do
-  include Cell::ControllerMethods
-end
+
+ActionController::Base.class_eval do  include Cell::ActionController end
+ActionView::Base.class_eval       do  include Cell::ActionView end
+
 
 # add APP_CELLS_PATH to $LOAD_PATH:
 ### DISCUSS: look at Loader#add_plugin_load_paths
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT+"/app/cells"
-
 # add APP_CELLS_PATH to view_paths:
 Cell::Base.view_paths=([RAILS_ROOT+"/app/cells"])
 
 
+
+
 # add engine-cells view/code paths, once at server start.
+# thanks to Tore Torell for making me aware of the initializer instance here:
 config.after_initialize do
-    #puts config.plugins.inspect
-    
-  config.plugins.each do |plugin|
-    plugin = Plugin.new(plugin.to_s) ### FIXME: how do we get the loaded_plugins object list?
+  initializer.loaded_plugins.each do |plugin|
     next unless plugin.engine?
     
     engine_cells_dir = File.join([plugin.directory, "app/cells"])
@@ -64,4 +64,5 @@ end
 config.to_prepare do
   ###@ Cell::Base.view_paths.reload!
 end
+
 

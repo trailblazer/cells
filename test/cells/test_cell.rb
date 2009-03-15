@@ -27,4 +27,8 @@ class MyTestCell < Cell::Base
   def state_with_not_included_helper_method
   end
   
+  
+  def state_using_params
+    params[:my_param].to_s
+  end
 end

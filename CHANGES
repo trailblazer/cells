@@ -1,3 +1,12 @@
+- 2.3
+  * Cell::Base#new(controller, opts={})
+    We got rid of the second argument cell_name, since it was completely useless.
+  * when a state view couldn't be found there's no longer a warning message, but an exception.
+  * moved Cell::Base to lib/cell/base.rb
+  * moved Rails extension code to lib/rails_extensions.rb
+  * removed all the boot code since we don't need it anymore
+  
+
 - trunk
   * Remove dependency on Engines
   * Improved support for helpers
