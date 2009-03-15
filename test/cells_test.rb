@@ -266,19 +266,13 @@ class CellsTest < Test::Unit::TestCase
 
   ### API test (unit) -----------------------------------------------------------
   def test_cell_name
-    cell_one = CellsTestOneCell.new(@controller, nil)
+    cell_one = CellsTestOneCell.new(@controller)
 
     assert_equal cell_one.cell_name, "cells_test_one"
     assert_equal CellsTestOneCell.cell_name, "cells_test_one"
   end
-
-  def test_cell_name_set_in_constructor
-    cell_one = CellsTestOneCell.new(@controller, "sophisticated_extra_name")
-
-    assert_equal cell_one.cell_name, "sophisticated_extra_name"
-    assert_equal CellsTestOneCell.cell_name, "cells_test_one"
-  end
-
+  
+  
   def test_cell_name_suffix
     assert_equal Cell::Base.name_suffix, "_cell"
   end

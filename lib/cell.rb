@@ -138,6 +138,7 @@ module Cell
   class Base
     attr_accessor :controller
     attr_accessor :state_name
+    attr_reader   :cell_name
     
     # Forgery protection for forms
     cattr_accessor :request_forgery_protection_token
@@ -145,32 +146,16 @@ module Cell
     self.allow_forgery_protection = true
     
     
+    delegate :params, :session, :request, :to => :controller
     
     
-    def initialize(controller, cell_name=nil, options={})
+    def initialize(controller, options={})
       @controller = controller
-      @cell_name  = cell_name ### TODO: currently we don't use this.
+      @cell_name  = self.class.cell_name
       @opts       = options
       self.allow_forgery_protection = true
     end
 
-    # Access the current controller's params hash. This is only to be used
-    # in exceptional situations because it greatly increases coupling between
-    # the Cell and the Controller from which it is rendered.
-    def params
-      @controller.params
-    end
-
-    # Access the session
-    def session
-      @controller.session
-    end
-
-    # Access the current controller's request object. This should only be
-    # used when you really need it.
-    def request
-      @controller.request
-    end
 
     # Render the given state.  You can pass the name as either a symbol or
     # a string.
@@ -315,19 +300,6 @@ module Cell
       self.name.underscore.sub(/#{name_suffix}/, '')
     end
 
-    # Get the name of the current cell as a string.
-    #
-    # Example:
-    #  my_user_cell.class.name
-    #  => "UserCell"
-    #  my_user_cell.cell_name
-    #  => "user"
-    def cell_name
-      # XXX Why is this needed?  Can there be cells which have a different
-      # @cell_name from their class's name?
-      @cell_name || self.class.cell_name
-    end
-
     # The name suffix of a cell.  Always '_cell'.
     def self.name_suffix
       # XXX Why is this needed?  Seems like superfluous "abstraction"
@@ -394,7 +366,7 @@ module Cell
     # Creates a cell instance of the class <tt>name</tt>Cell, passing through 
     # <tt>opts</tt>.
     def self.create_cell_for(controller, name, opts={})
-      class_from_cell_name(name).new(controller, name, opts)
+      class_from_cell_name(name).new(controller, opts)
     end
   end
 end
