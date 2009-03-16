@@ -319,14 +319,8 @@ module Cell
     def self.class_from_cell_name(cell_name)
       "#{cell_name}#{name_suffix}".classify.constantize
     end
-
-    # Render the given view file to a string.  This will
-    # make the helpers defined using Cell::Base#helper available
-    # from that view and copy the instance variables from the
-    # Cell to the view.
-    def render_string_from_view(view_file)
-    end
-
+    
+    
     # When passed a copy of the ActionView::Base class, it
     # will mix in all helper classes for this cell in that class.
     def include_helpers_in_class(view_klass)

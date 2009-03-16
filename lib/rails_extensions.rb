@@ -3,11 +3,6 @@
 module Cell
 
   module ActionView
-    # Let the ActionView class know that this is being instantiated for cells.
-    # This is a hack, but it is required because the assumption that views are
-    # located in a 'views' directory is pretty much hardcoded in Rails.
-    attr_accessor :for_cells
-
     # Call a cell state and return its rendered view.
     #
     # ERB example:

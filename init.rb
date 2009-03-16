@@ -50,7 +50,7 @@ config.after_initialize do
     
     # if a path is in +load_once_path+ it won't be reloaded between requests.
     unless config.reload_plugins?
-      ActiveSupport::Dependencies.load_once_paths << path
+      ActiveSupport::Dependencies.load_once_paths << engine_cells_dir
     end
   end
 end

@@ -88,27 +88,14 @@ To install, simply cd to your rails app directory and run
 
   script/plugin install git://github.com/apotonick/cells.git
   
-Add the following line to your <tt>environment.rb</tt> file:
-
-  require File.join(File.dirname(__FILE__), '../vendor/plugins/cells/boot')
-
-This release is tested and runs with Rails 2.2.
+This release is tested and runs with Rails 2.3.
 
 
 === Engines
 
-If you're using the Engines plugin from http://www.rails-engines.org,
-you should put the cells boot file after the engines one.  If you're
-just using Cells without Engines, you can put it right after Rails's
-own <tt>boot.rb</tt> line.
-
-If you define <tt>config.plugins</tt> in your environment, make sure
-to put all plugins that depend on Cells after Cells, and Cells after
-Engines if you're using Engines.
-
-Cells will only work with Engines tagged 2.2.2. This tag is available 
-at: http://github.com/lazyatom/engines/tree/2.2.2
-
+You can even put cells in plugins and thus maximize the modularity of your code.
+As soon as the plugin has an app/cells/ directory your cells will be added automatically
+and can be used everywhere in your application.
 
 = Documentation
 
@@ -120,7 +107,7 @@ tutorial.
 
 = LICENSE
 
-Copyright (c) 2007-2008, Nick Sutterer
+Copyright (c) 2007-2009, Nick Sutterer
 
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
