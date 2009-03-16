@@ -246,7 +246,7 @@ class CellsTest < ActionController::TestCase
     assert_equal cell_one.cell_name, "cells_test_one"
     assert_equal CellsTestOneCell.cell_name, "cells_test_one"
   end
-
+  
   def test_cell_name_suffix
     assert_equal Cell::Base.name_suffix, "_cell"
   end
