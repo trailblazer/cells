@@ -32,37 +32,25 @@ ActionController::Base.class_eval do  include Cell::ActionController end
 ActionView::Base.class_eval       do  include Cell::ActionView end
 
 
-# add APP_CELLS_PATH to $LOAD_PATH:
-### DISCUSS: look at Loader#add_plugin_load_paths
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT+"/app/cells"
-# add APP_CELLS_PATH to view_paths:
 Cell::Base.view_paths=([RAILS_ROOT+"/app/cells"])
 
 
-
-
-# add engine-cells view/code paths, once at server start.
+# process cells in plugins ("engine-cells").
 # thanks to Tore Torell for making me aware of the initializer instance here:
 config.after_initialize do
   initializer.loaded_plugins.each do |plugin|
-    next unless plugin.engine?
-    
     engine_cells_dir = File.join([plugin.directory, "app/cells"])
-
-    # add view paths:
-    if File.exists?(engine_cells_dir)
-      Cell::Base.view_paths << engine_cells_dir 
-      # add code path:
-      ### DISCUSS: look at Loader#add_plugin_load_paths
-      ActiveSupport::Dependencies.load_paths << engine_cells_dir
+    next unless plugin.engine?
+    next unless File.exists?(engine_cells_dir)
+    
+    # propagate the view- and code path of this engine-cell:
+    Cell::Base.view_paths << engine_cells_dir 
+    ActiveSupport::Dependencies.load_paths << engine_cells_dir
+    
+    # if a path is in +load_once_path+ it won't be reloaded between requests.
+    unless config.reload_plugins?
+      ActiveSupport::Dependencies.load_once_paths << path
     end
   end
 end
-
-# calls Dispatcher#to_prepare, so the views get reloaded after each request 
-# in development mode.
-config.to_prepare do
-  ###@ Cell::Base.view_paths.reload!
-end
-
-
