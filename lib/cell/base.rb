@@ -137,7 +137,7 @@ module Cell
   # If gettext is set to DE_de, the latter view will be chosen.
   class Base
     attr_accessor :controller
-    attr_accessor :state_name
+    attr_reader   :state_name
     attr_reader   :cell_name
     
     cattr_reader :view_paths
@@ -162,15 +162,16 @@ module Cell
     # Render the given state.  You can pass the name as either a symbol or
     # a string.
     def render_state(state)
-      @cell = self
-      #state = state.to_s ### DISCUSS: why convert?
-      self.state_name = state
-
       content = dispatch_state(state)
-
+      
       return content if content.kind_of? String
-
-      return self.render_view_for_state(state)
+      
+      
+      ### DISCUSS: are these vars really needed in state views?
+      @cell       = self
+      @state_name = state
+      
+      render_view_for_state(state)
     end
     
     # Call the state method.
