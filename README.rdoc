@@ -81,6 +81,28 @@ versions or to instruct re-rendering.
 This would result in re-rendering the state <tt>:my_cached_state</tt> only if the
 version of the user instance changes. 
 
+= Compatibility with other rails plugins
+
+Cells uses the rails rendering code and thus stays completely compatible with (most?) plugins.
+
+=== I18N
+
+All of Rails' new i18n features work with Cells. For example
+
+  t("Translate me, I'm a lonesome string in a cell state view!")
+  
+from the i18n helper can also be used in cell views. 
+
+=== Haml
+
+Alternative templating engines will work seamlessly with Cells, too. Usem the markup language 
+of your choice (.erb, .haml, ...) to write your cell views.
+
+=== Engines
+
+You can even put cells in plugins and thus maximize the modularity of your code.
+As soon as the plugin has an app/cells/ directory your cells will be added automatically
+and can be used everywhere in your application.
 
 = Installation
 
@@ -90,12 +112,6 @@ To install, simply cd to your rails app directory and run
   
 This release is tested and runs with Rails 2.3.
 
-
-=== Engines
-
-You can even put cells in plugins and thus maximize the modularity of your code.
-As soon as the plugin has an app/cells/ directory your cells will be added automatically
-and can be used everywhere in your application.
 
 = Documentation
 

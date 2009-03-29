@@ -30,6 +30,7 @@ require 'rails_extensions'
 
 ActionController::Base.class_eval do  include Cell::ActionController end
 ActionView::Base.class_eval       do  include Cell::ActionView end
+Cell::Base.class_eval             do  include Cell::Caching end
 
 
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT+"/app/cells"

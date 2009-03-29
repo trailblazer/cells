@@ -180,10 +180,6 @@ module Cell
     end
     
     
-    ### FIXME: we alias_method_chain in Caching, so we need to include it here. sucks.
-    ###   better include it in boot.rb or so.
-    include Caching
-    
     
     @@view_paths = nil
     def self.view_paths=(value)
@@ -197,7 +193,7 @@ module Cell
     # if it can not find one of the requested view template. Note that this behaviour was
     # introduced in cells 2.3 and replaces the former warning message.
     def render_view_for_state(state)
-      ### DISCUSS: create Cell::View directly? maybe we can fix a gettext problem this way?
+      ### DISCUSS: create Cell::View directly? are there still problematic class vars in View::Base 
       view_class  = Class.new(Cell::View)
       action_view = view_class.new(@@view_paths, {}, @controller)
       action_view.cell = self
@@ -332,7 +328,7 @@ module Cell
     # Defines the instance variables that should <em>not</em> be copied to the 
     # View instance.
     def ivars_to_ignore
-      ['@controller', '@_already_rendered']
+      ['@controller']
     end
     
     
