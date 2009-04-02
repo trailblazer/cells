@@ -12,6 +12,7 @@ class CellsCachingTest < Test::Unit::TestCase
     super
     @controller.session= {}
     @cc = CachingCell.new(@controller)
+    @c2 = AnotherCachingCell.new(@controller)
   end
   
   def cache_configured?; ActionController::Base.cache_configured?; end
@@ -43,9 +44,10 @@ class CellsCachingTest < Test::Unit::TestCase
   end
   
   def test_cache_key
-    assert_equal "cells/CachingCell/some_state", @cc.cache_key(:some_state)
-    assert_equal "cells/CachingCell/some_state/param=9", @cc.cache_key(:some_state, :param => 9)
-    assert_equal "cells/CachingCell/some_state/a=1/b=2", @cc.cache_key(:some_state, :a => 1, :b => 2)
+    assert_equal "cells/caching/some_state", @cc.cache_key(:some_state)
+    assert_equal @cc.cache_key(:some_state), Cell::Base.cache_key_for(:caching, :some_state)
+    assert_equal "cells/caching/some_state/param=9", @cc.cache_key(:some_state, :param => 9)
+    assert_equal "cells/caching/some_state/a=1/b=2", @cc.cache_key(:some_state, :b => 2, :a => 1)
   end
   
   def test_render_state_without_caching
@@ -93,6 +95,31 @@ class CellsCachingTest < Test::Unit::TestCase
     assert_equal c, "1 should change every third call!"
   end
   
+  def test_caching_with_two_same_named_states
+    c = @cc.render_state(:cheers)
+    assert_equal c, "cheers!"
+    c = @c2.render_state(:cheers)
+    assert_equal c, "prost!"
+    c = @cc.render_state(:cheers)
+    assert_equal c, "cheers!"
+    c = @c2.render_state(:cheers)
+    assert_equal c, "prost!"
+  end
+  
+  def test_expire_cache_key
+    k = @cc.cache_key(:cached_state)
+    @cc.render_state(:cached_state)
+    assert Cell::Base.cache_store.read(k)
+    Cell::Base.expire_cache_key(k)
+    assert ! Cell::Base.cache_store.read(k)
+    
+    # test via ActionController::expire_cell_state, which is called from Sweepers.
+    @cc.render_state(:cached_state)
+    assert Cell::Base.cache_store.read(k)
+    @controller.expire_cell_state(:caching, :cached_state)
+    assert ! Cell::Base.cache_store.read(k)
+  end
+  
 end
 
 class CachingCell < Cell::Base
@@ -130,4 +157,15 @@ class CachingCell < Cell::Base
   #def cached_state_with_symbol_proc
   #  
   #end
+  cache :cheers
+  def cheers
+    "cheers!"
+  end
+end
+
+class AnotherCachingCell < Cell::Base
+  cache :cheers
+  def cheers
+    "prost!"
+  end
 end

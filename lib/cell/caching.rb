@@ -1,8 +1,8 @@
 # To improve performance rendered state views can be cached using Rails' caching
 # mechanism.
 # If this it configured (e.g. using our fast friend memcached) all you have to do is to 
-# tell Cells which state you want to cache. You can further attach a proc for deciding
-# versions or to instruct re-rendering.
+# tell Cells which state you want to cache. You can further attach a proc to expire the 
+# cached view.
 #
 # As always I stole a lot of code, this time from Lance Ivy <cainlevy@gmail.com> and
 # his fine components plugin at http://github.com/cainlevy/components.
@@ -66,6 +66,20 @@ module Cell::Caching
       @cache_store ||= ActionController::Base.cache_store
     end
     
+    
+    def cache_key_for(cell_class, state, args = {}) #:nodoc:
+      key_pieces = [cell_class, state]
+
+      args.collect{|a,b| [a.to_s, b]}.sort.each{ |k,v| key_pieces << "#{k}=#{v}" }
+      key = key_pieces.join('/')
+
+      ActiveSupport::Cache.expand_cache_key(key, :cells)
+    end
+    
+    def expire_cache_key(key, opts=nil)
+      cache_store.delete(key, opts)
+    end
+    
   end
   
   
@@ -113,13 +127,10 @@ module Cell::Caching
   
   
   def cache_key(state, args = {}) #:nodoc:
-    key_pieces = [self.class, state]
-        
-    args.collect{|a,b| [a.to_s, b]}.sort.each{ |k,v| key_pieces << "#{k}=#{v}" }
-    key = key_pieces.join('/')
- 
-    ActiveSupport::Cache.expand_cache_key(key, :cells)
+    self.class.cache_key_for(self.cell_name, state, args)
   end
+  
+  
   
   
   

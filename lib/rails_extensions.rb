@@ -44,6 +44,24 @@ module Cell
 
       return cell.render_state(state)
     end
+    
+    # Expires the cached cell state view, similar to ActionController::expire_fragment.
+    # Usually, this method is used in Sweepers.
+    # 
+    # Example:
+    #
+    #  class ListSweeper < ActionController::Caching::Sweeper
+    #   observe List, Item
+    #
+    #   def after_save(record)
+    #     expire_cell_state :my_listing, :display_list
+    #   end
+    #
+    # will expire the view for state <tt>:display_list</tt> in the cell <tt>MyListingCell</tt>.
+    def expire_cell_state(cell_name, state, opts=nil)
+      key = Cell::Base.cache_key_for(cell_name, state)
+      Cell::Base.expire_cache_key(key, opts)
+    end
   end
   
 end
