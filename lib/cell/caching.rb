@@ -11,12 +11,15 @@ module Cell::Caching
   
   def self.included(base) #:nodoc:
     base.class_eval do
+      # mixin Cell::Base#cache, setup vars and extend #render_state if caching's on.
       extend ClassMethods
-      
-      alias_method_chain :render_state, :caching
       
       cattr_accessor :version_procs
       base.version_procs= {}  ### DISCUSS: what about per-instance caching definitions?
+      
+      return unless ActionController::Base.cache_configured?
+      
+      alias_method_chain :render_state, :caching
     end
     
     
