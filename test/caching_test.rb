@@ -104,6 +104,24 @@ class CellsCachingTest < Test::Unit::TestCase
     c = @c2.render_state(:cheers)
     assert_equal c, "prost!"
   end
+
+  def test_caching_one_of_two_same_named_states
+    @cc = CachingCell.new(@controller, :str => "foo1")
+    c = @cc.render_state(:another_state)
+    assert_equal c, "foo1"
+
+    @c2 = AnotherCachingCell.new(@controller, :str => "foo2")
+    c = @c2.render_state(:another_state)
+    assert_equal c, "foo2"
+
+    @cc = CachingCell.new(@controller, :str => "bar1")
+    c = @cc.render_state(:another_state)
+    assert_equal c, "foo1"
+
+    @c2 = AnotherCachingCell.new(@controller, :str => "bar2")
+    c = @c2.render_state(:another_state)
+    assert_equal c, "bar2"
+  end
   
   def test_expire_cache_key
     k = @cc.cache_key(:cached_state)
@@ -166,11 +184,20 @@ class CachingCell < Cell::Base
   def cheers
     "cheers!"
   end
+
+  cache :another_state
+  def another_state
+    @opts[:str]
+  end
 end
 
 class AnotherCachingCell < Cell::Base
   cache :cheers
   def cheers
     "prost!"
+  end
+
+  def another_state
+    @opts[:str]
   end
 end

@@ -62,7 +62,7 @@ module Cell::Caching
     #--
     def cache(state, version_proc = Proc.new{Hash.new})
       #return unless ActionController::Base.cache_configured?
-      version_procs[state] = version_proc
+      version_procs[state_key(state)] = version_proc
     end
     
     def cache_store #:nodoc:
@@ -83,6 +83,9 @@ module Cell::Caching
       cache_store.delete(key, opts)
     end
     
+    def state_key(state)
+      "#{self.name}:#{state}"
+    end
   end
   
   
@@ -114,10 +117,12 @@ module Cell::Caching
     content
   end
   
+  def state_key(state)
+    self.class.state_key(state)
+  end
   
   def state_cached?(state);           version_proc_for_state(state);  end
-  def version_proc_for_state(state);  self.class.version_procs[state];  end
-  
+  def version_proc_for_state(state);  self.class.version_procs[state_key(state)];  end
   
   # Call the versioning Proc for the respective state.
   def call_version_proc_for_state(state)
