@@ -14,9 +14,6 @@ module Cell::Caching
       # mixin Cell::Base#cache, setup vars and extend #render_state if caching's on.
       extend ClassMethods
       
-      cattr_accessor :version_procs
-      base.version_procs= {}  ### DISCUSS: what about per-instance caching definitions?
-      
       return unless ActionController::Base.cache_configured?
       
       alias_method_chain :render_state, :caching
@@ -60,15 +57,18 @@ module Cell::Caching
     ### DISCUSS: introduce return method #sweep ? so the Proc can explicitly
     ###   delegate re-rendering to the outside.
     #--
+    
     def cache(state, version_proc = Proc.new{Hash.new})
-      #return unless ActionController::Base.cache_configured?
-      version_procs[state_key(state)] = version_proc
+      version_procs[state] = version_proc
+    end
+    
+    def version_procs
+      @version_procs ||= {}
     end
     
     def cache_store #:nodoc:
       @cache_store ||= ActionController::Base.cache_store
     end
-    
     
     def cache_key_for(cell_class, state, args = {}) #:nodoc:
       key_pieces = [cell_class, state]
@@ -81,10 +81,6 @@ module Cell::Caching
     
     def expire_cache_key(key, opts=nil)
       cache_store.delete(key, opts)
-    end
-    
-    def state_key(state)
-      "#{self.name}:#{state}"
     end
   end
   
@@ -117,12 +113,8 @@ module Cell::Caching
     content
   end
   
-  def state_key(state)
-    self.class.state_key(state)
-  end
-  
   def state_cached?(state);           version_proc_for_state(state);  end
-  def version_proc_for_state(state);  self.class.version_procs[state_key(state)];  end
+  def version_proc_for_state(state);  self.class.version_procs[state];  end
   
   # Call the versioning Proc for the respective state.
   def call_version_proc_for_state(state)

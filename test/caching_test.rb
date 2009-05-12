@@ -106,6 +106,9 @@ class CellsCachingTest < Test::Unit::TestCase
   end
 
   def test_caching_one_of_two_same_named_states
+    ### DISCUSS with drogus: the problem was that CachingCell and AnotherCachingCell keep
+    ### overwriting their version_procs, wasn't it? why don't we test that with different
+    ### version_procs in each cell?
     @cc = CachingCell.new(@controller, :str => "foo1")
     c = @cc.render_state(:another_state)
     assert_equal c, "foo1"
