@@ -29,10 +29,48 @@ class CellsCachingTest < Test::Unit::TestCase
     assert ! @cc.state_cached?(:not_cached_state)
   end
   
-  def test_version_proc_for_state
-    assert_kind_of Proc, @cc.version_proc_for_state(:cached_state)
-    assert ! @cc.version_proc_for_state(:not_cached_state)
+  def test_cache_without_options
+    # :cached_state is cached without any options:
+    assert_nil      @cc.version_procs[:cached_state]
+    assert_nil      @cc.version_procs[:not_cached_state]
+    
+    # cache_options must at least return an empty hash for a cached state:
+    assert_equal(  {},   @cc.cache_options[:cached_state])
+    assert_nil      @cc.cache_options[:not_cached_state]
   end
+  
+  
+  def test_cache_with_proc_only
+    CachingCell.class_eval do
+      cache :my_state, Proc.new {}
+    end
+    
+    assert_kind_of  Proc, @cc.version_procs[:my_state]
+    assert_equal(   {},   @cc.cache_options[:my_state])
+  end
+  
+  
+  def test_cache_with_proc_and_cache_options
+    CachingCell.class_eval do
+      cache :my_state, Proc.new{}, {:expires_in => 10.seconds}
+    end
+    
+    assert_kind_of  Proc, @cc.version_procs[:my_state]
+    assert_equal(   {:expires_in => 10.seconds}, @cc.cache_options[:my_state])
+  end
+  
+  
+  def test_cache_with_cache_options_only
+    CachingCell.class_eval do
+      cache :my_state, :expires_in => 10.seconds
+    end
+    
+    assert          @cc.version_procs.has_key?(:my_state)
+    assert_nil      @cc.version_procs[:my_state]
+    assert_equal(   {:expires_in => 10.seconds}, @cc.cache_options[:my_state])
+  end
+  
+  
   
   def test_if_caching_works
     c = @cc.render_state(:cached_state)

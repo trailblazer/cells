@@ -25,13 +25,18 @@ module Cell::Caching
  
  
   module ClassMethods
-    # Activate caching for the state <tt>state</tt>. If <tt>version_proc</tt> is omitted,
+    # Activate caching for the state <tt>state</tt>. If no other options are passed
     # the view will be cached forever.
-    # Otherwise you may either directly pass a Proc or provide a Symbol,
-    # which is treated as an instance method of the cell.
+    #
+    # You may pass a Proc or a Symbol as cache expiration <tt>version_proc</tt>.
     # This method is called every time the state is rendered, and is expected to return a
     # Hash containing the cache key ingredients.
     #
+    # Additional options will be passed directly to the cache store when caching the state.
+    # Useful for simply setting a TTL for a cached state.
+    # Note that you may omit the <tt>version_proc</tt>.
+    # 
+    # 
     # Example:
     #   class CachingCell < Cell::Base
     #     cache :versioned_cached_state, Proc.new{ {:version => 0} }
@@ -52,19 +57,31 @@ module Cell::Caching
     # results in a very specific cache key, for customized caching:
     #   cells/CachingCell/cached_state/user=18/item_id=1
     #
+    # You may also set a TTL only, e.g. when using the memcached store:
+    #
+    #  cache :cached_state, :expires_in => 3.minutes
+    #
+    # Or use both, having a versioning proc <em>and</em> a TTL expiring the state as a fallback
+    # after a certain amount of time.
+    #
+    #  cache :cached_state, Proc.new { {:version => 0} }, :expires_in => 10.minutes
     #--
     ### TODO: implement for string, nil.
     ### DISCUSS: introduce return method #sweep ? so the Proc can explicitly
     ###   delegate re-rendering to the outside.
-    #--
-    
-    def cache(state, version_proc = Proc.new{Hash.new})
-      version_procs[state] = version_proc
+    #--  
+    def cache(state, version_proc=nil, cache_opts={})
+      if version_proc.is_a?(Hash)
+        cache_opts    = version_proc
+        version_proc  = nil
+      end
+      
+      version_procs[state]  = version_proc
+      cache_options[state]  = cache_opts
     end
     
-    def version_procs
-      @version_procs ||= {}
-    end
+    def version_procs;  @version_procs    ||= {}; end
+    def cache_options;  @cache_options    ||= {}; end
     
     def cache_store #:nodoc:
       @cache_store ||= ActionController::Base.cache_store
@@ -97,7 +114,7 @@ module Cell::Caching
       return content 
     end
     # re-render:
-    return write_fragment(key, render_state_without_caching(state))
+    return write_fragment(key, render_state_without_caching(state), cache_options[state])
   end
   
   
@@ -107,32 +124,28 @@ module Cell::Caching
     end
   end
  
-  def write_fragment(key, content, cache_options = nil) #:nodoc:
+  def write_fragment(key, content, cache_opts = nil) #:nodoc:
     @controller.logger.debug "Cell Cache miss: #{key}"
-    self.class.cache_store.write(key, content, cache_options)
+    self.class.cache_store.write(key, content, cache_opts)
     content
   end
   
-  def state_cached?(state);           version_proc_for_state(state);  end
-  def version_proc_for_state(state);  self.class.version_procs[state];  end
-  
   # Call the versioning Proc for the respective state.
   def call_version_proc_for_state(state)
-    version_proc = version_proc_for_state(state)
-    return unless version_proc  ### DISCUSS: what to do if there's simply nothing?
+    version_proc = version_procs[state]
+    
+    return {} unless version_proc # call to #cache was without any args.
     
     return version_proc.call(self) if version_proc.kind_of? Proc
     send(version_proc)
   end
   
-  
   def cache_key(state, args = {}) #:nodoc:
     self.class.cache_key_for(self.cell_name, state, args)
   end
   
-  
-  
-  
-  
-  
+  def state_cached?(state); self.class.version_procs.has_key?(state);  end
+  def version_procs;        self.class.version_procs;  end
+  def cache_options;        self.class.cache_options;  end
+
 end
