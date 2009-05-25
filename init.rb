@@ -34,7 +34,7 @@ Cell::Base.class_eval             do  include Cell::Caching end
 
 
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT+"/app/cells"
-Cell::Base.view_paths=([RAILS_ROOT+"/app/cells"])
+Cell::Base.add_view_path "app/cells"
 
 
 # process cells in plugins ("engine-cells").

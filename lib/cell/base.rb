@@ -136,26 +136,51 @@ module Cell
   #
   # If gettext is set to DE_de, the latter view will be chosen.
   class Base
-    attr_accessor :controller
-    attr_reader   :state_name
-    attr_reader   :cell_name
+    include ActionController::Helpers
+    include ActionController::RequestForgeryProtection
     
-    cattr_reader :view_paths
+    helper ApplicationHelper
     
-    # Forgery protection for forms
-    cattr_accessor :request_forgery_protection_token
+    
+    class << self
+      attr_accessor :request_forgery_protection_token
+      
+      # A template file will be looked for in each view path. This is typically
+      # just RAILS_ROOT/app/cells, but you might want to add e.g.
+      # RAILS_ROOT/app/views.
+      def add_view_path(path)
+        self.view_paths << RAILS_ROOT + '/' + path
+      end
+      
+      # Creates a cell instance of the class <tt>name</tt>Cell, passing through 
+      # <tt>opts</tt>.
+      def create_cell_for(controller, name, opts={})
+        class_from_cell_name(name).new(controller, opts)
+      end
+      
+    end
+    
+    class_inheritable_array :view_paths, :instance_writer => false
+    self.view_paths = ActionView::PathSet.new
+    
     class_inheritable_accessor :allow_forgery_protection
     self.allow_forgery_protection = true
     
     
-    delegate :params, :session, :request, :to => :controller
+    delegate :params, :session, :request, :logger, :to => :controller
+    
+    
+    attr_accessor :controller
+    attr_reader   :state_name
     
     
     def initialize(controller, options={})
       @controller = controller
-      @cell_name  = self.class.cell_name
       @opts       = options
-      self.allow_forgery_protection = true
+    end
+    
+    def cell_name
+      self.class.cell_name
     end
 
 
@@ -181,11 +206,7 @@ module Cell
     
     
     
-    @@view_paths = nil
-    def self.view_paths=(value)
-      # this just creates a ActionView::PathSet.
-      @@view_paths = ::ActionView::Base.process_view_paths(value)
-    end
+    
     
     
     
@@ -195,7 +216,7 @@ module Cell
     def render_view_for_state(state)
       ### DISCUSS: create Cell::View directly? are there still problematic class vars in View::Base 
       view_class  = Class.new(Cell::View)
-      action_view = view_class.new(@@view_paths, {}, @controller)
+      action_view = view_class.new(self.class.view_paths, {}, @controller)
       action_view.cell = self
       ### FIXME/DISCUSS: 
       action_view.template_format = :html # otherwise it's set to :js in AJAX context!
@@ -217,6 +238,8 @@ module Cell
     # for the current <tt>state</tt> in each level.
     # As soon as a view file is found it is returned as an ActionView::Template 
     # instance.
+    
+    ### DISCUSS: moved to Cell::View#find_template in rainhead's fork:
     def find_family_view_for_state(state, action_view)
       missing_template_exception = nil
       
@@ -243,6 +266,8 @@ module Cell
     #
     # You can override the Cell::Base#view_for_state method for a particular
     # cell if you wish to make it decide dynamically what file to render.
+    
+    ### DISCUSS: don't stop when instance.view_for_state returns.
     def possible_paths_for_state(state)
       if view_file = view_for_state(state) # instance.
         return [view_file]
@@ -332,10 +357,7 @@ module Cell
     end
     
     
-    include ActionController::Helpers
-    include ActionController::RequestForgeryProtection
     
-    helper ApplicationHelper
     
     # Declare a controller method as a helper.  For example,
     #   helper_method :link_to
@@ -351,10 +373,6 @@ module Cell
       end
     end
     
-    # Creates a cell instance of the class <tt>name</tt>Cell, passing through 
-    # <tt>opts</tt>.
-    def self.create_cell_for(controller, name, opts={})
-      class_from_cell_name(name).new(controller, opts)
-    end
+    
   end
 end

@@ -19,9 +19,9 @@ class CellsCachingTest < Test::Unit::TestCase
     @c2 = AnotherCachingCell.new(@controller)
   end
     
-  def self.path_to_test_views
-    RAILS_ROOT + "/vendor/plugins/cells/test/views/"
-  end
+  #def self.path_to_test_views
+  #  RAILS_ROOT + "/vendor/plugins/cells/test/views/"
+  #end
   
   
   def test_state_cached?

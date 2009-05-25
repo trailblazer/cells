@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../../../../test/test_helper'
 require File.dirname(__FILE__) + '/testing_helper'
 
+
 # this would usually happen by rails' autoloading -
 # anyway, we don't test loading but rendering in this file.
 require File.dirname(__FILE__) + '/cells/cells_test_one_cell'
@@ -112,7 +113,7 @@ end
 class CellsTest < ActionController::TestCase
   include CellsTestMethods
   
-  Cell::Base.view_paths << "#{RAILS_ROOT}/vendor/plugins/cells/test/cells"
+
   ### FIXME:
   #Cell::View.warn_cache_misses = true
   
@@ -281,7 +282,7 @@ class CellsTest < ActionController::TestCase
   end
   
   
-  def test_modified_view_finding_for_testing    
+  def test_modified_view_finding_for_testing
     t = MyTestCell.new(@controller)
     c = t.render_state(:view_in_local_test_views_dir)
     assert_selekt c, "#localView"

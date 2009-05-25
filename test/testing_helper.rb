@@ -1,3 +1,5 @@
+Cell::Base.add_view_path "vendor/plugins/cells/test/cells"
+
 module CellsTestMethods
   
   def assert_selekt(content, *args)
