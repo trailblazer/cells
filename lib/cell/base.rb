@@ -158,6 +158,58 @@ module Cell
         class_from_cell_name(name).new(controller, opts)
       end
       
+      # Declare a controller method as a helper.  For example,
+      #   helper_method :link_to
+      #   def link_to(name, options) ... end
+      # makes the link_to controller method available in the view.
+      def helper_method(*methods)
+        methods.flatten.each do |method|
+          master_helper_module.module_eval <<-end_eval
+            def #{method}(*args, &block)
+              @cell.send(%(#{method}), *args, &block)
+            end
+          end_eval
+        end
+      end
+      
+      # Return the default view for the given state on this cell subclass.
+      # This is a file with the name of the state under a directory with the
+      # name of the cell followed by a template extension.
+      def view_for_state(state)
+        "#{cell_name}/#{state}"
+      end
+      
+      # Find a possible template for a cell's current state.  It tries to find a
+      # template file with the name of the state under a subdirectory
+      # with the name of the cell under the <tt>app/cells</tt> directory.
+      # If this file cannot be found, it will try to call this method on
+      # the superclass.  This way you only have to write a state template
+      # once when a more specific cell does not need to change anything in
+      # that view.
+      def find_class_view_for_state(state)
+        return [view_for_state(state)] if superclass == Cell::Base
+        
+        superclass.find_class_view_for_state(state) << view_for_state(state)
+      end
+      
+      # Get the name of this cell's class as an underscored string,
+      # with _cell removed.
+      #
+      # Example:
+      #  UserCell.cell_name
+      #  => "user"
+      def cell_name
+        name.underscore.sub(/_cell/, '')
+      end
+  
+      # Given a cell name, finds the class that belongs to it.
+      #
+      # Example:
+      # Cell::Base.class_from_cell_name(:user)
+      # => UserCell
+      def class_from_cell_name(cell_name)
+        "#{cell_name}_cell".classify.constantize
+      end
     end
     
     class_inheritable_array :view_paths, :instance_writer => false
@@ -204,17 +256,10 @@ module Cell
       send(state)
     end
     
-    
-    
-    
-    
-    
-    
     # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
     # if it can not find one of the requested view template. Note that this behaviour was
     # introduced in cells 2.3 and replaces the former warning message.
     def render_view_for_state(state)
-      ### DISCUSS: create Cell::View directly? are there still problematic class vars in View::Base 
       view_class  = Class.new(Cell::View)
       action_view = view_class.new(self.class.view_paths, {}, @controller)
       action_view.cell = self
@@ -275,20 +320,6 @@ module Cell
       
       self.class.find_class_view_for_state(state).reverse!
     end
-    
-    
-    # Find a possible template for a cell's current state.  It tries to find a
-    # template file with the name of the state under a subdirectory
-    # with the name of the cell under the <tt>app/cells</tt> directory.
-    # If this file cannot be found, it will try to call this method on
-    # the superclass.  This way you only have to write a state template
-    # once when a more specific cell does not need to change anything in
-    # that view.
-    def self.find_class_view_for_state(state)
-      return [view_for_state(state)] if superclass == Cell::Base
-      
-       superclass.find_class_view_for_state(state) << self.view_for_state(state)
-    end
 
     # Empty method.  Returns nil.  You can override this method
     # in individual cell classes if you want them to determine the
@@ -299,13 +330,6 @@ module Cell
     def view_for_state(state)
       nil
     end
-
-    # Return the default view for the given state on this cell subclass.
-    # This is a file with the name of the state under a directory with the
-    # name of the cell followed by a template extension.
-    def self.view_for_state(state)
-      "#{cell_name}/#{state}"
-    end
     
     # Prepares the hash {instance_var => value, ...} that should be available
     # in the ActionView when rendering the state view.
@@ -315,32 +339,7 @@ module Cell
        assigns[k[1..-1]] = instance_variable_get(k)
       end
       assigns
-    end
-      
-    # Get the name of this cell's class as an underscored string,
-    # with _cell removed.
-    #
-    # Example:
-    #  UserCell.cell_name
-    #  => "user"
-    def self.cell_name
-      self.name.underscore.sub(/#{name_suffix}/, '')
-    end
-
-    # The name suffix of a cell.  Always '_cell'.
-    def self.name_suffix
-      # XXX Why is this needed?  Seems like superfluous "abstraction"
-      '_cell'
-    end
-
-    # Given a cell name, find the class that belongs to it.
-    #
-    # Example:
-    # Cell::Base.class_from_cell_name(:user)
-    # => UserCell
-    def self.class_from_cell_name(cell_name)
-      "#{cell_name}#{name_suffix}".classify.constantize
-    end
+    end    
     
     
     # When passed a copy of the ActionView::Base class, it
@@ -352,27 +351,7 @@ module Cell
 
     # Defines the instance variables that should <em>not</em> be copied to the 
     # View instance.
-    def ivars_to_ignore
-      ['@controller']
-    end
-    
-    
-    
-    
-    # Declare a controller method as a helper.  For example,
-    #   helper_method :link_to
-    #   def link_to(name, options) ... end
-    # makes the link_to controller method available in the view.
-    def self.helper_method(*methods)
-      methods.flatten.each do |method|
-        master_helper_module.module_eval <<-end_eval
-          def #{method}(*args, &block)
-            @cell.send(%(#{method}), *args, &block)
-          end
-        end_eval
-      end
-    end
-    
+    def ivars_to_ignore;  ['@controller']; end
     
   end
 end
