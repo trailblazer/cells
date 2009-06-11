@@ -72,6 +72,9 @@ class MyTestCell < Cell::Base
   
   def missing_view
   end
+  
+  def state_with_link_to_function
+  end
 end
 
 # fixtures for view inheritance -------------------------------
@@ -110,6 +113,27 @@ module ReallyModule
 end
 
 
+# render_test ------------------------------------------------------------------
+class GalleryCell < Cell::Base
+  # prerequisites:
+  # there is NO current layout (?)
+  
+  def content_without_layout
+    # ...
+    render
+  end
+  
+  def content_with_layout
+    # ...
+    render  :layout           => 'metal',
+            :template_format  => :html,
+            :view             => 'another_view'
+  end
+  
+end
+# /render_test #################################################################
+
+
 class CellsTest < ActionController::TestCase
   include CellsTestMethods
   
@@ -134,7 +158,6 @@ class CellsTest < ActionController::TestCase
   
   # test simple rendering cycle -------------------------------------------------
   
-  # ok
   def test_render_state_which_returns_a_string
     cell = MyTestCell.new(@controller)
     
@@ -145,13 +168,16 @@ class CellsTest < ActionController::TestCase
     #assert_raises (NoMethodError) { cell.render_state("non_existing_state") }
   end
   
-  # ok
-  def test_render_state_which_needs_a_view
+  def test_render_state_with_view_file
     cell = MyTestCell.new(@controller)
     
     c= cell.render_state(:view_with_instance_var)
     assert_selekt c, "#one", "yeah"
     assert_selekt c, "#two", "wow"
+  end
+  
+  def test_render_state_with_layout
+    
   end
   
   
@@ -196,8 +222,15 @@ class CellsTest < ActionController::TestCase
     assert_selekt c, "#partialContained>#partial"
   end
   
+  # test advanced views (prototype_helper, ...) --------------------------------
+  ### TODO: fix CellTestController to allow rendering views with #link_to_function-
+  def dont_test_view_with_link_to_function
+    cell = MyTestCell.new(@controller)
+    c = cell.render_state(:state_with_link_to_function)
+    assert_selekt c, "#partialContained>#partial"
+  end
   
-  # test view inheritance -------------------------------------------------------
+  # test view inheritance ------------------------------------------------------
   
   def test_possible_paths_for_state
     t = MyChildCell.new(@controller)
@@ -248,9 +281,6 @@ class CellsTest < ActionController::TestCase
     assert_equal CellsTestOneCell.cell_name, "cells_test_one"
   end
   
-  def test_cell_name_suffix
-    assert_equal Cell::Base.name_suffix, "_cell"
-  end
 
   def test_class_from_cell_name
     assert_equal Cell::Base.class_from_cell_name("cells_test_one"), CellsTestOneCell
@@ -295,6 +325,10 @@ class CellsTest < ActionController::TestCase
     c = t.render_state(:state_using_params)
     assert_equal c, "value"
   end
+  
+  
+  
+  
   
   ### functional tests: ---------------------------------------------------------
 

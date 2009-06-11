@@ -27,7 +27,16 @@ module Cell
       path
     end
     
+    # this prevents cell ivars from being overwritten by same-named
+    # controller ivars.
+    # we'll hopefully get a cleaner way, or an API, to handle this in rails 3.
     def _copy_ivars_from_controller #:nodoc:
+      if @controller
+        variables = @controller.instance_variable_names
+        variables -= @controller.protected_instance_variables if @controller.respond_to?(:protected_instance_variables)
+        variables -= assigns.keys.collect {|key| "@#{key}"} # cell ivars override controller ivars.
+        variables.each { |name| instance_variable_set(name, @controller.instance_variable_get(name)) }
+      end
     end
   end
 end
