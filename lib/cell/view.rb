@@ -26,5 +26,8 @@ module Cell
       path = "#{cell.cell_name}/#{path}" unless path.include?('/')  
       path
     end
+    
+    def _copy_ivars_from_controller #:nodoc:
+    end
   end
 end
