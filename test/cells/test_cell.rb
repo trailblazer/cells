@@ -1,4 +1,4 @@
-class MyTestCell < Cell::Base
+class TestCell < Cell::Base
 
   
 

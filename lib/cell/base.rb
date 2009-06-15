@@ -218,6 +218,9 @@ module Cell
     class_inheritable_accessor :allow_forgery_protection
     self.allow_forgery_protection = true
     
+    class_inheritable_accessor :default_template_format
+    self.default_template_format = :html
+    
     
     delegate :params, :session, :request, :logger, :to => :controller
     
@@ -248,7 +251,7 @@ module Cell
       @cell       = self
       @state_name = state
       
-      render_view_for_state(state)
+      render_view_for(content, state)
     end
     
     # Call the state method.
@@ -256,33 +259,56 @@ module Cell
       send(state)
     end
     
+    def render(opts={})
+      opts
+    end
+    
     # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
     # if it can not find one of the requested view template. Note that this behaviour was
     # introduced in cells 2.3 and replaces the former warning message.
-    def render_view_for_state(state)
+    def render_view_for(opts, state)
       view_class  = Class.new(Cell::View)
       action_view = view_class.new(self.class.view_paths, {}, @controller)
       action_view.cell = self
-      ### FIXME/DISCUSS: 
-      action_view.template_format = :html # otherwise it's set to :js in AJAX context!
       
-      # Make helpers and instance vars available
+      # make helpers and instance vars available:
       include_helpers_in_class(view_class)
       
       action_view.assigns = assigns_for_view
       
+      # handle :layout, :template_format, :view
+      render_opts = defaultize_render_options_for(opts, state)
       
-      template = find_family_view_for_state(state, action_view)
+      ### FIXME/DISCUSS: pass in #render ? is this possible?
+      action_view.template_format = render_opts[:template_format]
+      
+      template = find_family_view_for_state(render_opts[:view], action_view)
       ### TODO: cache family_view for this cell_name/state in production mode,
       ###   so we can save the call to possible_paths_for_state.
+      render_opts[:file] = template unless render_opts[:file]
       
-      action_view.render(:file => template)      
+      action_view.render(render_opts)      
+    end
+    
+    # Defaultize the passed options from #render.
+    def defaultize_render_options_for(opts, state)
+      opts ||= {}
+      opts[:template_format]  ||= self.class.default_template_format
+      opts[:view]             ||= state
+      opts
     end
     
     # Climbs up the inheritance hierarchy of the Cell, looking for a view 
     # for the current <tt>state</tt> in each level.
     # As soon as a view file is found it is returned as an ActionView::Template 
     # instance.
+    
+    # render :view => "[cell_name/]view_name"
+    #   if x/x -------------------------------> render :file
+    #   if   x
+    #     find_family_view_for(x) # x may be state name or arbitrary string.
+    #       possible_paths_for_view(x)
+    #         path_for_view(x) --> travel up!
     
     ### DISCUSS: moved to Cell::View#find_template in rainhead's fork:
     def find_family_view_for_state(state, action_view)
@@ -311,24 +337,8 @@ module Cell
     #
     # You can override the Cell::Base#view_for_state method for a particular
     # cell if you wish to make it decide dynamically what file to render.
-    
-    ### DISCUSS: don't stop when instance.view_for_state returns.
     def possible_paths_for_state(state)
-      if view_file = view_for_state(state) # instance.
-        return [view_file]
-      end
-      
       self.class.find_class_view_for_state(state).reverse!
-    end
-
-    # Empty method.  Returns nil.  You can override this method
-    # in individual cell classes if you want them to determine the
-    # view file dynamically.
-    #
-    # If a view filename is returned here, we assume it really exists
-    # and don't invoke the superclass view finding chain.
-    def view_for_state(state)
-      nil
     end
     
     # Prepares the hash {instance_var => value, ...} that should be available

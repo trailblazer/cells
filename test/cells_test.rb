@@ -19,10 +19,6 @@ class JustOneViewCell < Cell::Base
   def some_state
     return
   end
-
-  def view_for_state(state)
-    CellsTestMethods.views_path + "just_one_view.html.erb"
-  end
 end
 
 
@@ -140,7 +136,10 @@ class CellsTest < ActionController::TestCase
 
   ### FIXME:
   #Cell::View.warn_cache_misses = true
-  
+  def setup
+    super
+    MyTestCell.default_template_format = :html
+  end
 
   def test_controller_render_methods
     get :call_render_cell_with_strings  # render_cell("test", "state")
@@ -256,20 +255,10 @@ class CellsTest < ActionController::TestCase
   
   # test Cell::View -------------------------------------------------------------
   
-  # ok
   def test_find_family_view_for_state
     t = MyChildCell.new(@controller)
     tpl = t.find_family_view_for_state(:bye, Cell::View.new(["#{RAILS_ROOT}/vendor/plugins/cells/test/cells"], {}, @controller))
     assert_equal "my_mother/bye.html.erb", tpl.path
-  end
-  
-  
-  
-  # view for :instance_view is provided directly by #view_for_state.
-  def test_view_for_state
-    t = CellsTestOneCell.new(@controller)
-    c = t.render_state(:instance_view)
-    assert_selekt c, "#renamedInstanceView"
   end
   
 
@@ -285,7 +274,32 @@ class CellsTest < ActionController::TestCase
   def test_class_from_cell_name
     assert_equal Cell::Base.class_from_cell_name("cells_test_one"), CellsTestOneCell
   end
-
+  
+  def test_default_template_format
+    # test getter
+    u = MyTestCell.new(@controller)
+    assert_equal :html, Cell::Base.default_template_format
+    assert_equal :html, u.class.default_template_format
+    
+    # test setter
+    MyTestCell.default_template_format = :js
+    assert_equal :html, Cell::Base.default_template_format
+    assert_equal :js, u.class.default_template_format
+  end
+  
+  def test_defaultize_render_options_for
+    u = MyTestCell.new(@controller)
+    assert_equal( {:template_format => :html, :view => :do_it}, 
+      u.defaultize_render_options_for(nil, :do_it))
+    assert_equal( {:template_format => :html, :view => :do_it}, 
+      u.defaultize_render_options_for({}, :do_it))
+    assert_equal( {:template_format => :js, :view => :do_it},
+      u.defaultize_render_options_for({:template_format => :js}, :do_it))
+    assert_equal( {:template_format => :html, :layout => :metal, :view => :do_it},
+      u.defaultize_render_options_for({:layout => :metal}, :do_it))
+    assert_equal( {:template_format => :js, :layout => :metal, :view => :do_it}, 
+      u.defaultize_render_options_for({:layout => :metal, :template_format => :js}, :do_it))
+  end
 
   def test_new_directory_hierarchy
     cell = ReallyModule::NestedCell.new(@controller)
@@ -321,7 +335,7 @@ class CellsTest < ActionController::TestCase
   
   def test_params_in_a_cell_state
     @controller.params = {:my_param => "value"}
-    t = MyTestCell.new(@controller)
+    t = TestCell.new(@controller)
     c = t.render_state(:state_using_params)
     assert_equal c, "value"
   end
