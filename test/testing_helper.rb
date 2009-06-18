@@ -1,4 +1,5 @@
 Cell::Base.add_view_path "vendor/plugins/cells/test/cells"
+Cell::Base.add_view_path "vendor/plugins/cells/test/cells/layouts"
 
 module CellsTestMethods
   

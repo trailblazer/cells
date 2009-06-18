@@ -16,12 +16,12 @@ module Cell
   # - the <em>state method</em> <tt>newest_article</tt> is executed and assigns instance 
   #   variables to be used in the view
   # - if the method returns a string, the cycle ends, rendering the string
-  # - otherwise, the corresponding <em>state view</em> is searched. 
+  # - otherwise, the corresponding <em>state view</em> is searched.
   #   Usually the cell will first look for a view template in
   #   <tt>app/cells/blog/newest_article.html. [erb|haml|...]</tt>
   # - after the view has been found, it is rendered and returned
   #
-  # It is common to simply return <tt>nil</tt> in state methods to advice the cell to
+  # It is common to simply return <tt>nil</tt> or call #render in state methods to advice the cell to
   # render the corresponding template.
   #
   # == Design Principles
@@ -64,6 +64,8 @@ module Cell
   #       user_cell.rb
   #       user/
   #         login.html.erb
+  #       layouts/
+  #         box.html.erb
   #     ..
   #
   # The directory with the same name as the cell contains views for the
@@ -259,6 +261,29 @@ module Cell
       send(state)
     end
     
+    # Render the view for the current state. Usually called at the end of a state method.
+    #
+    # ==== Options
+    # * <tt>:view</tt> - Specifies the name of the view file to render. Defaults to the current state name.
+    # * <tt>:template_format</tt> - Allows using a format different to <tt>:html</tt>.
+    # * <tt>:layout</tt> - If set to a valid filename inside your cell's view_paths, the current state view will be rendered inside the layout (as known from controller actions). Layouts should reside in <tt>app/cells/layouts</tt>.
+    #
+    # Example:
+    #  class MyCell < Cell::Base
+    #    def my_first_state
+    #      # ... do something
+    #      render 
+    #    end
+    #
+    # will just render the view <tt>my_first_state.html</tt>.
+    # 
+    #    def my_first_state
+    #      # ... do something
+    #      render :view => :my_first_state, :layout => "metal"
+    #    end
+    #
+    # will also use the view <tt>my_first_state.html</tt> as template and even put it in the layout
+    # <tt>metal</tt> that's located at <tt>$RAILS_ROOT/app/cells/layouts/metal.html.erb</tt>.
     def render(opts={})
       opts
     end
@@ -271,15 +296,13 @@ module Cell
       action_view = view_class.new(self.class.view_paths, {}, @controller)
       action_view.cell = self
       
-      # make helpers and instance vars available:
-      include_helpers_in_class(view_class)
-      
-      action_view.assigns = assigns_for_view
+      # make helpers available:
+      include_helpers_in_class(view_class)   
       
       # handle :layout, :template_format, :view
       render_opts = defaultize_render_options_for(opts, state)
       
-      ### FIXME/DISCUSS: pass in #render ? is this possible?
+      action_view.assigns         = assigns_for_view  # make instance vars available.
       action_view.template_format = render_opts[:template_format]
       
       template = find_family_view_for_state(render_opts[:view], action_view)
@@ -302,14 +325,6 @@ module Cell
     # for the current <tt>state</tt> in each level.
     # As soon as a view file is found it is returned as an ActionView::Template 
     # instance.
-    
-    # render :view => "[cell_name/]view_name"
-    #   if x/x -------------------------------> render :file
-    #   if   x
-    #     find_family_view_for(x) # x may be state name or arbitrary string.
-    #       possible_paths_for_view(x)
-    #         path_for_view(x) --> travel up!
-    
     ### DISCUSS: moved to Cell::View#find_template in rainhead's fork:
     def find_family_view_for_state(state, action_view)
       missing_template_exception = nil

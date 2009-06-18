@@ -88,6 +88,24 @@ class RenderTest < ActionController::TestCase
     assert_equal "Metal:B/existing_view/b/js", render_cell(:b, :existing_view)
   end
   
+  # test :layout
+  def test_render_passing_layout_located_in_cells_layout
+    ACell.class_eval do
+      def existing_view;    @a = "a"; 
+        render :layout => "metal"; end
+    end
+    assert_equal "Metal:A/existing_view/a", render_cell(:a, :existing_view)
+  end
+  
+  ### DISCUSS: currently undocumented feature:
+  def test_render_passing_layout_located_in_cells_b_layouts
+    BCell.class_eval do
+      def existing_view;    @b = "b"; 
+        render :layout => "b/layouts/metal"; end
+    end
+    assert_equal "B-Metal:B/existing_view/b", render_cell(:b, :existing_view)
+  end
+  
   # test with inherited view:
   def test_render_without_arguments_with_inherited_view
     BCell.class_eval do

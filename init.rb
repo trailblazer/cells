@@ -35,6 +35,8 @@ Cell::Base.class_eval             do  include Cell::Caching end
 
 ActiveSupport::Dependencies.load_paths << RAILS_ROOT+"/app/cells"
 Cell::Base.add_view_path "app/cells"
+### DISCUSS: do we need shared layouts for different cells?
+Cell::Base.add_view_path "app/cells/layouts"
 
 
 # process cells in plugins ("engine-cells").

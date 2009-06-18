@@ -24,12 +24,13 @@ this, after some editing:
     
     def newest
       @articles = Article.get_newest
-      nil   # returning nil says "render the view named newest.html.[erb|haml|...]".
+      render   # will render the view named newest.html.[erb|haml|...]".
     end
     
     def top_article
       @article = Article.top_article
-      nil
+      render  :view   => :top_article_v2, # renders top_article_v2.html.[erb|haml|...]
+              :layout => :box             # and put it in the layout "box.html".
     end
   end
 
@@ -42,7 +43,7 @@ The corresponding views are in <tt>app/cells/article/newest.html.erb</tt>:
   <% end %>
   </ul>
 
-The other view would be in <tt>app/cells/article/top_article.html.haml</tt>:
+The other view would be in <tt>app/cells/article/top_article_v2.html.haml</tt>:
 
   %h2
     = @article.title
