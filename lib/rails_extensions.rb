@@ -39,11 +39,14 @@ module Cell
 
     # Equivalent to ActionController#render_to_string, except it renders a cell
     # rather than a regular templates.
-    def render_cell_to_string(name, state, opts={})
+    def render_cell(name, state, opts={})
       cell = Cell::Base.create_cell_for(self, name, opts)
 
       return cell.render_state(state)
     end
+    
+    alias_method :render_cell_to_string, :render_cell # just for backward compatibility.
+    
     
     # Expires the cached cell state view, similar to ActionController::expire_fragment.
     # Usually, this method is used in Sweepers.
