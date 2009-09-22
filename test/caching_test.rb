@@ -184,6 +184,23 @@ class CellsCachingTest < Test::Unit::TestCase
     assert ! Cell::Base.cache_store.read(k)
   end
   
+  
+  def test_find_family_view_for_state_with_caching
+    # test environment: --------------------------------------
+    assert_equal({}, ACell.state2view_cache)
+    
+    ACell.new(@controller).render_state :existing_view
+    # in development/test environment, no view name caching should happen:
+    assert_equal({}, ACell.state2view_cache)
+    
+    # production environment: --------------------------------
+    a = ACell.new(@controller)
+    a.instance_eval do
+      def rails_env; "production"; end
+    end 
+    a.render_state :existing_view
+    assert ACell.state2view_cache.has_key?("existing_view/html") 
+  end
 end
 
 class CachingCell < Cell::Base

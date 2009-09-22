@@ -212,6 +212,10 @@ module Cell
       def class_from_cell_name(cell_name)
         "#{cell_name}_cell".classify.constantize
       end
+      
+      def state2view_cache
+        @state2view_cache ||= {}
+      end
     end
     
     class_inheritable_array :view_paths, :instance_writer => false
@@ -305,7 +309,7 @@ module Cell
       action_view.assigns         = assigns_for_view  # make instance vars available.
       action_view.template_format = render_opts[:template_format]
       
-      template = find_family_view_for_state(render_opts[:view], action_view)
+      template = find_family_view_for_state_with_caching(render_opts[:view], action_view)
       ### TODO: cache family_view for this cell_name/state in production mode,
       ###   so we can save the call to possible_paths_for_state.
       render_opts[:file] = template unless render_opts[:file]
@@ -343,6 +347,17 @@ module Cell
       raise missing_template_exception
     end
     
+    # In production mode, the view for a state/template_format is cached.
+    ### DISCUSS: ActionView::Base already caches results for #pick_template, so maybe
+    ### we should just cache the family path for a state/format?
+    def find_family_view_for_state_with_caching(state, action_view)
+      return find_family_view_for_state(state, action_view) unless rails_env == "production"
+      
+      # in production mode:
+      key         = "#{state}/#{action_view.template_format}"
+      state2view  = self.class.state2view_cache
+      state2view[key] || state2view[key] = find_family_view_for_state(state, action_view)
+    end
     
     # Find possible files that belong to the state.  This first tries the cell's
     # <tt>#view_for_state</tt> method and if that returns a true value, it
@@ -378,5 +393,6 @@ module Cell
     # View instance.
     def ivars_to_ignore;  ['@controller']; end
     
+    def rails_env; RAILS_ENV; end
   end
 end
