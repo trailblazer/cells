@@ -39,7 +39,7 @@ The corresponding views are in <tt>app/cells/article/newest.html.erb</tt>:
   <h2>Hot stuff!</h2>
   <ul>
   <% @articles.each do |article| %>
-    <li><%= article.title</li>
+    <li><%= article.title %></li>
   <% end %>
   </ul>
 
@@ -63,8 +63,8 @@ where the rendered action view could be <tt>app/views/blog/top_page.html.erb</tt
   
   <%= yield %>
   
-  <div><%= render_cell(:article, :newest)</div>
-  <div><%= render_cell(:article, :top_article)</div>
+  <div><%= render_cell(:article, :newest) %></div>
+  <div><%= render_cell(:article, :top_article) %></div>
     
 The "top page" would consist of the controller action's content, and two additional 
 independent boxes with interesting content. These two boxes are <em>cells</em> and could

@@ -14,7 +14,7 @@ module Cell::Caching
       # mixin Cell::Base#cache, setup vars and extend #render_state if caching's on.
       extend ClassMethods
       
-      return unless ActionController::Base.cache_configured?
+      return unless cache_configured?
       
       alias_method_chain :render_state, :caching
     end

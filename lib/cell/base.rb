@@ -5,7 +5,7 @@ module Cell
   # lightweight controller in the sense that it will assign variables and
   # render a view.  Cells can be rendered from other cells as well as from
   # regular controllers and views (see ActionView::Base#render_cell and
-  # ControllerMethods#render_cell_to_string)
+  # ControllerMethods#render_cell)
   #
   # == A render_cell() cycle
   #
@@ -216,6 +216,8 @@ module Cell
       def state2view_cache
         @state2view_cache ||= {}
       end
+      
+      def cache_configured?; ::ActionController::Base.cache_configured?; end
     end
     
     class_inheritable_array :view_paths, :instance_writer => false
@@ -351,7 +353,7 @@ module Cell
     ### DISCUSS: ActionView::Base already caches results for #pick_template, so maybe
     ### we should just cache the family path for a state/format?
     def find_family_view_for_state_with_caching(state, action_view)
-      return find_family_view_for_state(state, action_view) unless rails_env == "production"
+      return find_family_view_for_state(state, action_view) unless self.class.cache_configured?
       
       # in production mode:
       key         = "#{state}/#{action_view.template_format}"
@@ -393,6 +395,5 @@ module Cell
     # View instance.
     def ivars_to_ignore;  ['@controller']; end
     
-    def rails_env; RAILS_ENV; end
   end
 end

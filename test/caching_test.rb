@@ -189,15 +189,20 @@ class CellsCachingTest < Test::Unit::TestCase
     # test environment: --------------------------------------
     assert_equal({}, ACell.state2view_cache)
     
-    ACell.new(@controller).render_state :existing_view
-    # in development/test environment, no view name caching should happen:
+    a = ACell.new(@controller)
+    a.class.instance_eval do
+        def cache_configured?;    false;  end
+    end
+    a.render_state :existing_view
+    # in development/test environment, no view name caching should happen, 
+    # if perform_caching is false.
     assert_equal({}, ACell.state2view_cache)
     
     # production environment: --------------------------------
     a = ACell.new(@controller)
-    a.instance_eval do
-      def rails_env; "production"; end
-    end 
+    a.class.instance_eval do
+        def cache_configured?;    true;   end
+    end
     a.render_state :existing_view
     assert ACell.state2view_cache.has_key?("existing_view/html") 
   end
