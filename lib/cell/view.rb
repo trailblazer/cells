@@ -3,6 +3,7 @@ module Cell
     
     attr_accessor :cell
     
+    alias_method :render_for, :render
     
     ### DISCUSS: where/how do WE set template_format (render_view_for_state)?
     # Tries to find the passed template in view_paths. Returns the view on success-
@@ -11,8 +12,15 @@ module Cell
       self.view_paths.find_template(template_path, template_format)
     end    
     
-    
+    ### TODO: this should just be a thin helper.
     def render(options = {}, local_assigns = {}, &block)
+      ### TODO: delegate dynamically:
+      if view = options[:view]
+        return cell.render_view_for(options, view)
+      end
+      
+      
+      
       if partial_path = options[:partial]
         # adds the cell name to the partial name.
         options[:partial] = expand_view_path(partial_path)

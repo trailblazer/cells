@@ -144,4 +144,22 @@ class RenderTest < ActionController::TestCase
     end
     assert_equal "Metal:A/inherited_view/b/js", render_cell(:b, :existing_view)
   end
+  
+  
+  def test_render_passing_locals
+    ACell.class_eval do
+      def view_with_locals; @a = "a"; 
+        render :locals => {:name => "Nick"}; end
+    end
+    assert_equal "A/view_with_locals/a/Nick", render_cell(:a, :view_with_locals)
+  end
+  
+  
+  def test_recursive_render_view_with_existing_views
+    ACell.class_eval do
+      def view_with_render_call; @a = "a"; 
+        render; end
+    end
+    assert_equal "A/view_with_render_call/a:A/existing_view/a", render_cell(:a, :view_with_render_call)
+  end
 end

@@ -273,6 +273,7 @@ module Cell
     # * <tt>:view</tt> - Specifies the name of the view file to render. Defaults to the current state name.
     # * <tt>:template_format</tt> - Allows using a format different to <tt>:html</tt>.
     # * <tt>:layout</tt> - If set to a valid filename inside your cell's view_paths, the current state view will be rendered inside the layout (as known from controller actions). Layouts should reside in <tt>app/cells/layouts</tt>.
+    # * <tt>:locals</tt> - Makes the named parameters available as variables in the view.
     #
     # Example:
     #  class MyCell < Cell::Base
@@ -290,6 +291,12 @@ module Cell
     #
     # will also use the view <tt>my_first_state.html</tt> as template and even put it in the layout
     # <tt>metal</tt> that's located at <tt>$RAILS_ROOT/app/cells/layouts/metal.html.erb</tt>.
+    #
+    #    def say_your_name
+    #      render :locals => {:name => "Nick"}
+    #    end
+    #
+    # will make the variable +name+ available in the view <tt>say_your_name.html</tt>.
     def render(opts={})
       opts
     end
@@ -316,7 +323,7 @@ module Cell
       ###   so we can save the call to possible_paths_for_state.
       render_opts[:file] = template unless render_opts[:file]
       
-      action_view.render(render_opts)      
+      action_view.render_for(render_opts)
     end
     
     # Defaultize the passed options from #render.
@@ -394,6 +401,7 @@ module Cell
     # Defines the instance variables that should <em>not</em> be copied to the 
     # View instance.
     def ivars_to_ignore;  ['@controller']; end
+    
     
   end
 end
