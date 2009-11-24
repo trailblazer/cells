@@ -155,11 +155,43 @@ class RenderTest < ActionController::TestCase
   end
   
   
-  def test_recursive_render_view_with_existing_views
+  def test_recursive_render_view_with_existing_view
     ACell.class_eval do
       def view_with_render_call; @a = "a"; 
         render; end
     end
     assert_equal "A/view_with_render_call/a:A/existing_view/a", render_cell(:a, :view_with_render_call)
+  end
+  
+  def test_recursive_render_view_with_inherited_view
+    BCell.class_eval do
+      def view_with_render_call; @a = "b"; 
+        render; end
+    end
+    assert_equal "B/view_with_render_call/b:A/inherited_view/b", render_cell(:b, :view_with_render_call)
+  end
+  
+  def test_render_text
+    ACell.class_eval do
+      def existing_view;
+        render :text => "Cells kick ass!"; end
+    end
+    assert_equal "Cells kick ass!", render_cell(:a, :existing_view)
+  end
+  
+  def test_render_nothing
+    ACell.class_eval do
+      def existing_view;
+        render :nothing; end
+    end
+    assert_equal "", render_cell(:a, :existing_view)
+  end
+  
+  def test_render_inline
+    ACell.class_eval do
+      def existing_view; @a = "a"; 
+        render :inline => 'A/existing_view/a:<%= a %>', :type => :erb, :locals => {:a=>'a'}; end
+    end
+    assert_equal "A/existing_view/a:a", render_cell(:a, :existing_view)
   end
 end

@@ -305,34 +305,67 @@ module Cell
     # if it can not find one of the requested view template. Note that this behaviour was
     # introduced in cells 2.3 and replaces the former warning message.
     def render_view_for(opts, state)
-      view_class  = Class.new(Cell::View)
-      action_view = view_class.new(self.class.view_paths, {}, @controller)
-      action_view.cell = self
+      return ""       if opts == :nothing
       
-      # make helpers available:
-      include_helpers_in_class(view_class)   
+      opts        = defaultize_render_options(opts)
       
-      # handle :layout, :template_format, :view
-      render_opts = defaultize_render_options_for(opts, state)
+      action_view = setup_action_view
       
-      action_view.assigns         = assigns_for_view  # make instance vars available.
-      action_view.template_format = render_opts[:template_format]
+      ### TODO: dispatch dynamically:
+      if    opts[:text]
+      elsif opts[:inline]
+      elsif opts[:file]
+      else
+        # handle :layout, :template_format, :view
+        opts = defaultize_render_options_for(opts, state)
+        
+        # set instance vars, include helpers:
+        prepare_action_view_for(action_view, opts)
+        
+        template = find_family_view_for_state_with_caching(opts[:view], action_view)
+        ### TODO: cache family_view for this cell_name/state in production mode,
+        ###   so we can save the call to possible_paths_for_state.
+        opts[:file] = template
+      end
       
-      template = find_family_view_for_state_with_caching(render_opts[:view], action_view)
-      ### TODO: cache family_view for this cell_name/state in production mode,
-      ###   so we can save the call to possible_paths_for_state.
-      render_opts[:file] = template unless render_opts[:file]
+      opts = sanitize_render_options(opts)
       
-      action_view.render_for(render_opts)
+      action_view.render_for(opts)
+    end
+    
+    def defaultize_render_options(opts)
+      opts ||= {}
     end
     
     # Defaultize the passed options from #render.
     def defaultize_render_options_for(opts, state)
-      opts ||= {}
       opts[:template_format]  ||= self.class.default_template_format
       opts[:view]             ||= state
       opts
     end
+    
+    def prepare_action_view_for(action_view, opts)
+      # make helpers available:
+      include_helpers_in_class(action_view.class)
+      
+      action_view.assigns         = assigns_for_view  # make instance vars available.
+      action_view.template_format = opts[:template_format]
+    end
+    
+    def setup_action_view
+      view_class  = Class.new(Cell::View)
+      action_view = view_class.new(self.class.view_paths, {}, @controller)
+      action_view.cell = self
+      action_view
+    end
+    
+    # Prepares <tt>opts</tt> to be passed to ActionView::Base#render by removing
+    # unknown parameters.
+    def sanitize_render_options(opts)
+      opts.delete(:view)
+      opts
+    end
+    
     
     # Climbs up the inheritance hierarchy of the Cell, looking for a view 
     # for the current <tt>state</tt> in each level.

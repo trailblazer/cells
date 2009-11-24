@@ -290,7 +290,7 @@ class CellsTest < ActionController::TestCase
   def test_defaultize_render_options_for
     u = MyTestCell.new(@controller)
     assert_equal( {:template_format => :html, :view => :do_it}, 
-      u.defaultize_render_options_for(nil, :do_it))
+      u.defaultize_render_options_for({}, :do_it))
     assert_equal( {:template_format => :html, :view => :do_it}, 
       u.defaultize_render_options_for({}, :do_it))
     assert_equal( {:template_format => :js, :view => :do_it},
