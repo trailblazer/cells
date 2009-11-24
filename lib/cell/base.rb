@@ -250,16 +250,18 @@ module Cell
     # Render the given state.  You can pass the name as either a symbol or
     # a string.
     def render_state(state)
+      ### DISCUSS: are these vars really needed in state views?
+      @cell       = self
+      @state_name = state
+      
       content = dispatch_state(state)
       
       return content if content.kind_of? String
       
       
-      ### DISCUSS: are these vars really needed in state views?
-      @cell       = self
-      @state_name = state
       
-      render_view_for(content, state)
+      
+      render_view_for(content, state) ### DISCUSS: really have an implicit render?
     end
     
     # Call the state method.
@@ -298,7 +300,7 @@ module Cell
     #
     # will make the variable +name+ available in the view <tt>say_your_name.html</tt>.
     def render(opts={})
-      opts
+      render_view_for(opts, @state_name)  ### FIXME: i don't like the magic access to @state_name here. ugly!
     end
     
     # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
