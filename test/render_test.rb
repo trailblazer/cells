@@ -3,21 +3,21 @@ require File.dirname(__FILE__) + '/testing_helper'
 
 class ACell < Cell::Base
   def existing_view
-    @a = "a"; nil
+    @a = "a"; render
   end
   
   def not_existing_view
-    @a = "a"; nil
+    @a = "a"; render
   end
 end
 
 class BCell < ACell
   def existing_view
-    @b = "b"; nil
+    @b = "b"; render
   end
   
   def not_existing_view
-    @b = "b"; nil
+    @b = "b"; render
   end
 end
 
@@ -32,12 +32,12 @@ class RenderTest < ActionController::TestCase
   
   def test_return_nil_with_inherited_view
     BCell.class_eval do   
-      def inherited_view;   @a = "b"; nil; end
+      def inherited_view;   @a = "b"; render; end
     end
     assert_equal "A/inherited_view/b", render_cell(:b, :inherited_view)
   end
   
-  def test_return_nil_with_not_existing_view
+  def test_render_with_not_existing_view
     assert_raises ActionView::MissingTemplate do render_cell(:a, :not_existing_view)  end
     assert_raises ActionView::MissingTemplate do render_cell(:b, :not_existing_view)  end
   end

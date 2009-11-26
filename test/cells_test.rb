@@ -17,7 +17,7 @@ end
 
 class JustOneViewCell < Cell::Base
   def some_state
-    return
+    render
   end
 end
 
@@ -40,36 +40,45 @@ class MyTestCell < Cell::Base
   end
   
   def state_with_link_to
+    render
   end
   
   def view_in_local_test_views_dir
+    render
   end
   
   def view_with_explicit_english_translation
+    render
   end
   
   def view_containing_partial
+    render
   end
   
   def view_containing_partial_without_cell_name
+    render
   end
   
   def view_containing_nonexistant_partial
+    render
   end
   
   def view_containing_broken_partial
+    render
   end
   
   def view_with_instance_var
     @instance_variable_one = "yeah"
     @instance_variable_two = "wow"
-    nil
+    render
   end
   
   def missing_view
+    render
   end
   
   def state_with_link_to_function
+    render
   end
 end
 
@@ -78,11 +87,11 @@ end
 class MyMotherCell < Cell::Base
   def hello
     @message = "hello, kid!"
-    nil
+    render
   end
   def bye
     @message = "bye, you!"
-    nil
+    render
   end
 end
 
@@ -90,12 +99,12 @@ end
 class MyChildCell < MyMotherCell
   def hello
     @message = "hello, mom!"
-    nil
+    render
   end
   # view is inherited and located in cells/test/cells/my_mother_cell/bye.html.erb
   def bye
     @message = "bye, mom!"
-    nil
+    render
   end
 end
 
@@ -104,30 +113,10 @@ module ReallyModule
   class NestedCell < Cell::Base
     # view: cells/test/cells/really_module/nested_cell/happy_state.html.erb
     def happy_state
+      render
     end
   end
 end
-
-
-# render_test ------------------------------------------------------------------
-class GalleryCell < Cell::Base
-  # prerequisites:
-  # there is NO current layout (?)
-  
-  def content_without_layout
-    # ...
-    render
-  end
-  
-  def content_with_layout
-    # ...
-    render  :layout           => 'metal',
-            :template_format  => :html,
-            :view             => 'another_view'
-  end
-  
-end
-# /render_test #################################################################
 
 
 class CellsTest < ActionController::TestCase

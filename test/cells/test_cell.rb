@@ -4,27 +4,27 @@ class TestCell < Cell::Base
 
   def needs_view
     @instance_variable_one = "yeah"
-    nil
+    render
   end
 
   def another_rendering_state
     @instance_variable_one = "go"
-
-    return
+    render
   end
 
   def setting_state
     @reset_me = '<p id="ho">ho</p>'
-    return
+    render
   end
 
   def reset_state
-    return
+    render
   end
 
   
 
   def state_with_not_included_helper_method
+    render
   end
   
   

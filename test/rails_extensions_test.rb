@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/testing_helper'
 
 class ACell < Cell::Base
   def existing_view
-    @a = "a"; nil
+    @a = "a"; render
   end
 end
 

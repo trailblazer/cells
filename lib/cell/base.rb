@@ -15,14 +15,10 @@ module Cell
   #   arbitrary parameters is passed
   # - the <em>state method</em> <tt>newest_article</tt> is executed and assigns instance 
   #   variables to be used in the view
-  # - if the method returns a string, the cycle ends, rendering the string
-  # - otherwise, the corresponding <em>state view</em> is searched.
-  #   Usually the cell will first look for a view template in
-  #   <tt>app/cells/blog/newest_article.html. [erb|haml|...]</tt>
-  # - after the view has been found, it is rendered and returned
-  #
-  # It is common to simply return <tt>nil</tt> or call #render in state methods to advice the cell to
-  # render the corresponding template.
+  # - Usually the state method will call #render and return
+  # - #render will retrieve the corresponding view 
+  #   (e.g. <tt>app/cells/blog/newest_article.html. [erb|haml|...]</tt>),
+  #   renders this template and returns the markup.
   #
   # == Design Principles
   # A cell is a completely autonomous object and it should not know or have to know
@@ -258,10 +254,7 @@ module Cell
       
       return content if content.kind_of? String
       
-      
-      
-      
-      render_view_for(content, state) ### DISCUSS: really have an implicit render?
+      render_view_for_backward_compat(content, state)
     end
     
     # Call the state method.
@@ -269,14 +262,26 @@ module Cell
       send(state)
     end
     
-    # Render the view for the current state. Usually called at the end of a state method.
+    # We will soon remove the implicit call to render_view_for, but here it is for your convenience.
+    def render_view_for_backward_compat(opts, state)
+      ActiveSupport::Deprecation.warn "You either didn't call #render or forgot to return a string in the state method '#{state}'. However, returning nil is deprecated for the sake of explicitness"
+      
+      render_view_for(opts, state)
+    end
+    
+    
+    # Renders the view for the current state and returns the markup for the component. 
+    # Usually called and returned at the end of a state method.
     #
     # ==== Options
     # * <tt>:view</tt> - Specifies the name of the view file to render. Defaults to the current state name.
     # * <tt>:template_format</tt> - Allows using a format different to <tt>:html</tt>.
     # * <tt>:layout</tt> - If set to a valid filename inside your cell's view_paths, the current state view will be rendered inside the layout (as known from controller actions). Layouts should reside in <tt>app/cells/layouts</tt>.
     # * <tt>:locals</tt> - Makes the named parameters available as variables in the view.
-    #
+    # * <tt>:text</tt> - Just renders plain text.
+    # * <tt>:inline</tt> - Renders an inline template as state view. See ActionView::Base#render for details.
+    # * <tt>:file</tt> - Specifies the name of the file template to render.
+    # * <tt>:nothing</tt> - Will make the component kinda invisible and doesn't invoke the rendering cycle.
     # Example:
     #  class MyCell < Cell::Base
     #    def my_first_state
@@ -299,6 +304,12 @@ module Cell
     #    end
     #
     # will make the variable +name+ available in the view <tt>say_your_name.html</tt>.
+    #
+    # ==== Where have all the partials gone?
+    # In Cells we abandoned the term 'partial' in favor of plain 'views' - we don't need to distinguish 
+    # between both terms. A cell view is both, a view and a kind of partial as it represents only a small
+    # part of the page.
+    # Just use <tt>:view</tt> and enjoy.
     def render(opts={})
       render_view_for(opts, @state_name)  ### FIXME: i don't like the magic access to @state_name here. ugly!
     end

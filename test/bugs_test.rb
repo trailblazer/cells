@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/testing_helper'
 class MyTestCell < Cell::Base
   def state_with_instance_var
     @my_ivar = "value from cell"
-    nil
+    render
   end
 end
 
