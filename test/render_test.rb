@@ -179,6 +179,14 @@ class RenderTest < ActionController::TestCase
     assert_equal "Cells kick ass!", render_cell(:a, :existing_view)
   end
   
+  def test_render_text_with_layout
+    ACell.class_eval do
+      def existing_view;
+        render :text => "Cells kick ass!", :layout => 'metal'; end
+    end
+    assert_equal "Metal:Cells kick ass!", render_cell(:a, :existing_view)
+  end
+  
   def test_render_nothing
     ACell.class_eval do
       def existing_view;
@@ -193,5 +201,29 @@ class RenderTest < ActionController::TestCase
         render :inline => 'A/existing_view/a:<%= a %>', :type => :erb, :locals => {:a=>'a'}; end
     end
     assert_equal "A/existing_view/a:a", render_cell(:a, :existing_view)
+  end
+  
+  def test_render_state
+    ACell.class_eval do
+      def existing_view; @a = "a"; 
+        render :state => :another_state
+      end
+      def another_state; @b = "b";
+        render
+      end
+    end
+    assert_equal "A/another_state/a,b", render_cell(:a, :existing_view)
+  end
+  
+  def test_render_state_with_layout
+    ACell.class_eval do
+      def existing_view; @a = "a"; 
+        render :state => :another_state, :layout => 'metal'
+      end
+      def another_state; @b = "b";
+        render
+      end
+    end
+    assert_equal "Metal:A/another_state/a,b", render_cell(:a, :existing_view)
   end
 end

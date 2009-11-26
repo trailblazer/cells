@@ -282,6 +282,7 @@ module Cell
     # * <tt>:inline</tt> - Renders an inline template as state view. See ActionView::Base#render for details.
     # * <tt>:file</tt> - Specifies the name of the file template to render.
     # * <tt>:nothing</tt> - Will make the component kinda invisible and doesn't invoke the rendering cycle.
+    # * <tt>:state</tt> - Instantly invokes another rendering cycle for the passed state and returns.
     # Example:
     #  class MyCell < Cell::Base
     #    def my_first_state
@@ -328,6 +329,8 @@ module Cell
       if    opts[:text]
       elsif opts[:inline]
       elsif opts[:file]
+      elsif opts[:state]
+        opts[:text] = render_state(opts[:state])
       else
         # handle :layout, :template_format, :view
         opts = defaultize_render_options_for(opts, state)
@@ -375,7 +378,7 @@ module Cell
     # Prepares <tt>opts</tt> to be passed to ActionView::Base#render by removing
     # unknown parameters.
     def sanitize_render_options(opts)
-      opts.delete(:view)
+      [:view, :state].each do |k| opts.delete(k) end
       opts
     end
     
