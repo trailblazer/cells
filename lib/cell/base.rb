@@ -246,7 +246,6 @@ module Cell
     # Render the given state.  You can pass the name as either a symbol or
     # a string.
     def render_state(state)
-      ### DISCUSS: are these vars really needed in state views?
       @cell       = self
       @state_name = state
       
@@ -338,9 +337,7 @@ module Cell
         # set instance vars, include helpers:
         prepare_action_view_for(action_view, opts)
         
-        template = find_family_view_for_state_with_caching(opts[:view], action_view)
-        ### TODO: cache family_view for this cell_name/state in production mode,
-        ###   so we can save the call to possible_paths_for_state.
+        template    = find_family_view_for_state_with_caching(opts[:view], action_view)
         opts[:file] = template
       end
       
@@ -378,8 +375,7 @@ module Cell
     # Prepares <tt>opts</tt> to be passed to ActionView::Base#render by removing
     # unknown parameters.
     def sanitize_render_options(opts)
-      [:view, :state].each do |k| opts.delete(k) end
-      opts
+      opts.except!(:view, :state)
     end
     
     
