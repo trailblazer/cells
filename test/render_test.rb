@@ -190,7 +190,7 @@ class RenderTest < ActionController::TestCase
   def test_render_nothing
     ACell.class_eval do
       def existing_view;
-        render :nothing; end
+        render :nothing => true; end
     end
     assert_equal "", render_cell(:a, :existing_view)
   end

@@ -305,6 +305,13 @@ module Cell
     #
     # will make the variable +name+ available in the view <tt>say_your_name.html</tt>.
     #
+    #    def say_your_name
+    #      render :nothing => true
+    #    end
+    #
+    # will render an empty string thus keeping your name a secret.
+    #
+    #
     # ==== Where have all the partials gone?
     # In Cells we abandoned the term 'partial' in favor of plain 'views' - we don't need to distinguish 
     # between both terms. A cell view is both, a view and a kind of partial as it represents only a small
@@ -318,9 +325,7 @@ module Cell
     # if it can not find one of the requested view template. Note that this behaviour was
     # introduced in cells 2.3 and replaces the former warning message.
     def render_view_for(opts, state)
-      return ""       if opts == :nothing
-      
-      opts        = defaultize_render_options(opts)
+      return ""       if opts[:nothing]
       
       action_view = setup_action_view
       
@@ -346,9 +351,6 @@ module Cell
       action_view.render_for(opts)
     end
     
-    def defaultize_render_options(opts)
-      opts ||= {}
-    end
     
     # Defaultize the passed options from #render.
     def defaultize_render_options_for(opts, state)
