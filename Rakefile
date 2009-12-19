@@ -2,6 +2,13 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
+NAME = "cells"
+SUMMARY = %{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
+HOMEPAGE = "http://github.com/apotonick/#{NAME}"
+AUTHORS = ["Nick Sutterer", "Peter Bex", "Bob Leers"]
+EMAIL = "apotonick@gmail.com"
+SUPPORT_FILES = %w[README CHANGES]
+
 desc 'Default: run unit tests.'
 task :default => :test
 
@@ -23,3 +30,49 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
 end
 
 # rdoc -m "README.rdoc" init.rb lib/ generators/ README.rdoc
+
+# Gem managment tasks.
+#
+# == Bump gem version (any):
+#
+#   rake version:bump:major
+#   rake version:bump:minor
+#   rake version:bump:patch
+#
+# == Generate gemspec, build & install locally:
+#
+#   rake gemspec
+#   rake build
+#   sudo rake install
+#
+# == Git tag & push to origin/master
+#
+#   rake release
+#
+# == Release to Gemcutter.org:
+#
+#   rake gemcutter:release
+#
+begin
+  gem 'jeweler'
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name        = NAME
+    gemspec.summary     = SUMMARY
+    gemspec.description = SUMMARY
+    gemspec.homepage    = HOMEPAGE
+    gemspec.authors     = AUTHORS
+    gemspec.email       = EMAIL
+    
+    gemspec.require_paths = %w{lib}
+    gemspec.files = SUPPORT_FILES << %w(Rakefile) <<
+      Dir.glob(File.join(*%w[{generators,lib} ** *]).to_s)
+    gemspec.extra_rdoc_files = SUPPORT_FILES
+    
+    # gemspec.add_dependency 'activesupport', '>= 2.3.0' # Dependencies and minimum versions?
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler - or one of its dependencies - is not available. " <<
+        "Install it with: sudo gem install jeweler -s http://gemcutter.org"
+end
