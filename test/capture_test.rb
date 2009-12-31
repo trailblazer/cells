@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/testing_helper'
 
 require File.dirname(__FILE__) + '/cells/test_cell'
 
-class CellsTest < ActionController::TestCase
+class CaptureTest < ActionController::TestCase
   include CellsTestMethods
   
   def setup
