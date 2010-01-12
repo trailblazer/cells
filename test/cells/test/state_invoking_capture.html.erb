@@ -1,0 +1,7 @@
+<h1>
+<% @captured_block = global_capture :captured_block do %>
+	<%= "captured!" %>
+<% end %>
+</h1>
+
+<h2><%= @captured_block %></h2>

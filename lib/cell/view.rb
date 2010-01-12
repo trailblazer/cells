@@ -9,7 +9,7 @@ module Cell
     # otherwise it will throw an ActionView::MissingTemplate exception.
     def try_picking_template_for_path(template_path)
       self.view_paths.find_template(template_path, template_format)
-    end    
+    end
     
     ### TODO: this should just be a thin helper.
     ### dear rails folks, could you guys please provide a helper #render and an internal #render_for
