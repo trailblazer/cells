@@ -5,7 +5,7 @@ require 'rake/rdoctask'
 NAME = "cells"
 SUMMARY = %{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
 HOMEPAGE = "http://github.com/apotonick/#{NAME}"
-AUTHORS = ["Nick Sutterer", "Peter Bex", "Bob Leers"]
+AUTHORS = ["Nick Sutterer"]
 EMAIL = "apotonick@gmail.com"
 SUPPORT_FILES = %w[README CHANGES]
 
