@@ -1,22 +1,17 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
-
-NAME = "cells"
-SUMMARY = %{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
-HOMEPAGE = "http://github.com/apotonick/#{NAME}"
-AUTHORS = ["Nick Sutterer", "Peter Bex", "Bob Leers"]
-EMAIL = "apotonick@gmail.com"
-SUPPORT_FILES = %w[README CHANGES]
+require File.join(File.dirname(__FILE__), 'lib', 'cells', 'version')
 
 desc 'Default: run unit tests.'
 task :default => :test
 
 desc 'Test the cells plugin.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib'
+  test.libs << 'test'
+  test.pattern = 'test/**/*_test.rb'
+  test.verbose = true
 end
 
 desc 'Generate documentation for the cells plugin.'
@@ -56,23 +51,23 @@ end
 begin
   gem 'jeweler'
   require 'jeweler'
-  Jeweler::Tasks.new do |gemspec|
-    gemspec.name        = NAME
-    gemspec.summary     = SUMMARY
-    gemspec.description = SUMMARY
-    gemspec.homepage    = HOMEPAGE
-    gemspec.authors     = AUTHORS
-    gemspec.email       = EMAIL
-    
-    gemspec.require_paths = %w{lib}
-    gemspec.files = SUPPORT_FILES << %w(Rakefile) <<
-      Dir.glob(File.join(*%w[{generators,lib} ** *]).to_s)
-    gemspec.extra_rdoc_files = SUPPORT_FILES
-    
-    # gemspec.add_dependency 'activesupport', '>= 2.3.0' # Dependencies and minimum versions?
+
+  Jeweler::Tasks.new do |spec|
+    spec.name         = "cells"
+    spec.version      = Cells::VERSION
+    spec.summary      = %{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
+    spec.description  = spec.summary
+    spec.homepage     = "http://github.com/apotonick/#{spec.name}"
+    spec.authors      = ["Nick Sutterer", "Peter Bex", "Bob Leers"]
+    spec.email        = "apotonick@gmail.com"
+
+    spec.files = FileList["[A-Z]*", File.join(*%w[{generators,lib} ** *]).to_s, "init.rb"]
+
+    # spec.add_dependency 'activesupport', '>= 2.3.0' # Dependencies and minimum versions?
   end
+
   Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler - or one of its dependencies - is not available. " <<
-        "Install it with: sudo gem install jeweler -s http://gemcutter.org"
+  "Install it with: sudo gem install jeweler -s http://gemcutter.org"
 end
