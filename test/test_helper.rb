@@ -33,8 +33,7 @@ Cell::Base.add_view_path File.join(File.dirname(__FILE__), *%w[app cells])
 Cell::Base.add_view_path File.join(File.dirname(__FILE__), *%w[app cells layouts])
 
 ActionController::Routing::Routes.draw do |map|
-  map.connect ':controller/:action'
-  map.connect ':controller/:action/:id'
+  map.connect 'cells_test/:action', :controller => 'cells_test'
 end
 
 # require 'active_support/test_case' # for some reason ActionView::TestCase is undefined even after doing this. =S
