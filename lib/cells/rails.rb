@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'cells/rails/action_controller'
 require 'cells/rails/action_view'
 

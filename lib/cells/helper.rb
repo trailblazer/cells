@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # Sorry for the interface violations, but it looks as if there are
 # no interfaces in rails at all.
 module Cells

@@ -1,3 +1,4 @@
+# encoding: utf-8
 
 class CellsTestController < ActionController::Base
   def rescue_action(e)

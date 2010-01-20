@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # The Cells plugin defines a number of new methods for ActionView::Base.  These allow
 # you to render cells from within normal controller views as well as from Cell state views.
 module Cells

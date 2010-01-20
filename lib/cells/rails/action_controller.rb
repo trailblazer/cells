@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # These ControllerMethods are automatically added to all Controllers when
 # the cells plugin is loaded.
 module Cells

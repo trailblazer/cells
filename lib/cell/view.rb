@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Cell
   class View < ::ActionView::Base
 

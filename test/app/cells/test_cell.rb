@@ -1,5 +1,6 @@
-class TestCell < Cell::Base
+# encoding: utf-8
 
+class TestCell < Cell::Base
   def needs_view
     @instance_variable_one = "yeah"
     render
@@ -26,5 +27,4 @@ class TestCell < Cell::Base
   def state_using_params
     params[:my_param].to_s
   end
-
 end

@@ -4,7 +4,7 @@ require 'rubygems'
 begin
   require 'test/unit'
 rescue
-  gem 'test-unit'#, '1.2.3'
+  gem 'test-unit', '1.2.3'
   require 'test/unit'
 end
 

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # Assertion helpers extracted from Devise by José Valim.
 #
 class Test::Unit::TestCase
