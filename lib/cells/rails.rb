@@ -1,6 +1,13 @@
 require 'cells/rails/action_controller'
 require 'cells/rails/action_view'
 
+module Cells
+  module Rails
+    autoload :ActionController, 'cells/rails/action_controller'
+    autoload :ActionView, 'cells/rails/action_view'
+  end
+end
+
 # Add extended ActionController behaviour.
 ActionController::Base.class_eval do
   include ::Cells::Rails::ActionController

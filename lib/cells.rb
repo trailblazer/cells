@@ -39,8 +39,6 @@ Cell::Base.add_view_path File.join(*%w[app cells layouts]) ### DISCUSS: do we ne
 
 module Cells
   autoload :Helper, 'cells/helper'
-  # autoload :ActionController, 'cells/rails/action_controller'
-  # autoload :ActionView, 'cells/rails/action_view'
 end
 
 require 'cells/rails'

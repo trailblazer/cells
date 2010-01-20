@@ -16,9 +16,9 @@ module Cells
     #
     #  <%= @greeting %>
     def global_capture(name, &block)
-      global_view = controller.instance_variable_get( "@template" )
-      content     = capture &block
-      global_view.send("instance_variable_set", "@#{name}", content)
+      global_view = controller.instance_variable_get(:@template)
+      content     = capture(&block)
+      global_view.send(:instance_variable_set, :"@#{name}", content)
     end
 
 
@@ -36,11 +36,11 @@ module Cells
     #  <%= yield :greetings %>
     def global_content_for(name, content = nil, &block)
       # OMG.
-      global_view = controller.instance_variable_get( "@template" )
-      ivar        = "@content_for_#{name}"
+      global_view = controller.instance_variable_get(:@template)
+      ivar        = :"@content_for_#{name}"
       content     = capture(&block) if block_given?
-      old_content = global_view.send("instance_variable_get", ivar)
-      global_view.send("instance_variable_set", ivar, "#{old_content}#{content}")
+      old_content = global_view.send(:'instance_variable_get', ivar)
+      global_view.send(:'instance_variable_set', ivar, "#{old_content}#{content}")
       nil
     end
   end

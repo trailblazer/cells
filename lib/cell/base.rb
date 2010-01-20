@@ -1,9 +1,4 @@
-#require 'action_controller/base'
-#require 'cell/caching'
-#require 'action_controller/helpers'
-#require 'action_controller/request_forgery_protection.rb'
 require 'action_controller/base'
-
 require 'cell/caching'
 
 module Cell
@@ -176,7 +171,7 @@ module Cell
         methods.flatten.each do |method|
           master_helper_module.module_eval <<-end_eval
             def #{method}(*args, &block)
-              @cell.send(%(#{method}), *args, &block)
+              @cell.send(:#{method}, *args, &block)
             end
           end_eval
         end
@@ -337,7 +332,7 @@ module Cell
     # if it can not find one of the requested view template. Note that this behaviour was
     # introduced in cells 2.3 and replaces the former warning message.
     def render_view_for(opts, state)
-      return ""       if opts[:nothing]
+      return '' if opts[:nothing]
 
       action_view = setup_action_view
 
