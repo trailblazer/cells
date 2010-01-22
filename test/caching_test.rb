@@ -206,6 +206,12 @@ class CellsCachingTest < Test::Unit::TestCase
     a.render_state :existing_view
     assert ACell.state2view_cache.has_key?("existing_view/html") 
   end
+  
+  
+  def test_view_paths
+    assert_kind_of ActionView::PathSet, Cell::Base.view_paths, "must be a PathSet for proper template caching/reloading (see issue#2)"
+  end
+  
 end
 
 class CachingCell < Cell::Base

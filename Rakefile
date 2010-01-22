@@ -4,7 +4,7 @@ require 'rake/rdoctask'
 
 NAME = "cells"
 SUMMARY = %{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
-HOMEPAGE = "http://github.com/apotonick/#{NAME}"
+HOMEPAGE = "http://cells.rubyforge.org"
 AUTHORS = ["Nick Sutterer"]
 EMAIL = "apotonick@gmail.com"
 SUPPORT_FILES = %w[README CHANGES]
@@ -65,8 +65,7 @@ begin
     gemspec.email       = EMAIL
     
     gemspec.require_paths = %w{lib}
-    gemspec.files = SUPPORT_FILES << %w(Rakefile) <<
-      Dir.glob(File.join(*%w[{generators,lib} ** *]).to_s)
+    gemspec.files = FileList["[A-Z]*", File.join(*%w[{generators,lib} ** *]).to_s, "init.rb"]
     gemspec.extra_rdoc_files = SUPPORT_FILES
     
     # gemspec.add_dependency 'activesupport', '>= 2.3.0' # Dependencies and minimum versions?
