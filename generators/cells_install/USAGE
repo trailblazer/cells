@@ -1,0 +1,3 @@
+To copy a Cells initializer to your current Rails app - with some configuration values - just do:
+
+    script/generate cells_install
