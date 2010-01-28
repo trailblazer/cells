@@ -9,8 +9,7 @@ task :default => :test
 
 desc 'Test the cells plugin.'
 Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib'
-  test.libs << 'test'
+  test.libs << ['lib', 'test']
   test.pattern = 'test/**/*_test.rb'
   test.verbose = true
 end
@@ -55,14 +54,14 @@ begin
 
   Jeweler::Tasks.new do |spec|
     spec.name         = "cells"
-    spec.version      = Cells::VERSION
+    spec.version      = ::Cells::VERSION
     spec.summary      = %{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
     spec.description  = spec.summary
-    spec.homepage     = "http://github.com/apotonick/#{spec.name}"
+    spec.homepage     = "http://cells.rubyforge.org"
     spec.authors      = ["Nick Sutterer", "Peter Bex", "Bob Leers"]
     spec.email        = "apotonick@gmail.com"
 
-    spec.files = FileList["[A-Z]*", File.join(*%w[{generators,lib} ** *]).to_s, "init.rb"]
+    spec.files = FileList["[A-Z]*", File.join(*%w[{generators,lib,rails} ** *]).to_s]
 
     # spec.add_dependency 'activesupport', '>= 2.3.0' # Dependencies and minimum versions?
   end

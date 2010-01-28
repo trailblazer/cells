@@ -1,7 +1,7 @@
 # encoding: utf-8
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class ACell < Cell::Base
+class ACell < ::Cell::Base
   def existing_view
     @a = 'a'
     render

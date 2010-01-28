@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.join(File.dirname(__FILE__), 'test_helper')
+require File.join(File.dirname(__FILE__), *%w[test_helper])
 require File.join(File.dirname(__FILE__), *%w[app cells test_cell])
 
 class CaptureTest < ActionController::TestCase
@@ -27,7 +27,7 @@ class CaptureTest < ActionController::TestCase
 
   def test_global_capture
     TestCell.class_eval do
-      helper Cells::Helper
+      helper ::Cells::Helpers::CaptureHelper
       def state_invoking_capture
         render
       end
@@ -42,7 +42,7 @@ class CaptureTest < ActionController::TestCase
 
   def test_global_content_for
     TestCell.class_eval do
-      helper Cells::Helper
+      helper ::Cells::Helpers::CaptureHelper
       def state_invoking_content_for
         render
       end

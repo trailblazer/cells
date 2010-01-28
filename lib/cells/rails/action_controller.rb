@@ -8,7 +8,7 @@ module Cells
       # Equivalent to ActionController#render_to_string, except it renders a cell
       # rather than a regular templates.
       def render_cell(name, state, opts={})
-        cell = Cell::Base.create_cell_for(self, name, opts)
+        cell = ::Cell::Base.create_cell_for(self, name, opts)
         return cell.render_state(state)
       end
       alias_method :render_cell_to_string, :render_cell # just for backward compatibility.
@@ -29,8 +29,8 @@ module Cells
       #
       # will expire the view for state <tt>:display_list</tt> in the cell <tt>MyListingCell</tt>.
       def expire_cell_state(cell_name, state, args={}, opts=nil)
-        key = Cell::Base.cache_key_for(cell_name, state, args)
-        Cell::Base.expire_cache_key(key, opts)
+        key = ::Cell::Base.cache_key_for(cell_name, state, args)
+        ::Cell::Base.expire_cache_key(key, opts)
       end
     end
   end

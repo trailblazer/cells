@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class TestCell < Cell::Base
+class TestCell < ::Cell::Base
   def needs_view
     @instance_variable_one = "yeah"
     render

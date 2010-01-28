@@ -1,13 +1,9 @@
-# encoding: utf-8
+require 'cells'
 
+# Make cell class interface leaner, i.e. ::Cell::Base < ::Cells::Cell::Base, etc.
+# Note: Reason for doing like so is to make load path-resolving complexity to a minimum.
+#
 module Cell
-  autoload :Base, 'cell/base'
-  autoload :Caching, 'cell/caching'
-  autoload :View, 'cell/view'
-end
-
-# Mixin caching behaviour into +Cell::Base+.
-# Note: Must be done using class_eval.
-Cell::Base.class_eval do
-  include ::Cell::Caching
+  Base = ::Class.new(::Cells::Cell::Base)
+  View = ::Class.new(::Cells::Cell::View)
 end

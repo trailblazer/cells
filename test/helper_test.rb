@@ -13,7 +13,7 @@ module AnotherHelper
   end
 end
 
-class HelperUsingCell < Cell::Base
+class HelperUsingCell < ::Cell::Base
   helper CellsTestHelper
   helper_method :my_helper_method
 
@@ -66,7 +66,7 @@ class HelperTest < ActionController::TestCase
   #   there seems to be no automatic mechanism.
   def dont_test_auto_helper
     # ActionController::Base.helpers_dir = File.join(File.dirname(__FILE__), 'helpers')
-    Cell::Base.helpers_dir = File.join(File.dirname(__FILE__), 'app', 'helpers')
+    ::Cell::Base.helpers_dir = File.join(File.dirname(__FILE__), 'app', 'helpers')
     setup
 
     cell = HelperUsingCell.new(@controller)
@@ -101,7 +101,7 @@ class HelperTest < ActionController::TestCase
     cell = TestCell.new(@controller)
 
     # assert_raises (NameError) do
-    assert_raises (ActionView::TemplateError) do
+    assert_raises (::ActionView::TemplateError) do
       cell.render_state(:state_with_not_included_helper_method)
     end
   end

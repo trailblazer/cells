@@ -19,7 +19,7 @@ To quickly create the necessary files for an example cell run the generator:
 The generated cell class located in <tt>app/cells/article_cell.rb</tt> could look like
 this, after some editing:
 
-  class ArticleCell < Cell::Base
+  class ArticleCell < ::Cell::Base
     helper :my_formatting_and_escaping_helper   # you can use helpers in cell views!
     
     def newest
@@ -116,7 +116,7 @@ This release is tested and runs with Rails 2.3.
 
 = Documentation
 
-Reference documentation is found in the documentation of the Cell::Base class.
+Reference documentation is found in the documentation of the ::Cell::Base class.
 
 See http://cells.rubyforge.org for documentation targeted at cells
 newbies, including an overview of what you can do with cells and a

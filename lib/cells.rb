@@ -21,25 +21,48 @@ rescue
   require 'action_view'
 end
 
-# A bit of cheating to avoid breaking the current pattern: Cell::Base, etc.
+require 'cells/cell'
+require 'cells/helpers'
 require 'cell'
 
-# Tell *Rails* to load files in path:
-#
-#   * +app/cells+
-#
-ActiveSupport::Dependencies.load_paths << Rails.root.join(*%w[app cells]) if defined?(Rails)
-
-# Tell *Cells* to look for view templates in paths:
-#
-#   * +app/cells+
-#   * +app/cells/layouts+
-#
-Cell::Base.add_view_path File.join(*%w[app cells])
-Cell::Base.add_view_path File.join(*%w[app cells layouts]) ### DISCUSS: do we need shared layouts for different cells?
-
 module Cells
-  autoload :Helper, 'cells/helper'
+  # Any config should be placed here using +mattr_accessor+.
+
+  # Default view paths for Cells.
+  DEFAULT_VIEW_PATHS = [
+    File.join('app', 'cells'),
+    File.join('app', 'cells', 'layouts')
+  ].freeze
+
+  class << self
+    # Holds paths in which Cells should look for cell views (i.e. view template files).
+    #
+    # == Default:
+    #
+    #   * +app/cells+
+    #   * +app/cells/layouts+
+    #
+    def self.view_paths(paths)
+      ::Cell::Base.view_paths ||= DEFAULT_VIEW_PATHS
+    end
+    def self.view_paths=(paths)
+      ::Cell::Base.view_paths = [*paths]
+    end
+  end
+
+  # Cells setup/configuration helper for initializer.
+  #
+  # == Usage/Exmaples:
+  #
+  #   Cells.setup do |config|
+  #     config.cell_view_paths << Rails.root.join('lib', 'cells')
+  #   end
+  #
+  def self.setup
+    yield(self)
+  end
 end
+
+Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
 
 require 'cells/rails'

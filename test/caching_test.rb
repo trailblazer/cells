@@ -1,7 +1,7 @@
 # encoding: utf-8
-require File.join(File.dirname(__FILE__), 'test_helper')
+require File.join(File.dirname(__FILE__), *%w[test_helper])
 
-class CachingCell < Cell::Base
+class CachingCell < ::Cell::Base
   cache :cached_state
 
   def cached_state
@@ -48,7 +48,7 @@ class CachingCell < Cell::Base
   end
 end
 
-class AnotherCachingCell < Cell::Base
+class AnotherCachingCell < ::Cell::Base
   cache :cheers
   def cheers
     'prost!'
@@ -130,7 +130,7 @@ class CachingTest < ActiveSupport::TestCase
 
   def test_cache_key
     assert_equal "cells/caching/some_state", @cc.cache_key(:some_state)
-    assert_equal @cc.cache_key(:some_state), Cell::Base.cache_key_for(:caching, :some_state)
+    assert_equal @cc.cache_key(:some_state), ::Cell::Base.cache_key_for(:caching, :some_state)
     assert_equal "cells/caching/some_state/param=9", @cc.cache_key(:some_state, :param => 9)
     assert_equal "cells/caching/some_state/a=1/b=2", @cc.cache_key(:some_state, :b => 2, :a => 1)
   end
@@ -218,24 +218,24 @@ class CachingTest < ActiveSupport::TestCase
   def test_expire_cache_key
     key = @cc.cache_key(:cached_state)
     @cc.render_state(:cached_state)
-    assert Cell::Base.cache_store.read(key)
+    assert ::Cell::Base.cache_store.read(key)
 
-    Cell::Base.expire_cache_key(key)
-    assert_not Cell::Base.cache_store.read(key)
+    ::Cell::Base.expire_cache_key(key)
+    assert_not ::Cell::Base.cache_store.read(key)
 
     # test via ActionController::expire_cell_state, which is called from Sweepers.
     @cc.render_state(:cached_state)
-    assert Cell::Base.cache_store.read(key)
+    assert ::Cell::Base.cache_store.read(key)
 
     @controller.expire_cell_state(:caching, :cached_state)
-    assert_not Cell::Base.cache_store.read(k)
+    assert_not ::Cell::Base.cache_store.read(k)
 
     # ..and additionally test if passing cache key args works:
     key = @cc.cache_key(:cached_state, :more => :yes)
-    assert Cell::Base.cache_store.write(key, 'test content')
+    assert ::Cell::Base.cache_store.write(key, 'test content')
 
     @controller.expire_cell_state(:caching, :cached_state, :more => :yes)
-    assert_not Cell::Base.cache_store.read(key)
+    assert_not ::Cell::Base.cache_store.read(key)
   end
 
   def test_find_family_view_for_state_with_caching

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class CellsTestOneCell < Cell::Base
+class CellsTestOneCell < ::Cell::Base
   def super_state
     @my_class = self.class.to_s
     return

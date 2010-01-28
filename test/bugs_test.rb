@@ -1,7 +1,7 @@
 # encoding: utf-8
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class MyTestCell < Cell::Base
+class MyTestCell < ::Cell::Base
   def state_with_instance_var
     @my_ivar = 'value from cell'
     render

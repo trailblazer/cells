@@ -3,22 +3,22 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 require File.join(File.dirname(__FILE__), *%w[app cells cells_test_one_cell])
 
 module Some
-  class Cell < Cell::Base
+  class Cell < ::Cell::Base
   end
 end
 
-class JustOneViewCell < Cell::Base
+class JustOneViewCell < ::Cell::Base
   def some_state
     render
   end
 end
 
-class CellContainedInPlugin < Cell::Base
+class CellContainedInPlugin < ::Cell::Base
   def some_view
   end
 end
 
-class MyTestCell < Cell::Base
+class MyTestCell < ::Cell::Base
   def direct_output
     "<h9>this state method doesn't render a template but returns a string, which is great!</h9>"
   end
@@ -68,7 +68,7 @@ end
 
 # fixtures for view inheritance -------------------------------
 # views are located in cells/test/cells/my_mother_cell/
-class MyMotherCell < Cell::Base
+class MyMotherCell < ::Cell::Base
   def hello
     @message = 'hello, kid!'
     render
@@ -93,7 +93,7 @@ class MyChildCell < MyMotherCell
 end
 
 module ReallyModule
-  class NestedCell < Cell::Base
+  class NestedCell < ::Cell::Base
     # view: cells/test/cells/really_module/nested_cell/happy_state.html.erb
     def happy_state
       render
@@ -230,7 +230,7 @@ class CellsTest < ActionController::TestCase
   def test_find_family_view_for_state
     cell = MyChildCell.new(@controller)
     cells_path = File.join(File.dirname(__FILE__), 'app', 'cells')
-    cell_template = cell.find_family_view_for_state(:bye, Cell::View.new([cells_path], {}, @controller))
+    cell_template = cell.find_family_view_for_state(:bye, ::Cell::View.new([cells_path], {}, @controller))
 
     assert_equal 'my_mother/bye.html.erb', cell_template.path
   end
@@ -244,20 +244,20 @@ class CellsTest < ActionController::TestCase
   end
 
   def test_class_from_cell_name
-    assert_equal CellsTestOneCell, Cell::Base.class_from_cell_name('cells_test_one')
+    assert_equal CellsTestOneCell, ::Cell::Base.class_from_cell_name('cells_test_one')
   end
 
   def test_default_template_format
     # test getter
     cell = MyTestCell.new(@controller)
 
-    assert_equal :html, Cell::Base.default_template_format
+    assert_equal :html, ::Cell::Base.default_template_format
     assert_equal :html, cell.class.default_template_format
 
     # test setter
     MyTestCell.default_template_format = :js
 
-    assert_equal :html, Cell::Base.default_template_format
+    assert_equal :html, ::Cell::Base.default_template_format
     assert_equal :js, cell.class.default_template_format
   end
 
