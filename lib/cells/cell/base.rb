@@ -443,7 +443,12 @@ module Cells
       # Defines the instance variables that should <em>not</em> be copied to the
       # View instance.
       def ivars_to_ignore;  ['@controller']; end
-
+      
+      ### TODO: allow log levels.
+      def log(message)
+        return unless @controller.logger
+        @controller.logger.debug(message)
+      end
     end
   end
 end

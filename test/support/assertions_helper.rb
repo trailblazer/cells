@@ -1,5 +1,6 @@
 # encoding: utf-8
-
+require 'action_controller/test_case'
+ 
 # Assertion helpers extracted from Devise by José Valim.
 #
 module Cells

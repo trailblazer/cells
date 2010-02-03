@@ -311,6 +311,12 @@ class CellsTest < ActionController::TestCase
 
     assert_equal 'value', c
   end
+  
+  def test_log
+    assert_nothing_raised do
+      TestCell.new(@controller).log("everything is perfect!")
+    end
+  end
 
   ### functional tests: ---------------------------------------------------------
 

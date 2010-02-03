@@ -70,6 +70,9 @@ class CachingTest < ActiveSupport::TestCase
     @old_action_controller_perform_caching = ::ActionController::Base.perform_caching
     ::ActionController::Base.cache_store = :memory_store
     ::ActionController::Base.perform_caching = true
+    
+    ### FIXME: sorry for that, but we need to force caching. avoid #alias_method_chain.
+    Cell::Base.alias_method_chain :render_state, :caching unless Cell::Base.method_defined? :render_state_without_caching
   end
 
   def teardown
@@ -228,7 +231,7 @@ class CachingTest < ActiveSupport::TestCase
     assert ::Cell::Base.cache_store.read(key)
 
     @controller.expire_cell_state(:caching, :cached_state)
-    assert_not ::Cell::Base.cache_store.read(k)
+    assert_not ::Cell::Base.cache_store.read(key)
 
     # ..and additionally test if passing cache key args works:
     key = @cc.cache_key(:cached_state, :more => :yes)
