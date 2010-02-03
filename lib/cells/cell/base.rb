@@ -221,7 +221,7 @@ module Cells
       end
 
       class_inheritable_array :view_paths, :instance_writer => false
-      self.view_paths = ActionView::PathSet.new
+      write_inheritable_attribute(:view_paths, ActionView::PathSet.new) # Force use of a PathSet in this attribute, self.view_paths = ActionView::PathSet.new would still yield in an array
 
       class_inheritable_accessor :allow_forgery_protection
       self.allow_forgery_protection = true
