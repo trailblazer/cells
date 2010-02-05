@@ -1,8 +1,8 @@
 - 2.3
-  * Cell::Base#new(controller, opts={})
+  * ::Cell::Base#new(controller, opts={})
     We got rid of the second argument cell_name, since it was completely useless.
   * when a state view couldn't be found there's no longer a warning message, but an exception.
-  * moved Cell::Base to lib/cell/base.rb
+  * moved ::Cell::Base to lib/cell/base.rb
   * moved Rails extension code to lib/rails_extensions.rb
   * removed all the boot code since we don't need it anymore
   
@@ -16,7 +16,7 @@
     that fixes bug #1
   * introduced view inheritance, so derived cells inherit view files from their
     superclass
-  * introduced automatic view file finding, Cell::Base#path is no longer needed
+  * introduced automatic view file finding, ::Cell::Base#path is no longer needed
   * added support for helpers in cell views
   * removed Cell::Registry in favor or a new cells autoloading mechanism
   
