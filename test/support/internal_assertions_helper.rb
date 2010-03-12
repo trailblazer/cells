@@ -1,11 +1,10 @@
 # encoding: utf-8
-require 'action_controller/test_case'
- 
-# Assertion helpers extracted from Devise by José Valim.
-#
 module Cells
-  module AssertionsHelper
+  # Assertion helpers extracted from Devise by José Valim.
+  #
+  module InternalAssertionsHelper
     def setup
+      ### TODO: clean up CellsTestController.
       @controller = ::CellsTestController.new
       @request    = ::ActionController::TestRequest.new
       @response   = ::ActionController::TestResponse.new
@@ -13,21 +12,7 @@ module Cells
       @controller.response = @response
       @controller.params = {}
     end
-    
-    # Use this for functional tests of your application cells.
-    #
-    # Example:
-    #   should "spit out a h1 title" do
-    #     html = render_cell(:news, :latest)
-    #     assert_selekt html, "h1", "The latest and greatest!"
-    def render_cell(*args)
-      @controller.render_cell(*args)
-    end
-
-    def assert_selekt(content, *args)
-      assert_select(HTML::Document.new(content).root, *args)
-    end
-
+      
     def assert_not(assertion)
       assert !assertion
     end
@@ -75,6 +60,5 @@ module Cells
       cell.instance_eval(&block) if block_given?
       cell
     end
-    
   end
 end

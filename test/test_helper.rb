@@ -68,7 +68,9 @@ end
 
 # Load test support files.
 Dir[File.join(File.dirname(__FILE__), *%w[support ** *.rb]).to_s].each { |f| require f }
+require File.join(File.dirname(__FILE__), *%w[.. lib cells assertions_helper])
 
 ActiveSupport::TestCase.class_eval do
   include Cells::AssertionsHelper
+  include Cells::InternalAssertionsHelper
 end
