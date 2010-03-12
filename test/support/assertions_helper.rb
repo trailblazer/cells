@@ -13,6 +13,16 @@ module Cells
       @controller.response = @response
       @controller.params = {}
     end
+    
+    # Use this for functional tests of your application cells.
+    #
+    # Example:
+    #   should "spit out a h1 title" do
+    #     html = render_cell(:news, :latest)
+    #     assert_selekt html, "h1", "The latest and greatest!"
+    def render_cell(*args)
+      @controller.render_cell(*args)
+    end
 
     def assert_selekt(content, *args)
       assert_select(HTML::Document.new(content).root, *args)
@@ -56,5 +66,15 @@ module Cells
         object.send :"#{key}=", value
       end
     end
+    
+    # Provides a TestCell instance. The <tt>block</tt> is passed to instance_eval and should be used
+    # to extend the mock on the fly.
+    ### DISCUSS: make an anonymous subclass of TestCell?
+    def cell_mock(options={}, &block)
+      cell = TestCell.new(@controller, options)
+      cell.instance_eval(&block) if block_given?
+      cell
+    end
+    
   end
 end

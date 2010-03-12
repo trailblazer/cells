@@ -29,6 +29,13 @@ rescue
   require 'action_view'
 end
 
+begin
+  require 'shoulda'
+rescue
+  gem 'shoulda'
+  require 'shoulda'
+end
+
 require 'active_support/test_case'
 
 # Require app's test_helper.rb if such exists.
