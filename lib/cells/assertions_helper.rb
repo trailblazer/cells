@@ -33,6 +33,17 @@ module Cells
     def assert_selekt(content, *args)
       assert_select(HTML::Document.new(content).root, *args)
     end
+    
+    # Builds an instance of <tt>name</tt>Cell for unit testing.
+    # Passes the optional block to <tt>cell.instance_eval</tt>.
+    #
+    # Example:
+    #   assert_equal "Banks kill planet!" cell(:news, :topic => :terror).latest_headline
+    def cell(name, opts={}, &block)
+      cell = Cell::Base.create_cell_for(@controller, name, opts)
+      cell.instance_eval &block if block_given?
+      cell
+    end
   end
 end
 
