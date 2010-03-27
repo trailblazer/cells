@@ -17,16 +17,19 @@ class CellGenerator < ControllerGenerator
       # Directories
       m.directory File.join('app/cells', class_path)
       m.directory File.join('app/cells', class_path, file_name)
-
+      m.directory File.join('test/cells')
+      
       # Cell
       m.template 'cell.rb', File.join('app/cells', class_path, "#{file_name}_cell.rb")
 
       # View template for each action.
       actions.each do |action|
         path = File.join('app/cells', class_path, file_name, "#{action}.html.#{template_type}")
-        m.template "view.html.#{template_type}", path,
-          :assigns => { :action => action, :path => path }
+        m.template "view.html.#{template_type}", path, :assigns => { :action => action, :path => path }
       end
+      
+      # Functional test for the widget.
+      m.template 'cell_test.rb', File.join('test/cells/', "#{file_name}_cell_test.rb"), :assigns => {:states => actions}
     end
   end
 

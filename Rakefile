@@ -62,7 +62,7 @@ begin
     spec.authors      = ["Nick Sutterer"]
     spec.email        = "apotonick@gmail.com"
 
-    spec.files = FileList["[A-Z]*", File.join(*%w[{generators,lib,rails} ** *]).to_s]
+    spec.files = FileList["[A-Z]*", File.join(*%w[{lib,rails,rails_generators} ** *]).to_s]
 
     # spec.add_dependency 'activesupport', '>= 2.3.0' # Dependencies and minimum versions?
   end
