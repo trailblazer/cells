@@ -60,5 +60,11 @@ module Cells
       cell.instance_eval(&block) if block_given?
       cell
     end
+    
+    def bassist_mock(options={}, &block)
+      cell = BassistCell.new(@controller, options)
+      cell.instance_eval(&block) if block_given?
+      cell
+    end
   end
 end

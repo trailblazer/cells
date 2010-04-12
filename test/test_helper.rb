@@ -74,3 +74,5 @@ ActiveSupport::TestCase.class_eval do
   include Cells::AssertionsHelper
   include Cells::InternalAssertionsHelper
 end
+
+require File.join(File.dirname(__FILE__), *%w[app cells bassist_cell])

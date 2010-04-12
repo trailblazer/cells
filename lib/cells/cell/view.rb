@@ -18,11 +18,11 @@ module Cells
       ### so that we can overwrite the helper and cleanly reuse the internal method? using the same
       ### method both internally and externally sucks ass.
       def render(options = {}, local_assigns = {}, &block)
-        ### TODO: delegate dynamically:
         ### TODO: we have to find out if this is a call to the cells #render method, or to the rails
         ###       method (e.g. when rendering a layout). what a shit.
-        if view = options[:view]
-          return cell.render_view_for(options, view)
+        if (options.keys & [:view, :state]).present?  ### TODO: is there something like has_keys?
+          # that's better: simply delegate render back to the cell/controller.
+          return cell.render(options)
         end
 
         # rails compatibility we should get rid of:
@@ -30,7 +30,6 @@ module Cells
           # adds the cell name to the partial name.
           options[:partial] = expand_view_path(partial_path)
         end
-        #throw Exception.new
 
         super(options, local_assigns, &block)
       end

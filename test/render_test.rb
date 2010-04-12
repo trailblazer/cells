@@ -283,4 +283,20 @@ class RenderTest < ActiveSupport::TestCase
     end
     assert_equal "Metal:A/another_state/a,b", render_cell(:a, :existing_view)
   end
+  
+  context "render :state within a view" do
+    should "return the state content" do
+      assert_equal( "\nDoo\n\nDoo\n\nDoo\n\nDoo\n", 
+        bassist_mock do
+          def jam
+            @chords = %w(d a c g)
+            render
+          end
+          def play
+            render
+          end
+        end.render_state(:jam)
+      )
+    end
+  end
 end
