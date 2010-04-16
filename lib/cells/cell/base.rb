@@ -140,6 +140,7 @@ module Cells
     class Base
       include ::ActionController::Helpers
       include ::ActionController::RequestForgeryProtection
+      include ActiveHelper
       
       class_inheritable_array :view_paths, :instance_writer => false
       write_inheritable_attribute(:view_paths, ActionView::PathSet.new) # Force use of a PathSet in this attribute, self.view_paths = ActionView::PathSet.new would still yield in an array
@@ -367,6 +368,8 @@ module Cells
       def prepare_action_view_for(action_view, opts)
         # make helpers available:
         include_helpers_in_class(action_view.class)
+        
+        import_active_helpers_into(action_view) # in Cells::Cell::ActiveHelper.
 
         action_view.assigns         = assigns_for_view  # make instance vars available.
         action_view.template_format = opts[:template_format]

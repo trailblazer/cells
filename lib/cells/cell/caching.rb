@@ -3,7 +3,7 @@
 # To improve performance rendered state views can be cached using Rails' caching
 # mechanism.
 # If this it configured (e.g. using our fast friend memcached) all you have to do is to
-# tell Cells which state you want to cache. You can further attach a proc to expire the
+# tell Cells which state to cache. You can further attach a proc to expire the
 # cached view.
 #
 # As always I stole a lot of code, this time from Lance Ivy <cainlevy@gmail.com> and

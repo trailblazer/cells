@@ -52,7 +52,7 @@ module Cells
 
   # Cells setup/configuration helper for initializer.
   #
-  # == Usage/Exmaples:
+  # == Usage/Examples:
   #
   #   Cells.setup do |config|
   #     config.cell_view_paths << Rails.root.join('lib', 'cells')

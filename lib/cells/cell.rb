@@ -5,6 +5,7 @@ module Cells
     autoload :Base, 'cells/cell/base'
     autoload :View, 'cells/cell/view'
     autoload :Caching, 'cells/cell/caching'
+    autoload :ActiveHelper, 'cells/cell/active_helper'
   end
 end
 
