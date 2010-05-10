@@ -395,6 +395,7 @@ module Cells
 
       # Prepares the hash {instance_var => value, ...} that should be available
       # in the ActionView when rendering the state view.
+      ### DISCUSS: to we need that at all?
       def assigns_for_view
         assigns = {}
         (self.instance_variables - ivars_to_ignore).each do |k|
@@ -411,6 +412,7 @@ module Cells
 
       # Defines the instance variables that should <em>not</em> be copied to the
       # View instance.
+      ### DISCUSS: to we need that at all?
       def ivars_to_ignore;  ['@controller']; end
       
       ### TODO: allow log levels.
