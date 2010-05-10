@@ -137,16 +137,21 @@ module Cells
     #   cells/user/user_form_de.html.erb
     #
     # If gettext is set to DE_de, the latter view will be chosen.
+    require 'cells/cell/rails'
     class Base
-      include ::ActionController::Helpers
-      include ::ActionController::RequestForgeryProtection
+      
+    include ::ActionController::Helpers
+      
       include ActiveHelper
       
       class_inheritable_array :view_paths, :instance_writer => false
       write_inheritable_attribute(:view_paths, ActionView::PathSet.new) # Force use of a PathSet in this attribute, self.view_paths = ActionView::PathSet.new would still yield in an array
       
       class << self
-        attr_accessor :request_forgery_protection_token
+        attr_accessor :framework
+        
+        
+        
         
         # Use this if you want Cells to look up view templates
         # in directories other than the default.
@@ -230,6 +235,10 @@ module Cells
         end
       end
       
+      
+      
+      
+      
 
       class_inheritable_accessor :allow_forgery_protection
       self.allow_forgery_protection = true
@@ -245,6 +254,14 @@ module Cells
       def initialize(controller, options={})
         @controller = controller
         @opts       = options
+        
+       if Cell::Base.framework == :sinatra
+        extend Cells::Cell::SinatraMethods
+        puts "siiiinatra"
+      else
+      #puts "raaaails"
+      extend Cells::Cell::Rails
+      end
       end
 
       def cell_name
@@ -328,65 +345,7 @@ module Cells
         render_view_for(opts, @state_name)  ### FIXME: i don't like the magic access to @state_name here. ugly!
       end
 
-      # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
-      # if it can not find one of the requested view template. Note that this behaviour was
-      # introduced in cells 2.3 and replaces the former warning message.
-      def render_view_for(opts, state)
-        return '' if opts[:nothing]
-
-        action_view = setup_action_view
-
-        ### TODO: dispatch dynamically:
-        if    opts[:text]
-        elsif opts[:inline]
-        elsif opts[:file]
-        elsif opts[:state]
-          opts[:text] = render_state(opts[:state])
-        else
-          # handle :layout, :template_format, :view
-          opts = defaultize_render_options_for(opts, state)
-
-          # set instance vars, include helpers:
-          prepare_action_view_for(action_view, opts)
-
-          template    = find_family_view_for_state_with_caching(opts[:view], action_view)
-          opts[:file] = template
-        end
-
-        opts = sanitize_render_options(opts)
-
-        action_view.render_for(opts)
-      end
-
-      # Defaultize the passed options from #render.
-      def defaultize_render_options_for(opts, state)
-        opts[:template_format]  ||= self.class.default_template_format
-        opts[:view]             ||= state
-        opts
-      end
-
-      def prepare_action_view_for(action_view, opts)
-        # make helpers available:
-        include_helpers_in_class(action_view.class)
-        
-        import_active_helpers_into(action_view) # in Cells::Cell::ActiveHelper.
-
-        action_view.assigns         = assigns_for_view  # make instance vars available.
-        action_view.template_format = opts[:template_format]
-      end
-
-      def setup_action_view
-        view_class  = Class.new(::Cells::Cell::View)
-        action_view = view_class.new(self.class.view_paths, {}, @controller)
-        action_view.cell = self
-        action_view
-      end
-
-      # Prepares <tt>opts</tt> to be passed to ActionView::Base#render by removing
-      # unknown parameters.
-      def sanitize_render_options(opts)
-        opts.except!(:view, :state)
-      end
+      
 
       # Climbs up the inheritance hierarchy of the Cell, looking for a view
       # for the current <tt>state</tt> in each level.

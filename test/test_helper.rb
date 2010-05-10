@@ -75,4 +75,11 @@ ActiveSupport::TestCase.class_eval do
   include Cells::InternalAssertionsHelper
 end
 
-require File.join(File.dirname(__FILE__), *%w[app cells bassist_cell])
+require File.join(File.dirname(__FILE__), %w(app cells bassist_cell))
+require File.join(File.dirname(__FILE__), %w(app cells bad_guitarist_cell))
+
+
+
+
+### FIXME:
+Cell::Base.framework = :rails
