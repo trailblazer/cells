@@ -51,6 +51,13 @@ class SinatraRenderTest < ActiveSupport::TestCase
       assert_equal "Doo", render_cell(:bassist, :play)
     end
     
+    should "render a haml view" do
+      BassistCell.class_eval do
+        def sing; render :engine => :haml; end
+      end
+      assert_equal "Haml!\n", render_cell(:bassist, :sing)
+    end
+    
     should "render instance variables from the cell" do
       assert_equal "Boing in D", render_cell(:bassist, :slap)
     end

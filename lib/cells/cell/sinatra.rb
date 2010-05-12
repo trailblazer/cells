@@ -49,13 +49,12 @@ module Cells
           # set instance vars, include helpers:
           
           views = self.class.view_paths[2]  ### FIXME: use view_paths.first
-
-          file = find_family_view_for(state, options, views)
+          file  = find_family_view_for(state, options, views)
           
           
           
-          
-          view.erb "#{file}.#{options[:template_format]}".to_sym, :views => views
+          # call view.erb(..) or friends:
+          view.send(options[:engine], "#{file}.#{options[:template_format]}".to_sym, :views => views)
         end
         
         # Returns the first existing view for +state+ in the inheritance chain.

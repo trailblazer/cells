@@ -11,6 +11,16 @@ class SinatraCellsTest < ActiveSupport::TestCase
       
     end
     
+    context "invoking defaultize_render_options_for" do
+      should "set default values" do
+        assert_equal({:engine => :erb, :template_format => :html}, cell(:bassist).defaultize_render_options_for({}, :play))
+      end
+      
+      should "allow overriding defaults" do
+        assert cell(:bassist).defaultize_render_options_for({:engine => :haml}, :play)[:engine] == :haml
+      end
+    end
+    
     context "invoking find_family_view_for" do
       setup do
         @views = File.join(File.dirname(__FILE__), '/../app/cells')
