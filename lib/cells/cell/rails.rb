@@ -22,10 +22,10 @@ module Cells
             action_view = setup_action_view
     
             ### TODO: dispatch dynamically:
-            if    opts[:text]
+            if    opts[:text]   ### FIXME: generic option?
             elsif opts[:inline]
             elsif opts[:file]
-            elsif opts[:state]
+            elsif opts[:state]  ### FIXME: generic option
               opts[:text] = render_state(opts[:state])
             else
               # handle :layout, :template_format, :view

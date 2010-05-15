@@ -62,9 +62,29 @@ class SinatraRenderTest < ActiveSupport::TestCase
       assert_equal "Boing in D", render_cell(:bassist, :slap)
     end
     
+    # layout
+    should "render a view with layout" do
+      BassistCell.class_eval do
+        def play; render :layout => :b; end
+      end
+      assert_equal "<b>Doo</b>", render_cell(:bassist, :play)
+    end
+    
+    
     # inheriting
     should "inherit play.html.erb from BassistCell" do
       assert_equal "Doo", render_cell(:bad_guitarist, :play)
     end
   end
+  
+  context "A view" do
+    # sinatra view api
+    should "allow calls to params/response/..." do
+      BassistCell.class_eval do
+        def pose; render; end
+      end
+      assert_equal "<b>Doo</b>", render_cell(:bassist, :pose)
+    end
+  end
+  
 end

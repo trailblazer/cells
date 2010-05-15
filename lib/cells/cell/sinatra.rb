@@ -31,39 +31,37 @@ module Cells
       
       
       # Defaultize the passed options from #render.
-          def defaultize_render_options_for(opts, state)
-            opts[:template_format]  ||= self.class.default_template_format
-            #opts[:view]             ||= state
-            opts.reverse_merge! :engine       => :erb
-            opts
-          end
+      def defaultize_render_options_for(options, state)
+        options.reverse_merge!  :engine           => :erb,
+                                :template_format  => self.class.default_template_format
+      end
       
       def render_view_for(options, state)
-          # handle :layout, :template_format, :view
-          options = defaultize_render_options_for(options, state)
-          
-          view = ::Cells::Cell::Sinatra::View.new
-          view.copy_ivars(assigns)  ### DISCUSS: how can we avoid copying?
-
-
-          # set instance vars, include helpers:
-          
-          views = self.class.view_paths[2]  ### FIXME: use view_paths.first
-          file  = find_family_view_for(state, options, views)
-          
-          
-          
-          # call view.erb(..) or friends:
-          view.send(options[:engine], "#{file}.#{options[:template_format]}".to_sym, :views => views)
-        end
+        # handle :layout, :template_format, :view
+        options = defaultize_render_options_for(options, state)
         
-        # Returns the first existing view for +state+ in the inheritance chain.
-        def find_family_view_for(state, options, views)
-          possible_paths_for_state(state).find do |template_path|
-            path = ::File.join(views, "#{template_path}.#{options[:template_format]}.#{options[:engine]}")
-            ::File.readable?(path)
-          end
+        view = ::Cells::Cell::Sinatra::View.new
+        view.copy_ivars(assigns)  ### DISCUSS: how can we avoid copying?
+
+
+        # set instance vars, include helpers:
+        views = self.class.view_paths[2]  ### FIXME: use view_paths.first
+        file  = find_family_view_for(state, options, views)
+        
+        ### TODO: compile sinatra options:
+        options[:views] = views
+        
+        # call view.erb(..) or friends:
+        view.send(options[:engine], "#{file}.#{options[:template_format]}".to_sym, options)
+      end
+        
+      # Returns the first existing view for +state+ in the inheritance chain.
+      def find_family_view_for(state, options, views)
+        possible_paths_for_state(state).find do |template_path|
+          path = ::File.join(views, "#{template_path}.#{options[:template_format]}.#{options[:engine]}")
+          ::File.readable?(path)
         end
+      end
         
     end
   end
