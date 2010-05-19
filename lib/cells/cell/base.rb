@@ -257,6 +257,8 @@ module Cells
         
        if Cell::Base.framework == :sinatra
         extend Cells::Cell::SinatraMethods
+        init_framework
+        
         puts "siiiinatra"
       else
       #puts "raaaails"

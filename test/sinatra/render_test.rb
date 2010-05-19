@@ -18,24 +18,6 @@ class SinatraRenderTest < ActiveSupport::TestCase
   def render_cell(name, state, opts={})  ### FIXME.
       cell = ::Cell::Base.create_cell_for(@controller, name, opts)
       return cell.render_state(state)
-  end  
-  
-  context "Sinatra::View" do
-    should "respond to copy_ivars" do
-      view = ::Cells::Cell::Sinatra::View.new
-      
-      assert_nil view.instance_variable_get(:@model)
-      
-      view.copy_ivars( {:@model => 'precision'})
-      assert_equal 'precision', view.instance_variable_get(:@model)
-    end
-  end
-  
-  context "SinatraMethods" do
-    should "respond to assigns" do
-      Cell::Base.framework = :sinatra
-      assert_kind_of Hash, cell(:bassist).assigns
-    end
   end
   
   context "Invoking render" do
@@ -86,10 +68,8 @@ class SinatraRenderTest < ActiveSupport::TestCase
     end
   end
   
-  context "A view" do
+  context "A cell" do
     setup do
-      
-      
       @controller = MyApp.new
     end
     
@@ -103,9 +83,7 @@ class SinatraRenderTest < ActiveSupport::TestCase
     
     should "delegate #settings to the app" do
       @controller.class.set :skills, :awesome
-      
-      view = Cells::Cell::Sinatra::View.new(@controller)
-      assert_equal :awesome, view.settings.skills
+      assert_equal :awesome, cell(:bassist).settings.skills
     end
   end
   
