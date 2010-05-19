@@ -25,7 +25,6 @@ class SinatraRenderTest < ActiveSupport::TestCase
       Cell::Base.framework = :sinatra
       
       BassistCell.class_eval do
-        def play; render; end
         def slap; @note = "D"; render; end
       end
       
@@ -71,6 +70,8 @@ class SinatraRenderTest < ActiveSupport::TestCase
   context "A cell" do
     setup do
       @controller = MyApp.new
+      
+      Cell::Base.framework = :sinatra
     end
     
     # sinatra view api

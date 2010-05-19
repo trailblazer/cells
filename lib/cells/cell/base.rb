@@ -150,7 +150,9 @@ module Cells
       class << self
         attr_accessor :framework
         
-        
+        def render_cell_for(controller, name, state, opts={})
+          create_cell_for(controller, name, opts).render_state(state)
+        end
         
         
         # Use this if you want Cells to look up view templates
@@ -258,11 +260,8 @@ module Cells
        if Cell::Base.framework == :sinatra
         extend Cells::Cell::SinatraMethods
         init_framework
-        
-        puts "siiiinatra"
       else
-      #puts "raaaails"
-      extend Cells::Cell::Rails
+        extend Cells::Cell::Rails
       end
       end
 

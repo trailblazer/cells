@@ -7,5 +7,9 @@ class AbstractCellTest < ActiveSupport::TestCase
       Cell::Base.framework = :sinatra
       assert_equal :sinatra, Cell::Base.framework
     end
+    
+    should "provide render_cell_for" do
+      assert_equal "Doo", Cell::Base.render_cell_for(@controller, :bassist, :play)
+    end
   end
 end
