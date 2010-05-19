@@ -6,18 +6,43 @@ module Cells
       class View
         include ::Sinatra::Templates
         
-        def initialize
-          @template_cache = Tilt::Cache.new ### FIXME: get @template_cache from sinatra app.
+        # Sinatra::Templates introduces two dependencies:
+        #  - it accesses @template_cache
+        #  - it uses self.class.templates to reads named templates
+        #  - invokes methods #settings
+        
+        class << self
+          attr_accessor :templates
         end
         
-        def settings; self.class; end ### FIXME: delegate to sinatra app
-        
-        #def self.views; []; end
-        def self.templates; {}; end### FIXME: delegate to sinatra app
+        attr_reader :app
         
         
-        def copy_ivars(ivars)
-          ivars.each { |ivar, val| instance_variable_set(ivar, val) }
+        def initialize(app=nil)
+          @app = app
+        end
+        
+        delegate :settings, :to => :app
+        
+        
+        def method_missing(name, *args)
+          app.send(name, *args)
+        end
+        
+
+        
+        
+        def prepare_for_cell!(cell)
+          ivars = cell.assigns  ### DISCUSS: pass as separate arguments?
+          
+          ivars.each { |ivar, val| instance_variable_set(ivar, val) } ### DISCUSS: how can we avoid copying?
+          
+          
+          
+          
+          @template_cache = app.instance_variable_get(:@template_cache)
+          
+          self.class.templates = {} ### TODO: get class_inheritable_hash from cell!
         end
       end
     end
@@ -40,8 +65,9 @@ module Cells
         # handle :layout, :template_format, :view
         options = defaultize_render_options_for(options, state)
         
-        view = ::Cells::Cell::Sinatra::View.new
-        view.copy_ivars(assigns)  ### DISCUSS: how can we avoid copying?
+        view = ::Cells::Cell::Sinatra::View.new(self.controller)
+        #view.copy_ivars(assigns)  
+        view.prepare_for_cell!(self)
 
 
         # set instance vars, include helpers:

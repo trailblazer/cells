@@ -4,14 +4,19 @@ require File.join(File.dirname(__FILE__), '/../test_helper')
 
 require 'cells/cell/sinatra'  ### FIXME.
 
-
+class MyApp < Sinatra::Base
+  class << self
+    def new(*args, &bk)
+      super(*args, &bk).instance_variable_get(:@app)  ### FIXME: how to get a real Sinatra::Base instance?
+    end
+  end
+end
 
 
 class SinatraRenderTest < ActiveSupport::TestCase
   
   def render_cell(name, state, opts={})  ### FIXME.
-
-      cell = ::Cell::Base.create_cell_for(nil, name, opts)
+      cell = ::Cell::Base.create_cell_for(@controller, name, opts)
       return cell.render_state(state)
   end  
   
@@ -45,6 +50,10 @@ class SinatraRenderTest < ActiveSupport::TestCase
       BadGuitaristCell.class_eval do
         def play; render; end # inherits from BassistCell.
       end
+      
+      @controller = MyApp.new
+      
+      assert_kind_of Tilt::Cache, @controller.instance_variable_get(:@template_cache)
     end
     
     should "render a plain view" do
@@ -78,12 +87,25 @@ class SinatraRenderTest < ActiveSupport::TestCase
   end
   
   context "A view" do
+    setup do
+      
+      
+      @controller = MyApp.new
+    end
+    
     # sinatra view api
     should "allow calls to params/response/..." do
       BassistCell.class_eval do
         def pose; render; end
       end
-      assert_equal "<b>Doo</b>", render_cell(:bassist, :pose)
+      assert_equal "See me in text/html", render_cell(:bassist, :pose)
+    end
+    
+    should "delegate #settings to the app" do
+      @controller.class.set :skills, :awesome
+      
+      view = Cells::Cell::Sinatra::View.new(@controller)
+      assert_equal :awesome, view.settings.skills
     end
   end
   
