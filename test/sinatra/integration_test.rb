@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '/../test_helper')
 require 'rack/test'
-require 'cells/cell/sinatra'
+require 'cells/sinatra'
 
 class CellsApp < Sinatra::Base
   helpers Cells::Sinatra

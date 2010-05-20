@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), '/../test_helper')
 
 
 
-require 'cells/cell/sinatra'  ### FIXME.
+require 'cells/sinatra'  ### FIXME.
 
 class MyApp < Sinatra::Base
   class << self
@@ -46,6 +46,10 @@ class SinatraRenderTest < ActiveSupport::TestCase
         def sing; render :engine => :haml; end
       end
       assert_equal "Haml!\n", render_cell(:bassist, :sing)
+    end
+    
+    should "raise an error for an non-existent template" do
+      
     end
     
     should "render instance variables from the cell" do
