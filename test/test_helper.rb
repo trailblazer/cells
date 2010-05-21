@@ -1,62 +1,42 @@
 # encoding: utf-8
 require 'rubygems'
-
-begin
-  require 'test/unit'
-rescue
-  gem 'test-unit', '1.2.3'
-  require 'test/unit'
-end
-
-begin
-  require 'active_support'
-rescue
-  gem 'activesupport'
-  require 'active_support'
-end
-
-begin
-  require 'action_controller'
-rescue
-  gem 'actionpack'
-  require 'action_controller'
-end
-
-begin
-  require 'action_view'
-rescue
-  gem 'actionpack'
-  require 'action_view'
-end
-
-begin
-  require 'shoulda'
-rescue
-  gem 'shoulda'
-  require 'shoulda'
-end
-
+require 'test/unit'
+require 'shoulda'
 require 'active_support/test_case'
 
-# Require app's test_helper.rb if such exists.
-app_test_helper = if defined?(Rails)
-  Rails.root.join('test', 'test_helper')
-else
-  # Assuming we are in something like APP_ROOT/vendor/plugins/cells that is.
-  File.expand_path(File.join(File.dirname(__FILE__), *%w[.. .. .. .. test test_helper])) rescue nil
-end
-require app_test_helper if File.exist?(app_test_helper)
 
 ENV['RAILS_ENV'] = 'test'
 test_app_path = File.expand_path(File.join(File.dirname(__FILE__), 'app').to_s)
 
-# Important: Load any ApplicationHelper before loading cells.
+# Important: Load any test ApplicationHelper before loading cells.
 Dir[File.join(test_app_path, *%w[helpers ** *.rb]).to_s].each { |f| require f }
 
 require 'cells'
 
-Cell::Base.add_view_path File.join(test_app_path, 'cells')
-Cell::Base.add_view_path File.join(test_app_path, 'cells', 'layouts')
+class TestConfiguration
+  cattr_accessor :basedir, :rails_view_paths, :sinatra_view_paths
+  
+  class << self
+    # Setup the testing environment for Rails.
+    def rails!
+      Cell::Base.framework = :rails
+      Cell::Base.view_paths = rails_view_paths
+    end
+    
+    def sinatra!
+      Cell::Base.view_paths = sinatra_view_paths
+      Cell::Base.framework = :sinatra
+    end
+  end
+end
+
+TestConfiguration.rails_view_paths = [File.join(test_app_path, 'cells'), File.join(test_app_path, 'cells', 'layouts')]
+TestConfiguration.sinatra_view_paths = [File.join(test_app_path, 'cells')]
+
+#Cell::Base.add_view_path File.join(test_app_path, 'cells')
+#Cell::Base.add_view_path File.join(test_app_path, 'cells', 'layouts')
+TestConfiguration.rails!
+
 
 # Now, load the rest.
 Dir[File.join(test_app_path, *%w[controllers ** *.rb]).to_s].each { |f| require f }
@@ -77,9 +57,3 @@ end
 
 require File.join(File.dirname(__FILE__), %w(app cells bassist_cell))
 require File.join(File.dirname(__FILE__), %w(app cells bad_guitarist_cell))
-
-
-
-
-### FIXME:
-Cell::Base.framework = :rails

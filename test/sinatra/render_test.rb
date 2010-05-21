@@ -22,7 +22,7 @@ class SinatraRenderTest < ActiveSupport::TestCase
   
   context "Invoking render" do
     setup do
-      Cell::Base.framework = :sinatra
+      TestConfiguration.sinatra!
       
       BassistCell.class_eval do
         def slap; @note = "D"; render; end

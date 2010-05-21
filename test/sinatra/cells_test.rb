@@ -13,7 +13,11 @@ class SinatraCellsTest < ActiveSupport::TestCase
     
     context "invoking defaultize_render_options_for" do
       should "set default values" do
-        assert_equal({:engine => :erb, :template_format => :html}, cell(:bassist).defaultize_render_options_for({}, :play))
+        options = cell(:bassist).defaultize_render_options_for({}, :play)
+        
+        assert_equal :erb,  options[:engine]
+        assert_equal :html, options[:template_format] 
+        assert options.has_key?(:views)
       end
       
       should "allow overriding defaults" do

@@ -258,7 +258,7 @@ module Cells
         @opts       = options
         
        if Cell::Base.framework == :sinatra
-        extend Cells::Cell::SinatraMethods
+        extend Cells::Sinatra::InstanceMethods
         init_framework
       else
         extend Cells::Cell::Rails
