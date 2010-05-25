@@ -6,7 +6,7 @@ class CellsApp < Sinatra::Base
   helpers Cells::Sinatra
   
   get "/" do
-    render_cell :bassist, :play
+    render_cell :singer, :sing
   end
 end
 
@@ -19,16 +19,8 @@ class SinatraIntegrationTest < ActiveSupport::TestCase
   end
   
   context "A Sinatra app" do
-    setup do
-      Cell::Base.framework = :sinatra
-    end
-    
-    should "render the bassist cell" do
-      assert_equal "Doo", get("/").body
-    end
-    
-    teardown do
-      Cell::Base.framework = :rails
+    should "render the singer cell" do
+      assert_equal "Laaa", get("/").body
     end
   end
 end

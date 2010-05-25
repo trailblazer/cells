@@ -68,7 +68,7 @@ end
 
 # fixtures for view inheritance -------------------------------
 # views are located in cells/test/cells/my_mother_cell/
-class MyMotherCell < ::Cell::Base
+class MyMotherCell < Cell::Rails
   def hello
     @message = 'hello, kid!'
     render
@@ -109,10 +109,6 @@ class CellsTest < ActionController::TestCase
   def setup
     super
     MyTestCell.default_template_format = :html
-  end
-  
-  def test_class_aliasing
-    assert_equal Cell::Base, Cells::Cell::Base
   end
   
   def test_view_paths
@@ -225,7 +221,7 @@ class CellsTest < ActionController::TestCase
     cell_paths = cell.possible_paths_for_state(:bye)
 
     assert_equal 'my_child/bye', cell_paths.first
-    assert_equal 'my_mother/bye', cell_paths.last
+    assert_equal 'my_mother/bye', cell_paths.second
   end
 
   def test_render_state_on_child_where_child_view_exists
@@ -248,7 +244,7 @@ class CellsTest < ActionController::TestCase
   def test_find_family_view_for_state
     cell = MyChildCell.new(@controller)
     cells_path = File.join(File.dirname(__FILE__), 'app', 'cells')
-    cell_template = cell.find_family_view_for_state(:bye, ::Cell::View.new([cells_path], {}, @controller))
+    cell_template = cell.find_family_view_for_state(:bye, ::Cells::Rails::View.new([cells_path], {}, @controller))
 
     assert_equal 'my_mother/bye.html.erb', cell_template.path
   end

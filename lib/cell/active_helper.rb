@@ -1,4 +1,4 @@
-module Cells::Cell::ActiveHelper
+module Cell::ActiveHelper
   
   def self.included(base)
     base.extend ClassMethods

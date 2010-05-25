@@ -1,8 +1,6 @@
 require File.join(File.dirname(__FILE__), '/../test_helper')
-
-
-
-require 'cells/sinatra'  ### FIXME.
+require 'cells/sinatra'
+#require File.join(File.dirname(__FILE__), %w(.. app cells singer_cell))
 
 class MyApp < Sinatra::Base
   class << self
@@ -12,11 +10,10 @@ class MyApp < Sinatra::Base
   end
 end
 
-
 class SinatraRenderTest < ActiveSupport::TestCase
   
   def render_cell(name, state, opts={})  ### FIXME.
-      cell = ::Cell::Base.create_cell_for(@controller, name, opts)
+      cell = ::Cell::AbstractBase.create_cell_for(@controller, name, opts)
       return cell.render_state(state)
   end
   
@@ -24,71 +21,88 @@ class SinatraRenderTest < ActiveSupport::TestCase
     setup do
       TestConfiguration.sinatra!
       
-      BassistCell.class_eval do
-        def slap; @note = "D"; render; end
+      SingerCell.class_eval do
+        def solo; @note = "D"; render; end
       end
       
-      BadGuitaristCell.class_eval do
-        def play; render; end # inherits from BassistCell.
+      BackgroundSingerCell.class_eval do
+        def sing; render; end # inherits from SingerCell.
       end
       
       @controller = MyApp.new
       
       assert_kind_of Tilt::Cache, @controller.instance_variable_get(:@template_cache)
+      assert SingerCell.views.present?
     end
     
     should "render a plain view" do
-      assert_equal "Doo", render_cell(:bassist, :play)
+      SingerCell.class_eval do
+        def sing; render; end
+      end
+      assert_equal "Laaa", render_cell(:singer, :sing)
     end
     
-    should "render a haml view" do
-      BassistCell.class_eval do
+    should "accept the :engine option" do
+      SingerCell.class_eval do
         def sing; render :engine => :haml; end
       end
-      assert_equal "Haml!\n", render_cell(:bassist, :sing)
+      assert_equal "Haml!\n", render_cell(:singer, :sing)
     end
     
-    should "raise an error for an non-existent template" do
+    should "accept the :view option" do
+      SingerCell.class_eval do
+        def solo; render :view => :sing; end
+      end
+      assert_equal "Laaa", render_cell(:singer, :solo)
+    end
+    
+    should "raise an error for a non-existent template" do
+      SingerCell.class_eval do
+        def solo; render :engine => :haml; end
+      end
       
+      assert_raises Errno::ENOENT do  # from Tilt.
+        render_cell(:singer, :solo)
+      end
+      
+      ### TODO: test error message sanity.
     end
     
     should "render instance variables from the cell" do
-      assert_equal "Boing in D", render_cell(:bassist, :slap)
+      assert_equal "Laaalaaa in D", render_cell(:singer, :solo)
     end
     
     # layout
     should "render a view with layout" do
-      BassistCell.class_eval do
-        def play; render :layout => :b; end
+      SingerCell.class_eval do
+        def sing; render :layout => :b; end
       end
-      assert_equal "<b>Doo</b>", render_cell(:bassist, :play)
+      assert_equal "<b>Laaa</b>", render_cell(:singer, :sing)
     end
     
     
     # inheriting
-    should "inherit play.html.erb from BassistCell" do
-      assert_equal "Doo", render_cell(:bad_guitarist, :play)
+    should "inherit sing.html.erb from SingerCell" do
+      assert_equal "Laaa", render_cell(:background_singer, :sing)
     end
   end
   
   context "A cell" do
     setup do
       @controller = MyApp.new
-      
-      Cell::Base.framework = :sinatra
     end
     
     # sinatra view api
     should "allow calls to params/response/..." do
-      BassistCell.class_eval do
+      SingerCell.class_eval do
         def pose; render; end
       end
-      assert_equal "See me in text/html", render_cell(:bassist, :pose)
+      assert_equal "See me in text/html", render_cell(:singer, :pose)
     end
     
     should "delegate #settings to the app" do
       @controller.class.set :skills, :awesome
-      assert_equal :awesome, cell(:bassist).settings.skills
+      assert_equal :awesome, cell(:singer).settings.skills
     end
   end
   

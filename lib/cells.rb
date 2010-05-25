@@ -21,7 +21,11 @@ rescue
   require 'action_view'
 end
 
-require 'cells/cell'
+require 'cell/abstract_base'
+require 'cell'
+
+require 'cell/base' ### TODO: rename to rails
+
 require 'cells/helpers'
 require 'cell'
 

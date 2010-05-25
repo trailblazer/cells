@@ -12,6 +12,7 @@ test_app_path = File.expand_path(File.join(File.dirname(__FILE__), 'app').to_s)
 Dir[File.join(test_app_path, *%w[helpers ** *.rb]).to_s].each { |f| require f }
 
 require 'cells'
+require 'cells/sinatra'
 
 class TestConfiguration
   cattr_accessor :basedir, :rails_view_paths, :sinatra_view_paths
@@ -19,24 +20,22 @@ class TestConfiguration
   class << self
     # Setup the testing environment for Rails.
     def rails!
-      Cell::Base.framework = :rails
       Cell::Base.view_paths = rails_view_paths
     end
     
     def sinatra!
-      Cell::Base.view_paths = sinatra_view_paths
-      Cell::Base.framework = :sinatra
+      Cell::Sinatra.views = sinatra_view_paths
     end
   end
 end
 
 TestConfiguration.rails_view_paths = [File.join(test_app_path, 'cells'), File.join(test_app_path, 'cells', 'layouts')]
-TestConfiguration.sinatra_view_paths = [File.join(test_app_path, 'cells')]
+TestConfiguration.sinatra_view_paths = File.join(test_app_path, 'cells')
 
 #Cell::Base.add_view_path File.join(test_app_path, 'cells')
 #Cell::Base.add_view_path File.join(test_app_path, 'cells', 'layouts')
 TestConfiguration.rails!
-
+TestConfiguration.sinatra!
 
 # Now, load the rest.
 Dir[File.join(test_app_path, *%w[controllers ** *.rb]).to_s].each { |f| require f }
@@ -57,3 +56,6 @@ end
 
 require File.join(File.dirname(__FILE__), %w(app cells bassist_cell))
 require File.join(File.dirname(__FILE__), %w(app cells bad_guitarist_cell))
+
+require File.join(File.dirname(__FILE__), %w(app cells singer_cell))
+require File.join(File.dirname(__FILE__), %w(app cells background_singer_cell))

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-05-21}
+  s.date = %q{2010-05-25}
   s.description = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
@@ -21,19 +21,18 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "lib/cell.rb",
+     "lib/cell/abstract_base.rb",
+     "lib/cell/active_helper.rb",
+     "lib/cell/base.rb",
+     "lib/cell/caching.rb",
+     "lib/cell/rails.rb",
+     "lib/cell/sinatra.rb",
+     "lib/cell/view.rb",
      "lib/cells.rb",
      "lib/cells/assertions_helper.rb",
-     "lib/cells/cell.rb",
-     "lib/cells/cell/active_helper.rb",
-     "lib/cells/cell/base.rb",
-     "lib/cells/cell/caching.rb",
-     "lib/cells/cell/rails.rb",
-     "lib/cells/cell/view.rb",
      "lib/cells/helpers.rb",
      "lib/cells/helpers/capture_helper.rb",
      "lib/cells/rails.rb",
-     "lib/cells/rails/action_controller.rb",
-     "lib/cells/rails/action_view.rb",
      "lib/cells/sinatra.rb",
      "lib/cells/version.rb",
      "rails/init.rb",
@@ -59,6 +58,7 @@ Gem::Specification.new do |s|
      "test/sinatra/integration_test.rb",
      "test/sinatra/render_test.rb",
      "test/sinatra/cells_test.rb",
+     "test/sinatra/helper_test.rb",
      "test/assertions_helper_test.rb",
      "test/cell_generator_test.rb",
      "test/test_helper.rb",
@@ -70,7 +70,9 @@ Gem::Specification.new do |s|
      "test/caching_test.rb",
      "test/abstract_cell_test.rb",
      "test/app/controllers/cells_test_controller.rb",
+     "test/app/cells/singer_cell.rb",
      "test/app/cells/bassist_cell.rb",
+     "test/app/cells/background_singer_cell.rb",
      "test/app/cells/really_module/nested_cell.rb",
      "test/app/cells/cells_test_one_cell.rb",
      "test/app/cells/cells_test_two_cell.rb",

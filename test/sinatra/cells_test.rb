@@ -4,24 +4,37 @@ require File.join(File.dirname(__FILE__), '/../test_helper')
 class SinatraCellsTest < ActiveSupport::TestCase
   context "A sinatra cell" do
     setup do
-      Cell::Base.framework = :sinatra
+      TestConfiguration.sinatra!
+    end
+    
+    teardown do
+      TestConfiguration.sinatra!
+      BackgroundSingerCell.views = Cell::Sinatra.views
     end
     
     should_eventually "respond to default_template_engine" do
       
     end
     
+    should "respond to views" do
+      BackgroundSingerCell.views = "another/dir"
+      Cell::Sinatra.views = "test/dir"
+      assert_equal "test/dir", Cell::Sinatra.views
+      assert_equal "another/dir", BackgroundSingerCell.views
+    end
+    
     context "invoking defaultize_render_options_for" do
       should "set default values" do
-        options = cell(:bassist).defaultize_render_options_for({}, :play)
+        options = cell(:singer).defaultize_render_options_for({}, :play)
         
         assert_equal :erb,  options[:engine]
-        assert_equal :html, options[:template_format] 
+        assert_equal :html, options[:template_format]
+        assert_equal :play, options[:view]
         assert options.has_key?(:views)
       end
       
       should "allow overriding defaults" do
-        assert cell(:bassist).defaultize_render_options_for({:engine => :haml}, :play)[:engine] == :haml
+        assert cell(:singer).defaultize_render_options_for({:engine => :haml}, :play)[:engine] == :haml
       end
     end
     
@@ -30,16 +43,16 @@ class SinatraCellsTest < ActiveSupport::TestCase
         @views = File.join(File.dirname(__FILE__), '/../app/cells')
       end
       
-      should "return play.html.erb" do
-        assert_equal "bassist/play", cell(:bassist).find_family_view_for(:play, {:template_format => :html, :engine => :erb}, @views)
+      should "return sing.html.erb" do
+        assert_equal "singer/sing", cell(:singer).find_family_view_for(:sing, {:template_format => :html, :engine => :erb}, @views)
       end
       
       should "return nil when non-existent" do
-        assert_nil cell(:bassist).find_family_view_for(:play, {:template_format => :js, :engine => :erb}, @views)
+        assert_nil cell(:singer).find_family_view_for(:play, {:template_format => :js, :engine => :erb}, @views)
       end
       
-      should "find inherited play.html.erb" do
-        assert_equal "bassist/play", cell(:bad_guitarist  ).find_family_view_for(:play, {:template_format => :html, :engine => :erb}, @views)
+      should "find inherited sing.html.erb" do
+        assert_equal "singer/sing", cell(:background_singer  ).find_family_view_for(:sing, {:template_format => :html, :engine => :erb}, @views)
       end
       
       should_eventually "return an already cached family view"
