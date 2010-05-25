@@ -1,4 +1,4 @@
-class <%= class_name %>Cell < ::Cell::Base
+class <%= class_name %>Cell < ::Cell::Rails
 
 <% for action in actions -%>
   def <%= action %>
