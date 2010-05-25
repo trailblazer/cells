@@ -226,6 +226,7 @@ class CellsTest < ActionController::TestCase
 
   def test_render_state_on_child_where_child_view_exists
     cell = MyChildCell.new(@controller)
+    #puts cell.possible_paths_for_state(:hello).inspect
     c = cell.render_state(:hello)
 
     assert_selekt c, '#childHello', 'hello, mom!'

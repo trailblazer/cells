@@ -1,79 +1,60 @@
+require 'action_controller/base'
+
 module Cell
-  class Rails < AbstractBase
+  class Rails < AbstractBase  ### TODO: derive from AbstractBase.
     include ::ActionController::Helpers
     include ::ActionController::RequestForgeryProtection
     
-      include Cell::ActiveHelper
+    include Cell::Caching
+    include Cell::ActiveHelper
+    
+    class_inheritable_array :view_paths, :instance_writer => false
+    write_inheritable_attribute(:view_paths, ActionView::PathSet.new) # Force use of a PathSet in this attribute, self.view_paths = ActionView::PathSet.new would still yield in an array
+    
+    class_inheritable_accessor :allow_forgery_protection
+    self.allow_forgery_protection = true
+
+    delegate :params, :session, :request, :logger, :to => :controller
+    
+    
+    class << self
+      attr_accessor :request_forgery_protection_token
       
-      class_inheritable_array :view_paths, :instance_writer => false
-      write_inheritable_attribute(:view_paths, ActionView::PathSet.new) # Force use of a PathSet in this attribute, self.view_paths = ActionView::PathSet.new would still yield in an array
-      
-      class << self
-        attr_accessor :request_forgery_protection_token
-
-        
-        
-        # Use this if you want Cells to look up view templates
-        # in directories other than the default.
-        def view_paths=(paths)
-          self.view_paths.clear.concat(paths) # don't let 'em overwrite the PathSet.
-        end
-        
-        # A template file will be looked for in each view path. This is typically
-        # just RAILS_ROOT/app/cells, but you might want to add e.g.
-        # RAILS_ROOT/app/views.
-        def add_view_path(path)
-          path = ::Rails.root.join(path) if defined?(::Rails)
-          self.view_paths << path unless self.view_paths.include?(path)
-        end
-
-        
-
-        # Declare a controller method as a helper.  For example,
-        #   helper_method :link_to
-        #   def link_to(name, options) ... end
-        # makes the link_to controller method available in the view.
-        def helper_method(*methods)
-          methods.flatten.each do |method|
-            master_helper_module.module_eval <<-end_eval
-              def #{method}(*args, &block)
-                @cell.send(:#{method}, *args, &block)
-              end
-            end_eval
-          end
-        end
-
-        
-
-        def state2view_cache
-          @state2view_cache ||= {}
-        end
-
-        def cache_configured?
-          ::ActionController::Base.cache_configured?
-        end
+      # Use this if you want Cells to look up view templates
+      # in directories other than the default.
+      def view_paths=(paths)
+        self.view_paths.clear.concat(paths) # don't let 'em overwrite the PathSet.
       end
       
-      
-      
-      
-      
-
-      class_inheritable_accessor :allow_forgery_protection
-      self.allow_forgery_protection = true
-
-      
-
-      delegate :params, :session, :request, :logger, :to => :controller
-
-      
-
-      # We will soon remove the implicit call to render_view_for, but here it is for your convenience.
-      def render_view_for_backward_compat(opts, state)
-        ::ActiveSupport::Deprecation.warn "You either didn't call #render or forgot to return a string in the state method '#{state}'. However, returning nil is deprecated for the sake of explicitness"
-
-        render_view_for(opts, state)
+      # A template file will be looked for in each view path. This is typically
+      # just RAILS_ROOT/app/cells, but you might want to add e.g.
+      # RAILS_ROOT/app/views.
+      def add_view_path(path)
+        path = ::Rails.root.join(path) if defined?(::Rails)
+        self.view_paths << path unless self.view_paths.include?(path)
       end
+
+      # Declare a controller method as a helper.  For example,
+      #   helper_method :link_to
+      #   def link_to(name, options) ... end
+      # makes the link_to controller method available in the view.
+      def helper_method(*methods)
+        methods.flatten.each do |method|
+          master_helper_module.module_eval <<-end_eval
+            def #{method}(*args, &block)
+              @cell.send(:#{method}, *args, &block)
+            end
+          end_eval
+        end
+      end
+
+      
+
+      def state2view_cache
+        @state2view_cache ||= {}
+      end
+    end
+      
 
       # Renders the view for the current state and returns the markup for the component.
       # Usually called and returned at the end of a state method.
@@ -138,9 +119,7 @@ module Cell
         missing_template_exception = nil
 
         possible_paths_for_state(state).each do |template_path|
-        puts "looking for #{template_path}"
-          # we need to catch MissingTemplate, since we want to try for all possible
-          # family views.
+          # we need to catch MissingTemplate, since we want to try for all possible family views.
           begin
             if view = action_view.try_picking_template_for_path(template_path)
               return view
@@ -148,7 +127,7 @@ module Cell
           rescue ::ActionView::MissingTemplate => missing_template_exception
           end
         end
-
+puts missing_template_exception.inspect
         raise missing_template_exception
       end
 
@@ -194,66 +173,64 @@ module Cell
         @controller.logger.debug(message)
       end
       
-    ### TODO: move to module.
-        # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
-        # if it can not find one of the requested view template. Note that this behaviour was
-        # introduced in cells 2.3 and replaces the former warning message.
-        def render_view_for(opts, state)
-          return '' if opts[:nothing]
-  
-          action_view = setup_action_view
-  
-          ### TODO: dispatch dynamically:
-          if    opts[:text]   ### FIXME: generic option?
-          elsif opts[:inline]
-          elsif opts[:file]
-          elsif opts[:state]  ### FIXME: generic option
-            opts[:text] = render_state(opts[:state])
-          else
-            # handle :layout, :template_format, :view
-            opts = defaultize_render_options_for(opts, state)
-  
-            # set instance vars, include helpers:
-            prepare_action_view_for(action_view, opts)
-  
-            template    = find_family_view_for_state_with_caching(opts[:view], action_view)
-            opts[:file] = template
-          end
-  
-          opts = sanitize_render_options(opts)
-  
-          action_view.render_for(opts)
+      # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
+      # if it can not find one of the requested view template. Note that this behaviour was
+      # introduced in cells 2.3 and replaces the former warning message.
+      def render_view_for(opts, state)
+        return '' if opts[:nothing]
+
+        action_view = setup_action_view
+
+        ### TODO: dispatch dynamically:
+        if    opts[:text]   ### FIXME: generic option?
+        elsif opts[:inline]
+        elsif opts[:file]
+        elsif opts[:state]  ### FIXME: generic option
+          opts[:text] = render_state(opts[:state])
+        else
+          # handle :layout, :template_format, :view
+          opts = defaultize_render_options_for(opts, state)
+
+          # set instance vars, include helpers:
+          prepare_action_view_for(action_view, opts)
+
+          template    = find_family_view_for_state_with_caching(opts[:view], action_view)
+          opts[:file] = template
         end
-  
-        # Defaultize the passed options from #render.
-        def defaultize_render_options_for(opts, state)
-          opts[:template_format]  ||= self.class.default_template_format
-          opts[:view]             ||= state
-          opts
-        end
-  
-        def prepare_action_view_for(action_view, opts)
-          # make helpers available:
-          include_helpers_in_class(action_view.class)
-          
-          import_active_helpers_into(action_view) # in Cells::Cell::ActiveHelper.
-  
-          action_view.assigns         = assigns_for_view  # make instance vars available.
-          action_view.template_format = opts[:template_format]
-        end
-  
-        def setup_action_view
-          view_class  = Class.new(::Cells::Rails::View)
-          action_view = view_class.new(self.class.view_paths, {}, @controller)
-          action_view.cell = self
-          action_view
-        end
-  
-        # Prepares <tt>opts</tt> to be passed to ActionView::Base#render by removing
-        # unknown parameters.
-        def sanitize_render_options(opts)
-          opts.except!(:view, :state)
-        end
-      
+
+        opts = sanitize_render_options(opts)
+
+        action_view.render_for(opts)
+      end
+
+      # Defaultize the passed options from #render.
+      def defaultize_render_options_for(opts, state)
+        opts[:template_format]  ||= self.class.default_template_format
+        opts[:view]             ||= state
+        opts
+      end
+
+      def prepare_action_view_for(action_view, opts)
+        # make helpers available:
+        include_helpers_in_class(action_view.class)
+        
+        import_active_helpers_into(action_view) # in Cells::Cell::ActiveHelper.
+
+        action_view.assigns         = assigns_for_view  # make instance vars available.
+        action_view.template_format = opts[:template_format]
+      end
+
+      def setup_action_view
+        view_class  = Class.new(::Cells::Rails::View)
+        action_view = view_class.new(self.class.view_paths, {}, @controller)
+        action_view.cell = self
+        action_view
+      end
+
+      # Prepares <tt>opts</tt> to be passed to ActionView::Base#render by removing
+      # unknown parameters.
+      def sanitize_render_options(opts)
+        opts.except!(:view, :state)
+      end
 		end
 end

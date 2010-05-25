@@ -22,12 +22,15 @@ rescue
 end
 
 require 'cell/abstract_base'
-require 'cell'
 
-require 'cell/base' ### TODO: rename to rails
+
+#require 'cell/base' ### TODO: rename to rails
+
+require 'cell'
+require 'cell/rails'
 
 require 'cells/helpers'
-require 'cell'
+
 
 module Cells
   # Any config should be placed here using +mattr_accessor+.
@@ -66,6 +69,8 @@ module Cells
     yield(self)
   end
 end
+
+Cell::Base = Cell::Rails
 
 Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
 

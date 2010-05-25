@@ -1,7 +1,3 @@
-# encoding: utf-8
-require 'action_controller/base'
-
-  module Cell
     # == Basic overview
     #
     # A Cell is the central notion of the cells plugin.  A cell acts as a
@@ -136,9 +132,3 @@ require 'action_controller/base'
     #   cells/user/user_form_de.html.erb
     #
     # If gettext is set to DE_de, the latter view will be chosen.
-    require 'cell/rails'
-    class Base < Rails  ### DISCUSS: for backward-compatibilty.
-      
-    
-    end
-  end

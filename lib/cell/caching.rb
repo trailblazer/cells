@@ -17,7 +17,7 @@ module Cell
         # mixin ::Cell::Base#cache, setup vars and extend #render_state if caching's on.
         extend ClassMethods
 
-        return unless cache_configured?
+        #return unless cache_configured?
 
         alias_method_chain :render_state, :caching
       end
@@ -102,6 +102,10 @@ module Cell
 
       def expire_cache_key(key, opts=nil)
         cache_store.delete(key, opts)
+      end
+      
+      def cache_configured?
+        ::ActionController::Base.cache_configured?
       end
     end
 
