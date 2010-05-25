@@ -28,7 +28,6 @@ class SinatraCellsTest < ActiveSupport::TestCase
         options = cell(:singer).defaultize_render_options_for({}, :play)
         
         assert_equal :erb,  options[:engine]
-        assert_equal :html, options[:template_format]
         assert_equal :play, options[:view]
         assert options.has_key?(:views)
       end

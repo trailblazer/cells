@@ -14,10 +14,7 @@ module Cell
 
     def self.included(base) #:nodoc:
       base.class_eval do
-        # mixin ::Cell::Base#cache, setup vars and extend #render_state if caching's on.
         extend ClassMethods
-
-        #return unless cache_configured?
 
         alias_method_chain :render_state, :caching
       end

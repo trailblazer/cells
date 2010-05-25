@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-05-25}
+  s.date = %q{2010-05-26}
   s.description = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [

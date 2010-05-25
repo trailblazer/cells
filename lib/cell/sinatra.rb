@@ -45,7 +45,7 @@ module Cell
       # Defaultize the passed options from #render.
       def defaultize_render_options_for(options, state)
         options.reverse_merge!  :engine           => :erb,
-                                :template_format  => self.class.default_template_format,
+                                #:template_format  => self.class.default_template_format,
                                 :views            => self.class.views,
                                 :view             => state
       end
@@ -58,14 +58,14 @@ module Cell
         file  = find_family_view_for(options[:view], options, options[:views])
         
         # call erb(..) or friends:
-        self.send(options[:engine], "#{file}.#{options[:template_format]}".to_sym, options)
+        self.send(options[:engine], "#{file}".to_sym, options)
       end
       
       ### FIXME: template_format needed?
       # Returns the first existing view for +state+ in the inheritance chain.
       def find_family_view_for(state, options, views)
         possible_paths_for_state(state).find do |template_path|
-          path = ::File.join(views, "#{template_path}.#{options[:template_format]}.#{options[:engine]}")
+          path = ::File.join(views, "#{template_path}.#{options[:engine]}")
           ::File.readable?(path)
         end
       end
