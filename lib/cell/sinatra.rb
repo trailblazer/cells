@@ -10,18 +10,20 @@ module Cell
       
       
       class << self
-        #attr_accessor :views
+        # Define a named template. The block must return the template source.
+        def template(name, &block)
+          templates[name] = [block, self.class.to_s, 1]
+        end
         
-        #attr_accessor :templates
-          #templates = {}
-          def templates; {}; end
-          
-          
-          
-          def helpers(*helpers); include *helpers;  end
+        def helpers(*helpers)
+          include *helpers
+        end
       end
           
       class_inheritable_accessor :views 
+      
+      class_inheritable_hash :templates
+      self.templates = {}
       
       
       def initialize(*args)
@@ -45,7 +47,6 @@ module Cell
       # Defaultize the passed options from #render.
       def defaultize_render_options_for(options, state)
         options.reverse_merge!  :engine           => :erb,
-                                #:template_format  => self.class.default_template_format,
                                 :views            => self.class.views,
                                 :view             => state
       end

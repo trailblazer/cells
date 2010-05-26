@@ -85,6 +85,37 @@ class SinatraRenderTest < ActiveSupport::TestCase
     should "inherit sing.html.erb from SingerCell" do
       assert_equal "Laaa", render_cell(:background_singer, :sing)
     end
+    
+    # named templates
+    context "with a named template" do
+      setup do
+        SingerCell.class_eval do
+          template :scream do
+            '%h1 AAAaaah'
+          end
+  
+          def sing; haml :scream; end
+        end
+        
+        class HardcoreSingerCell < SingerCell
+          template :roar do '%h1 WHOOO' end
+          
+          def roar; haml :roar; end
+        end
+      end
+      
+      should "return a named template" do
+        assert_equal "<h1>AAAaaah</h1>\n", render_cell(:singer, :sing)
+      end
+      
+      should "inherit a named template" do
+        assert_equal "<h1>AAAaaah</h1>\n", render_cell(:'sinatra_render_test/hardcore_singer', :sing)
+      end
+      
+      should "allow multiple named templates" do
+        assert_equal "<h1>WHOOO</h1>\n", render_cell(:'sinatra_render_test/hardcore_singer', :roar)
+      end
+    end
   end
   
   context "A cell" do

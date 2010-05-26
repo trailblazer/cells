@@ -127,7 +127,7 @@ module Cell
           rescue ::ActionView::MissingTemplate => missing_template_exception
           end
         end
-puts missing_template_exception.inspect
+        
         raise missing_template_exception
       end
 
