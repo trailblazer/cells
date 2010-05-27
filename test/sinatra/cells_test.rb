@@ -12,10 +12,6 @@ class SinatraCellsTest < ActiveSupport::TestCase
       BackgroundSingerCell.views = Cell::Sinatra.views
     end
     
-    should_eventually "respond to default_template_engine" do
-      
-    end
-    
     should "respond to views" do
       BackgroundSingerCell.views = "another/dir"
       Cell::Sinatra.views = "test/dir"

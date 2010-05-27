@@ -37,6 +37,7 @@ module Cell
         options = args.first || {}
         
         if options.kind_of? Hash
+          return render_state(options[:state]) if options[:state]
           return render_view_for(options, @state_name)
         end
                 

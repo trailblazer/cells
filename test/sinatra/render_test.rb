@@ -72,6 +72,29 @@ class SinatraRenderTest < ActiveSupport::TestCase
       assert_equal "Laaalaaa in D", render_cell(:singer, :solo)
     end
     
+    should "allow subsequent calls to render in the rendered view" do
+      SingerCell.class_eval do
+        def jam; @chords = [:a, :c]; render; end
+        def sing; render; end
+      end
+      assert_equal "\nLaaa\n\nLaaa\n", render_cell(:singer, :jam)
+    end
+    
+    should "allow multiple calls to render" do
+      SingerCell.class_eval do
+        def sing; render + render + render; end
+      end
+      assert_equal "LaaaLaaaLaaa", render_cell(:singer, :sing)
+    end
+    
+    should "accept locals" do
+      SingerCell.class_eval do
+        def ahem; render :locals => {:times => 2}; end
+      end
+      assert_equal "AhemAhem", render_cell(:singer, :ahem)
+    end
+    
+    
     # layout
     should "render a view with layout" do
       SingerCell.class_eval do
