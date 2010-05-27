@@ -53,8 +53,7 @@ module Cell
     
     
     class_inheritable_accessor :default_template_format
-      self.default_template_format = :html
-    
+    self.default_template_format = :html
     
     
     attr_accessor :controller
@@ -69,17 +68,12 @@ module Cell
       self.class.cell_name
     end
 
-    # Render the given state.  You can pass the name as either a symbol or
-    # a string.
+    # Invoke the state method and render the given state.
     def render_state(state)
       @cell       = self
       @state_name = state
 
-      content = dispatch_state(state)
-
-      return content if content.kind_of? String
-
-      render_view_for_backward_compat(content, state)
+      dispatch_state(state)
     end
 
     # Call the state method.
