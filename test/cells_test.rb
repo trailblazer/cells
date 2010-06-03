@@ -138,38 +138,7 @@ class CellsTest < ActionController::TestCase
     assert_select '#view_with_instance_var'
   end
 
-  # test simple rendering cycle -------------------------------------------------
-
-  def test_render_state_which_returns_a_string
-    cell = MyTestCell.new(@controller)
-    c = cell.render_state(:direct_output)
-
-    assert_kind_of String, c
-    assert_selekt c, 'h9'
-
-    #assert_raises (NoMethodError) { cell.render_state("non_existing_state") }
-  end
-
-  def test_render_state_with_view_file
-    cell = MyTestCell.new(@controller)
-    c = cell.render_state(:view_with_instance_var)
-
-    assert_selekt c, '#one', 'yeah'
-    assert_selekt c, '#two', 'wow'
-  end
-
-  def test_render_state_with_layout
-  end
-
-  def test_render_state_with_missing_view
-    cell = MyTestCell.new(@controller)
-    ### TODO: production <-> development/test context.
-
-    assert_raises ActionView::MissingTemplate do
-      c = cell.render_state(:missing_view)
-    end
-  end
-
+ 
   # test partial rendering ------------------------------------------------------
 
   # ok
@@ -205,40 +174,7 @@ class CellsTest < ActionController::TestCase
     assert_selekt c, '#partialContained > #partial'
   end
 
-  # test advanced views (prototype_helper, ...) --------------------------------
-  ### TODO: fix CellsTestController to allow rendering views with #link_to_function-
-  def dont_test_view_with_link_to_function
-    cell = MyTestCell.new(@controller)
-    c = cell.render_state(:state_with_link_to_function)
-
-    assert_selekt c, '#partialContained > #partial'
-  end
-
-  # test view inheritance ------------------------------------------------------
-
-  def test_possible_paths_for_state
-    cell = MyChildCell.new(@controller)
-    cell_paths = cell.possible_paths_for_state(:bye)
-
-    assert_equal 'my_child/bye', cell_paths.first
-    assert_equal 'my_mother/bye', cell_paths.second
-  end
-
-  def test_render_state_on_child_where_child_view_exists
-    cell = MyChildCell.new(@controller)
-    #puts cell.possible_paths_for_state(:hello).inspect
-    c = cell.render_state(:hello)
-
-    assert_selekt c, '#childHello', 'hello, mom!'
-  end
-
-  def test_render_state_on_child_where_view_is_inherited_from_mother
-    cell = MyChildCell.new(@controller)
-    # puts '  rendering cell!'
-    c = cell.render_state(:bye)
-
-    assert_selekt c, '#motherBye', 'bye, mom!'
-  end
+  
 
   # test Cell::View -------------------------------------------------------------
 
@@ -249,32 +185,7 @@ class CellsTest < ActionController::TestCase
 
     assert_equal 'my_mother/bye.html.erb', cell_template.path
   end
-
-  ### API test (unit) -----------------------------------------------------------
-  def test_cell_name
-    cell = CellsTestOneCell.new(@controller)
-
-    assert_equal 'cells_test_one', cell.cell_name
-    assert_equal 'cells_test_one', CellsTestOneCell.cell_name
-  end
-
-  def test_class_from_cell_name
-    assert_equal CellsTestOneCell, ::Cell::Base.class_from_cell_name('cells_test_one')
-  end
-
-  def test_default_template_format
-    # test getter
-    cell = MyTestCell.new(@controller)
-
-    assert_equal :html, ::Cell::Base.default_template_format
-    assert_equal :html, cell.class.default_template_format
-
-    # test setter
-    MyTestCell.default_template_format = :js
-
-    assert_equal :html, ::Cell::Base.default_template_format
-    assert_equal :js, cell.class.default_template_format
-  end
+  
 
   def test_defaultize_render_options_for
     cell = MyTestCell.new(@controller)
@@ -291,14 +202,6 @@ class CellsTest < ActionController::TestCase
                   cell.defaultize_render_options_for({:layout => :metal, :template_format => :js}, :do_it)
   end
 
-  def test_new_directory_hierarchy
-    cell = ReallyModule::NestedCell.new(@controller)
-    c = cell.render_state(:happy_state)
-    @response.body = c
-
-    assert_select '#happyStateView'
-  end
-
   # Thanks to Fran Pena who made us aware of this bug and contributed a patch.
   def test_i18n_support
     swap I18n, :locale => :en do
@@ -311,14 +214,7 @@ class CellsTest < ActionController::TestCase
       assert_selekt c, '#explicitEnglishTranslation'
     end
   end
-
-  def test_modified_view_finding_for_testing
-    cell = MyTestCell.new(@controller)
-    c = cell.render_state(:view_in_local_test_views_dir)
-
-    assert_selekt c, '#localView'
-  end
-
+  
   def test_params_in_a_cell_state
     @controller.params = {:my_param => 'value'}
     cell = TestCell.new(@controller)

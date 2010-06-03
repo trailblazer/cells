@@ -56,6 +56,20 @@ class SinatraRenderTest < ActiveSupport::TestCase
       assert_equal "Laaa", render_cell(:singer, :solo)
     end
     
+    should "accept the :text options" do
+      SingerCell.class_eval do
+        def sing; render :text => "Shoobie"; end
+      end
+      assert_equal "Shoobie", render_cell(:singer, :sing)
+    end
+    
+    should "accept the :nothing option" do
+      SingerCell.class_eval do
+        def sleep; render :nothing => true; end
+      end
+      assert_equal "", render_cell(:singer, :sleep)
+    end
+    
     should "raise an error for a non-existent template" do
       SingerCell.class_eval do
         def solo; render :engine => :haml; end
@@ -87,7 +101,7 @@ class SinatraRenderTest < ActiveSupport::TestCase
       assert_equal "LaaaLaaaLaaa", render_cell(:singer, :sing)
     end
     
-    should "accept locals" do
+    should "accept the :locals option" do
       SingerCell.class_eval do
         def ahem; render :locals => {:times => 2}; end
       end

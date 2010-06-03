@@ -28,7 +28,7 @@ module Cell
       
       def initialize(*args)
         super(*args)
-        @template_cache = controller.instance_variable_get(:@template_cache)
+        @template_cache = controller.instance_variable_get(:@template_cache)  ### FIXME: use accessor.
       end
       
       
@@ -37,11 +37,18 @@ module Cell
         options = args.first || {}
         
         if options.kind_of? Hash
-          return render_state(options[:state]) if options[:state]
-          return render_view_for(options, @state_name)
+          return render_for(options)    # a cell render call.
         end
                 
         render_template(*args, &block)  # a Sinatra::Templates#render call.
+      end
+      
+      # Implements the cell render API.
+      def render_for(options)
+        return render_state(options[:state]) if options[:state]
+        return "" if options[:nothing]
+        return options[:text] if options[:text]
+        return render_view_for(options, @state_name)
       end
       
       

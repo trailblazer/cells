@@ -38,7 +38,7 @@ module Cell
       #  UserCell.cell_name
       #  => "user"
       def cell_name
-        name.underscore.sub(/_cell/, '')
+        name.underscore.sub(/_cell$/, '')
       end
 
       # Given a cell name, finds the class that belongs to it.
