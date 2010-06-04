@@ -4,40 +4,30 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 class AssertionsHelperTest < ActionController::TestCase
   context "A TestCase" do
     setup do
-      TestCell.class_eval do
-        def beep; render; end
-      end
-    end
-    
-    context "calling #cell_mock" do
-      should "return a cell instance" do
-        assert_kind_of Cell::Base, cell_mock
-      end
-      
-      should "accept a block" do
-        assert_respond_to cell_mock { def beep; end}, :beep
+      BassistCell.class_eval do
+        def play; render; end
       end
     end
     
     should "respond to #render_cell" do
-      assert_equal "<h1>beep!</h1>", render_cell(:test, :beep)
+      assert_equal "Doo", render_cell(:bassist, :play)
     end
     
     should "respond to #assert_selekt" do
-      assert_selekt render_cell(:test, :beep), "h1", "beep!"
+      assert_selekt "<p>Doo</p>", "p", "Doo"
     end
     
     should "respond to #cell" do
-      assert_kind_of TestCell, cell(:test)
-      assert_not cell(:test).respond_to? :opts
+      assert_kind_of BassistCell, cell(:bassist)
+      assert_not cell(:bassist).respond_to? :opts
     end
     
     should "respond to #cell with a block" do
-      assert_respond_to cell(:test) { def opts; @opts; end }, :opts
+      assert_respond_to cell(:bassist) { def opts; @opts; end }, :opts
     end
     
     should "respond to #cell with options and block" do
-      assert_equal({:topic => :peace}, cell(:test, :topic => :peace) { def opts; @opts; end }.opts)
+      assert_equal({:topic => :peace}, cell(:bassist, :topic => :peace) { def opts; @opts; end }.opts)
     end
   end
 end

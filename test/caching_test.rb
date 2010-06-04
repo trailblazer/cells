@@ -243,28 +243,32 @@ class CachingTest < ActiveSupport::TestCase
 
   def test_find_family_view_for_state_with_caching
     # test environment: --------------------------------------
-    assert_equal ({}), ACell.state2view_cache
-
-    cell = ACell.new(@controller)
-    cell.class.instance_eval do
-      def cache_configured?
-        false
-      end
-    end
-    cell.render_state :existing_view
-    # in development/test environment, no view name caching should happen,
-    # if perform_caching is false.
-    assert_equal ({}), ACell.state2view_cache
-
-    # production environment: --------------------------------
-    cell = ACell.new(@controller)
-    cell.class.instance_eval do
-      def cache_configured?
-        true
-      end
+    BassistCell.instance_variable_set :@state2view_cache, {}
+    assert_equal({}, BassistCell.state2view_cache)
+    
+    BassistCell.instance_eval do
+      self.default_template_format = :html
+      
+      def play; render; end
     end
     
-    cell.render_state :existing_view
-    assert ACell.state2view_cache.has_key?("existing_view/html") 
+    
+    cell = cell(:bassist)
+    cell.class.instance_eval do
+      def cache_configured?; false; end
+    end
+    cell.render_state :play
+    # in development/test environment, no view name caching should happen,
+    # if perform_caching is false.
+    assert_equal({}, BassistCell.state2view_cache)
+
+    # production environment: --------------------------------
+    cell = BassistCell.new(@controller)
+    cell.class.instance_eval do
+      def cache_configured?; true; end
+    end
+    
+    cell.render_state :play
+    assert BassistCell.state2view_cache["play/html"] 
   end
 end
