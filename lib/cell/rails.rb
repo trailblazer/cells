@@ -1,7 +1,8 @@
 require 'action_controller/base'
 
 module Cell
-  class Rails < AbstractBase  ### TODO: derive from AbstractBase.
+  class Rails   ### TODO: derive from AbstractBase.
+    include BaseMethods
     include ::ActionController::Helpers
     include ::ActionController::RequestForgeryProtection
     

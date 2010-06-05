@@ -21,7 +21,7 @@ rescue
   require 'action_view'
 end
 
-require 'cell/abstract_base'
+require 'cell/base_methods'
 
 require 'cell'
 require 'cell/rails'

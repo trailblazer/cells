@@ -1,10 +1,10 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
-class AbstractCellTest < ActiveSupport::TestCase
+class BaseMethodsTest < ActiveSupport::TestCase
   context "Cell::Base" do
     
     should "provide AbstractBase.render_cell_for" do
-      assert_equal "Doo", Cell::AbstractBase.render_cell_for(@controller, :bassist, :play)
+      assert_equal "Doo", Cell::Base.render_cell_for(@controller, :bassist, :play)
     end
     
     should "provide possible_paths_for_state" do
@@ -17,21 +17,22 @@ class AbstractCellTest < ActiveSupport::TestCase
     end
     
     should "provide cell_name for modules, too" do
-      class SingerCell < ::Cell::AbstractBase
+      class SingerCell
+        include Cell::BaseMethods
       end
       
-      assert_equal "abstract_cell_test/singer", AbstractCellTest::SingerCell.cell_name
+      assert_equal "base_methods_test/singer", BaseMethodsTest::SingerCell.cell_name
     end
     
     
     should "provide class_from_cell_name" do
-      assert_equal BassistCell, ::Cell::AbstractBase.class_from_cell_name('bassist')
+      assert_equal BassistCell, ::Cell::Base.class_from_cell_name('bassist')
     end
     
     should "provide AbstractBase.default_template_format" do
       cell(:bassist).class.default_template_format = :js
       
-      assert_equal :html, ::Cell::AbstractBase.default_template_format
+      assert_equal :html, ::Cell::Base.default_template_format
       assert_equal :js, cell(:bassist).class.default_template_format
     end
     

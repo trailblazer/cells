@@ -1,6 +1,12 @@
 module Cell
-  class AbstractBase  ### TODO: will be renamed to Cell::Base.
-    class << self
+  module BaseMethods
+    def self.included(base)
+      base.extend ClassMethods
+      base.class_inheritable_accessor :default_template_format
+      base.default_template_format = :html
+    end
+    
+    module ClassMethods
       def render_cell_for(controller, name, state, opts={})
         create_cell_for(controller, name, opts).render_state(state)
       end
@@ -26,7 +32,7 @@ module Cell
       # once when a more specific cell does not need to change anything in
       # that view.
       def find_class_view_for_state(state)
-        return [view_for_state(state)] if superclass == ::Cell::AbstractBase
+        return [view_for_state(state)] unless superclass.respond_to?(:find_class_view_for_state)
 
         superclass.find_class_view_for_state(state) << view_for_state(state)
       end
@@ -40,20 +46,14 @@ module Cell
       def cell_name
         name.underscore.sub(/_cell$/, '')
       end
-
-      # Given a cell name, finds the class that belongs to it.
-      #
-      # Example:
-      # ::Cell::Base.class_from_cell_name(:user)
-      # => UserCell
+      
       def class_from_cell_name(cell_name)
         "#{cell_name}_cell".classify.constantize
       end
     end
     
     
-    class_inheritable_accessor :default_template_format
-    self.default_template_format = :html
+    
     
     
     attr_accessor :controller
