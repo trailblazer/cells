@@ -6,37 +6,22 @@ require 'active_support/test_case'
 
 
 ENV['RAILS_ENV'] = 'test'
-test_app_path = File.expand_path(File.join(File.dirname(__FILE__), 'app').to_s)
+
+gem_dir       = File.join(File.dirname(__FILE__), '..')
+test_app_dir  = File.join(gem_dir, 'test', 'app')
 
 # Important: Load any test ApplicationHelper before loading cells.
-Dir[File.join(test_app_path, *%w[helpers ** *.rb]).to_s].each { |f| require f }
+Dir[File.join(test_app_dir, *%w[helpers ** *.rb]).to_s].each { |f| require f }
 
 require 'cells'
-require 'cells/sinatra'
 
-class TestConfiguration
-  cattr_accessor :basedir, :rails_view_paths, :sinatra_view_paths
-  
-  class << self
-    # Setup the testing environment for Rails.
-    def rails!
-      Cell::Base.view_paths = rails_view_paths
-    end
-    
-    def sinatra!
-      Cell::Sinatra.views = sinatra_view_paths
-    end
-  end
-end
+Cell::Rails.view_paths = [File.join(test_app_dir, 'cells'), 
+                          File.join(test_app_dir, 'cells', 'layouts')]
 
-TestConfiguration.rails_view_paths = [File.join(test_app_path, 'cells'), File.join(test_app_path, 'cells', 'layouts')]
-TestConfiguration.sinatra_view_paths = File.join(test_app_path, 'cells')
-
-TestConfiguration.rails!
-TestConfiguration.sinatra!
 
 # Now, load the rest.
-Dir[File.join(test_app_path, *%w[controllers ** *.rb]).to_s].each { |f| require f }
+require File.join(test_app_dir, 'controllers', 'cells_test_controller')
+require File.join(test_app_dir, 'controllers', 'musician_controller')
 
 # We need to setup a fake route for the controller tests.
 ActionController::Routing::Routes.draw do |map|
@@ -46,18 +31,15 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'musician/:action', :controller => 'musician'
 end
 
+Dir[File.join(gem_dir, 'test', 'support', '**', '*.rb')].each { |f| require f }
+require File.join(gem_dir, 'lib', 'cells', 'assertions_helper')
 
-# Load test support files.
-Dir[File.join(File.dirname(__FILE__), *%w[support ** *.rb]).to_s].each { |f| require f }
-require File.join(File.dirname(__FILE__), *%w[.. lib cells assertions_helper])
-
+# Extend TestCase.
 ActiveSupport::TestCase.class_eval do
   include Cells::AssertionsHelper
   include Cells::InternalAssertionsHelper
 end
 
-require File.join(File.dirname(__FILE__), %w(app cells bassist_cell))
-require File.join(File.dirname(__FILE__), %w(app cells bad_guitarist_cell))
 
-require File.join(File.dirname(__FILE__), %w(app cells singer_cell))
-require File.join(File.dirname(__FILE__), %w(app cells background_singer_cell))
+require File.join(test_app_dir, 'cells', 'bassist_cell')
+require File.join(test_app_dir, 'cells', 'bad_guitarist_cell')

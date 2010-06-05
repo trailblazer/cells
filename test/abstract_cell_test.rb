@@ -8,7 +8,7 @@ class AbstractCellTest < ActiveSupport::TestCase
     end
     
     should "provide possible_paths_for_state" do
-      assert_equal ["background_singer/sing", "singer/sing", "cell/sinatra/sing"], cell(:background_singer).possible_paths_for_state(:sing)
+      assert_equal ["bad_guitarist/play", "bassist/play", "cell/rails/play"], cell(:bad_guitarist).possible_paths_for_state(:play)
     end
     
     should "provide cell_name" do

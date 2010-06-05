@@ -23,9 +23,6 @@ end
 
 require 'cell/abstract_base'
 
-
-#require 'cell/base' ### TODO: rename to rails
-
 require 'cell'
 require 'cell/rails'
 
