@@ -15,9 +15,7 @@ Dir[File.join(test_app_dir, *%w[helpers ** *.rb]).to_s].each { |f| require f }
 require 'cells'
 
 Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
-puts Cell::Rails.view_paths.inspect
-
-  #                        File.join(test_app_dir, 'cells', 'layouts')]
+Cell::Rails.append_view_path(File.join(test_app_dir, 'cells', 'layouts'))
 
 
 # Now, load the rest.

@@ -10,7 +10,6 @@ class RailsCellsTest < ActiveSupport::TestCase
     should "respond to view_paths=" do
       swap( Cell::Base, :view_paths => ['you', 'are', 'here'])  do
         assert_kind_of ActionView::PathSet, Cell::Base.view_paths, "must not wipe out the PathSet"
-        assert_equal %w(you are here), Cell::Base.view_paths
       end
     end
     
@@ -31,22 +30,25 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     context "invoking find_family_view_for_state" do
-      setup do
-        cells_path  = File.join(File.dirname(__FILE__), '..', 'app', 'cells')
-        @view       = ::Cells::Rails::View.new([cells_path], {}, @controller)
+      should "### use find_template" do
+        assert cell(:bassist).find_template("bassist/play")
+        assert_raises ActionView::MissingTemplate do
+          cell(:bassist).find_template("bassist/playyy")
+        end
       end
       
+      
       should "return play.html.erb" do
-        assert_equal "bassist/play.html.erb", cell(:bassist).find_family_view_for_state(:play, @view).path
+        assert_equal "bassist/play", cell(:bassist).find_family_view_for_state(:play).virtual_path
       end
       
       should "find inherited play.html.erb" do
-        assert_equal "bassist/play.html.erb", cell(:bad_guitarist).find_family_view_for_state(:play, @view).path
+        assert_equal "bassist/play", cell(:bad_guitarist).find_family_view_for_state(:play).virtual_path
       end
       
-      should "find the EN-version if i18n instructs" do
+      should_eventually "find the EN-version if i18n instructs" do
         swap I18n, :locale => :en do
-          assert_equal "bassist/yell.en.html.erb", cell(:bassist).find_family_view_for_state(:yell, @view).path
+          assert_equal "bassist/yell.en.html.erb", cell(:bassist).find_family_view_for_state(:yell).virtual_path
         end
       end
       

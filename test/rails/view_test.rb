@@ -3,14 +3,6 @@ require File.join(File.dirname(__FILE__), '../test_helper')
 
 class RailsViewTest < ActiveSupport::TestCase
   context "A cell view" do
-    should "respond to find_family_view_for_state" do
-      cells_path  = File.join(File.dirname(__FILE__), '..', 'app', 'cells')
-      view        = ::Cells::Rails::View.new([cells_path], {}, @controller)
-      template    = cell(:bassist).find_family_view_for_state(:play, view)
-
-      assert_equal 'bassist/play.html.erb', template.path
-    end
-    
     context "calling render :partial" do
       should "render the cell partial in bassist/dii" do
         BassistCell.class_eval do

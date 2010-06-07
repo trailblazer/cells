@@ -1,8 +1,13 @@
 require File.join(File.dirname(__FILE__), '/../test_helper')
 
+require 'action_dispatch/routing/route'
+
 class RailsIntegrationTest < ActionController::TestCase
   context "A rails controller" do
     setup do
+      ActionDispatch::Routing::Routes.draw { |map| map.connect ':controller/:action/:id' }
+
+      #@routes = Rails::Application.
       @controller = MusicianController.new
     end
     

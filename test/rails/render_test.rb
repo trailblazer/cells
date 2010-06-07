@@ -1,5 +1,6 @@
 require File.join(File.dirname(__FILE__), '/../test_helper')
-#RAILS_ROOT = File.dirname(__FILE__)
+require 'builder'
+
 class RailsRenderTest < ActiveSupport::TestCase
   context "Invoking render" do
     should "render a plain view" do

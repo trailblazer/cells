@@ -131,15 +131,14 @@ module Cell
       # As soon as a view file is found it is returned as an ActionView::Template
       # instance.
       ### DISCUSS: moved to Cell::View#find_template in rainhead's fork:
-      def find_family_view_for_state(state, action_view)
+      def find_family_view_for_state(state)
         missing_template_exception = nil
 
         possible_paths_for_state(state).each do |template_path|
           # we need to catch MissingTemplate, since we want to try for all possible family views.
           begin
-            if view = action_view.try_picking_template_for_path(template_path)
-              return view
-            end
+            template = find_template(template_path)
+            return template if template
           rescue ::ActionView::MissingTemplate => missing_template_exception
           end
         end
@@ -150,8 +149,8 @@ module Cell
       # In production mode, the view for a state/template_format is cached.
       ### DISCUSS: ActionView::Base already caches results for #pick_template, so maybe
       ### we should just cache the family path for a state/format?
-      def find_family_view_for_state_with_caching(state, action_view)
-        return find_family_view_for_state(state, action_view) unless self.class.cache_configured?
+      def find_family_view_for_state_with_caching(state)
+        return find_family_view_for_state(state) unless self.class.cache_configured?
 
         # in production mode:
         key         = "#{state}/#{action_view.template_format}"
@@ -170,6 +169,9 @@ module Cell
         return '' if opts[:nothing]
 
         #action_view = setup_action_view
+        #if opts[:view]
+        #  state = opts.delete(:view)
+        #end
 
         ### TODO: dispatch dynamically:
         if    opts[:text]   ### FIXME: generic option?
@@ -185,15 +187,13 @@ module Cell
           #prepare_action_view_for(action_view, opts)
 
           #template    = find_family_view_for_state_with_caching(opts[:view], action_view)
-          template = possible_paths_for_state(state).first  ### FIXME: introduce view inheritance, again.
-          opts[:file] = template
+          template    = find_family_view_for_state(opts[:view])
+          opts[:template] = template
         end
 
         opts = sanitize_render_options(opts)
         
         render_to_string(opts)
-        
-        #action_view.render_for(opts)
       end
 
       # Defaultize the passed options from #render.
@@ -211,13 +211,6 @@ module Cell
 
         action_view.assigns         = assigns_for_view  # make instance vars available.
         action_view.template_format = opts[:template_format]
-      end
-
-      def setup_action_view
-        view_class  = Class.new(::Cells::Rails::View)
-        action_view = view_class.new(self.class.view_paths, {}, @controller)
-        action_view.cell = self
-        action_view
       end
 
       # Prepares <tt>opts</tt> to be passed to ActionView::Base#render by removing

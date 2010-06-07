@@ -62,7 +62,7 @@ end
 class CachingTest < ActiveSupport::TestCase
   def setup
     super
-    @controller.session = {}
+    #@controller.session = {}
     @cc = CachingCell.new(@controller)
     @c2 = AnotherCachingCell.new(@controller)
 
