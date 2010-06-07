@@ -1,5 +1,5 @@
 # encoding: utf-8
 
 module Cells
-  VERSION = '3.4.0'
+  VERSION = '4.0.0'
 end

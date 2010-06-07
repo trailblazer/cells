@@ -1,53 +1,68 @@
-require 'action_controller/base'
+require 'abstract_controller'
+require 'action_controller'
+#require 'pathn'
 
 module Cell
-  class Rails   ### TODO: derive from AbstractBase.
+  class Rails < ActionController::Metal
     include BaseMethods
-    include ::ActionController::Helpers
-    include ::ActionController::RequestForgeryProtection
+    include AbstractController
+    include Rendering, Layouts, Helpers, Callbacks, Translation
+    include ActionController::RequestForgeryProtection
     
     include Cell::Caching
-    include Cell::ActiveHelper
+    #include Cell::ActiveHelper
     
-    class_inheritable_array :view_paths, :instance_writer => false
-    write_inheritable_attribute(:view_paths, ActionView::PathSet.new) # Force use of a PathSet in this attribute, self.view_paths = ActionView::PathSet.new would still yield in an array
+    abstract!
     
-    class_inheritable_accessor :allow_forgery_protection
-    self.allow_forgery_protection = true
+    def self.controller_path
+      @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
+    end
+    
+    def process(*)
+      self.response_body = super
+    end
 
-    delegate :params, :session, :request, :logger, :to => :controller
+    def render_to_string(*args)
+      return super
+      
+      return super unless cached_actions.include?(action_name)
+
+      if body = self.class.cached_bodies[action_name]
+        body
+      else
+        self.class.cached_bodies[action_name] = super
+      end
+    end
+
+    attr_internal :request
+
+    #delegate :session, :params, :to => "@_request"
+
+    #alias render render_to_string
+
+
+
+
     
     
     class << self
-      attr_accessor :request_forgery_protection_token
+      #attr_accessor :request_forgery_protection_token
       
       # Use this if you want Cells to look up view templates
       # in directories other than the default.
-      def view_paths=(paths)
-        self.view_paths.clear.concat(paths) # don't let 'em overwrite the PathSet.
-      end
+      #def view_paths=(paths)
+      #  self.view_paths.clear.concat(paths) # don't let 'em overwrite the PathSet.
+      #end
       
       # A template file will be looked for in each view path. This is typically
       # just RAILS_ROOT/app/cells, but you might want to add e.g.
       # RAILS_ROOT/app/views.
-      def add_view_path(path)
-        path = ::Rails.root.join(path) if defined?(::Rails)
-        self.view_paths << path unless self.view_paths.include?(path)
-      end
+      #def add_view_path(path)
+      #  path = ::Rails.root.join(path) if defined?(::Rails)
+      #  self.view_paths << path unless self.view_paths.include?(path)
+      #end
 
-      # Declare a controller method as a helper.  For example,
-      #   helper_method :link_to
-      #   def link_to(name, options) ... end
-      # makes the link_to controller method available in the view.
-      def helper_method(*methods)
-        methods.flatten.each do |method|
-          master_helper_module.module_eval <<-end_eval
-            def #{method}(*args, &block)
-              @cell.send(:#{method}, *args, &block)
-            end
-          end_eval
-        end
-      end
+
 
       
 
@@ -146,33 +161,7 @@ module Cell
 
       
 
-      # Prepares the hash {instance_var => value, ...} that should be available
-      # in the ActionView when rendering the state view.
-      ### DISCUSS: to we need that at all?
-      def assigns_for_view
-        assigns = {}
-        (self.instance_variables - ivars_to_ignore).each do |k|
-         assigns[k[1..-1]] = instance_variable_get(k)
-        end
-        assigns
-      end
 
-      # When passed a copy of the ActionView::Base class, it
-      # will mix in all helper classes for this cell in that class.
-      def include_helpers_in_class(view_klass)
-        view_klass.send(:include, self.class.master_helper_module)
-      end
-
-      # Defines the instance variables that should <em>not</em> be copied to the
-      # View instance.
-      ### DISCUSS: to we need that at all?
-      def ivars_to_ignore;  ['@controller']; end
-      
-      ### TODO: allow log levels.
-      def log(message)
-        return unless @controller.logger
-        @controller.logger.debug(message)
-      end
       
       # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
       # if it can not find one of the requested view template. Note that this behaviour was
@@ -180,7 +169,7 @@ module Cell
       def render_view_for(opts, state)
         return '' if opts[:nothing]
 
-        action_view = setup_action_view
+        #action_view = setup_action_view
 
         ### TODO: dispatch dynamically:
         if    opts[:text]   ### FIXME: generic option?
@@ -193,15 +182,18 @@ module Cell
           opts = defaultize_render_options_for(opts, state)
 
           # set instance vars, include helpers:
-          prepare_action_view_for(action_view, opts)
+          #prepare_action_view_for(action_view, opts)
 
-          template    = find_family_view_for_state_with_caching(opts[:view], action_view)
+          #template    = find_family_view_for_state_with_caching(opts[:view], action_view)
+          template = possible_paths_for_state(state).first  ### FIXME: introduce view inheritance, again.
           opts[:file] = template
         end
 
         opts = sanitize_render_options(opts)
-
-        action_view.render_for(opts)
+        
+        render_to_string(opts)
+        
+        #action_view.render_for(opts)
       end
 
       # Defaultize the passed options from #render.

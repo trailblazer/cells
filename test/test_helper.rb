@@ -2,7 +2,6 @@
 require 'rubygems'
 require 'test/unit'
 require 'shoulda'
-require 'active_support/test_case'
 
 
 ENV['RAILS_ENV'] = 'test'
@@ -15,8 +14,10 @@ Dir[File.join(test_app_dir, *%w[helpers ** *.rb]).to_s].each { |f| require f }
 
 require 'cells'
 
-Cell::Rails.view_paths = [File.join(test_app_dir, 'cells'), 
-                          File.join(test_app_dir, 'cells', 'layouts')]
+Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
+puts Cell::Rails.view_paths.inspect
+
+  #                        File.join(test_app_dir, 'cells', 'layouts')]
 
 
 # Now, load the rest.
@@ -24,12 +25,12 @@ require File.join(test_app_dir, 'controllers', 'cells_test_controller')
 require File.join(test_app_dir, 'controllers', 'musician_controller')
 
 # We need to setup a fake route for the controller tests.
-ActionController::Routing::Routes.draw do |map|
-  map.connect 'cells_test/:action', :controller => 'cells_test'
-end
-ActionController::Routing::Routes.draw do |map|
-  map.connect 'musician/:action', :controller => 'musician'
-end
+#ActionController::Routing::Routes.draw do |map|
+#  map.connect 'cells_test/:action', :controller => 'cells_test'
+#end
+#ActionController::Routing::Routes.draw do |map|
+#  map.connect 'musician/:action', :controller => 'musician'
+#end
 
 Dir[File.join(gem_dir, 'test', 'support', '**', '*.rb')].each { |f| require f }
 require File.join(gem_dir, 'lib', 'cells', 'assertions_helper')

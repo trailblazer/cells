@@ -40,7 +40,7 @@ module Cells
     # Example:
     #   assert_equal "Banks kill planet!" cell(:news, :topic => :terror).latest_headline
     def cell(name, opts={}, &block)
-      cell = ::Cell::Rails.create_cell_for(@controller, name, opts)
+      cell = ::Cell::Base.create_cell_for(@controller, name, opts)
       cell.instance_eval &block if block_given?
       cell
     end

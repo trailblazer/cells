@@ -1,9 +1,9 @@
 require File.join(File.dirname(__FILE__), *%w[test_helper])
-require 'rails_generator'
-require 'rails_generator/scripts/generate'
+#require 'rails_generator'
+#require 'rails_generator/scripts/generate'
 
 # for some reasons the "autoloading" in Rails::Generator::Lookup doesn't work:
-Rails::Generator::Base.append_sources Rails::Generator::PathSource.new(:cells, File.join(File.dirname(__FILE__)+'/../rails_generators'))
+#Rails::Generator::Base.append_sources Rails::Generator::PathSource.new(:cells, File.join(File.dirname(__FILE__)+'/../rails_generators'))
 
 class CellGeneratorTest < Test::Unit::TestCase
   context "Running script/generate cell" do

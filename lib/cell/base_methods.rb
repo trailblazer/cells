@@ -2,7 +2,9 @@ module Cell
   module BaseMethods
     def self.included(base)
       base.extend ClassMethods
-      base.class_inheritable_accessor :default_template_format
+      
+      ### DISCUSS: move that to Rails?
+      base.class_attribute :default_template_format
       base.default_template_format = :html
     end
     

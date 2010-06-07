@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cells}
-  s.version = "3.4.0"
+  s.version = "4.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-06-05}
+  s.date = %q{2010-06-06}
   s.description = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
@@ -21,9 +21,9 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "lib/cell.rb",
-     "lib/cell/abstract_base.rb",
      "lib/cell/active_helper.rb",
      "lib/cell/base.rb",
+     "lib/cell/base_methods.rb",
      "lib/cell/caching.rb",
      "lib/cell/rails.rb",
      "lib/cell/view.rb",
@@ -32,7 +32,6 @@ Gem::Specification.new do |s|
      "lib/cells/helpers.rb",
      "lib/cells/helpers/capture_helper.rb",
      "lib/cells/rails.rb",
-     "lib/cells/test.rb",
      "lib/cells/version.rb",
      "rails/init.rb",
      "rails_generators/cell/USAGE",
@@ -52,6 +51,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.test_files = [
     "test/active_helper_test.rb",
+     "test/base_methods_test.rb",
      "test/assertions_helper_test.rb",
      "test/rails/view_test.rb",
      "test/rails/capture_test.rb",
@@ -63,7 +63,6 @@ Gem::Specification.new do |s|
      "test/support/internal_assertions_helper.rb",
      "test/helper_test.rb",
      "test/caching_test.rb",
-     "test/abstract_cell_test.rb",
      "test/app/controllers/musician_controller.rb",
      "test/app/controllers/cells_test_controller.rb",
      "test/app/cells/bassist_cell.rb",
