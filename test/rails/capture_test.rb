@@ -1,6 +1,10 @@
 # encoding: utf-8
 require File.join(File.dirname(__FILE__), '/../test_helper')
 
+class ProducerCell < Cell::Base
+  helper ::Cells::Helpers::CaptureHelper
+end
+
 class RailsCaptureTest < ActionController::TestCase
   context "A Rails controller rendering cells" do
     setup do
@@ -13,12 +17,11 @@ class RailsCaptureTest < ActionController::TestCase
     should "see content from global_capture" do
       @controller.class_eval do
         def featured
-          render :inline => '<h3><%= @recorded %></h3>' << render_cell(:bassist, :capture)
+          render :inline => '<h3><%= @recorded %></h3>' << render_cell(:producer, :capture)
         end
       end
       
-      BassistCell.class_eval do
-        helper ::Cells::Helpers::CaptureHelper
+      ProducerCell.class_eval do
         def capture; render; end
       end
       
@@ -30,12 +33,11 @@ class RailsCaptureTest < ActionController::TestCase
     should "see yieldable content from global_content_for" do
       @controller.class_eval do
         def featured
-          render :inline => render_cell(:bassist, :content_for) + '<pre><%= yield :recorded %></pre>'
+          render :inline => render_cell(:producer, :content_for) + '<pre><%= yield :recorded %></pre>'
         end
       end
       
-      BassistCell.class_eval do
-        helper ::Cells::Helpers::CaptureHelper
+      ProducerCell.class_eval do
         def content_for; render; end
       end
        

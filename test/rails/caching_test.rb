@@ -69,8 +69,8 @@ class CachingTest < ActiveSupport::TestCase
         end
         
         assert cell(:director).state_cached?(:count)
-        assert_equal nil, cell(:director).version_procs[:count]
-        assert_equal({}, cell(:director).cache_options[:count])
+        assert_equal nil, cell(:director).class.version_procs[:count]
+        assert_equal({}, cell(:director).class.cache_options[:count])
         
         assert_equal render_cell(:director, :count), render_cell(:director, :count)
       end

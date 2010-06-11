@@ -117,7 +117,7 @@ module Cell
         return content
       end
       # re-render:
-      return write_fragment(key, render_state_without_caching(state), cache_options[state])
+      return write_fragment(key, render_state_without_caching(state), self.class.cache_options[state])
     end
 
     def read_fragment(key, cache_options = nil) #:nodoc:
@@ -134,7 +134,7 @@ module Cell
 
     # Call the versioning Proc for the respective state.
     def call_version_proc_for_state(state)
-      version_proc = version_procs[state]
+      version_proc = self.class.version_procs[state]
 
       return {} unless version_proc # call to #cache was without any args.
 
@@ -149,14 +149,5 @@ module Cell
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
     end
-
-    def version_procs
-      self.class.version_procs
-    end
-
-    def cache_options
-      self.class.cache_options
-    end
-
   end
 end
