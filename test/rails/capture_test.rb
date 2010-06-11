@@ -4,6 +4,9 @@ require File.join(File.dirname(__FILE__), '/../test_helper')
 class RailsCaptureTest < ActionController::TestCase
   context "A Rails controller rendering cells" do
     setup do
+      @routes = ActionDispatch::Routing::RouteSet.new
+      @routes.draw { |map| map.connect ':controller/:action/:id' }
+      
       @controller = MusicianController.new
     end
     

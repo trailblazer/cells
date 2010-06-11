@@ -1,6 +1,5 @@
 require 'abstract_controller'
 require 'action_controller'
-#require 'pathn'
 
 module Cell
   class Rails < ActionController::Metal
@@ -8,11 +7,34 @@ module Cell
     include AbstractController
     include Rendering, Layouts, Helpers, Callbacks, Translation
     include ActionController::RequestForgeryProtection
+    #include AbstractController::Logger
     
     include Cell::Caching
     #include Cell::ActiveHelper
     
     abstract!
+    
+    def initialize(bla, options={});@opts = options;end
+    def log(*args); end
+    
+    class View < ActionView::Base
+      def render(options = {}, locals = {}, &block)
+        if options[:state] or options[:view]
+          return @_controller.render(options, &block)
+        end
+        
+        super
+      end
+    end
+    #helper ::Cells::Rails::ViewHelper
+    def self.view_context_class
+      controller = self
+      @view_context_class ||= View.class_eval do
+      
+        include controller._helpers
+      end
+      ### DISCUSS: copy behaviour from abstract_controller/rendering-line 49? (helpers)
+    end
     
     def self.controller_path
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?

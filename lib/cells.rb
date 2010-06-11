@@ -24,6 +24,7 @@ end
 require 'cell/base_methods'
 
 require 'cell'
+require 'cells/rails' # helper.
 require 'cell/rails'
 
 require 'cells/helpers'

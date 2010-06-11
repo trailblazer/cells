@@ -63,7 +63,11 @@ module Cells
       end
     end
     
-    
+    module ViewHelper
+      def render
+      
+      end
+    end
 
     class View < ::ActionView::Base
 

@@ -57,9 +57,9 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     context "delegation" do
-      should "delegate log" do
+      should_eventually "delegate log" do
         assert_nothing_raised do
-          cell(:bassist).log("everything is perfect!")
+          cell(:bassist).class.logger.info("everything is perfect!")
         end
       end
     end
