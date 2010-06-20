@@ -14,9 +14,13 @@ module Cell
     
     abstract!
     
-    def initialize(options={})  ### FIXME: move to BaseMethods.
-      @opts = options
+    ### DISCUSS: should we pass the parent_controller here?
+    def initialize(parent_controller=nil, options={})  ### FIXME: move to BaseMethods.
+      @parent_controller  = parent_controller
+      @opts = @options    = options
     end
+    attr_reader :parent_controller
+    
     
     def log(*args); end
     
@@ -44,7 +48,7 @@ module Cell
     end
     
     def process(*)  # defined in AC::Metal.
-      self.response_body = super
+      self.response_body = super  ### TODO: discuss with yehuda.
     end
 
     attr_internal :request

@@ -126,7 +126,12 @@ class RailsRenderTest < ActiveSupport::TestCase
       BassistCell.class_eval do
         def pose; render; end
       end
-      assert_equal "Come and get me!", render_cell(:bassist, :pose)
+      
+      @request.env["action_dispatch.request.request_parameters"] = {:what => 'get'}
+      @cell = cell(:bassist)
+      @cell.request = @request  ### FIXME.
+      
+      assert_equal "Come and get me!", @cell.render_state(:pose)
     end
     
     

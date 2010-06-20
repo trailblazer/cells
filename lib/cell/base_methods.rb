@@ -17,7 +17,7 @@ module Cell
       # <tt>opts</tt>.
       def create_cell_for(controller, name, opts={})
         #class_from_cell_name(name).new(controller, opts)
-        class_from_cell_name(name).new(opts)
+        class_from_cell_name(name).new(controller, opts)
       end
       
       # Return the default view for the given state on this cell subclass.
@@ -72,7 +72,7 @@ module Cell
     end
 
     # Invoke the state method and render the given state.
-    def render_state(state)
+    def render_state(state, controller=nil)
       @cell       = self
       @state_name = state
 

@@ -3,6 +3,8 @@ require File.join(File.dirname(__FILE__), '/../test_helper')
 
 class ProducerCell < Cell::Base
   helper ::Cells::Helpers::CaptureHelper
+  
+  def logger(*args); puts args.inspect; end
 end
 
 class RailsCaptureTest < ActionController::TestCase
