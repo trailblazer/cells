@@ -5,12 +5,13 @@ class ProducerCell < Cell::Base
   helper ::Cells::Helpers::CaptureHelper
 end
 
-class RailsCaptureTest < ActionController::IntegrationTest
+class RailsCaptureTest < ActionController::TestCase
   context "A Rails controller rendering cells" do
     setup do
-      #@routes = ActionDispatch::Routing::RouteSet.new
-      #@routes.draw { |map| map.connect ':controller/:action/:id' }
-      
+      @routes = ActionDispatch::Routing::RouteSet.new
+      @routes.draw do
+        |map| match ':action', :to => MusicianController
+      end
       @controller = MusicianController.new
     end
     
@@ -33,7 +34,8 @@ class RailsCaptureTest < ActionController::IntegrationTest
     should "see yieldable content from global_content_for" do
       @controller.class_eval do
         def featured
-          render :inline => render_cell(:producer, :content_for) + '<pre><%= yield :recorded %></pre>'
+          render_cell(:producer, :content_for)
+          render :inline => '<pre><%= yield :recorded %></pre>'
         end
       end
       
