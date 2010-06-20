@@ -10,7 +10,6 @@ module Cells
       def render_cell(name, state, opts={})
         ::Cell::Base.render_cell_for(self, name, state, opts)
       end
-      alias_method :render_cell_to_string, :render_cell # just for backward compatibility.
 
       # Expires the cached cell state view, similar to ActionController::expire_fragment.
       # Usually, this method is used in Sweepers.
@@ -62,44 +61,8 @@ module Cells
         ::Cell::Base.render_cell_for(@controller, name, state, opts)
       end
     end
+
     
-    module ViewHelper
-      def render
-      
-      end
-    end
-
-    class View < ::ActionView::Base
-
-      attr_accessor :cell
-      alias_method :render_for, :render
-
-      ### TODO: this should just be a thin helper.
-      ### dear rails folks, could you guys please provide a helper #render and an internal #render_for
-      ### so that we can overwrite the helper and cleanly reuse the internal method? using the same
-      ### method both internally and externally sucks ass.
-      def render(options = {}, local_assigns = {}, &block)
-        ### TODO: we have to find out if this is a call to the cells #render method, or to the rails
-        ###       method (e.g. when rendering a layout). what a shit.
-        if (options.keys & [:view, :state]).present?  ### TODO: is there something like has_keys?
-          # that's better: simply delegate render back to the cell/controller.
-          return cell.render(options)
-        end
-
-        # rails compatibility we should get rid of:
-        if partial_path = options[:partial]
-          # adds the cell name to the partial name.
-          options[:partial] = expand_view_path(partial_path)
-        end
-
-        super(options, local_assigns, &block)
-      end
-
-      def expand_view_path(path)
-        path = "#{cell.cell_name}/#{path}" unless path.include?('/')
-        path
-      end
-    end
   end
 end
 

@@ -57,10 +57,25 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     context "delegation" do
+      setup do
+        @request = ActionController::TestRequest.new 
+        @request.env["action_dispatch.request.request_parameters"] = {:song => "Creatures"}
+        @cell = cell(:bassist)
+        @cell.request= @request
+      end
+      
       should_eventually "delegate log" do
         assert_nothing_raised do
           cell(:bassist).class.logger.info("everything is perfect!")
         end
+      end
+      
+      should "respond to params" do
+        assert_equal 'Creatures', @cell.params[:song]
+      end
+      
+      should "respond to session" do
+        assert_kind_of Hash, @cell.session
       end
     end
     

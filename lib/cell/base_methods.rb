@@ -16,7 +16,8 @@ module Cell
       # Creates a cell instance of the class <tt>name</tt>Cell, passing through
       # <tt>opts</tt>.
       def create_cell_for(controller, name, opts={})
-        class_from_cell_name(name).new(controller, opts)
+        #class_from_cell_name(name).new(controller, opts)
+        class_from_cell_name(name).new(opts)
       end
       
       # Return the default view for the given state on this cell subclass.
@@ -61,8 +62,8 @@ module Cell
     attr_accessor :controller
     attr_reader   :state_name
 
-    def initialize(controller, options={})
-      @controller = controller
+    def initialize(options={})
+      #@controller = controller
       @opts       = options
     end
 

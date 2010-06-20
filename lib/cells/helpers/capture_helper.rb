@@ -38,6 +38,9 @@ module Cells
       #
       #  <%= yield :greetings %>
       def global_content_for(name, content = nil, &block)
+        
+        
+        
         # OMG.
         global_view = controller.instance_variable_get(:@template)
         ivar        = :"@content_for_#{name}"

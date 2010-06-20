@@ -6,6 +6,7 @@ class ActiveHelperTest < ActiveSupport::TestCase
   context "The Cell::Base class" do
     setup do
       require 'active_helper'
+      require 'active_helper/rails'
       class FingeringHelper < ActiveHelper::Base
         provides :finger
       end

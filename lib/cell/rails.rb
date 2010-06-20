@@ -9,12 +9,15 @@ module Cell
     include ActionController::RequestForgeryProtection
     #include AbstractController::Logger
     
-    include Cell::Caching
+    
     #include Cell::ActiveHelper
     
     abstract!
     
-    def initialize(bla, options={});@opts = options;end
+    def initialize(options={})  ### FIXME: move to BaseMethods.
+      @opts = options
+    end
+    
     def log(*args); end
     
     class View < ActionView::Base
@@ -26,7 +29,7 @@ module Cell
         super
       end
     end
-    #helper ::Cells::Rails::ViewHelper
+    
     def self.view_context_class
       controller = self
       @view_context_class ||= View.class_eval do
@@ -40,28 +43,17 @@ module Cell
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
     end
     
-    def process(*)
+    def process(*)  # defined in AC::Metal.
       self.response_body = super
-    end
-
-    def render_to_string(*args)
-      return super
-      
-      return super unless cached_actions.include?(action_name)
-
-      if body = self.class.cached_bodies[action_name]
-        body
-      else
-        self.class.cached_bodies[action_name] = super
-      end
     end
 
     attr_internal :request
 
-    #delegate :session, :params, :to => "@_request"
-
-    #alias render render_to_string
-
+    def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given?
+      rack_response = dispatch(state, request)
+      rack_response[2].last  ### TODO: discuss with yehuda.
+    end
+    include Cell::Caching
 
 
 
@@ -143,7 +135,7 @@ module Cell
       # part of the page.
       # Just use <tt>:view</tt> and enjoy.
       def render(opts={})
-        render_view_for(opts, @state_name)  ### FIXME: i don't like the magic access to @state_name here. ugly!
+        render_view_for(opts, self.action_name)
       end
 
       
@@ -189,11 +181,6 @@ module Cell
       # introduced in cells 2.3 and replaces the former warning message.
       def render_view_for(opts, state)
         return '' if opts[:nothing]
-
-        #action_view = setup_action_view
-        #if opts[:view]
-        #  state = opts.delete(:view)
-        #end
 
         ### TODO: dispatch dynamically:
         if    opts[:text]   ### FIXME: generic option?

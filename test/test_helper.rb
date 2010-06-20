@@ -3,6 +3,10 @@ require 'rubygems'
 require 'test/unit'
 require 'shoulda'
 
+# wycats says...
+require 'bundler'
+Bundler.setup
+
 
 ENV['RAILS_ENV'] = 'test'
 
@@ -39,6 +43,10 @@ ActiveSupport::TestCase.class_eval do
   include Cells::InternalAssertionsHelper
 end
 
+# Enable dynamic states so we can do Cell.class_eval { def ... } at runtime.
+class Cell::Rails
+  def action_method?(*); true; end
+end
 
 require File.join(test_app_dir, 'cells', 'bassist_cell')
 require File.join(test_app_dir, 'cells', 'bad_guitarist_cell')

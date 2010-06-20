@@ -3,6 +3,7 @@ require 'builder'
 
 class RailsRenderTest < ActiveSupport::TestCase
   context "Invoking render" do
+    
     should "render a plain view" do
       BassistCell.class_eval do
         def play; render; end
@@ -100,7 +101,7 @@ class RailsRenderTest < ActiveSupport::TestCase
         def jam; @chords = [:a, :c]; render; end
         def play; render; end
       end
-      assert_equal "\nDoo\n\nDoo\n", render_cell(:bassist, :jam)
+      assert_equal "Doo\nDoo\n", render_cell(:bassist, :jam)
     end
     
     should "allow multiple calls to render" do

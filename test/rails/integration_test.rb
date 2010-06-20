@@ -2,25 +2,42 @@ require File.join(File.dirname(__FILE__), '/../test_helper')
 
 require 'active_support/core_ext/object/to_query'
 
-class RailsIntegrationTest < ActionController::TestCase
-  context "A rails controller" do
-    setup do
-      @routes = ActionDispatch::Routing::RouteSet.new
-      @routes.draw { |map| map.connect ':controller/:action/:id' }
+class RailsIntegrationTest < ActionController::IntegrationTest
+  #context "A rails controller" do
+    #setup do
+    #  @routes = ActionDispatch::Routing::RouteSet.new
+    #  @routes.draw { |map| match ':action', :to => ::MusicianController }
       
-      @controller = MusicianController.new
-    end
+      #@app = MusicianController.new.to_a
+    #end
     
-    should "respond to render_cell" do
+    def app
+    self.class
+  end
+  def self.call(env)
+    routes.call(env)
+  end
+  
+  def self.routes
+    @routes ||= ActionDispatch::Routing::RouteSet.new
+  end
+
+  routes.draw do
+    |map| match ':action', :to => ::MusicianController
+  end
+    
+    #include routes.url_helpers
+    
+    test "respond to render_cell" do
       get 'promotion'
       assert_equal "Doo", @response.body
     end
     
-    should "respond to render_cell in the view" do
+    test "respond to render_cell in the view" do
       get 'featured'
       assert_equal "Doo", @response.body
     end
     
-  end
+  #end
   
 end
