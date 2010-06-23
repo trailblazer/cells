@@ -1,41 +1,14 @@
 # encoding: utf-8
 require 'rubygems'
+require 'bundler'
+Bundler.setup
 
-begin
-  require 'test/unit'
-rescue
-  gem 'test-unit', '1.2.3'
-  require 'test/unit'
-end
 
-begin
-  require 'active_support'
-rescue
-  gem 'activesupport'
-  require 'active_support'
-end
-
-begin
-  require 'action_controller'
-rescue
-  gem 'actionpack'
-  require 'action_controller'
-end
-
-begin
-  require 'action_view'
-rescue
-  gem 'actionpack'
-  require 'action_view'
-end
-
-begin
-  require 'shoulda'
-rescue
-  gem 'shoulda'
-  require 'shoulda'
-end
-
+require 'test/unit'
+require 'active_support'
+require 'action_controller'
+require 'action_view'
+require 'shoulda'
 require 'active_support/test_case'
 
 # Require app's test_helper.rb if such exists.
