@@ -36,9 +36,31 @@ module Cell
     
     def self.view_context_class
       controller = self
+      
+      
+      
+      @routes = ActionDispatch::Routing::RouteSet.new
+_routes = @routes
+
+        # Unfortunately, there is currently an abstraction leak between AC::Base
+        # and AV::Base which requires having the URL helpers in both AC and AV.
+        # To do this safely at runtime for tests, we need to bump up the helper serial
+        # to that the old AV subclass isn't cached.
+        #
+        # TODO: Make this unnecessary
+        #if @controller
+        #  @controller.singleton_class.send(:include, _routes.url_helpers)
+        #  @controller.view_context_class = Class.new(@controller.view_context_class) do
+        #    include _routes.url_helpers
+      
+      
+      
+      
       @view_context_class ||= View.class_eval do
       
         include controller._helpers
+        
+        #include controller.parent_controller._router.url_helpers
       end
       ### DISCUSS: copy behaviour from abstract_controller/rendering-line 49? (helpers)
     end
