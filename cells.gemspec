@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cells}
-  s.version = "4.0.0"
+  s.version = "3.3.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-06-06}
+  s.date = %q{2010-06-28}
   s.description = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
@@ -17,16 +17,11 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "CHANGES",
+     "Gemfile",
      "MIT-LICENSE",
      "README.rdoc",
      "Rakefile",
      "lib/cell.rb",
-     "lib/cell/active_helper.rb",
-     "lib/cell/base.rb",
-     "lib/cell/base_methods.rb",
-     "lib/cell/caching.rb",
-     "lib/cell/rails.rb",
-     "lib/cell/view.rb",
      "lib/cells.rb",
      "lib/cells/assertions_helper.rb",
      "lib/cells/helpers.rb",
@@ -47,27 +42,28 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://cells.rubyforge.org}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.test_files = [
-    "test/active_helper_test.rb",
-     "test/base_methods_test.rb",
+    "test/rails_test.rb",
+     "test/active_helper_test.rb",
+     "test/capture_helper_test.rb",
      "test/assertions_helper_test.rb",
-     "test/rails/view_test.rb",
-     "test/rails/capture_test.rb",
-     "test/rails/integration_test.rb",
-     "test/rails/render_test.rb",
-     "test/rails/cells_test.rb",
      "test/cell_generator_test.rb",
      "test/test_helper.rb",
      "test/support/internal_assertions_helper.rb",
+     "test/bugs_test.rb",
+     "test/render_test.rb",
+     "test/cells_test.rb",
      "test/helper_test.rb",
      "test/caching_test.rb",
-     "test/app/controllers/musician_controller.rb",
      "test/app/controllers/cells_test_controller.rb",
      "test/app/cells/bassist_cell.rb",
+     "test/app/cells/really_module/nested_cell.rb",
+     "test/app/cells/cells_test_one_cell.rb",
+     "test/app/cells/cells_test_two_cell.rb",
+     "test/app/cells/simple_cell.rb",
      "test/app/cells/test_cell.rb",
-     "test/app/cells/bad_guitarist_cell.rb",
      "test/app/helpers/application_helper.rb",
      "test/app/helpers/helper_using_cell_helper.rb"
   ]
