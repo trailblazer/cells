@@ -128,6 +128,11 @@ class CellsTest < ActionController::TestCase
     end
   end
   
+  def test_add_view_path
+    Cell::Base.add_view_path 'now'
+    assert_kind_of ActionView::PathSet, Cell::Base.view_paths
+  end
+  
   
   def test_controller_render_methods
     get :call_render_cell_with_strings  # render_cell("test", "state")

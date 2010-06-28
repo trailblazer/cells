@@ -158,7 +158,7 @@ module Cells
         # just RAILS_ROOT/app/cells, but you might want to add e.g.
         # RAILS_ROOT/app/views.
         def add_view_path(path)
-          path = ::Rails.root.join(path) if defined?(::Rails)
+          path = File.join(::Rails.root, path) if defined?(::Rails) and ::Rails.respond_to?(:root)
           self.view_paths << path unless self.view_paths.include?(path)
         end
 
