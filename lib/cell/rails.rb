@@ -68,10 +68,12 @@ module Cell
       self.response_body = super  ### TODO: discuss with yehuda.
     end
 
-    attr_internal :request
+    #attr_internal :request
+    delegate :request, :to => :parent_controller
 
-    def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given?
-      rack_response = dispatch(state, request)
+
+    def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given? leave blank?
+      rack_response = dispatch(state, parent_controller.request)
       rack_response[2].last  ### TODO: discuss with yehuda.
     end
     include Cell::Caching

@@ -58,7 +58,7 @@ module Cells
       #     <label>password: <input name="user[password]" /></label>
       #   </div>
       def render_cell(name, state, opts = {})
-        ::Cell::Base.render_cell_for(@controller, name, state, opts)
+        ::Cell::Base.render_cell_for(controller, name, state, opts)
       end
     end
 
