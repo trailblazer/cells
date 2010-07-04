@@ -18,16 +18,7 @@ class RailsViewTest < ActiveSupport::TestCase
         assert_equal "Dumm Dooom", render_cell(:bassist, :compose)
       end
     end
-    
-    context "invoking rails helpers" do
-      should "respond to link_to" do
-        BassistCell.class_eval do
-          def promote; render; end
-        end
-        assert_equal "Find me at <a href=\"cells_test/index\">vd.com</a>", render_cell(:bassist, :promote)
-      end
-      
-    end
+  
     
   end
 end

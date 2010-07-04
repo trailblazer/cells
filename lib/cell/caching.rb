@@ -106,8 +106,8 @@ module Cell
       end
     end
 
-    def render_state_with_caching(state)
-      return render_state_without_caching(state) unless state_cached?(state)
+    def render_state_with_caching(state, request=ActionDispatch::Request.new({}))
+      return render_state_without_caching(state, request) unless state_cached?(state)
 
       key = cache_key(state, call_version_proc_for_state(state))
       ### DISCUSS: see sweep discussion at #cache.
@@ -117,7 +117,7 @@ module Cell
         return content
       end
       # re-render:
-      return write_fragment(key, render_state_without_caching(state), self.class.cache_options[state])
+      return write_fragment(key, render_state_without_caching(state, request), self.class.cache_options[state])
     end
 
     def read_fragment(key, cache_options = nil) #:nodoc:

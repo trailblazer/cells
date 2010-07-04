@@ -73,3 +73,16 @@ Cell::Base = Cell::Rails
 Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
 
 require 'cells/rails'
+
+if defined?(::Rails)
+class Cells::Railtie < Rails::Railtie
+  initializer "cells.attach_router" do |app|
+    Cell::Rails.class_eval do
+      include app.routes.url_helpers
+      #cattr_accessor :url_helpers
+    end
+    
+    Cell::Base.url_helpers = app.routes.url_helpers
+  end
+end
+end

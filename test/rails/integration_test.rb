@@ -22,6 +22,17 @@ class RailsIntegrationTest < ActionController::TestCase
       get 'featured'
       assert_equal "Doo", @response.body
     end
+    
+    should "make params (and friends) available in a cell" do
+      BassistCell.class_eval do
+        def listen
+          render :text => "That's a #{params[:note]}"
+        end
+      end
+      puts "riptide"
+      get 'skills', :note => "D"
+      assert_equal "That's a D", @response.body
+    end
   end
   
 end

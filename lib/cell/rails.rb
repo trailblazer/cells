@@ -11,6 +11,7 @@ module Cell
     
     
     #include Cell::ActiveHelper
+    cattr_accessor :url_helpers ### TODO: discuss if we really need that or can handle that in cells.rb already.
     
     abstract!
     
@@ -36,10 +37,26 @@ module Cell
     
     def self.view_context_class
       controller = self
-      @view_context_class ||= View.class_eval do
+        # Unfortunately, there is currently an abstraction leak between AC::Base
+        # and AV::Base which requires having the URL helpers in both AC and AV.
+        # To do this safely at runtime for tests, we need to bump up the helper serial
+        # to that the old AV subclass isn't cached.
+        #
+        # TODO: Make this unnecessary
+        #if @controller
+        #  @controller.singleton_class.send(:include, _routes.url_helpers)
+        #  @controller.view_context_class = Class.new(@controller.view_context_class) do
+        #    include _routes.url_helpers
       
+      View.class_eval do
+        
         include controller._helpers
+        
+        include Cell::Base.url_helpers if Cell::Rails.respond_to?(:url_helpers) and Cell::Rails.url_helpers
       end
+      
+      
+      @view_context_class ||= View
       ### DISCUSS: copy behaviour from abstract_controller/rendering-line 49? (helpers)
     end
     
@@ -51,10 +68,12 @@ module Cell
       self.response_body = super  ### TODO: discuss with yehuda.
     end
 
-    attr_internal :request
+    #attr_internal :request
+    delegate :request, :to => :parent_controller
 
-    def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given?
-      rack_response = dispatch(state, request)
+
+    def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given? leave blank?
+      rack_response = dispatch(state, parent_controller.request)
       rack_response[2].last  ### TODO: discuss with yehuda.
     end
     include Cell::Caching
@@ -64,26 +83,6 @@ module Cell
     
     
     class << self
-      #attr_accessor :request_forgery_protection_token
-      
-      # Use this if you want Cells to look up view templates
-      # in directories other than the default.
-      #def view_paths=(paths)
-      #  self.view_paths.clear.concat(paths) # don't let 'em overwrite the PathSet.
-      #end
-      
-      # A template file will be looked for in each view path. This is typically
-      # just RAILS_ROOT/app/cells, but you might want to add e.g.
-      # RAILS_ROOT/app/views.
-      #def add_view_path(path)
-      #  path = ::Rails.root.join(path) if defined?(::Rails)
-      #  self.view_paths << path unless self.view_paths.include?(path)
-      #end
-
-
-
-      
-
       def state2view_cache
         @state2view_cache ||= {}
       end

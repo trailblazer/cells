@@ -10,7 +10,7 @@ module Cell
     
     module ClassMethods
       def render_cell_for(controller, name, state, opts={})
-        create_cell_for(controller, name, opts).render_state(state)
+        create_cell_for(controller, name, opts).render_state(state) # FIXME: don't let BaseMethods know about controller's API.
       end
       
       # Creates a cell instance of the class <tt>name</tt>Cell, passing through
