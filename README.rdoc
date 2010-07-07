@@ -9,6 +9,10 @@ As if this wasn't enough, cells are superfast and lightweight.
 They perfectly work together with AJAX/JavaScript, but also run fine without it,
 Michael.
 
+== Rails 3
+
+This version of Cells is running with Rails 3, only (still work-in-progress)! If you wanted Rails 2.3, use the latest gem (3.3.4).
+
 == Give me code!
 
 To quickly create the necessary files for an example cell run the generator:
@@ -111,7 +115,7 @@ To install, simply cd to your rails app directory and run
 
   script/plugin install git://github.com/apotonick/cells.git
   
-This release is tested and runs with Rails 2.3.
+This release is tested and runs with Rails 3.
 
 
 = Documentation

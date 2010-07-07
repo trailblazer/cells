@@ -70,10 +70,6 @@ class RailsCellsTest < ActiveSupport::TestCase
         end
       end
       
-      should "respond to params" do
-        assert_equal 'Creatures', @cell.params[:song]
-      end
-      
       should "respond to session" do
         assert_kind_of Hash, @cell.session
       end

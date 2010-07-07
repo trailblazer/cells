@@ -29,7 +29,6 @@ class RailsIntegrationTest < ActionController::TestCase
           render :text => "That's a #{params[:note]}"
         end
       end
-      puts "riptide"
       get 'skills', :note => "D"
       assert_equal "That's a D", @response.body
     end
