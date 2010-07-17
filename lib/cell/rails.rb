@@ -74,10 +74,13 @@ module Cell
 
     def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given? leave blank?
       rack_response = dispatch(state, parent_controller.request)
-      rack_response[2].last  ### TODO: discuss with yehuda.
+      
+      return rack_response[2].last if rack_response[2].kind_of?(Array)  ### FIXME: HACK for testing, wtf is going on here?
+      rack_response[2]  ### TODO: discuss with yehuda.
+      # rack_response in test mode: [nil, nil, ["Doo"]]
+      # rack_response in dev mode:  [nil, nil, "<div>..."]
     end
     include Cell::Caching
-
 
 
     
