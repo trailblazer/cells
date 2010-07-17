@@ -1,3 +1,6 @@
 source :gemcutter
-gem "actionpack" , :git => "http://github.com/rails/rails.git"
-gem "railties"
+gem "rails" , :git => "http://github.com/rails/rails.git"
+gem 'sqlite3-ruby', '1.2.5', :require => 'sqlite3'	# needed in router_test, whatever.
+
+#gem "actionpack" , :path => "/home/nick/projects/rails"
+#gem "railties"
