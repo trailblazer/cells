@@ -70,6 +70,8 @@ module Cell
 
     #attr_internal :request
     delegate :request, :to => :parent_controller
+    delegate :config, :to => :parent_controller # DISCUSS: what if a cell has its own config (eg for assets, cells/bassist/images)?
+    # DISCUSS: let @controller point to @parent_controller in views, and @cell is the actual real controller?
 
 
     def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given? leave blank?
