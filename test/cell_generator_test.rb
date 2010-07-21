@@ -1,33 +1,45 @@
 require File.join(File.dirname(__FILE__), *%w[test_helper])
-#require 'rails_generator'
-#require 'rails_generator/scripts/generate'
 
-# for some reasons the "autoloading" in Rails::Generator::Lookup doesn't work:
-#Rails::Generator::Base.append_sources Rails::Generator::PathSource.new(:cells, File.join(File.dirname(__FILE__)+'/../rails_generators'))
+#require 'rails/generators/test_unit'
 
-class CellGeneratorTest < Test::Unit::TestCase
+
+require '/home/nick/projects/rails/railties/lib/rails/test/isolation/abstract_unit'
+#require '/home/nick/projects/rails/railties/test/generators/generators_test_helper'
+require 'rails/generators'
+require 'rails_generators/cell/cell_generator'
+module Rails
+  def self.root
+    @root ||= File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures'))
+  end
+end
+
+
+class CellGeneratorTest < Rails::Generators::TestCase
+  destination File.join(Rails.root, "tmp")
+  setup :prepare_destination
+  tests ::Cells::Generators::CellGenerator
+  
+  
   context "Running script/generate cell" do
-    setup do
-      FileUtils.mkdir_p(fake_rails_root)
-      @original_files = file_list
-    end
-    
-    teardown do
-      FileUtils.rm_r(fake_rails_root) 
-    end
-    
     context "Blog post latest" do
       should "create the standard assets" do
-        Rails::Generator::Scripts::Generate.new.run(%w(cell Blog post latest), :destination => fake_rails_root)
-        files = (file_list - @original_files)
-        assert files.include?(fake_rails_root+"/app/cells/blog_cell.rb")
-        assert files.include?(fake_rails_root+"/app/cells/blog/post.html.erb")
-        assert files.include?(fake_rails_root+"/app/cells/blog/latest.html.erb")
-        assert files.include?(fake_rails_root+"/test/cells/blog_cell_test.rb")
+        
+        require "#{app_path}/config/environment"  # we need Rails.application
+        
+
+        run_generator ["Blog", "post", "latest"]
+        
+        assert_file "app/cells/blog_cell.rb", /class BlogCell < Cell::Rails/
+        assert_file "app/cells/blog/post.html.erb", %r(app/cells/blog/post\.html\.erb)
+        assert_file "app/cells/blog/latest.html.erb", %r(app/cells/blog/latest\.html\.erb)
+
+        #assert files.include?(fake_rails_root+"/app/cells/blog/post.html.erb")
+        #assert files.include?(fake_rails_root+"/app/cells/blog/latest.html.erb")
+        #assert files.include?(fake_rails_root+"/test/cells/blog_cell_test.rb")
       end
       
       should "create haml assets with --haml" do
-        Rails::Generator::Scripts::Generate.new.run(%w(cell Blog post latest --haml), :destination => fake_rails_root)
+        run_generator ["Blog", "post", "latest", "--haml"]
         files = (file_list - @original_files)
         assert files.include?(fake_rails_root+"/app/cells/blog_cell.rb")
         assert files.include?(fake_rails_root+"/app/cells/blog/post.html.haml")
