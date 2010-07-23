@@ -1,154 +1,134 @@
-= Overview
+= Cells
 
-Cells are like controllers in Rails - they have methods and corresponding views.
-However, their big advantage to controllers is their <em>modularity</em>: you can have
-as many cells on a page as you want. That's as if you had multiple controllers in one 
-page, where each "controller" renders only a certain part of the page.
-As if this wasn't enough, cells are superfast and lightweight.
+<em>View Components for Rails.</em>
 
-They perfectly work together with AJAX/JavaScript, but also run fine without it,
-Michael.
+== Overview
 
-== Rails 3
+Say you're writing a Rails online shop - the shopping cart is reappearing again and again in every view. You're thinking about a clean solution for that part. A mixture of controller code, before-filters, partials and helpers?
 
-This version of Cells is running with Rails 3, only (still work-in-progress)! If you wanted Rails 2.3, use the latest gem (3.3.4).
+No. That sucks. Take Cells.
 
-== Give me code!
+Cells are View Components for Rails. They look and feel like controllers. They don't have no +DoubleRenderError+. They are callable everywhere in your controllers or views. They are cacheable, testable, fast and wonderful. They bring back OOP to your view and improve your software design.
 
-To quickly create the necessary files for an example cell run the generator:
-  
-  script/generate cell Article newest top_article
+== Installation
+
+It's a gem!
+
+Rails 3:
+
+  gem install cells
+
+Rails 2.3:
+
+  gem install cells --version 3.3.4
 
 
-The generated cell class located in <tt>app/cells/article_cell.rb</tt> could look like
-this, after some editing:
+== Generate
 
-  class ArticleCell < ::Cell::Base
-    helper :my_formatting_and_escaping_helper   # you can use helpers in cell views!
-    
-    def newest
-      @articles = Article.get_newest
-      render   # will render the view named newest.html.[erb|haml|...]".
-    end
-    
-    def top_article
-      @article = Article.top_article
-      render  :view   => :top_article_v2, # renders top_article_v2.html.[erb|haml|...]
-              :layout => :box             # and put it in the layout "box.html".
-    end
-  end
+Creating a cell is nothing more than
 
-The corresponding views are in <tt>app/cells/article/newest.html.erb</tt>:
+  $ rails generate cell ShoppingCart display
+    create  app/cells/
+    create  app/cells/shopping_cart
+    create  app/cells/shopping_cart_cell.rb
+    create  app/cells/shopping_cart/display.html.erb
+    create  test/cells/shopping_cart_test.rb
 
-  <h2>Hot stuff!</h2>
-  <ul>
-  <% @articles.each do |article| %>
-    <li><%= article.title %></li>
-  <% end %>
-  </ul>
+That looks very familiar.
 
-The other view would be in <tt>app/cells/article/top_article_v2.html.haml</tt>:
+== Render the cell
 
-  %h2
-    = @article.title
-    = format_and_escape(@article.text)
+Now, render your cart. Why not put it in <tt>layouts/application.html.erb</tt> for now? 
 
-You already know that from controllers, don't you? Speaking of controllers, here's
-how you could plug the cells into the page. In <tt>app/controllers/blog_controller.rb</tt>
-there could be an action
-  
-  class BlogController < ApplicationController
-    def top_page
-      ...
+  <div id="header">
+    <%= render_cell :shopping_cart, :display, :user => @current_user %>
+
+Feels like rendering a controller action. As additional encapsulation we pass the current +user+ from outside. Call it knowledge hiding.
+
+== Code
+
+Time to improve our cell code. Let's start with <tt>app/cells/shopping_cart_cell.rb</tt>:
+
+  class ShoppingCartCell < Cell::Rails 
+    def display 
+      @items = @opts[:user].items_in_cart
+      
+      render  # renders display.html.erb
     end
   end
 
-where the rendered action view could be <tt>app/views/blog/top_page.html.erb</tt>:
+Is that a controller? Hell, yeah. We even got a +render+ method as we know it from the good ol' +ActionController+.
+
+
+== Views
+
+Since a plain call to +render+ will start rendering <tt>app/cells/shopping_cart/display.html.erb</tt> we should put some meaningful markup there.
+
+  <div id="cart">
+    You have <%= @items.size %> items in your shopping cart. 
+  </div>
   
-  <%= yield %>
-  
-  <div><%= render_cell(:article, :newest) %></div>
-  <div><%= render_cell(:article, :top_article) %></div>
+=== Haml? Builder?
+
+Yes, Cells support all template types that are supported by Rails itself. Remember- it's a controller!
+
+=== Helpers
+
+Yes, Cells have helpers just like controllers. If you need some specific helper, do
+
+  class ShoppingCartCell < Cell::Rails 
+    helper MyExtraHelper
+
+and it will be around in your cart views.
+
+
+== Caching
+
+Cells do strict view caching. No cluttered fragment caching. Add
+
+  class ShoppingCartCell < Cell::Rails 
+    cache :display, :expires_in => 10.minutes
+
+and your cart will be re-rendered after 10 minutes.
+
+There are multiple advanced options for expiring your view caches, including an expiration lambda.
+
+  class ShoppingCartCell < Cell::Rails 
+    cache :display do |cell|
+      Item.still_valid?
+    end
+
+
+== Testing
+
+Another big advantage compared to monolithic controller/helper/partial piles is the ability to test your cells isolated.
+
+So what if you wanna test the cart cell? Use the generated <tt>test/cells/shopping_cart_test.rb</tt> test.
+
+  class ShoppingCartTest < ActionController::TestCase
+    include Cells::AssertionsHelper
     
-The "top page" would consist of the controller action's content, and two additional 
-independent boxes with interesting content. These two boxes are <em>cells</em> and could
-be used on another page, too.
+    test "display" do
+      html = render_cell(:shopping_cart, :diplay, :user => @user_fixture)
+      assert_selekt html, "#cart", "You have 3 items in your shopping cart."
 
-= Caching
+That's easy, clean and strongly improves your component-driven software quality. How'd you do that with partials?
 
-To improve performance rendered state views can be cached using Rails' caching mechanism.
-If this it configured (e.g. using our fast friend memcached) all you have to do is to 
-tell Cells which state you want to cache. You can further attach a proc for deciding
-versions or to instruct re-rendering.
 
-  cache :my_cached_state, Proc.new{|cell| Version.for(User.find(1)}
+== More features
 
-This would result in re-rendering the state <tt>:my_cached_state</tt> only if the
-version of the user instance changes. 
-
-= Compatibility with other rails plugins
-
-Cells uses the rails rendering code and thus stays completely compatible with (most?) plugins.
-
-=== I18N
-
-All of Rails' new i18n features work with Cells. For example
-
-  t("Translate me, I'm a lonesome string in a cell state view!")
+Cells can do more.
   
-from the i18n helper can also be used in cell views. 
+<b>View Inheritance</b>::  Inherit view files dynamically from parent cells.
+<b>Cell Nesting</b>:: Have complex cell hierarchies as you can call +render_cell+ within cells, too. 
 
-=== Haml
-
-Alternative templating engines will work seamlessly with Cells, too. Usem the markup language 
-of your choice (.erb, .haml, ...) to write your cell views.
-
-=== Engines
-
-You can even put cells in plugins and thus maximize the modularity of your code.
-As soon as the plugin has an app/cells/ directory your cells will be added automatically
-and can be used everywhere in your application.
-
-= Installation
-
-To install, simply cd to your rails app directory and run
-
-  script/plugin install git://github.com/apotonick/cells.git
-  
-This release is tested and runs with Rails 3.
+Go for it, you'll love it!
 
 
-= Documentation
+== LICENSE
 
-Reference documentation is found in the documentation of the ::Cell::Base class.
-
-See http://cells.rubyforge.org for documentation targeted at cells
-newbies, including an overview of what you can do with cells and a
-tutorial.
-
-= LICENSE
-
-Copyright (c) 2007-2009, Nick Sutterer
+Copyright (c) 2007-2010, Nick Sutterer
 
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
-The MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
+Released under the MIT License.
