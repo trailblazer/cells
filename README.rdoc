@@ -16,7 +16,7 @@ It's a gem!
 
 Rails 3:
 
-  gem install cells --version 3.4.0.beta1
+  gem install cells --pre
 
 Rails 2.3:
 
