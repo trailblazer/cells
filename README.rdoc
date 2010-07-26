@@ -8,7 +8,9 @@ Say you're writing a Rails online shop - the shopping cart is reappearing again 
 
 No. That sucks. Take Cells.
 
-Cells are View Components for Rails. They look and feel like controllers. They don't have no +DoubleRenderError+. They are callable everywhere in your controllers or views. They are cacheable, testable, fast and wonderful. They bring back OOP to your view and improve your software design.
+Cells are View Components for Rails. They look and feel like controllers. They don't have no +DoubleRenderError+. They can be rendered everywhere in your controllers or views. They are cacheable, testable, fast and wonderful. They bring back OOP to your view and improve your software design.
+
+And the best: You can have as many cells in your page as you need!
 
 == Installation
 
@@ -51,7 +53,8 @@ Time to improve our cell code. Let's start with <tt>app/cells/shopping_cart_cell
 
   class ShoppingCartCell < Cell::Rails 
     def display 
-      @items = @opts[:user].items_in_cart
+      user    = @opts[:user]        # @opts exposes options passed to #render_cell.
+      @items  = user.items_in_cart
       
       render  # renders display.html.erb
     end
@@ -118,7 +121,8 @@ That's easy, clean and strongly improves your component-driven software quality.
 == More features
 
 Cells can do more.
-  
+
+<b>No Limits</b>::  Have as many cells in your page as you need - no limitation to your +render_cell+ calls.
 <b>View Inheritance</b>::  Inherit view files dynamically from parent cells.
 <b>Cell Nesting</b>:: Have complex cell hierarchies as you can call +render_cell+ within cells, too. 
 
