@@ -72,7 +72,7 @@ Cell::Base = Cell::Rails
 
 Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
 
-require 'cells/rails'
+require 'cells/rails' ### FIXME: 2BRM.
 
 
 require "rails/railtie"

@@ -121,9 +121,9 @@ module Cell
     end
 
     def read_fragment(key, cache_options = nil) #:nodoc:
-      returning self.class.cache_store.read(key, cache_options) do |content|
-        log "Cell Cache hit: #{key}" unless content.blank?
-      end
+      content = self.class.cache_store.read(key, cache_options)
+      log "Cell Cache hit: #{key}" unless content.blank?
+      content
     end
 
     def write_fragment(key, content, cache_opts = nil) #:nodoc:

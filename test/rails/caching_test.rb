@@ -3,19 +3,45 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class DirectorCell < Cell::Rails
   cache :count
+  
   @@counter = 0
+  cattr_accessor :counter
+  
+  def self.increment!
+    @@counter += 1
+  end
+  
+  def self.reset!
+    @@counter = 0
+  end
+  
+  def increment!
+    self.class.increment!
+  end
   
   def count
-    @@counter += 1
-    render :text => @@counter
+    render :text => increment!
   end 
 end
 
 class CachingTest < ActiveSupport::TestCase
+  context "The DirectorCell" do
+    setup do
+      DirectorCell.reset!
+    end
+    
+    should "respond to #increment" do
+      assert_equal 0, DirectorCell.counter
+      assert_equal 1, DirectorCell.increment!
+      assert_equal 1, DirectorCell.counter
+    end
+  end
+  
   context "A cell" do
     setup do
       ::ActionController::Base.cache_store = :memory_store
       ::ActionController::Base.perform_caching = true
+      DirectorCell.reset!
     end
     
     should "respond to state_cached?" do
@@ -54,12 +80,7 @@ class CachingTest < ActiveSupport::TestCase
     
     context "caching without options" do
       setup do
-        DirectorCell.class_eval do
-          @@counter = 0
-          cattr_accessor :count
-        end
-        
-                key = cell(:director).cache_key(:count, :count => 0)
+        key = cell(:director).cache_key(:count, :count => 0)
         Cell::Base.expire_cache_key(key)  ### TODO: separate test
       end
       
@@ -78,8 +99,7 @@ class CachingTest < ActiveSupport::TestCase
       should "not cache at all" do
         DirectorCell.class_eval do
           def dictate
-            @@counter += 1
-            render :text => @@counter
+            render :text => increment!
           end
         end
         
@@ -90,20 +110,19 @@ class CachingTest < ActiveSupport::TestCase
       should "expire the cache with a version proc" do
         DirectorCell.class_eval do
           cache :count, Proc.new { |cell|
-            cell.class.count >= 2 ? {:count => 2} : {:count => 0}
+            cell.class.counter >= 2 ? {:count => 2} : {:count => 0}
           }
           
           def count
-            render :text => @@count += 1
-            #@@count
+            render :text => increment!
           end 
         end
-        DirectorCell.count = 0
+        DirectorCell.reset!
         
         assert_equal "1", render_cell(:director, :count)
         assert_equal "1", render_cell(:director, :count)  # cached.
         
-        DirectorCell.count = 2  # invalidates the view cache.
+        DirectorCell.counter = 2  # invalidates the view cache.
         assert_equal "3", render_cell(:director, :count)
         assert_equal "3", render_cell(:director, :count)  # cached.
       end
@@ -113,20 +132,19 @@ class CachingTest < ActiveSupport::TestCase
           cache :count, :expire_count
           
           def expire_count
-            self.class.count >= 2 ? {:count => 2} : {:count => 0}
+            self.class.counter >= 2 ? {:count => 2} : {:count => 0}
           end
           
           def count
-            @@count += 1
-            render :text => @@count
+            render :text => increment!
           end 
         end
-        DirectorCell.count = 0
+        DirectorCell.reset!
         
         assert_equal "1", render_cell(:director, :count)
         assert_equal "1", render_cell(:director, :count)  # cached.
         
-        DirectorCell.count = 2  # invalidates the view cache.
+        DirectorCell.counter = 2  # invalidates the view cache.
         assert_equal "3", render_cell(:director, :count)
         assert_equal "3", render_cell(:director, :count)  # cached.
       end
@@ -153,10 +171,10 @@ class CachingTest < ActiveSupport::TestCase
       DirectorCell.class_eval do
         cache :count
         def count
-          render :text => @@count += 1
+          render :text => increment!
         end
       end
-      DirectorCell.count = 0
+      DirectorCell.reset!
       
       @key = cell(:director).cache_key(:count)
       render_cell(:director, :count)

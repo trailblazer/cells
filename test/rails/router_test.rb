@@ -1,5 +1,5 @@
-require '/home/nick/projects/rails/railties/lib/rails/test/isolation/abstract_unit'
-#require 'rails/test/isolation/abstract_unit'
+#require '/home/nick/projects/rails/railties/lib/rails/test/isolation/abstract_unit'
+require 'abstract_unit'
 
 module ApplicationTests
   class RouterTest < ActionController::TestCase#Test::Unit::TestCase
@@ -44,7 +44,7 @@ module ApplicationTests
           def promote; render; end
         end
       
-        assert ::Cell::Rails.view_context_class._routes, "Cells::Railtie initializer wasn't invoked."
+        #assert ::Cell::Rails.view_context_class._routes, "Cells::Railtie initializer wasn't invoked."
         #assert ! ::OmgController.new.respond_to?( :render_cell)
         
         get "/cell"

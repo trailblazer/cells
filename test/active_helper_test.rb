@@ -5,8 +5,6 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 class ActiveHelperTest < ActiveSupport::TestCase
   context "The Cell::Base class" do
     setup do
-      require 'active_helper'
-      require 'active_helper/rails'
       class FingeringHelper < ActiveHelper::Base
         provides :finger
       end
@@ -16,17 +14,17 @@ class ActiveHelperTest < ActiveSupport::TestCase
       end
     end
     
-    should "respond to active_helper" do
+    should_eventually "respond to active_helper" do
       assert_respond_to Cell::Base, :active_helper
     end
     
-    should "store helper constants from active_helper" do
+    should_eventually "store helper constants from active_helper" do
       @cell = Class.new(BassistCell)
       @cell.active_helper SlappingHelper
       assert_equal [SlappingHelper], @cell.active_helpers
     end
     
-    should "inherit helper constants from active_helper" do
+    should_eventually "inherit helper constants from active_helper" do
       @base_cell = Class.new(BassistCell)
       @base_cell.active_helper SlappingHelper
       @cell = Class.new(@base_cell)
@@ -45,7 +43,7 @@ class ActiveHelperTest < ActiveSupport::TestCase
     end
     
     context "The view rendered by the cell" do
-      should "respond to used helper methods" do
+      should_eventually "respond to used helper methods" do
         @cell = bassist_mock
         @cell.class.active_helper SlappingHelper
         
@@ -56,5 +54,4 @@ class ActiveHelperTest < ActiveSupport::TestCase
       end
     end
   end
-  
 end
