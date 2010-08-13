@@ -1,25 +1,8 @@
 # encoding: utf-8
 
-begin
-  require 'active_support'
-rescue
-  gem 'activesupport'
-  require 'active_support'
-end
+require 'active_support'
+require 'action_controller'
 
-begin
-  require 'action_controller'
-rescue
-  gem 'actionpack'
-  require 'action_controller'
-end
-
-begin
-  require 'action_view'
-rescue
-  gem 'actionpack'
-  require 'action_view'
-end
 
 require 'cell/base_methods'
 
@@ -72,8 +55,6 @@ Cell::Base = Cell::Rails
 
 Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
 
-require 'cells/rails' ### FIXME: 2BRM.
-
 
 require "rails/railtie"
 class Cells::Railtie < Rails::Railtie
@@ -87,5 +68,6 @@ class Cells::Railtie < Rails::Railtie
   
   initializer "cells.add_load_path" do |app|
     #ActiveSupport::Dependencies.load_paths << Rails.root.join(*%w[app cells])
+    ### DISCUSS: how are cell classes found by Rails?
   end
 end
