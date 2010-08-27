@@ -1,24 +1,13 @@
-# encoding: utf-8
-
-# To improve performance rendered state views can be cached using Rails' caching
-# mechanism.
-# If this it configured (e.g. using our fast friend memcached) all you have to do is to
-# tell Cells which state to cache. You can further attach a proc to expire the
-# cached view.
-#
-# As always I stole a lot of code, this time from Lance Ivy <cainlevy@gmail.com> and
-# his fine components plugin at http://github.com/cainlevy/components.
+require 'active_support/concern'
 
 module Cell
   module Caching
-
-    def self.included(base) #:nodoc:
-      base.class_eval do
-        extend ClassMethods
-
-        alias_method_chain :render_state, :caching
-      end
-    end
+    extend ActiveSupport::Concern
+    
+    #included do
+    #    #self.alias_method_chain :render_state, :caching
+   # 
+   # end
 
     module ClassMethods
       # Activate caching for the state <tt>state</tt>. If no other options are passed
@@ -106,18 +95,18 @@ module Cell
       end
     end
 
-    def render_state_with_caching(state, request=ActionDispatch::Request.new({}))
-      return render_state_without_caching(state, request) unless state_cached?(state)
+    def render_state(state, request=ActionDispatch::Request.new({}))
+      return super(state, request) unless state_cached?(state)
 
       key = cache_key(state, call_version_proc_for_state(state))
-      ### DISCUSS: see sweep discussion at #cache.
 
       # cache hit:
       if content = read_fragment(key)
         return content
       end
+      
       # re-render:
-      return write_fragment(key, render_state_without_caching(state, request), self.class.cache_options[state])
+      write_fragment(key, super(state, request), self.class.cache_options[state])
     end
 
     def read_fragment(key, cache_options = nil) #:nodoc:

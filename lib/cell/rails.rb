@@ -7,6 +7,20 @@ module Cell
     include AbstractController
     include Rendering, Layouts, Helpers, Callbacks, Translation
     include ActionController::RequestForgeryProtection
+    
+    module Rendering
+      def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given? leave blank?
+        rack_response = dispatch(state, parent_controller.request)
+        
+        return rack_response[2].last if rack_response[2].kind_of?(Array)  ### FIXME: HACK for testing, wtf is going on here?
+        rack_response[2]  ### TODO: discuss with yehuda.
+        # rack_response in test mode: [nil, nil, ["Doo"]]
+        # rack_response in dev mode:  [nil, nil, "<div>..."]
+      end
+    end
+    include Rendering
+    include Caching
+    
     #include AbstractController::Logger
     
     
@@ -74,15 +88,8 @@ module Cell
     # DISCUSS: let @controller point to @parent_controller in views, and @cell is the actual real controller?
 
 
-    def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given? leave blank?
-      rack_response = dispatch(state, parent_controller.request)
-      
-      return rack_response[2].last if rack_response[2].kind_of?(Array)  ### FIXME: HACK for testing, wtf is going on here?
-      rack_response[2]  ### TODO: discuss with yehuda.
-      # rack_response in test mode: [nil, nil, ["Doo"]]
-      # rack_response in dev mode:  [nil, nil, "<div>..."]
-    end
-    include Cell::Caching
+    
+    
 
 
     
