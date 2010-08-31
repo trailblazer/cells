@@ -9,15 +9,12 @@ module Cell
     include ActionController::RequestForgeryProtection
     
     module Rendering
-      def render_state(state, request=ActionDispatch::Request.new({}))  ### FIXME: where to set Request if none given? leave blank?
+      def render_state(state)
         rack_response = dispatch(state, parent_controller.request)
-        
-        return rack_response[2].last if rack_response[2].kind_of?(Array)  ### FIXME: HACK for testing, wtf is going on here?
-        rack_response[2]  ### TODO: discuss with yehuda.
-        # rack_response in test mode: [nil, nil, ["Doo"]]
-        # rack_response in dev mode:  [nil, nil, "<div>..."]
+        rack_response[2]
       end
     end
+    
     include Rendering
     include Caching
     
@@ -207,9 +204,6 @@ module Cell
           # handle :layout, :template_format, :view
           opts = defaultize_render_options_for(opts, state)
 
-          # set instance vars, include helpers:
-          #prepare_action_view_for(action_view, opts)
-
           #template    = find_family_view_for_state_with_caching(opts[:view], action_view)
           template    = find_family_view_for_state(opts[:view])
           opts[:template] = template
@@ -226,19 +220,7 @@ module Cell
         opts[:view]             ||= state
         opts
       end
-
-      def prepare_action_view_for(action_view, opts)
-        # make helpers available:
-        include_helpers_in_class(action_view.class)
-        
-        import_active_helpers_into(action_view) # in Cells::Cell::ActiveHelper.
-
-        action_view.assigns         = assigns_for_view  # make instance vars available.
-        action_view.template_format = opts[:template_format]
-      end
-
-      # Prepares <tt>opts</tt> to be passed to ActionView::Base#render by removing
-      # unknown parameters.
+      
       def sanitize_render_options(opts)
         opts.except!(:view, :state)
       end

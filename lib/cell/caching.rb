@@ -4,11 +4,6 @@ module Cell
   module Caching
     extend ActiveSupport::Concern
     
-    #included do
-    #    #self.alias_method_chain :render_state, :caching
-   # 
-   # end
-
     module ClassMethods
       # Activate caching for the state <tt>state</tt>. If no other options are passed
       # the view will be cached forever.
@@ -95,8 +90,8 @@ module Cell
       end
     end
 
-    def render_state(state, request=ActionDispatch::Request.new({}))
-      return super(state, request) unless state_cached?(state)
+    def render_state(state)
+      return super(state) unless state_cached?(state)
 
       key = cache_key(state, call_version_proc_for_state(state))
 
@@ -106,7 +101,7 @@ module Cell
       end
       
       # re-render:
-      write_fragment(key, super(state, request), self.class.cache_options[state])
+      write_fragment(key, super(state), self.class.cache_options[state])
     end
 
     def read_fragment(key, cache_options = nil) #:nodoc:
