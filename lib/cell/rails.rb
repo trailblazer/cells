@@ -15,6 +15,16 @@ module Cell
       end
     end
     
+    class View < ActionView::Base
+      def render(options = {}, locals = {}, &block)
+        if options[:state] or options[:view]
+          return @_controller.render(options, &block)
+        end
+        
+        super
+      end
+    end
+    
     include Rendering
     include Caching
     
@@ -36,34 +46,13 @@ module Cell
     
     def log(*args); end
     
-    class View < ActionView::Base
-      def render(options = {}, locals = {}, &block)
-        if options[:state] or options[:view]
-          return @_controller.render(options, &block)
-        end
-        
-        super
-      end
-    end
     
     def self.view_context_class
       controller = self
-        # Unfortunately, there is currently an abstraction leak between AC::Base
-        # and AV::Base which requires having the URL helpers in both AC and AV.
-        # To do this safely at runtime for tests, we need to bump up the helper serial
-        # to that the old AV subclass isn't cached.
-        #
-        # TODO: Make this unnecessary
-        #if @controller
-        #  @controller.singleton_class.send(:include, _routes.url_helpers)
-        #  @controller.view_context_class = Class.new(@controller.view_context_class) do
-        #    include _routes.url_helpers
       
       View.class_eval do
-        
         include controller._helpers
-        
-        include Cell::Base.url_helpers if Cell::Rails.respond_to?(:url_helpers) and Cell::Rails.url_helpers
+        include Cell::Base.url_helpers if Cell::Rails.url_helpers
       end
       
       
@@ -76,18 +65,12 @@ module Cell
     end
     
     def process(*)  # defined in AC::Metal.
-      self.response_body = super  ### TODO: discuss with yehuda.
+      self.response_body = super
     end
-
-    #attr_internal :request
+    
     delegate :request, :to => :parent_controller
     delegate :config, :to => :parent_controller # DISCUSS: what if a cell has its own config (eg for assets, cells/bassist/images)?
     # DISCUSS: let @controller point to @parent_controller in views, and @cell is the actual real controller?
-
-
-    
-    
-
 
     
     
