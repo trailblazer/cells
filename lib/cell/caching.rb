@@ -94,27 +94,12 @@ module Cell
     def render_state(state)
       return super(state) unless state_cached?(state)
 
-      key = cache_key(state, call_version_proc_for_state(state))
-
-      # cache hit:
-      if content = read_fragment(key)
-        return content
-      end
+      key     = cache_key(state, call_version_proc_for_state(state))
+      options = self.class.cache_options[state]
       
-      # re-render:
-      write_fragment(key, super(state), self.class.cache_options[state])
-    end
-
-    def read_fragment(key, cache_options = nil) #:nodoc:
-      content = self.class.cache_store.read(key, cache_options)
-      log "Cell Cache hit: #{key}" unless content.blank?
-      content
-    end
-
-    def write_fragment(key, content, cache_opts = nil) #:nodoc:
-      log "Cell Cache miss: #{key}"
-      self.class.cache_store.write(key, content, cache_opts)
-      content
+      self.class.cache_store.fetch(key, options) do
+        super(state)
+      end
     end
 
     # Call the versioning Proc for the respective state.
