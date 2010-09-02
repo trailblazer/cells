@@ -30,13 +30,13 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     context "invoking find_family_view_for_state" do
-      should "### use find_template" do
-        assert cell(:bassist).find_template("bassist/play")
+      should "raise an error when a template is missing" do
         assert_raises ActionView::MissingTemplate do
           cell(:bassist).find_template("bassist/playyy")
         end
+        
+        puts "format: #{cell(:bassist).find_template("bassist/play.js").formats.inspect}"
       end
-      
       
       should "return play.html.erb" do
         assert_equal "bassist/play", cell(:bassist).find_family_view_for_state(:play).virtual_path

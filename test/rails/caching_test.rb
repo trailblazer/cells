@@ -194,40 +194,9 @@ class CachingTest < ActiveSupport::TestCase
     should "accept cache options" do
       key = cell(:director).cache_key(:count, :volume => 9)
       assert ::Cell::Base.cache_store.write(key, 'ONE!')
-  
+   
       MusicianController.new.expire_cell_state(:director, :count, :volume => 9)
       assert_not ::Cell::Base.cache_store.read(key)
     end
-  end
-
-  def test_find_family_view_for_state_with_caching
-    # test environment: --------------------------------------
-    BassistCell.instance_variable_set :@state2view_cache, {}
-    assert_equal({}, BassistCell.state2view_cache)
-    
-    BassistCell.instance_eval do
-      self.default_template_format = :html
-      
-      def play; render; end
-    end
-    
-    
-    cell = cell(:bassist)
-    cell.class.instance_eval do
-      def cache_configured?; false; end
-    end
-    cell.render_state :play
-    # in development/test environment, no view name caching should happen,
-    # if perform_caching is false.
-    assert_equal({}, BassistCell.state2view_cache)
-
-    # production environment: --------------------------------
-    cell = BassistCell.new(@controller)
-    cell.class.instance_eval do
-      def cache_configured?; true; end
-    end
-    
-    cell.render_state :play
-    assert BassistCell.state2view_cache["play/html"] 
   end
 end

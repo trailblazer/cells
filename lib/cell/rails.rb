@@ -125,6 +125,7 @@ module Cell
       #
       #
       # ==== Where have all the partials gone?
+      #
       # In Cells we abandoned the term 'partial' in favor of plain 'views' - we don't need to distinguish
       # between both terms. A cell view is both, a view and a kind of partial as it represents only a small
       # part of the page.
@@ -135,16 +136,11 @@ module Cell
 
       
 
-      # Climbs up the inheritance hierarchy of the Cell, looking for a view
-      # for the current <tt>state</tt> in each level.
-      # As soon as a view file is found it is returned as an ActionView::Template
-      # instance.
-      ### DISCUSS: moved to Cell::View#find_template in rainhead's fork:
+      # Climbs up the inheritance hierarchy of the Cell, looking for a view for the current +state+ in each level.
       def find_family_view_for_state(state)
         missing_template_exception = nil
 
         possible_paths_for_state(state).each do |template_path|
-          # we need to catch MissingTemplate, since we want to try for all possible family views.
           begin
             template = find_template(template_path)
             return template if template
@@ -154,22 +150,6 @@ module Cell
         
         raise missing_template_exception
       end
-
-      # In production mode, the view for a state/template_format is cached.
-      ### DISCUSS: ActionView::Base already caches results for #pick_template, so maybe
-      ### we should just cache the family path for a state/format?
-      def find_family_view_for_state_with_caching(state)
-        return find_family_view_for_state(state) unless self.class.cache_configured?
-
-        # in production mode:
-        key         = "#{state}/#{action_view.template_format}"
-        state2view  = self.class.state2view_cache
-        state2view[key] || state2view[key] = find_family_view_for_state(state, action_view)
-      end
-
-      
-
-
       
       # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
       # if it can not find one of the requested view template. Note that this behaviour was
