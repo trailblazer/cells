@@ -11,7 +11,10 @@ module Cell
     module Rendering
       def render_state(state)
         rack_response = dispatch(state, parent_controller.request)
-        rack_response[2]
+        
+        str = ''      # copied from Response#body.
+        rack_response[2].each { |part| str << part.to_s }
+        str.html_safe # in fact, i'd love to return a real OutputBuffer here.
       end
     end
     
