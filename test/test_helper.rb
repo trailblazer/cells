@@ -22,17 +22,11 @@ Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
 Cell::Rails.append_view_path(File.join(test_app_dir, 'cells', 'layouts'))
 
 
-# Now, load the rest.
+# Now, load the controllers.
 require File.join(test_app_dir, 'controllers', 'cells_test_controller')
 require File.join(test_app_dir, 'controllers', 'musician_controller')
 
-# We need to setup a fake route for the controller tests.
-#ActionController::Routing::Routes.draw do |map|
-#  map.connect 'cells_test/:action', :controller => 'cells_test'
-#end
-#ActionController::Routing::Routes.draw do |map|
-#  map.connect 'musician/:action', :controller => 'musician'
-#end
+
 
 Dir[File.join(gem_dir, 'test', 'support', '**', '*.rb')].each { |f| require f }
 require File.join(gem_dir, 'lib', 'cells', 'assertions_helper')
@@ -50,3 +44,6 @@ end
 
 require File.join(test_app_dir, 'cells', 'bassist_cell')
 require File.join(test_app_dir, 'cells', 'bad_guitarist_cell')
+
+require "haml"
+require "haml/template" # Thanks, Nathan!
