@@ -1,7 +1,5 @@
 require File.join(File.dirname(__FILE__), '/../test_helper')
 
-require 'active_support/core_ext/object/to_query'
-
 class RailsIntegrationTest < ActionController::TestCase
   
   context "A Rails controller" do
@@ -18,9 +16,12 @@ class RailsIntegrationTest < ActionController::TestCase
       assert_equal "Doo", @response.body
     end
     
-    should "respond to render_cell in the view" do
+    should "respond to render_cell in the view without escaping twice" do
+      BassistCell.class_eval do
+        def provoke; render; end
+      end
       get 'featured'
-      assert_equal "Doo", @response.body
+      assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
     end
     
     should "make params (and friends) available in a cell" do
