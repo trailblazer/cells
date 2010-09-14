@@ -75,15 +75,6 @@ module Cell
     delegate :config, :to => :parent_controller # DISCUSS: what if a cell has its own config (eg for assets, cells/bassist/images)?
     # DISCUSS: let @controller point to @parent_controller in views, and @cell is the actual real controller?
 
-    
-    
-    class << self
-      def state2view_cache
-        @state2view_cache ||= {}
-      end
-    end
-      
-
       # Renders the view for the current state and returns the markup for the component.
       # Usually called and returned at the end of a state method.
       #

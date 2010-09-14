@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cells}
-  s.version = "3.4.0.beta1"
+  s.version = "3.4.0.beta2"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-07-23}
+  s.date = %q{2010-09-09}
   s.description = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.files = [
     "CHANGES",
      "Gemfile",
+     "Gemfile.lock",
      "MIT-LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -51,6 +52,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.test_files = [
     "test/active_helper_test.rb",
+     "test/abstract_unit.rb",
      "test/base_methods_test.rb",
      "test/assertions_helper_test.rb",
      "test/rails/router_test.rb",
