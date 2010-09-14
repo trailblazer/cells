@@ -10,6 +10,11 @@ Bundler.setup
 
 ENV['RAILS_ENV'] = 'test'
 
+$:.unshift File.dirname(__FILE__) # add current dir to LOAD_PATHS
+
+require "dummy/config/environment"
+require "rails/test_help" # adds stuff like @routes, etc.
+
 gem_dir       = File.join(File.dirname(__FILE__), '..')
 test_app_dir  = File.join(gem_dir, 'test', 'app')
 
@@ -20,12 +25,6 @@ require 'cells'
 
 Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
 Cell::Rails.append_view_path(File.join(test_app_dir, 'cells', 'layouts'))
-
-
-# Now, load the controllers.
-require File.join(test_app_dir, 'controllers', 'cells_test_controller')
-require File.join(test_app_dir, 'controllers', 'musician_controller')
-
 
 
 Dir[File.join(gem_dir, 'test', 'support', '**', '*.rb')].each { |f| require f }

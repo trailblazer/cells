@@ -1,19 +1,9 @@
 require File.join(File.dirname(__FILE__), '/../test_helper')
 
 class RailsIntegrationTest < ActionController::TestCase
+  tests MusicianController
   
   context "A Rails controller" do
-    
-    setup do
-      @routes = ActionDispatch::Routing::RouteSet.new
-      @routes.draw do
-        |map| match ':action', :to => MusicianController
-      end
-      
-      @controller = MusicianController.new
-      @controller.view_paths << File.expand_path(File.join(File.dirname(__FILE__), '../app/views'))
-    end
-    
     should "respond to render_cell" do
       get 'promotion'
       assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body

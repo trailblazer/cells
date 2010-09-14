@@ -1,15 +1,15 @@
-require File.join(File.dirname(__FILE__), *%w[test_helper])
+require File.join(File.dirname(__FILE__), 'test_helper')
 
-#require 'rails/generators/test_unit'
-
-
-#require '/home/nick/projects/rails/railties/lib/rails/test/isolation/abstract_unit'
-require 'abstract_unit'
-
-#require '/home/nick/projects/rails/railties/test/generators/generators_test_helper'
+require 'rails/all'
 require 'rails/generators'
 require 'rails_generators/cell/cell_generator'
-module Rails
+
+# Call configure to load the settings from
+# Rails.application.config.generators to Rails::Generators
+Rails::Generators.configure!
+
+
+module Rails2BRM
   def self.root
     @root ||= File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures'))
   end

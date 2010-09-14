@@ -4,8 +4,7 @@ module Cells
   #
   module InternalAssertionsHelper
     def setup
-      ### TODO: clean up CellsTestController.
-      @controller = ::CellsTestController.new
+      @controller = ::MusicianController.new
       @request    = ::ActionController::TestRequest.new
       @response   = ::ActionController::TestResponse.new
       @controller.request = @request
@@ -55,7 +54,7 @@ module Cells
     # Provides a TestCell instance. The <tt>block</tt> is passed to instance_eval and should be used
     # to extend the mock on the fly.
     ### DISCUSS: make an anonymous subclass of TestCell?
-    def cell_mock(options={}, &block)
+    def cell_mock(options={}, &block) ### DISCUSS: 2BRM.
       cell = TestCell.new(@controller, options)
       cell.instance_eval(&block) if block_given?
       cell
