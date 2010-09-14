@@ -3,3 +3,5 @@ pkg
 .*~
 .bundle
 Gemfile.lock
+test/dummy/log/test.log
+test/dummy/tmp/
