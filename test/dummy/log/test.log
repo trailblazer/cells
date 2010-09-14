@@ -439,3 +439,465 @@ Completed 200 OK in 11ms (Views: 10.4ms | ActiveRecord: 0.0ms)
 Completed 200 OK in 3ms (Views: 0.6ms | ActiveRecord: 0.0ms)
 Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (1.1ms)
 Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (1.1ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (10.6ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 87ms (Views: 23.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 52ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 62ms (Views: 1.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 61ms (Views: 2.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 3ms (Views: 0.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 21ms (Views: 20.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 9ms (Views: 8.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 3ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (1.3ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (1.2ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.3ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 40ms (Views: 10.3ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 26ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 1.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 32ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.6ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.6ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 40ms (Views: 10.3ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 31ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 33ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.0ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 40ms (Views: 10.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 32ms (Views: 1.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 11ms (Views: 10.3ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.3ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 40ms (Views: 10.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 24ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 29ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 9ms (Views: 8.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.6ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.0ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 9.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 27ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 29ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 3ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 11ms (Views: 10.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 4ms (Views: 4.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.9ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 43ms (Views: 12.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 27ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 9ms (Views: 8.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.5ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.3ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 41ms (Views: 10.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 27ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.2ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 9.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 1.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 11ms (Views: 10.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 5.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 3ms (Views: 0.7ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.6ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.1ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 9.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 8.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (6.2ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 40ms (Views: 9.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 27ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 13ms (Views: 12.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 6ms (Views: 6.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.5ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.6ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 40ms (Views: 10.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 26ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 29ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.6ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.1ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 9.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 26ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 27ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 4ms (Views: 4.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.6ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.1ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 9.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 31ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 33ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 3ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 10.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.7ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.1ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 10.3ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 27ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.7ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (6.1ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 40ms (Views: 10.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 30ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 29ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 5.3ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.6ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.9ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 47ms (Views: 13.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 30ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 29ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 27ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.3ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (6.6ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 49ms (Views: 12.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 27ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 31ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 36ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 8ms (Views: 8.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.0ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 10.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 27ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.6ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.5ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 41ms (Views: 10.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 26ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 27ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 29ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 9ms (Views: 9.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 5.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.3ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 10.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 25ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 29ms (Views: 0.9ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 10ms (Views: 9.7ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.6ms)
+  Processing by MusicianController#promotion as HTML
+Rendered /home/nick/projects/cells/test/app/cells/bassist/provoke.html.erb (5.2ms)
+Rendered text template (0.0ms)
+Completed 200 OK in 39ms (Views: 9.6ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#index as HTML
+Completed 200 OK in 26ms (Views: 0.4ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 28ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 29ms (Views: 1.1ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#skills as HTML
+  Parameters: {"note"=>"D"}
+Completed 200 OK in 2ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#hamlet as HTML
+Completed 200 OK in 9ms (Views: 9.0ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#featured as HTML
+Completed 200 OK in 5ms (Views: 4.8ms | ActiveRecord: 0.0ms)
+  Processing by MusicianController#promotion as HTML
+Completed 200 OK in 2ms (Views: 0.3ms | ActiveRecord: 0.0ms)
+Rendered /home/nick/projects/cells/test/app/cells/bad_guitarist/_dii.html.erb (0.5ms)
+Rendered /home/nick/projects/cells/test/app/cells/bassist/_dii.html.erb (0.5ms)

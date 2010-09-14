@@ -1,43 +1,28 @@
 #require 'rails_generator/generators/components/controller/controller_generator'
 require 'rails/generators/named_base'
+
 module Cells
 module Generators
 class CellGenerator < ::Rails::Generators::NamedBase
   argument :actions, :type => :array, :default => [], :banner => "action action"
   check_class_collision :suffix => "Cell"
-
-  def create_cell_files
-    template 'cell.rb', File.join('app/cells', class_path, "#{file_name}_cell.rb")
-  end
-
-  hook_for :template_engine
-  hook_for :test_framework
   
   source_root File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
   
+  class_option :template_engine, :type => :string, :aliases => "-t", :desc => "Template engine for the views. Available options are 'erb' and 'haml'."
+  
+  def create_cell_file
+    template 'cell.rb', File.join('app/cells', class_path, "#{file_name}_cell.rb")
+  end
+  
+  def create_views
+    for state in actions do
+      @state  = state
+      @path   = File.join('app/cells', file_name, "#{state}.html.erb")
       
-  #attr_reader :template_type
-
-  #def initialize(runtime_args, runtime_options = {})
-  #  super
-  #  @template_type = options[:haml] ? :haml : :erb
-  #end
-
-  #def ___manifest
-      # Directories
-      #m.directory File.join('app/cells', class_path)
-      #m.directory File.join('app/cells', class_path, file_name)
-      #m.directory File.join('test/cells')
-      
-      # Cell
-      #m.template 'cell.rb', File.join('app/cells', class_path, "#{file_name}_cell.rb")
-
-      # View template for each action.
-      #actions.each do |action|
-      #  path = File.join('app/cells', class_path, file_name, "#{action}.html.#{template_type}")
-      #  m.template "view.html.#{template_type}", path, :assigns => { :action => action, :path => path }
-      #end
-      
+      template 'view.erb', @path
+    end
+  end
       # Functional test for the widget.
       #m.template 'cell_test.rb', File.join('test/cells/', "#{file_name}_cell_test.rb"), :assigns => {:states => actions}
     #end
