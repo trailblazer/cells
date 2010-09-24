@@ -1,0 +1,87 @@
+= Hooks
+
+<em>Generic hooks with callbacks for Ruby.</em>
+
+
+== Introduction
+
+Hooks lets you define hooks declaratively in your ruby class. You can add callbacks to your hook, which will be 
+run as soon as _you_ run the hook!
+
+It's almost like ActiveSupport::Callbacks but 76,6% less complex.
+
+Instead, it is not more than 80 lines of code, one method compilation, no +method_missing+ and no magic.
+
+
+== Example
+
+Let's take... a cat.
+
+  class Cat
+    include Hooks
+    
+    define_hook :after_dinner
+
+Now you can add callbacks to your hook declaratively in your class.
+
+    after_dinner do 
+      puts "Ice cream!"
+    end
+    
+    after_dinner :have_a_desert   # => refers to Cat#have_a_desert
+    
+    
+    def have_a_desert
+      puts "Hell, yeah!"
+    end
+ 
+Running the callbacks happens on instances. It will run the block and +#have_a_desert+ from above.
+
+  cat.run_hook :after_dinner
+  # => Ice cream!
+       Hell, yeah!
+
+
+== Options
+
+You're free to pass any number of arguments to #run_callback.
+
+  cat.run_hook :before_dinner, cat, Time.now
+
+The callbacks should be ready for receiving parameters.
+  
+  before_dinner :wash_pawns
+  before_dinner do |who, when|
+    ...
+  end
+  
+  def wash_pawns(who, when)
+
+
+Not sure why a cat should have ice cream for dinner. Beside that, I was tempted naming this gem _hooker_.
+
+
+== Installation
+
+  gem install hooks
+
+
+== Dependencies
+
+The current gem requires
+
+* active_support 2.3.x
+
+
+== Similar libraries
+
+* http://github.com/nakajima/aspectory/tree/master/lib/aspectory/
+* http://github.com/auser/backcall
+* http://github.com/mmcgrana/simple_callbacks
+
+
+== License
+
+Copyright (c) 2010, Nick Sutterer 
+
+Released under the MIT License.
