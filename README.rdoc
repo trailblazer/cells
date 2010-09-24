@@ -84,6 +84,15 @@ Yes, Cells have helpers just like controllers. If you need some specific helper,
 
 and it will be around in your cart views.
 
+=== Partials?
+
+Yeah, we do support rendering partials in views. Nevertheless, we discourage _partials_ at all.
+
+The distinction between partials and views is making things more complex, so why should we have two kinds of view types? Use ordinary views instead, they're fine.
+
+  %p
+    = render :view => 'items'
+
 
 == Caching
 
