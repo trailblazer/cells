@@ -1,11 +1,10 @@
 module Cell
   module BaseMethods
-    
     extend ActiveSupport::Concern
     
     module ClassMethods
       def render_cell_for(controller, name, state, opts={})
-        create_cell_for(controller, name, opts).render_state(state) # FIXME: don't let BaseMethods know about controller's API.
+        create_cell_for(controller, name, opts).render_state(state)
       end
       
       # Creates a cell instance.
@@ -31,31 +30,10 @@ module Cell
         name.underscore.sub(/_cell$/, '')
       end
       
+      # The cell class constant for +cell_name+.
       def class_from_cell_name(cell_name)
         "#{cell_name}_cell".classify.constantize
       end
-    end
-    
-    
-    
-    
-    attr_reader   :state_name
-
-    #def cell_name
-    #  self.class.cell_name
-    #end
-
-    # Invoke the state method and render the given state.
-    def render_state(state, controller=nil)
-      @cell       = self
-      @state_name = state
-
-      dispatch_state(state)
-    end
-
-    # Call the state method.
-    def dispatch_state(state)
-      send(state)
     end
     
     # Computes all possible paths for +state+ by traversing up the inheritance chain.

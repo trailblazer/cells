@@ -9,6 +9,7 @@ module Cell
     include ActionController::RequestForgeryProtection
     
     module Rendering
+      # Invoke the state method for +state+ which usually renders something nice.
       def render_state(state)
         dispatch(state, parent_controller.request)
       end
