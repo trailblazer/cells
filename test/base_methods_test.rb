@@ -28,13 +28,5 @@ class BaseMethodsTest < ActiveSupport::TestCase
     should "provide class_from_cell_name" do
       assert_equal BassistCell, ::Cell::Base.class_from_cell_name('bassist')
     end
-    
-    should "provide AbstractBase.default_template_format" do
-      cell(:bassist).class.default_template_format = :js
-      
-      assert_equal :html, ::Cell::Base.default_template_format
-      assert_equal :js, cell(:bassist).class.default_template_format
-    end
-    
   end
 end

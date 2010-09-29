@@ -1,14 +1,7 @@
 module Cell
   module BaseMethods
     
-    ### FIXME. remove default_template_format ?
-    def self.included(base)
-      base.extend ClassMethods
-      
-      ### DISCUSS: move that to Rails?
-      base.class_attribute :default_template_format
-      base.default_template_format = :html
-    end
+    extend ActiveSupport::Concern
     
     module ClassMethods
       def render_cell_for(controller, name, state, opts={})

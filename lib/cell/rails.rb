@@ -42,24 +42,23 @@ module Cell
     end 
     
     include Metal
-    
     include Rendering
     include Caching
     
     #include AbstractController::Logger
     
     
-    #include Cell::ActiveHelper
     cattr_accessor :url_helpers ### TODO: discuss if we really need that or can handle that in cells.rb already.
+    attr_reader :parent_controller
     
     abstract!
     
-    ### DISCUSS: should we pass the parent_controller here?
-    def initialize(parent_controller=nil, options={})  ### FIXME: move to BaseMethods.
+    
+    def initialize(parent_controller=nil, options={})
       @parent_controller  = parent_controller
       @opts = @options    = options
     end
-    attr_reader :parent_controller
+    
     
     
     def log(*args); end
@@ -154,9 +153,8 @@ module Cell
         raise missing_template_exception
       end
       
-      # Render the view belonging to the given state. Will raise ActionView::MissingTemplate
-      # if it can not find one of the requested view template. Note that this behaviour was
-      # introduced in cells 2.3 and replaces the former warning message.
+      # Renders the view belonging to the given state. Will raise ActionView::MissingTemplate
+      # if it can't find a view.
       def render_view_for(opts, state)
         return '' if opts[:nothing]
 
@@ -182,9 +180,7 @@ module Cell
 
       # Defaultize the passed options from #render.
       def defaultize_render_options_for(opts, state)
-        opts[:template_format]  ||= self.class.default_template_format
-        opts[:view]             ||= state
-        opts
+        opts.reverse_merge!(:view => state)
       end
       
       def sanitize_render_options(opts)

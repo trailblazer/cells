@@ -15,11 +15,8 @@ class RailsCellsTest < ActiveSupport::TestCase
     
     context "invoking defaultize_render_options_for" do
       should "set default values" do
-        cell(:bassist).class.default_template_format = :html  ### FIXME: remove and get it working.
-        
         options = cell(:bassist).defaultize_render_options_for({}, :play)
         
-        assert_equal :html, options[:template_format]
         assert_equal :play, options[:view]
       end
       
