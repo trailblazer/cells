@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cells}
-  s.version = "3.4.0.beta3"
+  s.version = "3.4.0"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-09-15}
-  s.description = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
+  s.date = %q{2010-09-29}
+  s.description = %q{Cells are lightweight controllers for Rails and can be rendered in views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
     "README.rdoc"
@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
      "lib/cell.rb",
      "lib/cell/active_helper.rb",
      "lib/cell/base.rb",
-     "lib/cell/base_methods.rb",
      "lib/cell/caching.rb",
      "lib/cell/rails.rb",
      "lib/cells.rb",
@@ -39,53 +38,50 @@ Gem::Specification.new do |s|
      "lib/generators/cells/templates/cell.rb",
      "lib/generators/cells/templates/cell_test.rb",
      "lib/generators/cells/templates/view.erb",
-     "lib/generators/cells/templates/view.haml",
-     "lib/generators/cells_install/USAGE",
-     "lib/generators/cells_install/cells_install_generator.rb",
-     "lib/generators/cells_install/templates/initializer.rb"
+     "lib/generators/cells/templates/view.haml"
   ]
   s.homepage = %q{http://cells.rubyforge.org}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
+  s.summary = %q{View Components for Rails.}
   s.test_files = [
-    "test/assertions_helper_test.rb",
+    "test/active_helper_test.rb",
+     "test/assertions_helper_test.rb",
+     "test/rails/router_test.rb",
+     "test/rails/view_test.rb",
+     "test/rails/capture_test.rb",
+     "test/rails/integration_test.rb",
+     "test/rails/render_test.rb",
+     "test/rails/cells_test.rb",
+     "test/rails/caching_test.rb",
+     "test/cell_generator_test.rb",
      "test/test_helper.rb",
-     "test/app/cells/bad_guitarist_cell.rb",
-     "test/app/cells/bassist_cell.rb",
-     "test/app/cells/test_cell.rb",
-     "test/app/helpers/helper_using_cell_helper.rb",
-     "test/app/helpers/application_helper.rb",
-     "test/dummy/app/controllers/application_controller.rb",
-     "test/dummy/app/controllers/musician_controller.rb",
-     "test/dummy/app/helpers/application_helper.rb",
-     "test/dummy/config/environments/test.rb",
-     "test/dummy/config/environments/production.rb",
-     "test/dummy/config/environments/development.rb",
-     "test/dummy/config/boot.rb",
-     "test/dummy/config/environment.rb",
-     "test/dummy/config/initializers/secret_token.rb",
-     "test/dummy/config/initializers/backtrace_silencers.rb",
+     "test/support/internal_assertions_helper.rb",
+     "test/dummy/config/application.rb",
      "test/dummy/config/initializers/session_store.rb",
      "test/dummy/config/initializers/mime_types.rb",
+     "test/dummy/config/initializers/secret_token.rb",
      "test/dummy/config/initializers/inflections.rb",
-     "test/dummy/config/application.rb",
+     "test/dummy/config/initializers/backtrace_silencers.rb",
      "test/dummy/config/routes.rb",
-     "test/dummy/tmp/app/cells/blog_cell.rb",
+     "test/dummy/config/boot.rb",
+     "test/dummy/config/environment.rb",
+     "test/dummy/config/environments/production.rb",
+     "test/dummy/config/environments/test.rb",
+     "test/dummy/config/environments/development.rb",
      "test/dummy/tmp/test/cells/blog_cell_test.rb",
-     "test/base_methods_test.rb",
-     "test/active_helper_test.rb",
-     "test/support/internal_assertions_helper.rb",
-     "test/rails/render_test.rb",
-     "test/rails/view_test.rb",
-     "test/rails/caching_test.rb",
-     "test/rails/cells_test.rb",
-     "test/rails/integration_test.rb",
-     "test/rails/router_test.rb",
-     "test/rails/capture_test.rb",
+     "test/dummy/tmp/app/cells/blog_cell.rb",
+     "test/dummy/app/controllers/musician_controller.rb",
+     "test/dummy/app/controllers/application_controller.rb",
+     "test/dummy/app/helpers/application_helper.rb",
      "test/helper_test.rb",
-     "test/cell_generator_test.rb"
+     "test/cell_module_test.rb",
+     "test/app/cells/bassist_cell.rb",
+     "test/app/cells/test_cell.rb",
+     "test/app/cells/bad_guitarist_cell.rb",
+     "test/app/helpers/application_helper.rb",
+     "test/app/helpers/helper_using_cell_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
