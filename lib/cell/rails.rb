@@ -5,7 +5,7 @@ module Cell
   class Rails < AbstractController::Base
     include Cell
     include AbstractController
-    include Rendering, Layouts, Helpers, Callbacks, Translation
+    include Rendering, Layouts, Helpers, Callbacks, Translation, Logging
     include ActionController::RequestForgeryProtection
     
     module Rendering
