@@ -113,7 +113,7 @@ module Cell
     end
 
     def cache_key(state, args = {}) #:nodoc:
-      self.class.cache_key_for(self.cell_name, state, args)
+      self.class.cache_key_for(self.class.cell_name, state, args)
     end
 
     def state_cached?(state)

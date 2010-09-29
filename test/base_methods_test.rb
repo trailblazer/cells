@@ -11,9 +11,8 @@ class BaseMethodsTest < ActiveSupport::TestCase
       assert_equal ["bad_guitarist/play", "bassist/play", "cell/rails/play"], cell(:bad_guitarist).possible_paths_for_state(:play)
     end
     
-    should "provide cell_name" do
-      assert_equal 'bassist', cell(:bassist).cell_name
-      assert_equal cell(:bassist).cell_name, BassistCell.cell_name
+    should "provide Cell.cell_name" do
+      assert_equal 'bassist', cell(:bassist).class.cell_name
     end
     
     should "provide cell_name for modules, too" do

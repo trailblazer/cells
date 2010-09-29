@@ -41,9 +41,9 @@ module Cell
     
     attr_reader   :state_name
 
-    def cell_name
-      self.class.cell_name
-    end
+    #def cell_name
+    #  self.class.cell_name
+    #end
 
     # Invoke the state method and render the given state.
     def render_state(state, controller=nil)
