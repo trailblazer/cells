@@ -18,11 +18,11 @@ It's a gem!
 
 Rails 3:
 
-  gem install cells --pre
+  gem install cells
 
 Rails 2.3:
 
-  gem install cells
+  gem install cells -v 3.3.4
 
 
 == Generate

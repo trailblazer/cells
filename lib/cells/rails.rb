@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # These Methods are automatically added to all Controllers and Views when
 # the cells plugin is loaded.
 module Cells
@@ -62,7 +60,6 @@ module Cells
       end
     end
 
-    
   end
 end
 
