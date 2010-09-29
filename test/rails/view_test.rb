@@ -1,5 +1,4 @@
-# encoding: utf-8
-require File.join(File.dirname(__FILE__), '../test_helper')
+require 'test_helper'
 
 class RailsViewTest < ActiveSupport::TestCase
   context "A cell view" do
@@ -18,7 +17,6 @@ class RailsViewTest < ActiveSupport::TestCase
         assert_equal "Dumm Dooom", render_cell(:bassist, :compose)
       end
     end
-  
     
   end
 end

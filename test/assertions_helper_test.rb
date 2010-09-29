@@ -1,5 +1,4 @@
-# encoding: utf-8
-require File.join(File.dirname(__FILE__), 'test_helper')
+require 'test_helper'
 
 class AssertionsHelperTest < ActionController::TestCase
   context "A TestCase" do

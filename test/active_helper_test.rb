@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'test_helper')
+require 'test_helper'
 
 ### DISCUSS: how can we limit that test to systems where ActiveHelper's around?
 

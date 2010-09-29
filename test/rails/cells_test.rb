@@ -1,5 +1,4 @@
-require File.join(File.dirname(__FILE__), '/../test_helper')
-
+require 'test_helper'
 
 class RailsCellsTest < ActiveSupport::TestCase
   context "A rails cell" do
