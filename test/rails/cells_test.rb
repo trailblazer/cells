@@ -60,7 +60,6 @@ class RailsCellsTest < ActiveSupport::TestCase
         @request = ActionController::TestRequest.new 
         @request.env["action_dispatch.request.request_parameters"] = {:song => "Creatures"}
         @cell = cell(:bassist)
-        @cell.request= @request
       end
       
       should_eventually "delegate log" do

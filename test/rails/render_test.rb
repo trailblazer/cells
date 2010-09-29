@@ -129,12 +129,10 @@ class RailsRenderTest < ActiveSupport::TestCase
       
       @request.env["action_dispatch.request.request_parameters"] = {:what => 'get'}
       @cell = cell(:bassist)
-      @cell.request = @request  ### FIXME.
       
       assert_equal "Come and get me!", @cell.render_state(:pose)
     end
     
     
   end
-  
 end

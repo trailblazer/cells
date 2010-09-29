@@ -2,7 +2,7 @@ require 'abstract_controller'
 require 'action_controller'
 
 module Cell
-  class Rails < ActionController::Metal
+  class Rails < AbstractController::Base
     include BaseMethods
     include AbstractController
     include Rendering, Layouts, Helpers, Callbacks, Translation
@@ -10,11 +10,7 @@ module Cell
     
     module Rendering
       def render_state(state)
-        rack_response = dispatch(state, parent_controller.request)
-        
-        str = ''      # copied from Response#body.
-        rack_response[2].each { |part| str << part.to_s }
-        str.html_safe # in fact, i'd love to return a real OutputBuffer here.
+        dispatch(state, parent_controller.request)
       end
     end
     
@@ -27,6 +23,25 @@ module Cell
         super
       end
     end
+    
+    module Metal
+      def dispatch(name, request)
+        @_request = request
+        @_env = request.env
+        @_env['action_controller.instance'] = self
+        process(name)
+      end
+      
+      def params
+        @_params ||= request.parameters # DISCUSS: let rails helper access @controller.params!
+      end
+      
+      delegate :request,  :to => :parent_controller
+      delegate :config,   :to => :parent_controller
+      delegate :session,  :to => :parent_controller
+    end 
+    
+    include Metal
     
     include Rendering
     include Caching
@@ -67,12 +82,6 @@ module Cell
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
     end
     
-    def process(*)  # defined in AC::Metal.
-      self.response_body = super
-    end
-    
-    delegate :request, :to => :parent_controller
-    delegate :config, :to => :parent_controller # DISCUSS: what if a cell has its own config (eg for assets, cells/bassist/images)?
     # DISCUSS: let @controller point to @parent_controller in views, and @cell is the actual real controller?
 
       # Renders the view for the current state and returns the markup for the component.
