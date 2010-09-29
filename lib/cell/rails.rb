@@ -5,15 +5,8 @@ module Cell
   class Rails < AbstractController::Base
     include Cell
     include AbstractController
-    include Rendering, Layouts, Helpers, Callbacks, Translation
+    include Rendering, Layouts, Helpers, Callbacks, Translation, Logger
     include ActionController::RequestForgeryProtection
-    
-    module Rendering
-      # Invoke the state method for +state+ which usually renders something nice.
-      def render_state(state)
-        dispatch(state, parent_controller.request)
-      end
-    end
     
     class View < ActionView::Base
       def render(options = {}, locals = {}, &block)
@@ -24,6 +17,15 @@ module Cell
         super
       end
     end
+    
+    
+    module Rendering
+      # Invoke the state method for +state+ which usually renders something nice.
+      def render_state(state)
+        dispatch(state, parent_controller.request)
+      end
+    end
+    
     
     module Metal
       def dispatch(name, request)
@@ -42,11 +44,10 @@ module Cell
       delegate :session,  :to => :parent_controller
     end 
     
+    
     include Metal
     include Rendering
     include Caching
-    
-    #include AbstractController::Logger
     
     
     cattr_accessor :url_helpers ### TODO: discuss if we really need that or can handle that in cells.rb already.
@@ -59,11 +60,6 @@ module Cell
       @parent_controller  = parent_controller
       @opts = @options    = options
     end
-    
-    
-    
-    def log(*args); end
-    
     
     def self.view_context_class
       controller = self
