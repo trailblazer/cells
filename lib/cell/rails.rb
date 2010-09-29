@@ -3,7 +3,7 @@ require 'action_controller'
 
 module Cell
   class Rails < AbstractController::Base
-    include BaseMethods
+    include Cell
     include AbstractController
     include Rendering, Layouts, Helpers, Callbacks, Translation
     include ActionController::RequestForgeryProtection

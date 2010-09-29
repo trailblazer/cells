@@ -2,9 +2,6 @@
 
 require 'action_controller'
 
-
-require 'cell/base_methods'
-
 require 'cell'
 require 'cells/rails' # helper.
 require 'cell/rails'

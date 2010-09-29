@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BaseMethodsTest < ActiveSupport::TestCase
+class CellModuleTest < ActiveSupport::TestCase
   context "Cell::Base" do
     
     should "provide AbstractBase.render_cell_for" do
@@ -16,11 +16,10 @@ class BaseMethodsTest < ActiveSupport::TestCase
     end
     
     should "provide cell_name for modules, too" do
-      class SingerCell
-        include Cell::BaseMethods
+      class SingerCell < Cell::Base
       end
       
-      assert_equal "base_methods_test/singer", BaseMethodsTest::SingerCell.cell_name
+      assert_equal "cell_module_test/singer", CellModuleTest::SingerCell.cell_name
     end
     
     
