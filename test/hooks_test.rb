@@ -31,6 +31,13 @@ class HooksTest < ActiveSupport::TestCase
         @klass.after_eight do true; end
         assert @klass._after_eight_callbacks.first.kind_of? Proc
       end
+      
+      should "be inherited" do
+        subklass = Class.new(@klass) do
+        end
+        
+        assert_equal [], subklass.after_eight
+      end
     end
     
     context "Hooks#run_hook" do
