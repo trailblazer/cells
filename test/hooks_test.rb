@@ -33,7 +33,7 @@ class HooksTest < ActiveSupport::TestCase
       end
     end
     
-    context "Hooks.run_hook"do
+    context "Hooks#run_hook" do
       should "run without parameters" do
         @mum.instance_eval do
           def a; executed << :a; end
@@ -59,6 +59,32 @@ class HooksTest < ActiveSupport::TestCase
         
         assert_equal [2, 0], @mum.executed
       end
-    end  
+    end
+    
+    context "in class context" do
+      should "run a callback block" do
+        executed = []
+        @klass.after_eight do
+          executed << :klass
+        end
+        @klass.run_hook :after_eight
+        
+        assert_equal [:klass], executed
+      end
+      
+      should "run a class methods" do
+        executed = []
+        @klass.instance_eval do
+          after_eight :have_dinner
+          
+          def have_dinner(executed)
+            executed << :have_dinner
+          end
+        end
+        @klass.run_hook :after_eight, executed
+        
+        assert_equal [:have_dinner], executed
+      end
+    end
   end
 end

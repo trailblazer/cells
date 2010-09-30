@@ -5,12 +5,10 @@
 
 == Introduction
 
-Hooks lets you define hooks declaratively in your ruby class. You can add callbacks to your hook, which will be 
+_Hooks_ lets you define hooks declaratively in your ruby class. You can add callbacks to your hook, which will be 
 run as soon as _you_ run the hook!
 
-It's almost like ActiveSupport::Callbacks but 76,6% less complex.
-
-Instead, it is not more than 80 lines of code, one method compilation, no +method_missing+ and no magic.
+It's almost like ActiveSupport::Callbacks but 76,6% less complex. Instead, it is not more than 60 lines of code, one method compilation, no +method_missing+ and no magic.
 
 
 == Example
@@ -35,7 +33,7 @@ Now you can add callbacks to your hook declaratively in your class.
       puts "Hell, yeah!"
     end
  
-Running the callbacks happens on instances. It will run the block and +#have_a_desert+ from above.
+Running the callbacks happens on instances. It will run the block and #have_a_desert from above.
 
   cat.run_hook :after_dinner
   # => Ice cream!
@@ -73,9 +71,13 @@ The current gem requires
 * active_support 2.3.x
 
 
+== Anybody using it?
+
+* Hooks is already used in [Apotomo:http://github.com/apotonick/apotomo], a hot widget framework for Rails. Look at +lib/apotomo/widget.rb+ for examples and into +lib/apotomo/tree_node.rb+ to learn how modules-driven code might benefit from hooks.
+
 == Similar libraries
 
-* http://github.com/nakajima/aspectory/tree/master/lib/aspectory/
+* http://github.com/nakajima/aspectory
 * http://github.com/auser/backcall
 * http://github.com/mmcgrana/simple_callbacks
 
