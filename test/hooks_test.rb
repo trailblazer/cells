@@ -33,10 +33,10 @@ class HooksTest < ActiveSupport::TestCase
       end
       
       should "be inherited" do
-        subklass = Class.new(@klass) do
-        end
+        @klass.after_eight :dine
+        subklass = Class.new(@klass)
         
-        assert_equal [], subklass.after_eight
+        assert_equal [:dine], subklass._after_eight_callbacks
       end
     end
     

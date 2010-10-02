@@ -13,8 +13,8 @@ Rake::TestTask.new(:test) do |test|
 end
 
 require 'jeweler'
-$:.unshift File.dirname(__FILE__) # add current dir to LOAD_PATHS
-require 'lib/hooks'
+$:.unshift File.dirname(__FILE__)+"/lib" # add current dir to LOAD_PATHS
+require 'hooks'
 
 Jeweler::Tasks.new do |spec|
   spec.name         = "hooks"
@@ -26,8 +26,6 @@ Jeweler::Tasks.new do |spec|
   spec.email        = "apotonick@gmail.com"
 
   spec.files = FileList["[A-Z]*", File.join(*%w[{lib} ** *]).to_s]
-  
-  spec.add_dependency 'activesupport', '>= 2.3.0'
 end
 
 Jeweler::GemcutterTasks.new

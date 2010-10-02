@@ -15,7 +15,8 @@ module Hooks
     #
     # and then, later
     #
-    #   Garfield.drinks #=> ["Becks, Fireman's 4"]
+    #   Cat.drinks      #=> ["Becks"]
+    #   Garfield.drinks #=> ["Becks", "Fireman's 4"]
     def inheritable_attr(name)
       instance_eval %Q{
         def #{name}=(v)
