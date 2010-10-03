@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hooks}
-  s.version = "0.1"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-09-24}
+  s.date = %q{2010-10-03}
   s.description = %q{Declaratively define hooks, add callbacks and run them with the options you like.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
@@ -20,7 +20,8 @@ Gem::Specification.new do |s|
      "Gemfile.lock",
      "README.rdoc",
      "Rakefile",
-     "lib/hooks.rb"
+     "lib/hooks.rb",
+     "lib/hooks/inheritable_attribute.rb"
   ]
   s.homepage = %q{http://nicksda.apotomo.de/category/hooks}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -28,7 +29,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Generic hooks with callbacks for Ruby.}
   s.test_files = [
-    "test/test_helper.rb",
+    "test/inheritable_attribute_test.rb",
+     "test/test_helper.rb",
      "test/hooks_test.rb"
   ]
 
@@ -37,12 +39,9 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.0"])
     else
-      s.add_dependency(%q<activesupport>, [">= 2.3.0"])
     end
   else
-    s.add_dependency(%q<activesupport>, [">= 2.3.0"])
   end
 end
 

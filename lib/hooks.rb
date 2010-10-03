@@ -1,4 +1,3 @@
-#require 'active_support/core_ext/class/inheritable_attributes.rb'
 require "hooks/inheritable_attribute"
 
 # Almost like ActiveSupport::Callbacks but 76,6% less complex.
@@ -17,7 +16,7 @@ require "hooks/inheritable_attribute"
 #
 #   cat.run_hook :after_dinner
 module Hooks
-  VERSION = "0.1"
+  VERSION = "0.1.1"
   
   def self.included(base)
     base.extend InheritableAttribute
@@ -64,7 +63,6 @@ module Hooks
     end
     
     def setup_hook_accessors(accessor_name)
-      #class_inheritable_array(accessor_name, :instance_writer => false)
       inheritable_attr(accessor_name)
       send("#{accessor_name}=", [])  # initialize ivar.
     end  
