@@ -115,14 +115,13 @@ There are multiple advanced options for expiring your view caches, including an 
 
 Another big advantage compared to monolithic controller/helper/partial piles is the ability to test your cells isolated.
 
-So what if you wanna test the cart cell? Use the generated <tt>test/cells/shopping_cart_test.rb</tt> test.
+So what if you wanna test the cart cell? Use the generated <tt>test/cells/shopping_cart_cell_test.rb</tt> test.
 
-  class ShoppingCartTest < ActionController::TestCase
-    include Cells::AssertionsHelper
-    
+  class ShoppingCartCellTest < Cell::TestCase
     test "display" do
-      html = render_cell(:shopping_cart, :diplay, :user => @user_fixture)
-      assert_selekt html, "#cart", "You have 3 items in your shopping cart."
+      invoke :display, :user => @user_fixture
+      assert_select "#cart", "You have 3 items in your shopping cart."
+    end
 
 That's easy, clean and strongly improves your component-driven software quality. How'd you do that with partials?
 

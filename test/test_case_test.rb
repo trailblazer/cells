@@ -16,8 +16,8 @@ class TestCaseTest < Cell::TestCase
       assert_equal "Doo", render_cell(:bassist, :play)
     end
     
-    should "respond to #assert_select with 3 args" do
-      assert_select "p", "Doo", "<p>Doo</p>y"
+    should "respond to #assert_selector with 3 args" do
+      assert_selector "p", "Doo", "<p>Doo</p>y"
     end
     
     should "respond to #cell" do
@@ -33,8 +33,46 @@ class TestCaseTest < Cell::TestCase
       assert_equal({:topic => :peace}, cell(:bassist, :topic => :peace) { def opts; @opts; end }.opts)
     end
     
-    should "respond to TestCase.tests" do
+    context "in declarative tests" do
+      should "respond to TestCase.tests" do
+        self.class.tests BassistCell
+        assert_equal BassistCell, self.class.controller_class
+      end
       
+      should "infer the cell name" do
+        class SingerCell < Cell::Rails
+        end
+        
+        class SingerCellTest < Cell::TestCase
+        end
+        
+        assert_equal SingerCell, SingerCellTest.new(:cell_test).class.controller_class
+      end
+      
+      context "with invoke" do
+        setup do
+          self.class.tests BassistCell
+        end
+        
+        should "provide #invoke" do
+          assert_equal "Doo", invoke(:play)
+        end
+        
+        should "provide #last_invoke" do
+          assert_equal nil, last_invoke
+          assert_equal "Doo", invoke(:play)
+          assert_equal "Doo", last_invoke
+        end
+        
+        should "provide #invoke accepting opts" do
+          #assert_equal "Doo", invoke(:play)
+        end
+        
+        should "provide assert_select" do
+          invoke :promote
+          assert_select "a", "vd.com"
+        end
+      end
     end
   end
 end

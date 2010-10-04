@@ -20,7 +20,7 @@ class CellGeneratorTest < Rails::Generators::TestCase
         assert_file "app/cells/blog/post.html.erb", %r(<p>)
         assert_file "app/cells/blog/latest.html.erb", %r(app/cells/blog/latest\.html\.erb)
 
-        assert_file "test/cells/blog_cell_test.rb"
+        assert_file "test/cells/blog_cell_test.rb", %r(class BlogCellTest < Cell::TestCase)
       end
       
       should "create haml assets with --haml" do
