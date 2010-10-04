@@ -26,14 +26,12 @@ require 'cells'
 Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
 Cell::Rails.append_view_path(File.join(test_app_dir, 'cells', 'layouts'))
 
-
-Dir[File.join(gem_dir, 'test', 'support', '**', '*.rb')].each { |f| require f }
-require File.join(gem_dir, 'lib', 'cells', 'assertions_helper')
-
+require "cell/test_case"
 # Extend TestCase.
 ActiveSupport::TestCase.class_eval do
-  include Cells::AssertionsHelper
-  include Cells::InternalAssertionsHelper
+  def assert_not(assertion)
+    assert !assertion
+  end
 end
 
 # Enable dynamic states so we can do Cell.class_eval { def ... } at runtime.
