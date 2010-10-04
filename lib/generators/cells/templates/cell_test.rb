@@ -1,11 +1,11 @@
 require 'test_helper'
 
 class <%= class_name %>CellTest < Cell::TestCase
-  <% for state in @states -%>
+<% for state in @states -%>
   test "<%= state %>" do
-    invoke <%= state %>
+    invoke :<%= state %>
     assert_select "p"
   end
   
-  <% end %>
+<% end %>
 end

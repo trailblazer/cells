@@ -123,6 +123,10 @@ So what if you wanna test the cart cell? Use the generated <tt>test/cells/shoppi
       assert_select "#cart", "You have 3 items in your shopping cart."
     end
 
+Run your tests with
+
+  $ rake test:cells
+
 That's easy, clean and strongly improves your component-driven software quality. How'd you do that with partials?
 
 

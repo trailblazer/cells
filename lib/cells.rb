@@ -63,7 +63,7 @@ require 'action_controller'
 require 'cell'
 require 'cells/rails'
 require 'cell/rails'
-
+require 'cell/test_case' if Rails.env == "test"
 
 module Cells
   # Any config should be placed here using +mattr_accessor+.
@@ -122,4 +122,8 @@ class Cells::Railtie < Rails::Railtie
     #ActiveSupport::Dependencies.load_paths << Rails.root.join(*%w[app cells])
     ### DISCUSS: how are cell classes found by Rails?
   end
+  
+  rake_tasks do
+    load "tasks.rake"
+  end 
 end

@@ -7,20 +7,12 @@ Description:
   
 Examples:
   
-  ./script/generate cell Announcements index
+  rails g cells:cell ShoppingCart index --haml
   
-  This will create an Announcements cell:
+  This will create these cell assets:
     Cell:
-      app/cells/announcements_cell.rb
+      app/cells/shopping_cart_cell.rb
     Views:
-      app/cells/announcements/index.html.erb
-      
-      
-  ./script/generate cell Articles popular recent --haml
-  
-  This will create an Articles cell:
-    Cell:
-      app/cells/articles_cell.rb
-    Views:
-      app/cells/articles/popular.html.haml
-      app/cells/articles/recent.html.haml
+      app/cells/shopping_cart/index.html.haml
+    Test:
+      test/cells/shopping_cart_cell_test
