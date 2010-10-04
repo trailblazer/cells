@@ -1,6 +1,21 @@
 require 'test_helper'
 
 class RailsCellsTest < ActiveSupport::TestCase
+  include Cell::TestCase::TestMethods
+  
+  def swap(object, new_values)
+    old_values = {}
+    new_values.each do |key, value|
+      old_values[key] = object.send key
+      object.send :"#{key}=", value
+    end
+    yield
+  ensure
+    old_values.each do |key, value|
+      object.send :"#{key}=", value
+    end
+  end
+  
   context "A rails cell" do
     should "respond to view_paths" do
       assert_kind_of ActionView::PathSet, Cell::Rails.view_paths, "must be a PathSet for proper template caching/reloading (see issue#2)"

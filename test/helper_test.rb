@@ -14,6 +14,8 @@ end
 
 
 class HelperTest < ActionController::TestCase
+  include Cell::TestCase::TestMethods
+  
   context "a cell view" do
     should "have access to all helpers" do
       BassistCell.class_eval do

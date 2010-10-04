@@ -24,6 +24,8 @@ class DirectorCell < Cell::Rails
 end
 
 class CachingTest < ActiveSupport::TestCase
+  include Cell::TestCase::TestMethods
+  
   context "The DirectorCell" do
     setup do
       DirectorCell.reset!

@@ -2,6 +2,8 @@ require 'test_helper'
 require 'builder'
 
 class RailsRenderTest < ActiveSupport::TestCase
+  include Cell::TestCase::TestMethods
+  
   context "Invoking render" do
     
     should "render a plain view" do

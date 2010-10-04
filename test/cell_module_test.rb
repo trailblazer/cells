@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class CellModuleTest < ActiveSupport::TestCase
+  include Cell::TestCase::TestMethods
+  
   context "Cell::Base" do
     
     should "provide AbstractBase.render_cell_for" do

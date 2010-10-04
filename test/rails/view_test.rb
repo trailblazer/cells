@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class RailsViewTest < ActiveSupport::TestCase
+  include Cell::TestCase::TestMethods
+  
   context "A cell view" do
     context "calling render :partial" do
       should "render the cell partial in bassist/dii" do
