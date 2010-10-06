@@ -63,7 +63,7 @@ require 'action_controller'
 require 'cell'
 require 'cells/rails'
 require 'cell/rails'
-require 'cell/test_case' if Rails.env == "test"
+require 'cell/test_case' if Object.const_defined?("Rails") and Rails.env == "test"
 
 module Cells
   # Any config should be placed here using +mattr_accessor+.
