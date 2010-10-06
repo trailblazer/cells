@@ -22,7 +22,7 @@ Rails 3:
 
 Rails 2.3:
 
-  gem install cells -v 3.3.4
+  gem install cells -v 3.3.5
 
 
 == Generate
@@ -128,6 +128,12 @@ Run your tests with
   $ rake test:cells
 
 That's easy, clean and strongly improves your component-driven software quality. How'd you do that with partials?
+
+=== Rails 2.3 note
+
+In order to copy the cells rake tasks to your app, run
+
+  $ script/generate cells_install
 
 
 == More features
