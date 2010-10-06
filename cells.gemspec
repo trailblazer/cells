@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cells}
-  s.version = "3.3.4"
+  s.version = "3.3.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-06-28}
+  s.date = %q{2010-10-06}
   s.description = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.files = [
     "CHANGES",
      "Gemfile",
+     "Gemfile.lock",
      "MIT-LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -28,6 +29,7 @@ Gem::Specification.new do |s|
      "lib/cells/cell/active_helper.rb",
      "lib/cells/cell/base.rb",
      "lib/cells/cell/caching.rb",
+     "lib/cells/cell/test_case.rb",
      "lib/cells/cell/view.rb",
      "lib/cells/helpers.rb",
      "lib/cells/helpers/capture_helper.rb",
@@ -36,6 +38,7 @@ Gem::Specification.new do |s|
      "lib/cells/rails/action_view.rb",
      "lib/cells/version.rb",
      "rails/init.rb",
+     "rails/tasks/log.rake",
      "rails_generators/cell/USAGE",
      "rails_generators/cell/cell_generator.rb",
      "rails_generators/cell/templates/cell.rb",
@@ -44,12 +47,13 @@ Gem::Specification.new do |s|
      "rails_generators/cell/templates/view.html.haml",
      "rails_generators/cells_install/USAGE",
      "rails_generators/cells_install/cells_install_generator.rb",
-     "rails_generators/cells_install/templates/initializer.rb"
+     "rails_generators/cells_install/templates/initializer.rb",
+     "rails_generators/cells_install/templates/tasks.rake"
   ]
   s.homepage = %q{http://cells.rubyforge.org}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Cells are lightweight controllers for Rails and can be rendered in controllers and views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.test_files = [
     "test/rails_test.rb",
@@ -61,6 +65,7 @@ Gem::Specification.new do |s|
      "test/support/internal_assertions_helper.rb",
      "test/bugs_test.rb",
      "test/render_test.rb",
+     "test/test_case_test.rb",
      "test/cells_test.rb",
      "test/helper_test.rb",
      "test/caching_test.rb",
@@ -79,7 +84,7 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
     else
     end
   else

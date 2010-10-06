@@ -1,3 +1,4 @@
+require "active_support/test_case"
 module Cell
   # Test your cells.
   #
