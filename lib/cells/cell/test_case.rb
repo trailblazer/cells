@@ -68,6 +68,7 @@ module Cell
         @controller.request = @request
         @controller.response = @response
         @controller.params = {}
+        @controller.send(:initialize_current_url)
       end
       
       # Use this for functional tests of your application cells.
