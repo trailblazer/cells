@@ -174,7 +174,7 @@ class CellsTest < ActionController::TestCase
     cell = MyTestCell.new(@controller)
     ### TODO: production <-> development/test context.
 
-    assert_raises ActionView::MissingTemplate do
+    assert_raises Cell::Base::MissingTemplate do
       c = cell.render_state(:missing_view)
     end
   end

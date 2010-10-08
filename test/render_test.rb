@@ -44,12 +44,15 @@ class RenderTest < ActiveSupport::TestCase
   end
 
   def test_render_with_not_existing_view
-    assert_raises ActionView::MissingTemplate do
+    assert_raises Cell::Base::MissingTemplate do
       render_cell(:a, :not_existing_view)
     end
-    assert_raises ActionView::MissingTemplate do
+    
+    e = assert_raise Cell::Base::MissingTemplate do
       render_cell(:b, :not_existing_view)
     end
+    
+    assert_equal "Missing template a/not_existing_view.erb in view path app/cells:app/cells/layouts:/home/nick/projects/cells/test/app/cells:/home/nick/projects/cells/test/app/cells/layouts and possible paths [\"b/not_existing_view\", \"a/not_existing_view\"]", e.message
   end
 
   def test_render_without_arguments_with_locally_existing_view

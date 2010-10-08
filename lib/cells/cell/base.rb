@@ -230,6 +230,11 @@ module Cells
         end
       end
       
+      class MissingTemplate < ActionView::ActionViewError
+        def initialize(message, possible_paths)
+          super(message + " and possible paths #{possible_paths}")
+        end
+      end
 
       class_inheritable_accessor :allow_forgery_protection
       self.allow_forgery_protection = true
@@ -395,8 +400,9 @@ module Cells
       ### DISCUSS: moved to Cell::View#find_template in rainhead's fork:
       def find_family_view_for_state(state, action_view)
         missing_template_exception = nil
-
-        possible_paths_for_state(state).each do |template_path|
+        possible_paths  = possible_paths_for_state(state)
+        
+        possible_paths.each do |template_path|
           # we need to catch MissingTemplate, since we want to try for all possible
           # family views.
           begin
@@ -407,7 +413,7 @@ module Cells
           end
         end
 
-        raise missing_template_exception
+        raise MissingTemplate.new(missing_template_exception.message, possible_paths)
       end
 
       # In production mode, the view for a state/template_format is cached.
