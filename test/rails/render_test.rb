@@ -85,8 +85,18 @@ class RailsRenderTest < ActiveSupport::TestCase
       assert_raises ActionView::MissingTemplate do
         render_cell(:bassist, :groove)
       end
+    end
+    
+    should "raise an error for a non-existent template" do
+      BadGuitaristCell.class_eval do
+        def groove; render; end
+      end
       
-      ### TODO: test error message sanity.
+      e = assert_raise Cell::Rails::MissingTemplate do
+        render_cell(:bad_guitarist, :groove)
+      end
+      
+      assert_equal "Missing template cell/rails/groove with {:handlers=>[:erb, :rjs, :builder, :rhtml, :rxml, :haml], :formats=>[:html, :text, :js, :css, :ics, :csv, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json], :locale=>[:en, :en]} in view paths \"/home/nick/projects/cells/app/cells\", \"/home/nick/projects/cells/app/cells/layouts\", \"/home/nick/projects/cells/test/app/cells\", \"/home/nick/projects/cells/test/app/cells/layouts\" and possible paths [\"bad_guitarist/groove\", \"bassist/groove\", \"cell/rails/groove\"]", e.message
     end
     
     should "render instance variables from the cell" do

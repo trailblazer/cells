@@ -19,6 +19,13 @@ module Cell
     end
     
     
+    class MissingTemplate < ActionView::ActionViewError
+      def initialize(message, possible_paths)
+        super(message + " and possible paths #{possible_paths}")
+      end
+    end
+    
+    
     module Rendering
       # Invoke the state method for +state+ which usually renders something nice.
       def render_state(state)
@@ -129,17 +136,18 @@ module Cell
 
     # Climbs up the inheritance chain, looking for a view for the current +state+.
     def find_family_view_for_state(state)
-      missing_template_exception = nil
-
-      possible_paths_for_state(state).each do |template_path|
+      exception       = nil
+      possible_paths  = possible_paths_for_state(state)
+      
+      possible_paths.each do |template_path|
         begin
           template = find_template(template_path)
           return template if template
-        rescue ::ActionView::MissingTemplate => missing_template_exception
+        rescue ::ActionView::MissingTemplate => exception
         end
       end
       
-      raise missing_template_exception
+      raise MissingTemplate.new(exception.message, possible_paths)
     end
     
     # Renders the view belonging to the given state. Will raise ActionView::MissingTemplate
