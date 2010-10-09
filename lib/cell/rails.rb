@@ -29,19 +29,12 @@ module Cell
     module Rendering
       # Invoke the state method for +state+ which usually renders something nice.
       def render_state(state)
-        dispatch(state, parent_controller.request)
+        process(state)
       end
     end
     
     
     module Metal
-      def dispatch(name, request)
-        @_request = request
-        @_env = request.env
-        @_env['action_controller.instance'] = self
-        process(name)
-      end
-      
       def params
         @_params ||= request.parameters # DISCUSS: let rails helper access @controller.params!
       end
@@ -63,8 +56,9 @@ module Cell
     abstract!
     
     
-    def initialize(parent_controller=nil, options={})
+    def initialize(parent_controller, options={})
       @parent_controller  = parent_controller
+      @_request           = parent_controller.request
       @opts = @options    = options
     end
     
