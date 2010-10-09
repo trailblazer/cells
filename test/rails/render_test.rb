@@ -13,11 +13,11 @@ class RailsRenderTest < ActiveSupport::TestCase
       assert_equal "Doo", render_cell(:bassist, :play)
     end
     
-    should "also render alternative engines" do
+    should "also render alternative engines, like haml" do
       BassistCell.class_eval do
-        def sing; @xm = Builder::XmlMarkup.new; render; end
+        def sing; render; end
       end
-      assert_equal "", render_cell(:bassist, :sing) ### FIXME: where's the rendered xml?
+      assert_equal "<h1>Laaa</h1>\n", render_cell(:bassist, :sing)
     end
     
     should "accept the :template_format option" do
