@@ -20,10 +20,6 @@ class RailsRenderTest < ActiveSupport::TestCase
       assert_equal "<h1>Laaa</h1>\n", render_cell(:bassist, :sing)
     end
     
-    should "accept the :template_format option" do
-      
-    end
-    
     should "accept the :nothing option" do
       BassistCell.class_eval do
         def sleep; render :nothing => true; end
@@ -44,6 +40,7 @@ class RailsRenderTest < ActiveSupport::TestCase
         def sing; render :text => "Shoobie"; end
       end
       assert_equal "Shoobie", render_cell(:bassist, :sing)
+      assert render_cell(:bassist, :sing).html_safe?
     end
     
     should "accept the :inline option" do
@@ -111,23 +108,23 @@ class RailsRenderTest < ActiveSupport::TestCase
     should "allow subsequent calls to render in the rendered view" do
       BassistCell.class_eval do
         def jam; @chords = [:a, :c]; render; end
-        def play; render; end
+        def sing; render; end
       end
-      assert_equal "Doo\nDoo\n", render_cell(:bassist, :jam)
+      assert_equal "<h1>Laaa</h1>\n\n<h1>Laaa</h1>\n\n", render_cell(:bassist, :jam)
     end
     
     should "allow multiple calls to render" do
       BassistCell.class_eval do
-        def play; render + render + render; end
+        def sing; render + render + render; end
       end
-      assert_equal "DooDooDoo", render_cell(:bassist, :play)
+      assert_equal "<h1>Laaa</h1>\n<h1>Laaa</h1>\n<h1>Laaa</h1>\n", render_cell(:bassist, :sing)
     end
-    
-    
-    
     
     # inheriting
     should "inherit play.html.erb from BassistCell" do
+      BassistCell.class_eval do
+        def play; render; end
+      end
       assert_equal "Doo", render_cell(:bad_guitarist, :play)
     end
   end

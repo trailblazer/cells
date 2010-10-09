@@ -1,5 +1,5 @@
 module ApplicationTests
-  class RouterTest < ActionController::TestCase#Test::Unit::TestCase
+  class RouterTest < ActionController::TestCase
     tests MusicianController
 
     context "A Rails app" do

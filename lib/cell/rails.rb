@@ -166,7 +166,7 @@ module Cell
       end
 
       opts = sanitize_render_options(opts)
-      render_to_string(opts)
+      render_to_string(opts).html_safe # ActionView::Template::Text doesn't do that for us.
     end
 
     # Defaultize the passed options from #render.
