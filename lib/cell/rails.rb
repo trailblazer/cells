@@ -39,8 +39,8 @@ module Cell
         @_params ||= request.parameters # DISCUSS: let rails helper access @controller.params!
       end
       
-      delegate :request,  :to => :parent_controller
-      delegate :config,   :to => :parent_controller
+      attr_internal :request
+      attr_internal :config
       delegate :session,  :to => :parent_controller
     end 
     
@@ -58,7 +58,8 @@ module Cell
     
     def initialize(parent_controller, options={})
       @parent_controller  = parent_controller
-      @_request           = parent_controller.request
+      @_request           = parent_controller.request # DISCUSS: save request only?
+      @_config            = parent_controller.config.dup
       @opts = @options    = options
     end
     

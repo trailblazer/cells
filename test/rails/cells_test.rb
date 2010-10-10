@@ -27,6 +27,14 @@ class RailsCellsTest < ActiveSupport::TestCase
       end
     end
     
+    should "respond to #request" do
+      assert_equal @request, cell(:bassist).request
+    end
+    
+    should "respond to #config" do
+      assert_equal({}, cell(:bassist).config)
+    end
+    
     
     context "invoking defaultize_render_options_for" do
       should "set default values" do
