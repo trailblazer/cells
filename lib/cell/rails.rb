@@ -40,7 +40,6 @@ module Cell
       end
       
       attr_internal :request
-      attr_internal :config
       delegate :session,  :to => :parent_controller
     end 
     

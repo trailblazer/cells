@@ -34,6 +34,16 @@ class RailsIntegrationTest < ActionController::TestCase
       get 'skills', :note => "D"
       assert_equal "That's a D", @response.body
     end
+    
+    should "respond to #config" do
+      BassistCell.class_eval do
+        def listen
+          render :view => 'contact_form'  # form_tag internally calls config.allow_forgery_protection
+        end
+      end
+      get 'skills'
+      assert_equal "<form accept-charset=\"UTF-8\" action=\"musician/index\" method=\"post\"><div style=\"margin:0;padding:0;display:inline\"><input name=\"utf8\" type=\"hidden\" value=\"&#x2713;\" /></div>\n", @response.body
+    end
   end
   
 end
