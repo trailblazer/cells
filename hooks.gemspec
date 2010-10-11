@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hooks}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-10-03}
+  s.date = %q{2010-10-11}
   s.description = %q{Declaratively define hooks, add callbacks and run them with the options you like.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [

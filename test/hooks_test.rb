@@ -20,6 +20,12 @@ class HooksTest < ActiveSupport::TestCase
       @klass._after_eight_callbacks << :dine
       assert_equal [:dine], @klass._after_eight_callbacks
     end
+    
+    should "respond to Class.callbacks_for_hook" do
+      assert_equal [], @klass.callbacks_for_hook(:after_eight)
+      @klass.after_eight :dine
+      assert_equal [:dine], @klass.callbacks_for_hook(:after_eight)
+    end
   
     context "creates a public writer for the hook that" do
       should "accepts method names" do

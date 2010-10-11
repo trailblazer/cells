@@ -16,7 +16,7 @@ require "hooks/inheritable_attribute"
 #
 #   cat.run_hook :after_dinner
 module Hooks
-  VERSION = "0.1.1"
+  VERSION = "0.1.2"
   
   def self.included(base)
     base.extend InheritableAttribute
@@ -46,13 +46,29 @@ module Hooks
     end    
     
     def run_hook_for(name, scope, *args)
-      send("_#{name}_callbacks").each do |callback|
+      callbacks_for_hook(name).each do |callback|
         scope.send(callback, *args) and next if callback.kind_of? Symbol
         callback.call(*args) 
       end
     end
     
+    # Returns the callbacks for +name+. Handy if you want to run the callbacks yourself, say when
+    # they should be executed in another context.
+    #
+    # Example:
+    #
+    #   def initialize
+    #     self.class.callbacks_for_hook(:after_eight).each do |callback|
+    #       instance_exec(self, &callback)
+    #     end
+    #
+    # would run callbacks in the object _instance_ context, passing +self+ as block parameter.
+    def callbacks_for_hook(name)
+      send("_#{name}_callbacks")
+    end
+    
   private
+    
     def define_hook_writer(hook, accessor_name)
       instance_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
         def #{hook}(method=nil, &block)
