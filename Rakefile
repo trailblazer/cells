@@ -27,8 +27,8 @@ begin
     spec.authors      = ["Nick Sutterer"]
     spec.email        = "apotonick@gmail.com"
 
-    spec.files        = FileList["[A-Z]*", File.join(*%w[{lib,rails,rails_generators} ** *]).to_s]
-    spec.test_files   = FileList["test/*.rb", "test/app/**/*", "test/dummy/**/*", "test/rails/**/*"] - FileList["test/dummy/tmp/**/*", "test/dummy/log/*"]
+    spec.files        = FileList["[A-Z]*", "lib/**/*"] - ["Gemfile.lock"]
+    spec.test_files   = FileList["test/**/*"] - FileList["test/dummy/tmp", "test/dummy/tmp/**/*", "test/dummy/log/*"]
 
     # spec.add_dependency 'activesupport', '>= 2.3.0' # Dependencies and minimum versions?
   end
