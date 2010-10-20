@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{hooks}
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-10-11}
+  s.date = %q{2010-10-21}
   s.description = %q{Declaratively define hooks, add callbacks and run them with the options you like.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
@@ -29,9 +29,9 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Generic hooks with callbacks for Ruby.}
   s.test_files = [
-    "test/inheritable_attribute_test.rb",
+    "test/hooks_test.rb",
      "test/test_helper.rb",
-     "test/hooks_test.rb"
+     "test/inheritable_attribute_test.rb"
   ]
 
   if s.respond_to? :specification_version then

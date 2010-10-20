@@ -49,7 +49,7 @@ class HooksTest < ActiveSupport::TestCase
     context "Hooks#run_hook" do
       should "run without parameters" do
         @mum.instance_eval do
-          def a; executed << :a; end
+          def a; executed << :a; nil; end
           def b; executed << :b; end
           
           self.class.after_eight :b

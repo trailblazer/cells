@@ -16,7 +16,7 @@ require "hooks/inheritable_attribute"
 #
 #   cat.run_hook :after_dinner
 module Hooks
-  VERSION = "0.1.2"
+  VERSION = "0.1.3"
   
   def self.included(base)
     base.extend InheritableAttribute
@@ -47,8 +47,11 @@ module Hooks
     
     def run_hook_for(name, scope, *args)
       callbacks_for_hook(name).each do |callback|
-        scope.send(callback, *args) and next if callback.kind_of? Symbol
-        callback.call(*args) 
+        if callback.kind_of? Symbol
+          scope.send(callback, *args)
+        else
+          callback.call(*args)
+        end 
       end
     end
     
