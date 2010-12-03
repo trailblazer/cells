@@ -1,5 +1,7 @@
+require "rake/testtask"
+
 namespace "test" do
-  TestTaskWithoutDescription.new(:cells => "test:prepare") do |t|
+  Rake::TestTask.new(:cells) do |t|
     t.libs << "test"
     t.pattern = 'test/cells/**/*_test.rb'
   end

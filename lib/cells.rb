@@ -109,6 +109,7 @@ Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank
 
 
 require "rails/railtie"
+
 class Cells::Railtie < Rails::Railtie
   initializer "cells.attach_router" do |app|
     Cell::Rails.class_eval do
@@ -118,12 +119,7 @@ class Cells::Railtie < Rails::Railtie
     Cell::Base.url_helpers = app.routes.url_helpers
   end
   
-  initializer "cells.add_load_path" do |app|
-    #ActiveSupport::Dependencies.load_paths << Rails.root.join(*%w[app cells])
-    ### DISCUSS: how are cell classes found by Rails?
-  end
-  
   rake_tasks do
-    load "tasks.rake"
-  end 
+    load "cells/cells.rake"
+  end
 end
