@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
      "lib/generators/cells/templates/cell_test.rb",
      "lib/generators/cells/templates/view.erb",
      "lib/generators/cells/templates/view.haml",
-     "lib/tasks.rake"
+     "lib/cells/cells.rake"
   ]
   s.homepage = %q{http://cells.rubyforge.org}
   s.rdoc_options = ["--charset=UTF-8"]
