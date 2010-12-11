@@ -115,6 +115,8 @@ There are multiple advanced options for expiring your view caches, including an 
 
 Another big advantage compared to monolithic controller/helper/partial piles is the ability to test your cells isolated.
 
+=== Test::Unit
+
 So what if you wanna test the cart cell? Use the generated <tt>test/cells/shopping_cart_cell_test.rb</tt> test.
 
   class ShoppingCartCellTest < Cell::TestCase
@@ -129,7 +131,21 @@ Run your tests with
 
 That's easy, clean and strongly improves your component-driven software quality. How'd you do that with partials?
 
-=== Rails 2.3 note
+
+=== RSpec
+
+If you prefer RSpec examples, use the {rspec-cells}[http://github.com/apotonick/rspec-cells] gem for specing.
+
+  it "should render the posts count" do
+    render_cell(:posts, :count).should have_selector("p", :content => "4 posts!")
+  end
+
+To run your specs we got a rake task, too!
+
+  $ rake spec:cells
+
+
+== Rails 2.3 note
 
 In order to copy the cells rake tasks to your app, run
 
