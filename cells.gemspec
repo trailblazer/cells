@@ -5,18 +5,18 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cells}
-  s.version = "3.4.2"
+  s.version = "3.4.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-10-15}
+  s.date = %q{2010-12-13}
   s.description = %q{Cells are lightweight controllers for Rails and can be rendered in views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
   s.files = [
-    "CHANGES",
+    "CHANGES.textile",
      "Gemfile",
      "README.rdoc",
      "Rakefile",
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "lib/cell/rails.rb",
      "lib/cell/test_case.rb",
      "lib/cells.rb",
+     "lib/cells/cells.rake",
      "lib/cells/helpers.rb",
      "lib/cells/helpers/capture_helper.rb",
      "lib/cells/rails.rb",
@@ -35,8 +36,7 @@ Gem::Specification.new do |s|
      "lib/generators/cells/templates/cell.rb",
      "lib/generators/cells/templates/cell_test.rb",
      "lib/generators/cells/templates/view.erb",
-     "lib/generators/cells/templates/view.haml",
-     "lib/cells/cells.rake"
+     "lib/generators/cells/templates/view.haml"
   ]
   s.homepage = %q{http://cells.rubyforge.org}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -96,6 +96,7 @@ Gem::Specification.new do |s|
      "test/dummy/app/views/layouts",
      "test/dummy/app/views/layouts/application.html.erb",
      "test/dummy/app/views/musician",
+     "test/dummy/app/views/musician/featured_with_block.html.erb",
      "test/dummy/app/views/musician/hamlet.html.haml",
      "test/dummy/app/views/musician/featured.html.erb",
      "test/dummy/app/helpers",
