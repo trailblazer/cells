@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'builder'
 
 class RailsRenderTest < ActiveSupport::TestCase
   include Cell::TestCase::TestMethods

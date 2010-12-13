@@ -3,10 +3,22 @@
 module Cells
   module Rails
     module ActionController
-      # Equivalent to ActionController#render_to_string, except it renders a cell
-      # rather than a regular templates.
-      def render_cell(name, state, opts={})
-        ::Cell::Base.render_cell_for(self, name, state, opts)
+      # Renders the cell state and returns the content. You may pass options here, too. They will be
+      # around in @opts.
+      # 
+      # Example:
+      #
+      #   @box = render_cell(:posts, :latest, :user => current_user)
+      #
+      # If you need the cell instance before it renders, you can pass a block receiving the cell.
+      #
+      # Example:
+      #
+      #   @box = render_cell(:comments, :top5) do |cell|
+      #     cell.markdown! if config.parse_comments?
+      #   end
+      def render_cell(name, state, opts={}, &block)
+        ::Cell::Base.render_cell_for(self, name, state, opts, &block)
       end
 
       # Expires the cached cell state view, similar to ActionController::expire_fragment.
@@ -32,31 +44,9 @@ module Cells
     
     
     module ActionView
-      # Call a cell state and return its rendered view.
-      #
-      # ERB example:
-      #   <div id="login">
-      #     <%= render_cell :user, :login_prompt, :message => "Please login" %>
-      #   </div>
-      #
-      # If you have a <tt>UserCell</tt> cell in <tt>app/cells/user_cell.rb</tt>, which has a
-      # <tt>UserCell#login_prompt</tt> method, this will call that method and then will
-      # find the view <tt>app/cells/user/login_prompt.html.erb</tt> and render it. This is
-      # called the <tt>:login_prompt</tt> <em>state</em> in Cells terminology.
-      #
-      # If this view file looks like this:
-      #   <h1><%= @opts[:message] %></h1>
-      #   <label>name: <input name="user[name]" /></label>
-      #   <label>password: <input name="user[password]" /></label>
-      #
-      # The resulting view in the controller will be roughly equivalent to:
-      #   <div id="login">
-      #     <h1><%= "Please login" %></h1>
-      #     <label>name: <input name="user[name]" /></label>
-      #     <label>password: <input name="user[password]" /></label>
-      #   </div>
-      def render_cell(name, state, opts = {})
-        ::Cell::Base.render_cell_for(controller, name, state, opts)
+      # See Cells::Rails::ActionController#render_cell.
+      def render_cell(name, state, opts = {}, &block)
+        ::Cell::Base.render_cell_for(controller, name, state, opts, &block)
       end
     end
 

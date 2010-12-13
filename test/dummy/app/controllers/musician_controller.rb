@@ -10,12 +10,23 @@ class MusicianController < ActionController::Base
   def featured
   end
   
+  def featured_with_block
+  end
+  
   def skills
     render :text => render_cell(:bassist, :listen)
   end
   
   def hamlet
   end
-
-  #def action_method?(name); true; end ### FIXME: fixes NameError: undefined local variable or method `_router' for MusicianController:Class
+  
+  attr_reader :flag
+  def promotion_with_block
+    html = render_cell(:bassist, :play) do |cell|
+      @flag = cell.class
+    end
+    
+    render :text => html 
+  end
+  
 end

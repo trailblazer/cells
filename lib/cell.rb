@@ -5,7 +5,9 @@ module Cell
     
   module ClassMethods
     def render_cell_for(controller, name, state, opts={})
-      create_cell_for(controller, name, opts).render_state(state)
+      cell = create_cell_for(controller, name, opts)
+      yield cell if block_given?
+      cell.render_state(state)
     end
     
     # Creates a cell instance.

@@ -1,0 +1,4 @@
+<% flag = false %>
+<%= render_cell :bassist, :play do |cell| 
+  flag = cell.class
+end %> from <%= flag %>

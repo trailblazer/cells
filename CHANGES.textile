@@ -1,0 +1,7 @@
+h2. 3.4.3
+
+h3. Changes
+  * #render_cell now accepts a block which yields the cell instance before rendering.
+  
+h3. Bugfixes
+  * We no longer use TestTaskWithoutDescription in our rake tasks.

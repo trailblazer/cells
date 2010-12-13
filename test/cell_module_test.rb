@@ -5,9 +5,24 @@ class CellModuleTest < ActiveSupport::TestCase
   
   context "Cell::Base" do
     
-    should "provide AbstractBase.render_cell_for" do
-      assert_equal "Doo", Cell::Base.render_cell_for(@controller, :bassist, :play)
+    context "render_cell_for" do
+      should "render the actual cell" do
+        assert_equal "Doo", Cell::Base.render_cell_for(@controller, :bassist, :play)
+      end
+      
+      should "accept a block, passing the cell instance" do
+        flag = false
+        html = Cell::Base.render_cell_for(@controller, :bassist, :play) do |cell|
+          assert_equal BassistCell, cell.class
+          flag = true
+        end
+        
+        assert_equal "Doo", html
+        assert flag
+      end
     end
+    
+    
     
     should "provide possible_paths_for_state" do
       assert_equal ["bad_guitarist/play", "bassist/play", "cell/rails/play"], cell(:bad_guitarist).possible_paths_for_state(:play)
