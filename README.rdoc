@@ -94,6 +94,29 @@ The distinction between partials and views is making things more complex, so why
     = render :view => 'items'
 
 
+== View Inheritance
+
+This is where OOP comes back to your view.
+
+* <b>Inherit code</b> into your cells by deriving more abstract cells.
+* <b>Inherit views</b> from ancesting cells.
+
+=== Builders
+
+Let +render_cell+ take care of creating the right cell. Just configure your super-cell right.
+
+  class LoginCell < Cell::Rails
+    build do
+      UnauthorizedUserCell unless logged_in?
+    end
+  
+A call to
+
+  render_cell(:login, :box)
+
+will render the configured +UnauthorizedUserCell+ instead of the original +LoginCell+ if the login test fails.
+
+
 == Caching
 
 Cells do strict view caching. No cluttered fragment caching. Add
