@@ -46,11 +46,10 @@ module Cell
     end
     
     def build_class_for(controller, target_class, opts)
-      cell_class = target_class
-      target_class.builders.each { |blk| res = controller.instance_exec(opts, &blk)
-        cell_class = res and break if res
-       }
-      cell_class
+      target_class.builders.each do |blk|
+        res = controller.instance_exec(opts, &blk) and return res
+      end
+      target_class
     end
     
     def builders

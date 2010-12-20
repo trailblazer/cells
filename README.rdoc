@@ -103,7 +103,7 @@ This is where OOP comes back to your view.
 
 === Builders
 
-Let +render_cell+ take care of creating the right cell. Just configure your super-cell right.
+Let +render_cell+ take care of creating the right cell. Just configure your super-cell properly.
 
   class LoginCell < Cell::Rails
     build do
