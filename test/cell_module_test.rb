@@ -70,20 +70,27 @@ class CellModuleTest < ActiveSupport::TestCase
       end
       
       should "limit the builder to the receiving class" do
-        assert_equal MusicianCell,  Cell::Base.build_class_for(@controller, MusicianCell, {})  # bassist is false.
         assert_equal PianistCell,   Cell::Base.build_class_for(@controller, PianistCell, {})   # don't inherit anything.
         @controller.bassist = true
         assert_equal BassistCell,   Cell::Base.build_class_for(@controller, MusicianCell, {})
       end
       
-      should "chain build blocks and execute them in the same order" do
+      should "chain build blocks and execute them by ORing them in the same order" do
         MusicianCell.build do
           PianistCell unless bassist
+        end
+        
+        MusicianCell.build do
+          UnknownCell # should never be executed.
         end
         
         assert_equal PianistCell, Cell::Base.build_class_for(@controller, MusicianCell, {})  # bassist is false.
         @controller.bassist = true
         assert_equal BassistCell, Cell::Base.build_class_for(@controller, MusicianCell, {})
+      end
+      
+      should "use the original cell if no builder matches" do
+        assert_equal MusicianCell, Cell::Base.build_class_for(@controller, MusicianCell, {})  # bassist is false.
       end
       
       should "stop at the first builder returning a valid cell" do

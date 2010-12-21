@@ -19,9 +19,11 @@ module Cell
     
     # Adds a builder to the cell class. Builders are used in #render_cell to find out the concrete
     # class for rendering. This is helpful if you frequently want to render subclasses according
-    # to different circumstances (e.g. login situations).
+    # to different circumstances (e.g. login situations) and you don't want to place these deciders in
+    # your view code.
     #
-    # Passes the opts hash from #render_cell into the block. The block is executed in controller context.
+    # Passes the opts hash from #render_cell into the block. The block is executed in controller context. 
+    # Multiple build blocks are ORed, if no builder matches the building cell is used.
     #
     # Example:
     #
@@ -36,8 +38,8 @@ module Cell
     # Now you don't want to have deciders all over your views - use a declarative builder.
     #
     #   UserInfoBox.build do |opts|
-    #     AuthorizedUserBox if user_logged_in?
-    #     AdminUserBox if user_is_admin?
+    #     AuthorizedUserBox if user_signed_in?
+    #     AdminUserBox if admin_signed_in?
     #   end
     #
     # In your view #render_cell will instantiate the right cell for you now.
