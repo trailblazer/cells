@@ -1,3 +1,9 @@
+h2. 3.4.4
+
+h3. Changes
+  * Cells.setup now yields Cell::Base, so you can really call append_view_path and friends here.
+
+
 h2. 3.4.3
 
 h3. Changes
