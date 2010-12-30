@@ -10,7 +10,7 @@ task :default => :test
 desc 'Test the cells plugin.'
 Rake::TestTask.new(:test) do |test|
   test.libs << 'test'
-  test.test_files = FileList['test/*_test.rb', 'test/rails/*_test.rb'] - ['test/rails/capture_test.rb']
+  test.test_files = FileList['test/*_test.rb', 'test/rails/*_test.rb', 'test/cell/*_test.rb'] - ['test/rails/capture_test.rb']
   test.verbose = true
 end
 

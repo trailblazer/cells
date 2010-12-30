@@ -21,6 +21,23 @@ module Cells
         ::Cell::Base.render_cell_for(self, name, state, opts, &block)
       end
 
+      # DSL for rendering a cell, implemented as a delegator to render_cell.
+      # 
+      # Example:
+      #
+      #   @box = cell[:posts].latest(:user => current_user)
+      #
+      # If you need the cell instance before it renders, you can pass a block receiving the cell.
+      #
+      # Example:
+      #
+      #   @box = cell[:comments].top5 do |cell|
+      #     cell.markdown! if config.parse_comments?
+      #   end
+      def cell
+        ::Cell::Lookup.with(self)
+      end
+
       # Expires the cached cell state view, similar to ActionController::expire_fragment.
       # Usually, this method is used in Sweepers.
       # Beside the obvious first two args <tt>cell_name</tt> and <tt>state</tt> you can pass

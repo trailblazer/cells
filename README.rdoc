@@ -43,7 +43,11 @@ That looks very familiar.
 Now, render your cart. Why not put it in <tt>layouts/application.html.erb</tt> for now? 
 
   <div id="header">
-    <%= render_cell :shopping_cart, :display, :user => @current_user %>
+    <%= cell[:shopping_cart].display :user => @current_user %>
+
+You can also invoke it without the dsl:
+
+	<%= render_cell :shopping_cart, :display, :user => @current_user %>
 
 Feels like rendering a controller action. As additional encapsulation we pass the current +user+ from outside. Call it knowledge hiding.
 
@@ -112,7 +116,7 @@ Let +render_cell+ take care of creating the right cell. Just configure your supe
   
 A call to
 
-  render_cell(:login, :box)
+  cell[:login].box
 
 will render the configured +UnauthorizedUserCell+ instead of the original +LoginCell+ if the login test fails.
 

@@ -1,5 +1,7 @@
 module Cell
   autoload :Caching,      'cell/caching'
+  autoload :Lookup,       'cell/lookup'
+  autoload :Dsl,          'cell/dsl'
   
   extend ActiveSupport::Concern
     
