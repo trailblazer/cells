@@ -83,6 +83,26 @@ module Cells
   def self.setup
     yield(Cell::Base)
   end
+  
+  def self.config(&block)
+    instance_exec(&block)
+  end
+
+  def self.method_missing(sym, *args, &block)
+    typename = "#{sym}_cell".classify
+    type_definition = "class ::#{typename} < Cells::Custom; end"
+    eval type_definition
+    "::#{typename}".constantize.b = block
+  end
+  class Custom
+    def self.b=(x)
+      @b = x
+    end
+    def self.builders
+      [@b]
+    end
+  end
+  
 end
 
 Cell::Base = Cell::Rails
