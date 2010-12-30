@@ -35,7 +35,7 @@ module Cells
       #     cell.markdown! if config.parse_comments?
       #   end
       def cell
-        ::Cell::Lookup.with(self)
+        ::Cell::Lookup.new(self)
       end
 
       # Expires the cached cell state view, similar to ActionController::expire_fragment.
