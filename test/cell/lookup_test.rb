@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DslTest < ActiveSupport::TestCase
+class LookupTest < ActiveSupport::TestCase
   include Cell::TestCase::TestMethods
   
   context "A lookup process" do
