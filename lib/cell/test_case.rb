@@ -89,6 +89,21 @@ module Cell
         cell.instance_eval &block if block_given?
         cell
       end
+      
+      def setup_test_states_in(cell)
+        cell.instance_eval do
+          def in_view
+            render :inline => "<%= instance_exec(&block) %>", :locals => {:block => @opts[:block]}
+          end
+        end
+      end
+      
+      def in_view(cell_class, &block)
+        subject = cell(cell_class, :block => block)
+        setup_test_states_in(subject) # add #in_view to subject cell.
+        subject.render_state(:in_view)
+      end
+      
     end
     
     include TestMethods
@@ -97,6 +112,7 @@ module Cell
     include AssertSelect
     
     extend ActionController::TestCase::Behavior::ClassMethods
+    class_attribute :_controller_class
     
     
     attr_reader :last_invoke

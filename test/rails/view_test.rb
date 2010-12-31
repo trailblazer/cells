@@ -5,18 +5,16 @@ class RailsViewTest < ActiveSupport::TestCase
   
   context "A cell view" do
     context "calling render :partial" do
-      should "render the cell partial in bassist/dii" do
-        BassistCell.class_eval do
-          def compose; @partial = "dii"; render; end
-        end
-        assert_equal "Dumm Dii", render_cell(:bassist, :compose)
+      should "render the local cell partial in bassist/dii" do
+        assert_equal("Dii", in_view(:bassist) do
+          render :partial => 'dii'
+        end)
       end
       
-      should "render the cell partial in bad_guitarist/dii" do
-        BassistCell.class_eval do
-          def compose; @partial = "bad_guitarist/dii"; render; end
-        end
-        assert_equal "Dumm Dooom", render_cell(:bassist, :compose)
+      should "render the foreign cell partial in bad_guitarist/dii" do
+        assert_equal("Dooom", in_view(:bassist) do
+          render :partial => "bad_guitarist/dii"
+        end)
       end
     end
     
