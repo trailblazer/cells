@@ -90,6 +90,19 @@ module Cell
         cell
       end
       
+      # Execute the passed +block+ in a real view context of +cell_class+. 
+      # Usually you'd test helpers here.
+      #
+      # Example:
+      #
+      #   assert_equal("<h1>Modularity rocks.</h1>", in_view do content_tag(:h1, "Modularity rocks."))
+      def in_view(cell_class, &block)
+        subject = cell(cell_class, :block => block)
+        setup_test_states_in(subject) # add #in_view to subject cell.
+        subject.render_state(:in_view)
+      end
+      
+    protected
       def setup_test_states_in(cell)
         cell.instance_eval do
           def in_view
@@ -97,13 +110,6 @@ module Cell
           end
         end
       end
-      
-      def in_view(cell_class, &block)
-        subject = cell(cell_class, :block => block)
-        setup_test_states_in(subject) # add #in_view to subject cell.
-        subject.render_state(:in_view)
-      end
-      
     end
     
     include TestMethods

@@ -49,7 +49,7 @@ class TestCaseTest < Cell::TestCase
         assert_equal SingerCell, SingerCellTest.new(:cell_test).class.controller_class
       end
       
-      context "with invoke" do
+      context "with #invoke" do
         setup do
           self.class.tests BassistCell
         end
@@ -71,6 +71,24 @@ class TestCaseTest < Cell::TestCase
         should "provide assert_select" do
           invoke :promote
           assert_select "a", "vd.com"
+        end
+      end
+      
+      context "#setup_test_states_in" do
+        should "add the :in_view state" do
+          c = cell(:bassist, :block => lambda{"Cells rock."})
+          assert_not c.respond_to?(:in_view)
+          
+          setup_test_states_in(c)
+          assert_equal "Cells rock.", c.render_state(:in_view)
+        end
+      end
+      
+      context "#in_view" do
+        should "execute the block in a real view" do
+          content = "Cells rule."
+          @test.setup
+          assert_equal("<h1>Cells rule.</h1>", @test.in_view(:bassist) do content_tag("h1", content) end)
         end
       end
     end
