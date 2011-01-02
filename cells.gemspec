@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cells}
-  s.version = "3.4.3"
+  s.version = "3.4.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Sutterer"]
-  s.date = %q{2010-12-13}
+  s.date = %q{2011-01-02}
   s.description = %q{Cells are lightweight controllers for Rails and can be rendered in views, providing an elegant and fast way for encapsulation and component-orientation.}
   s.email = %q{apotonick@gmail.com}
   s.extra_rdoc_files = [
@@ -101,6 +101,7 @@ Gem::Specification.new do |s|
      "test/dummy/app/views/musician/featured.html.erb",
      "test/dummy/app/helpers",
      "test/dummy/app/helpers/application_helper.rb",
+     "test/cells_module_test.rb",
      "test/test_case_test.rb",
      "test/helper_test.rb",
      "test/cell_module_test.rb",
