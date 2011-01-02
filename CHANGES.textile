@@ -2,7 +2,9 @@ h2. 3.4.4
 
 h3. Changes
   * Cells.setup now yields Cell::Base, so you can really call append_view_path and friends here.
-
+  * added Cell::Base.build for streamlining the process of deciders around #render_cell, "see here":http://nicksda.apotomo.de/2010/12/pragmatic-rails-thoughts-on-views-inheritance-view-inheritance-and-rails-304
+  * added TestCase#in_view to test helpers in a real cell view.
+  
 
 h2. 3.4.3
 
