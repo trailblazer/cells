@@ -48,8 +48,6 @@ module Cell
     include Rendering
     include Caching
     
-    
-    cattr_accessor :url_helpers ### TODO: discuss if we really need that or can handle that in cells.rb already.
     attr_reader :parent_controller
     
     abstract!
@@ -67,12 +65,10 @@ module Cell
       
       View.class_eval do
         include controller._helpers
-        include Cell::Base.url_helpers if Cell::Rails.url_helpers
+        include controller._routes.url_helpers
       end
       
-      
       @view_context_class ||= View
-      ### DISCUSS: copy behaviour from abstract_controller/rendering-line 49? (helpers)
     end
     
     def self.controller_path

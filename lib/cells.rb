@@ -97,8 +97,6 @@ class Cells::Railtie < Rails::Railtie
     Cell::Rails.class_eval do
       include app.routes.url_helpers
     end
-    
-    Cell::Base.url_helpers = app.routes.url_helpers
   end
   
   rake_tasks do
