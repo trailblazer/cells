@@ -5,7 +5,7 @@ module Cells
     module ActionController
       # Renders the cell state and returns the content. You may pass options here, too. They will be
       # around in @opts.
-      # 
+      #
       # Example:
       #
       #   @box = render_cell(:posts, :latest, :user => current_user)
@@ -41,11 +41,13 @@ module Cells
         ::Cell::Base.expire_cache_key(key, opts)
       end
     end
-    
-    
+
+
     module ActionView
       # See Cells::Rails::ActionController#render_cell.
       def render_cell(name, state, opts = {}, &block)
+        # This is so that we have this "outer" view object available to us from within the cell (available via @opts[:outer_view] or the outer_view helper) and can use Cells' outer_content_for, etc.
+        opts.merge! :outer_view => self
         ::Cell::Base.render_cell_for(controller, name, state, opts, &block)
       end
     end
