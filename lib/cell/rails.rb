@@ -35,7 +35,7 @@ module Cell
     
     
     module Metal
-      def params
+      def controller_params
         @_params ||= request.parameters # DISCUSS: let rails helper access @controller.params!
       end
       
@@ -52,12 +52,15 @@ module Cell
     
     abstract!
     
-    
     def initialize(parent_controller, options={})
       @parent_controller  = parent_controller
       @_request           = parent_controller.request # DISCUSS: save request only?
       @_config            = parent_controller.config.dup
       @opts = @options    = options
+    end
+    
+    def params
+      @_params ||= controller_params.merge(@opts)
     end
     
     def self.view_context_class

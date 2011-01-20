@@ -102,5 +102,12 @@ class RailsCellsTest < ActiveSupport::TestCase
       assert_equal "Boing in A", render_cell(:bassist, :slap)
     end
     
+    should "pass in options to render_cell as params" do
+      BassistCell.class_eval do
+        def slap; @note = params[:note]; render; end
+      end
+      assert_equal "Boing in A", render_cell(:bassist, :slap, :note => "A")
+    end
+    
   end   
 end
