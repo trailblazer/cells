@@ -92,7 +92,7 @@ class RailsRenderTest < ActiveSupport::TestCase
         render_cell(:bad_guitarist, :groove)
       end
       
-      assert_equal "Missing template cell/rails/groove with {:handlers=>[:erb, :rjs, :builder, :rhtml, :rxml, :haml], :formats=>[:html, :text, :js, :css, :ics, :csv, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json], :locale=>[:en, :en]} in view paths \"/home/nick/projects/cells/app/cells\", \"/home/nick/projects/cells/app/cells/layouts\", \"/home/nick/projects/cells/test/app/cells\", \"/home/nick/projects/cells/test/app/cells/layouts\" and possible paths [\"bad_guitarist/groove\", \"bassist/groove\", \"cell/rails/groove\"]", e.message
+      assert_includes e.message, "Missing template cell/rails/groove with {:handlers=>[:erb, :rjs, :builder, :rhtml, :rxml, :haml], :formats=>[:html, :text, :js, :css, :ics, :csv, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json], :locale=>[:en, :en]} in view paths"
     end
     
     should "render instance variables from the cell" do
