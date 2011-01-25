@@ -7,7 +7,7 @@ Description:
 
 Examples:
 
-  rails g cells:cell ShoppingCart index
+  rails g cell ShoppingCart index
 
   This will create these cell assets:
     Cell:
@@ -18,7 +18,7 @@ Examples:
       test/cells/shopping_cart_cell_test.rb
 
 
-  rails g cells:cell main_menu display sort -e haml -t rspec
+  rails g cell main_menu display sort -e haml -t rspec
 
   This will create these cell assets:
     Cell:
