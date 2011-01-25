@@ -1,8 +1,8 @@
 module Cell
   autoload :Caching,      'cell/caching'
-  
+
   extend ActiveSupport::Concern
-    
+
   module ClassMethods
     def render_cell_for(controller, name, state, opts={})
       cell = create_cell_for(controller, name, opts)
@@ -57,7 +57,7 @@ module Cell
     def builders
       @builders ||= []
     end
-    
+
     # Return the default view path for +state+. Override this if you cell has a differing naming style.
     def view_for_state(state)
       "#{cell_name}/#{state}"
@@ -75,13 +75,13 @@ module Cell
     def cell_name
       name.underscore.sub(/_cell$/, '')
     end
-    
+
     # The cell class constant for +cell_name+.
     def class_from_cell_name(cell_name)
       "#{cell_name}_cell".classify.constantize
     end
   end
-    
+
   module InstanceMethods
     # Computes all possible paths for +state+ by traversing up the inheritance chain.
     def possible_paths_for_state(state)
