@@ -41,8 +41,7 @@ module Cells
         ::Cell::Base.expire_cache_key(key, opts)
       end
     end
-    
-    
+
     module ActionView
       # See Cells::Rails::ActionController#render_cell.
       def render_cell(name, state, opts = {}, &block)
@@ -52,7 +51,6 @@ module Cells
 
   end
 end
-
 
 # Add extended ActionController behaviour.
 ActionController::Base.class_eval do

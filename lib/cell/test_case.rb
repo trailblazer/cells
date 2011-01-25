@@ -1,7 +1,7 @@
 module Cell
   # Test your cells.
   #
-  # This class is roughly equal to ActionController::TestCase, exposing the same semantics. It will try 
+  # This class is roughly equal to ActionController::TestCase, exposing the same semantics. It will try
   # to infer the tested cell name from the test name if you use declarative testing. You can also set it
   # with TestCase.tests.
   #
@@ -12,7 +12,7 @@ module Cell
   #
   #     it "should be rendered nicely" do
   #       invoke :order_button, :items => @fixture_items
-  #       
+  #
   #       assert_select "button", "Order now!"
   #     end
   #
@@ -35,8 +35,8 @@ module Cell
   #
   # +invoke+::  Renders the passed +state+ with your tested cell. You may pass options like in #render_cell.
   # +render_cell+:: As in your views. Will return the rendered view.
-  # +assert_selector+:: Like #assert_select except that the last argument is the html markup you wanna test.     
-  # +cell+:: Gives you a cell instance for unit testing and stuff. 
+  # +assert_selector+:: Like #assert_select except that the last argument is the html markup you wanna test.
+  # +cell+:: Gives you a cell instance for unit testing and stuff.
   class TestCase < ActiveSupport::TestCase
     module AssertSelect
       # Invokes assert_select for the last argument, the +content+ string.
@@ -48,7 +48,7 @@ module Cell
       def assert_selector(*args, &block)
         rails_assert_select(HTML::Document.new(args.pop).root, *args, &block)
       end
-      
+
       # Invokes assert_select on the markup set by the last #invoke.
       #
       # Example:
@@ -58,7 +58,7 @@ module Cell
         super(HTML::Document.new(last_invoke).root, *args, &block)
       end
     end
-    
+
     module TestMethods
       def setup
         @controller = Class.new(ActionController::Base).new
@@ -68,7 +68,7 @@ module Cell
         @controller.response = @response
         @controller.params = {}
       end
-      
+
       # Use this for functional tests of your application cells.
       #
       # Example:
@@ -78,7 +78,7 @@ module Cell
       def render_cell(*args)
         @controller.render_cell(*args)
       end
-      
+
       # Builds an instance of <tt>name</tt>Cell for unit testing.
       # Passes the optional block to <tt>cell.instance_eval</tt>.
       #
@@ -111,18 +111,18 @@ module Cell
         end
       end
     end
-    
+
     include TestMethods
     include ActionDispatch::Assertions::SelectorAssertions  # imports "their" #assert_select.
     alias_method :rails_assert_select, :assert_select # i hate that.
     include AssertSelect
-    
+
     extend ActionController::TestCase::Behavior::ClassMethods
     class_attribute :_controller_class
     
     
     attr_reader :last_invoke
-    
+
     def invoke(state, *args)
       @last_invoke = self.class.controller_class.new(@controller, *args).render_state(state)
     end

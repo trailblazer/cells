@@ -4,7 +4,7 @@ require 'active_support/cache'
 module Cell
   module Caching
     extend ActiveSupport::Concern
-    
+
     module ClassMethods
       # Activate caching for the state <tt>state</tt>. If no other options are passed
       # the view will be cached forever.
@@ -85,7 +85,7 @@ module Cell
       def expire_cache_key(key, opts=nil)
         cache_store.delete(key, opts)
       end
-      
+
       def cache_configured?
         ::ActionController::Base.cache_configured?
       end
@@ -96,7 +96,7 @@ module Cell
 
       key     = cache_key(state, call_version_proc_for_state(state))
       options = self.class.cache_options[state]
-      
+
       self.class.cache_store.fetch(key, options) do
         super(state)
       end
