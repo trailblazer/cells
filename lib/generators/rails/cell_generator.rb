@@ -1,6 +1,6 @@
 require 'generators/cells/base'
 
-module Cells
+module Rails
   module Generators
     class CellGenerator < ::Cells::Generators::Base
       source_root File.expand_path('../../templates', __FILE__)
