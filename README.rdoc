@@ -29,7 +29,7 @@ Rails 2.3:
 
 Creating a cell is nothing more than
 
-  $ rails generate cells:cell ShoppingCart display
+  $ rails generate cell ShoppingCart display
     create  app/cells/
     create  app/cells/shopping_cart
     create  app/cells/shopping_cart_cell.rb
