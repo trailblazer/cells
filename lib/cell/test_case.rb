@@ -106,7 +106,7 @@ module Cell
       def setup_test_states_in(cell)
         cell.instance_eval do
           def in_view
-            render :inline => "<%= instance_exec(&block) %>", :locals => {:block => @opts[:block]}
+            render :inline => "<%= instance_exec(&block) %>", :locals => {:block => options[:block]}
           end
         end
       end
