@@ -35,6 +35,16 @@ class RailsCellsTest < ActiveSupport::TestCase
       assert_equal({}, cell(:bassist).config)
     end
     
+    include ActiveSupport::Testing::Deprecation
+    should "mark @opts as deprecated, but still works" do
+      res = nil
+      assert_deprecated do
+        res = cell(:bassist, :song => "Creatures").instance_eval do
+          @opts[:song]
+        end
+      end
+      assert_equal "Creatures", res
+    end
     
     context "invoking defaultize_render_options_for" do
       should "set default values" do
@@ -94,6 +104,7 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     
+    # DISCUSS: do we really need that test anymore?
     should "precede cell ivars over controller ivars" do
       @controller.instance_variable_set(:@note, "E")
       BassistCell.class_eval do

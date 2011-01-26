@@ -49,6 +49,7 @@ module Cell
     include Caching
     
     attr_reader :parent_controller
+    attr_accessor :options
     
     abstract!
     
@@ -56,8 +57,9 @@ module Cell
     def initialize(parent_controller, options={})
       @parent_controller  = parent_controller
       @_request           = parent_controller.request # DISCUSS: save request only?
-      @_config            = parent_controller.config.dup
-      @opts = @options    = options
+      @_config            = parent_controller.config.dup  # FIXME: lazy!
+      @options            = options
+      @opts               = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(self, :options)
     end
     
     def self.view_context_class
