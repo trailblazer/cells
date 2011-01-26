@@ -39,15 +39,15 @@ class RailsCellsTest < ActiveSupport::TestCase
     should "mark @opts as deprecated, but still works" do
       res = nil
       assert_deprecated do
-        res = cell(:bassist, :song => "Creatures").instance_eval do
+        res = cell(:bassist, :song => "Lockdown").instance_eval do
           @opts[:song]
         end
       end
-      assert_equal "Creatures", res
+      assert_equal "Lockdown", res
     end
     
     should "respond to #options and return the cell options" do
-      assert_equal({:song => "Creatures"}, cell(:bassist, :song => "Creatures"))
+      assert_equal({:song => "Lockdown"}, cell(:bassist, :song => "Lockdown").options)
     end
     
     context "invoking defaultize_render_options_for" do
@@ -93,6 +93,7 @@ class RailsCellsTest < ActiveSupport::TestCase
       setup do
         @request = ActionController::TestRequest.new 
         @request.env["action_dispatch.request.request_parameters"] = {:song => "Creatures"}
+        @controller.request = @request
         @cell = cell(:bassist)
       end
       
@@ -104,6 +105,14 @@ class RailsCellsTest < ActiveSupport::TestCase
       
       should "respond to session" do
         assert_kind_of Hash, @cell.session
+      end
+          
+      should "respond to #params and return the request parameters" do
+        assert_equal({"song" => "Creatures"}, cell(:bassist).params)
+      end
+      
+      should "not merge #params and #options" do
+        assert_equal({"song" => "Creatures"}, cell(:bassist, "song" => "Lockdown").params)
       end
     end
     
