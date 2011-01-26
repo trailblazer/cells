@@ -47,7 +47,7 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     should "respond to #options and return the cell options" do
-      
+      assert_equal({:song => "Creatures"}, cell(:bassist, :song => "Creatures"))
     end
     
     context "invoking defaultize_render_options_for" do
