@@ -22,15 +22,14 @@ class TestCaseTest < Cell::TestCase
     
     should "respond to #cell" do
       assert_kind_of BassistCell, cell(:bassist)
-      assert !cell(:bassist).respond_to?(:opts)
     end
     
     should "respond to #cell with a block" do
-      assert_respond_to cell(:bassist) { def opts; @opts; end }, :opts
+      assert_respond_to cell(:bassist){ def whatever; end }, :whatever
     end
     
     should "respond to #cell with options and block" do
-      assert_equal({:topic => :peace}, cell(:bassist, :topic => :peace) { def opts; @opts; end }.opts)
+      assert_equal({:topic => :peace}, cell(:bassist, :topic => :peace).options)
     end
     
     context "in declarative tests" do
@@ -64,7 +63,7 @@ class TestCaseTest < Cell::TestCase
           assert_equal "Doo", last_invoke
         end
         
-        should "provide #invoke accepting opts" do
+        should "provide #invoke accepting options" do
           #assert_equal "Doo", invoke(:play)
         end
         

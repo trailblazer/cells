@@ -46,6 +46,10 @@ class RailsCellsTest < ActiveSupport::TestCase
       assert_equal "Creatures", res
     end
     
+    should "respond to #options and return the cell options" do
+      
+    end
+    
     context "invoking defaultize_render_options_for" do
       should "set default values" do
         options = cell(:bassist).defaultize_render_options_for({}, :play)

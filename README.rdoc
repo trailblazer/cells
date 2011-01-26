@@ -53,7 +53,7 @@ Time to improve our cell code. Let's start with <tt>app/cells/shopping_cart_cell
 
   class ShoppingCartCell < Cell::Rails 
     def display 
-      user    = @opts[:user]        # @opts exposes options passed to #render_cell.
+      user    = options[:user]        # #options exposes options passed to #render_cell.
       @items  = user.items_in_cart
       
       render  # renders display.html.erb
