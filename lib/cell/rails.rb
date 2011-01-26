@@ -35,12 +35,8 @@ module Cell
     
     
     module Metal
-      def params
-        @_params ||= request.parameters # DISCUSS: let rails helper access @controller.params!
-      end
-      
       attr_internal :request
-      delegate :session,  :to => :parent_controller
+      delegate :session,  :params, :to => :parent_controller
     end 
     
     
