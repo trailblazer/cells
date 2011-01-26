@@ -91,8 +91,8 @@ class RailsCellsTest < ActiveSupport::TestCase
     
     context "delegation" do
       setup do
-        @request = ActionController::TestRequest.new 
         @request.env["action_dispatch.request.request_parameters"] = {:song => "Creatures"}
+        @controller = Class.new(ActionController::Base).new
         @controller.request = @request
         @cell = cell(:bassist)
       end

@@ -1,3 +1,9 @@
+h2. 3.5.0
+
+h3. Changes
+  * Deprecated @opts, use #options now. This should be the prefered way of parameter exchange with the outer world.
+  * #params is now delegated to @parent_controller. 
+
 h2. 3.4.4
 
 h3. Changes
