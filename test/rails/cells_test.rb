@@ -72,13 +72,13 @@ class RailsCellsTest < ActiveSupport::TestCase
     
     context "invoking defaultize_render_options_for" do
       should "set default values" do
-        options = cell(:bassist).defaultize_render_options_for({}, :play)
+        options = cell(:bassist).send(:defaultize_render_options_for, {}, :play)
         
         assert_equal :play, options[:view]
       end
       
       should "allow overriding defaults" do
-        assert cell(:bassist).defaultize_render_options_for({:view => :slap}, :play)[:view] == :slap
+        assert cell(:bassist).send(:defaultize_render_options_for, {:view => :slap}, :play)[:view] == :slap
       end
     end
     
@@ -92,11 +92,11 @@ class RailsCellsTest < ActiveSupport::TestCase
       end
       
       should "return play.html.erb" do
-        assert_equal "bassist/play", cell(:bassist).find_family_view_for_state(:play).virtual_path
+        assert_equal "bassist/play", cell(:bassist).send(:find_family_view_for_state, :play).virtual_path
       end
       
       should "find inherited play.html.erb" do
-        assert_equal "bassist/play", cell(:bad_guitarist).find_family_view_for_state(:play).virtual_path
+        assert_equal "bassist/play", cell(:bad_guitarist).send(:find_family_view_for_state, :play).virtual_path
       end
       
       should_eventually "find the EN-version if i18n instructs" do

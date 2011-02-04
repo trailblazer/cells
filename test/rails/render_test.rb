@@ -49,6 +49,16 @@ class RailsRenderTest < ActiveSupport::TestCase
       assert_equal "Snooore", render_cell(:bassist, :sleep)
     end
     
+    should "accept the :state option with state-args" do
+      BassistCell.class_eval do
+        def listen(to)
+          render :text => "Listening #{to}"
+        end
+        def groove; render("Thin Lizzy", :state => :listen); end
+      end
+      assert_equal "Listening Thin Lizzy", render_cell(:bassist, :groove)
+    end
+    
     should "accept the :state option" do
       BassistCell.class_eval do
         def play; render; end

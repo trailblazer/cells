@@ -119,10 +119,11 @@ module Cell
     # of the page.
     #
     # Just use <tt>:view</tt> and enjoy.
-    def render(opts={})
-      render_view_for(opts, self.action_name)
+    def render(*args)
+      render_view_for(self.action_name, *args)
     end
 
+  private
     # Climbs up the inheritance chain, looking for a view for the current +state+.
     def find_family_view_for_state(state)
       exception       = nil
@@ -141,13 +142,14 @@ module Cell
 
     # Renders the view belonging to the given state. Will raise ActionView::MissingTemplate
     # if it can't find a view.
-    def render_view_for(opts, state)
+    def render_view_for(state, *args)  # TODO: make private!
+      opts = args.extract_options!
       return "" if opts[:nothing]
 
       rails_options = [:text, :inline, :file]
       if (opts.keys & rails_options).present?
       elsif opts[:state]
-        opts[:text] = render_state(opts[:state])
+        opts[:text] = render_state(opts[:state], *args)
       else
         opts            = defaultize_render_options_for(opts, state)
         template        = find_family_view_for_state(opts[:view])
