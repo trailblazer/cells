@@ -28,8 +28,8 @@ module Cell
 
     module Rendering
       # Invoke the state method for +state+ which usually renders something nice.
-      def render_state(state)
-        process(state)
+      def render_state(state, *args)
+        process(state, *args)
       end
     end
 

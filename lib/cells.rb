@@ -64,6 +64,7 @@ require 'cell'
 require 'cells/rails'
 require 'cell/rails'
 require 'cell/test_case' if Object.const_defined?("Rails") and Rails.env == "test"
+require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4.    
 
 module Cells
   # Default view paths for Cells.

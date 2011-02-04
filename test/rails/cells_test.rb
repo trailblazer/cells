@@ -16,6 +16,26 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
   end
   
+  context "#render_state" do
+    should "work without args" do
+      BassistCell.class_eval do
+        def listen
+          render :text => options[:note]
+        end
+      end
+      assert_equal "D", cell(:bassist, :note => "D").render_state(:listen)
+    end
+    
+    should "accept state-args" do
+      BassistCell.class_eval do
+        def listen(args)
+          render :text => args[:note]
+        end
+      end
+      assert_equal "D", cell(:bassist).render_state(:listen, :note => "D")
+    end
+  end
+  
   context "A rails cell" do
     should "respond to view_paths" do
       assert_kind_of ActionView::PathSet, Cell::Rails.view_paths, "must be a PathSet for proper template caching/reloading (see issue#2)"

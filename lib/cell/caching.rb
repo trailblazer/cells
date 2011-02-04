@@ -91,14 +91,14 @@ module Cell
       end
     end
 
-    def render_state(state)
-      return super(state) unless state_cached?(state)
+    def render_state(state, *args)
+      return super(state, *args) unless state_cached?(state)
 
       key     = cache_key(state, call_version_proc_for_state(state))
       options = self.class.cache_options[state]
 
       self.class.cache_store.fetch(key, options) do
-        super(state)
+        super(state, *args)
       end
     end
 

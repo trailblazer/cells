@@ -16,6 +16,7 @@ class CellModuleTest < ActiveSupport::TestCase
   
   context "Cell::Base" do
     
+    # FUNCTIONAL:
     context "render_cell_for" do
       should "render the actual cell" do
         assert_equal "Doo", Cell::Base.render_cell_for(@controller, :bassist, :play)
@@ -32,7 +33,23 @@ class CellModuleTest < ActiveSupport::TestCase
         assert flag
       end
       
+      should "make options available in #options if not receiving state-args" do
+        BassistCell.class_eval do
+          def listen
+            render :text => options[:note]
+          end
+        end
+        assert_equal "C-minor", Cell::Base.render_cell_for(@controller, :bassist, :listen, :note => "C-minor")
+      end
       
+      should "pass options as state-args and still set #options otherwise" do
+        BassistCell.class_eval do
+          def listen(args)
+            render :text => args[:note] + options[:note].to_s
+          end
+        end
+        assert_equal "C-minorC-minor", Cell::Base.render_cell_for(@controller, :bassist, :listen, :note => "C-minor")
+      end
     end
     
     context "create_cell_for" do

@@ -5,9 +5,11 @@ module Cell
 
   module ClassMethods
     def render_cell_for(controller, name, state, opts={})
-      cell = create_cell_for(controller, name, opts)
+      cell = create_cell_for(controller, name, opts)  # DISCUSS: we always save options.
       yield cell if block_given?
-      cell.render_state(state)
+      
+      return cell.render_state(state, opts) if cell.method(state).arity == 1
+      cell.render_state(state)  # backward-compat.
     end
     
     # Creates a cell instance. Note that this method calls builders which were attached to the
