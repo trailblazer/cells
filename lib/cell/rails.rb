@@ -36,8 +36,7 @@ module Cell
 
 
     module Metal
-      attr_internal :request
-      delegate :session, :params, :to => :parent_controller
+      delegate :session, :params, :request, :config, :to => :parent_controller
     end 
     
     
@@ -53,8 +52,6 @@ module Cell
 
     def initialize(parent_controller, options={})
       @parent_controller  = parent_controller
-      @_request           = parent_controller.request # DISCUSS: save request only?
-      @_config            = parent_controller.config.dup  # FIXME: lazy!
       @options            = options
       @opts               = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(self, :options)
     end

@@ -1,8 +1,9 @@
 h2. 3.5.0
 
 h3. Changes
-  * Deprecated @opts, use #options now. This should be the prefered way of parameter exchange with the outer world.
-  * #params is now delegated to @parent_controller. 
+  * Deprecated @opts, use #options now.
+  * Added state-args. State methods can now receive the options as method arguments. This should be the prefered way of parameter exchange with the outer world.
+  * #params, #request, and #config is now delegated to @parent_controller. 
   * The generator now is invoked as @rails g cell ...@
     * The `--haml` option is no longer available.
     * The `-t` option now is compatible with the rest of rails generators, now it is used as alias for `--test-framework`. Use the `-e` option	as an alias of `--template-engine`
