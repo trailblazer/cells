@@ -85,7 +85,7 @@ module Cell
     # +:inline+:: Renders an inline template as state view. See ActionView::Base#render for details.
     # +:file+::   Specifies the name of the file template to render.
     # +:nothing+:: Doesn't invoke the rendering process.
-    # +:state+::  Instantly invokes another rendering cycle for the passed state and returns.
+    # +:state+::  Instantly invokes another rendering cycle for the passed state and returns. You may pass arbitrary state-args to the called state.  
     #
     # Example:
     #  class MusicianCell < ::Cell::Base
@@ -119,6 +119,22 @@ module Cell
     # of the page.
     #
     # Just use <tt>:view</tt> and enjoy.
+    #
+    # === Using states instead of helpers
+    #
+    # Sometimes it's useful to not only render a view but also invoke the associated state. This is 
+    # especially helpful when replacing helpers. Do that with <tt>render :state</tt>.
+    #
+    #   def show_cheap_item(item)
+    #     render if item.price <= 1
+    #   end
+    #
+    # A view could use this state in place of an odd helper.
+    #
+    #   - @items.each do |item|
+    #     = render({:state => :show_cheap_item}, item)
+    #
+    # This calls the state method which in turn will render its view - if the item isn't too expensive.
     def render(*args)
       render_view_for(self.action_name, *args)
     end

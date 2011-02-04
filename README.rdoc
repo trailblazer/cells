@@ -52,8 +52,8 @@ Feels like rendering a controller action. As additional encapsulation we pass th
 Time to improve our cell code. Let's start with <tt>app/cells/shopping_cart_cell.rb</tt>:
 
   class ShoppingCartCell < Cell::Rails 
-    def display 
-      user    = options[:user]        # #options exposes options passed to #render_cell.
+    def display(args)
+      user    = args[:user]
       @items  = user.items_in_cart
       
       render  # renders display.html.erb
@@ -93,13 +93,12 @@ The distinction between partials and views is making things more complex, so why
   %p
     = render :view => 'items'
 
-
 == View Inheritance
 
 This is where OOP comes back to your view.
 
 * <b>Inherit code</b> into your cells by deriving more abstract cells.
-* <b>Inherit views</b> from ancesting cells.
+* <b>Inherit views</b> from parent cells.
 
 === Builders
 
@@ -180,7 +179,6 @@ In order to copy the cells rake tasks to your app, run
 Cells can do more.
 
 <b>No Limits</b>::  Have as many cells in your page as you need - no limitation to your +render_cell+ calls.
-<b>View Inheritance</b>::  Inherit view files dynamically from parent cells.
 <b>Cell Nesting</b>:: Have complex cell hierarchies as you can call +render_cell+ within cells, too. 
 
 Go for it, you'll love it!
@@ -188,7 +186,7 @@ Go for it, you'll love it!
 
 == LICENSE
 
-Copyright (c) 2007-2010, Nick Sutterer
+Copyright (c) 2007-2011, Nick Sutterer
 
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
