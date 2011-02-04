@@ -1,4 +1,5 @@
 require 'abstract_controller'
+require 'cell'
 
 module Cell
   class Rails < AbstractController::Base

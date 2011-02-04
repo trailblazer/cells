@@ -58,13 +58,11 @@
 # Beside your new class you'd provide a star-sprangled button view in +xmas_cart/order_button.haml+.
 # When rendering the +cart+ state, the states as well as the "missing" views are inherited from ancesting cells,
 # this is pretty DRY and object-oriented, isn't it?
-require 'action_controller'
 
-require 'cell'
-require 'cells/rails'
 require 'cell/rails'
-require 'cell/test_case' if Object.const_defined?("Rails") and Rails.env == "test"
-require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4.    
+require 'cells/rails'
+require 'cell/test_case' if Rails.env == "test"
+require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4. # TODO: remove me as soon as we support 3.1, only.
 
 module Cells
   # Default view paths for Cells.
