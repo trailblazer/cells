@@ -150,5 +150,12 @@ class CellModuleTest < ActiveSupport::TestCase
     should "provide class_from_cell_name" do
       assert_equal BassistCell, ::Cell::Base.class_from_cell_name('bassist')
     end
+    
+    should "provide state_accepts_args?" do
+      assert_not cell(:bassist).state_accepts_args?(:play)
+      assert(cell(:bassist) do 
+        def listen(args) end 
+      end.state_accepts_args?(:listen))
+    end
   end
 end

@@ -8,7 +8,7 @@ module Cell
       cell = create_cell_for(controller, name, opts)  # DISCUSS: we always save options.
       yield cell if block_given?
       
-      return cell.render_state(state, opts) if cell.method(state).arity == 1
+      return cell.render_state(state, opts) if cell.state_accepts_args?(state)
       cell.render_state(state)  # backward-compat.
     end
     
@@ -88,6 +88,10 @@ module Cell
     # Computes all possible paths for +state+ by traversing up the inheritance chain.
     def possible_paths_for_state(state)
       self.class.find_class_view_for_state(state).reverse!
+    end
+    
+    def state_accepts_args?(state)
+      method(state).arity == 1
     end
   end
 end
