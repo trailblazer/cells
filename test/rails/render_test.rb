@@ -51,12 +51,20 @@ class RailsRenderTest < ActiveSupport::TestCase
     
     should "accept the :state option with state-args" do
       BassistCell.class_eval do
-        def listen(to)
-          render :text => "Listening #{to}"
+        def listen(band, song)
+          render :text => "Listening to #{band}: #{song}"
         end
-        def groove; render("Thin Lizzy", :state => :listen); end
+        def groove; render({:state => :listen}, "Thin Lizzy", "Southbound"); end
       end
-      assert_equal "Listening Thin Lizzy", render_cell(:bassist, :groove)
+      assert_equal "Listening to Thin Lizzy: Southbound", render_cell(:bassist, :groove)
+      
+      BassistCell.class_eval do
+        def listen(args)
+          render :text => "Listening to #{args[:band]}"
+        end
+        def groove; render({:state => :listen}, :band => "Belvedere"); end
+      end
+      assert_equal "Listening to Belvedere", render_cell(:bassist, :groove)
     end
     
     should "accept the :state option" do

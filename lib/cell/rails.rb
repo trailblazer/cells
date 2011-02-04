@@ -142,8 +142,9 @@ module Cell
 
     # Renders the view belonging to the given state. Will raise ActionView::MissingTemplate
     # if it can't find a view.
-    def render_view_for(state, *args)  # TODO: make private!
-      opts = args.extract_options!
+    def render_view_for(state, *args)
+      opts = args.first.is_a?(::Hash) ? args.shift : {}
+      
       return "" if opts[:nothing]
 
       rails_options = [:text, :inline, :file]
