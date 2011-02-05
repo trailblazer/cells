@@ -29,11 +29,11 @@ Rails 2.3:
 
 Creating a cell is nothing more than
 
-  $ rails generate cell ShoppingCart display
+  $ rails generate cell ShoppingCart display -t haml
     create  app/cells/
     create  app/cells/shopping_cart
     create  app/cells/shopping_cart_cell.rb
-    create  app/cells/shopping_cart/display.html.erb
+    create  app/cells/shopping_cart/display.html.haml
     create  test/cells/shopping_cart_test.rb
 
 That looks very familiar.
@@ -56,7 +56,7 @@ Time to improve our cell code. Let's start with <tt>app/cells/shopping_cart_cell
       user    = args[:user]
       @items  = user.items_in_cart
       
-      render  # renders display.html.erb
+      render  # renders display.html.haml
     end
   end
 
@@ -65,13 +65,12 @@ Is that a controller? Hell, yeah. We even got a +render+ method as we know it fr
 
 == Views
 
-Since a plain call to +render+ will start rendering <tt>app/cells/shopping_cart/display.html.erb</tt> we should put some meaningful markup there.
+Since a plain call to +render+ will start rendering <tt>app/cells/shopping_cart/display.html.haml</tt> we should put some meaningful markup there.
 
-  <div id="cart">
-    You have <%= @items.size %> items in your shopping cart. 
-  </div>
+  #cart
+    You have #{@items.size} items in your shopping cart. 
   
-=== Haml? Builder?
+=== ERB? Haml? Builder?
 
 Yes, Cells support all template types that are supported by Rails itself. Remember- it's a controller!
 
