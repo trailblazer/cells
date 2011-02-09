@@ -14,7 +14,7 @@ module Cell
         options = args.first.is_a?(::Hash) ? args.first : {}  # this is copied from #render by intention.
         
         if options[:state] or options[:view]
-          return @_controller.render(*args, &block)
+          return controller.render(*args, &block)
         end
 
         super
