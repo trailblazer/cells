@@ -18,5 +18,21 @@ class RailsViewTest < ActiveSupport::TestCase
       end
     end
     
+    should "respond to render :state" do
+      assert_equal("Doo", in_view(:bassist) do
+        render :state => :play
+      end)
+    end
+    
+    should "respond to render :state with options" do
+      BassistCell.class_eval do
+        def listen(*args)
+          render :text => "Listening to #{args.join(' ')}"
+        end
+      end
+      assert_equal("Listening to Much the Same", in_view(:bassist) do
+        render({:state => :listen}, "Much", "the", "Same")
+      end)
+    end
   end
 end

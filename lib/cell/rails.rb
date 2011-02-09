@@ -10,9 +10,11 @@ module Cell
 
 
     class View < ActionView::Base
-      def render(options = {}, locals = {}, &block)
+      def render(*args, &block)
+        options = args.first.is_a?(::Hash) ? args.first : {}  # this is copied from #render by intention.
+        
         if options[:state] or options[:view]
-          return @_controller.render(options, &block)
+          return @_controller.render(*args, &block)
         end
 
         super
