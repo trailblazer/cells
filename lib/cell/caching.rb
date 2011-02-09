@@ -85,14 +85,20 @@ module Cell
       def expire_cache_key(key, opts=nil)
         cache_store.delete(key, opts)
       end
-
-      def cache_configured?
-        ::ActionController::Base.cache_configured?
+      
+      def cache?(state)
+        # DISCUSS: why is it private?
+        ActionController::Base.send(:cache_configured?) and state_cached?(state)
+      end
+      
+    protected
+      def state_cached?(state)
+        version_procs.has_key?(state)
       end
     end
 
     def render_state(state, *args)
-      return super(state, *args) unless state_cached?(state)
+      return super(state, *args) unless self.class.cache?(state)
 
       key     = cache_key(state, call_version_proc_for_state(state))
       options = self.class.cache_options[state]
@@ -116,8 +122,6 @@ module Cell
       self.class.cache_key_for(self.class.cell_name, state, args)
     end
 
-    def state_cached?(state)
-      self.class.version_procs.has_key?(state)
-    end
+    
   end
 end
