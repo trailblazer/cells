@@ -13,10 +13,7 @@ module Cell
       def render(*args, &block)
         options = args.first.is_a?(::Hash) ? args.first : {}  # this is copied from #render by intention.
         
-        if options[:state] or options[:view]
-          return controller.render(*args, &block)
-        end
-
+        return controller.render(*args, &block) if options[:state] or options[:view]
         super
       end
     end
