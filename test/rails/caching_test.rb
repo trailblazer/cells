@@ -3,17 +3,10 @@ require 'test_helper'
 class DirectorCell < Cell::Rails
   attr_reader :count
   
-  
-  
-  #cache :count
-  
   def initialize(*)
     super
     @count = 0
   end
-  
-  
-
   
   cache :tock
   def tock
@@ -44,6 +37,10 @@ class CachingUnitTest < ActiveSupport::TestCase
     
     should "accept array as key parts" do
       assert_equal "cells/director/count/1/2/3", @class.state_cache_key(:count, [1,2,3])
+    end
+    
+    should "accept string as key parts" do
+      assert_equal "cells/director/count/1/2", @class.state_cache_key(:count, "1/2")
     end
   end
   
@@ -132,22 +129,35 @@ class CachingUnitTest < ActiveSupport::TestCase
     should "accept a state name, only" do
       @class.cache :count
       
-      assert @class.send(:state_cached?, :count)
-      assert_not cell(:director).class.version_procs[:count]
-      assert_equal({}, cell(:director).class.cache_options[:count])
+      assert_not @class.version_procs[:count]
+      assert_equal({}, @class.cache_options[:count])
     end
     
-    should "save the cache options" do
-      @class.cache :count, @proc, :expires_in => 10.minutes
-
-      assert_equal @proc, @class.version_procs[:count]
+    should "accept state and cache options" do
+      @class.cache :count, :expires_in => 10.minutes
+      
+      assert_not @class.version_procs[:count]
       assert_equal({:expires_in => 10.minutes}, @class.cache_options[:count])
     end
     
-    should "accept a versioner, only" do
+    should "accept args and versioner block" do
+      @class.cache :count, :expires_in => 10.minutes do "v1" end
+
+      assert_kind_of Proc, @class.version_procs[:count]
+      assert_equal({:expires_in => 10.minutes}, @class.cache_options[:count])
+    end
+    
+    should "stil accept a versioner proc, only" do
       @class.cache :count, @proc
       
       assert_equal @proc, @class.version_procs[:count]
+      assert_equal({},    @class.cache_options[:count])
+    end
+    
+    should "stil accept a versioner block" do
+      @class.cache :count do "v1" end
+      
+      assert_kind_of Proc, @class.version_procs[:count]
       assert_equal({},    @class.cache_options[:count])
     end
     
@@ -217,9 +227,9 @@ class CachingFunctionalTest < ActiveSupport::TestCase
     end
     
     should "compute the key with the proc" do
-      @class.cache :count, Proc.new { |cell|
+      @class.cache :count do |cell|
         (cell.options % 2)==0 ? {:count => "even"} : {:count => "odd"}
-      }
+      end
       # example cache key: cells/director/count/count=odd
       
       assert_equal "1", render_cell(:director, :count, 1)
@@ -245,9 +255,9 @@ class CachingFunctionalTest < ActiveSupport::TestCase
     end
     
     should "allow returning strings, too" do
-      @class.cache :count, Proc.new { |cell|
+      @class.cache :count do |cell|
         (cell.options % 2)==0 ? "even" : "odd"
-      }
+      end
       
       assert_equal "1", render_cell(:director, :count, 1)
       assert_equal "2", render_cell(:director, :count, 2)

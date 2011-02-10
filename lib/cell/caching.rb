@@ -6,59 +6,41 @@ module Cell
     extend ActiveSupport::Concern
 
     module ClassMethods
-      # Activate caching for the state <tt>state</tt>. If no other options are passed
-      # the view will be cached forever.
+      # Caches the rendered view of +state+.
       #
-      # You may pass a Proc or a Symbol as cache expiration <tt>version_proc</tt>.
-      # This method is called every time the state is rendered, and is expected to return a
-      # Hash containing the cache key ingredients.
+      # Examples:
       #
-      # Additional options will be passed directly to the cache store when caching the state.
-      # Useful for simply setting a TTL for a cached state.
-      # Note that you may omit the <tt>version_proc</tt>.
+      # This will cache forever.
       #
+      #   class CartCell < Cell::Base
+      #     cache :show
       #
-      # Example:
-      #   class CachingCell < ::Cell::Base
-      #     cache :versioned_cached_state, Proc.new{ {:version => 0} }
-      # would result in the complete cache key
-      #   cells/CachingCell/versioned_cached_state/version=0
+      # You can also pass options to the caching engine as known from Rails caching.
       #
-      # If you provide a symbol, you can access the cell instance directly in the versioning
-      # method:
+      #   cache :show, :expires_in => 10.minutes
       #
-      #   class CachingCell < ::Cell::Base
-      #     cache :cached_state, :my_cache_version
+      # If you need your own granular cache keys, pass a block.
       #
-      #     def my_cache_version
-      #       { :user     => current_user.id,
-      #         :item_id  => params[:item] }
-      #       }
-      #     end
-      # results in a very specific cache key, for customized caching:
-      #   cells/CachingCell/cached_state/user=18/item_id=1
+      #   cache :show do |cell|
+      #     "user/#{cell.options[:id]}"
       #
-      # You may also set a TTL only, e.g. when using the memcached store:
+      # Alternatively, use an instance method.
       #
-      #  cache :cached_state, :expires_in => 3.minutes
+      #   cache :show, :version
+      #   def version
+      #     "user/#{options[:id]}"
+      #   end
       #
-      # Or use both, having a versioning proc <em>and</em> a TTL expiring the state as a fallback
-      # after a certain amount of time.
+      # This will result in a cache key like <tt>cells/cart/show/user/1</tt>.
       #
-      #  cache :cached_state, Proc.new { {:version => 0} }, :expires_in => 10.minutes
-      #--
-      ### TODO: implement for string, nil.
-      ### DISCUSS: introduce return method #sweep ? so the Proc can explicitly
-      ###   delegate re-rendering to the outside.
-      #--
-      def cache(state, version_proc=nil, cache_opts={})
-        if version_proc.is_a?(Hash)
-          cache_opts    = version_proc
-          version_proc  = nil
-        end
-
-        version_procs[state]  = version_proc
-        cache_options[state]  = cache_opts
+      # Two things to note here.
+      # * The return value of the method/block is <em>appended</em> to the state cache key.
+      # * You may return a string, a hash, an array, ActiveSupport::Caching will compile it. 
+      def cache(state, *args, &block)
+        options = args.extract_options!
+        
+        version_procs[state]  = args.first || block
+        cache_options[state]  = options
       end
 
       def version_procs
