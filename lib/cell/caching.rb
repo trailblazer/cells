@@ -19,21 +19,22 @@ module Cell
       #
       #   cache :show, :expires_in => 10.minutes
       #
-      # If you need your own granular cache keys, pass a block.
+      # If you need your own granular cache keys, pass a versioner block.
       #
       #   cache :show do |cell|
       #     "user/#{cell.options[:id]}"
-      #
-      # Alternatively, use an instance method.
-      #
-      #   cache :show, :version
-      #   def version
-      #     "user/#{options[:id]}"
       #   end
       #
       # This will result in a cache key like <tt>cells/cart/show/user/1</tt>.
       #
-      # Two things to note here.
+      # Alternatively, use an instance method.
+      #
+      #   cache :show, :versioner
+      #   def versioner
+      #     "user/#{options[:id]}"
+      #   end
+      #
+      # Two things to mention here.
       # * The return value of the method/block is <em>appended</em> to the state cache key.
       # * You may return a string, a hash, an array, ActiveSupport::Caching will compile it. 
       def cache(state, *args, &block)
@@ -86,20 +87,17 @@ module Cell
     def render_state(state, *args)
       return super(state, *args) unless self.class.cache?(state)
       
-      key     = self.class.state_cache_key(state, call_version_proc_for_state(state))
+      key     = self.class.state_cache_key(state, call_state_versioner(state))
       options = self.class.cache_options[state]
       
       self.class.cache_store.fetch(key, options) do
         super(state, *args)
       end
     end
-
-    # Call the versioning Proc for the respective state.
-    def call_version_proc_for_state(state)
-      version_proc = self.class.version_procs[state]
-
-      return {} unless version_proc # call to #cache was without any args.
-
+    
+    def call_state_versioner(state)
+      version_proc = self.class.version_procs[state] or return
+      
       return version_proc.call(self) if version_proc.kind_of?(Proc)
       send(version_proc)
     end

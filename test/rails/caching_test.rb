@@ -42,6 +42,10 @@ class CachingUnitTest < ActiveSupport::TestCase
     should "accept string as key parts" do
       assert_equal "cells/director/count/1/2", @class.state_cache_key(:count, "1/2")
     end
+    
+    should "accept nil as key parts" do
+      assert_equal "cells/director/count/", @class.state_cache_key(:count, nil)
+    end
   end
   
   
