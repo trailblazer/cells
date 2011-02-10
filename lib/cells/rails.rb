@@ -36,9 +36,14 @@ module Cells
       #   end
       #
       # will expire the view for state <tt>:display_list</tt> in the cell <tt>MyListingCell</tt>.
-      def expire_cell_state(cell_name, state, args={}, opts=nil)
-        key = ::Cell::Base.cache_key_for(cell_name, state, args)
-        ::Cell::Base.expire_cache_key(key, opts)
+      def expire_cell_state(cell_class, state, args={}, opts=nil)
+        if cell_class.is_a?(Symbol)
+          ActiveSupport::Deprecation.warn "Please pass the cell class into #expire_cell_state, as in expire_cell_state(DirectorCell, :count, :user_id => 1)"
+          cell_class = Cell::Base.class_from_cell_name(cell_class)
+        end
+        
+        key = cell_class.state_cache_key(state, args)
+        cell_class.expire_cache_key(key, opts)
       end
     end
 

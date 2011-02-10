@@ -69,21 +69,19 @@ module Cell
         @cache_options ||= {}
       end
 
-      def cache_store #:nodoc:
+      def cache_store
+        # DISCUSS: move to instance level and delegate to #config/#parent_controller.
+        # This would allow convenient cache settings per cell (if needed).
         ::ActionController::Base.cache_store
       end
-
-      def cache_key_for(cell_class, state, args = {}) #:nodoc:
-        key_pieces = [cell_class, state]
-
-        args.collect{|a,b| [a.to_s, b]}.sort.each{ |k,v| key_pieces << "#{k}=#{v}" }
-        key = key_pieces.join('/')
-
-        ::ActiveSupport::Cache.expand_cache_key(key, :cells)
+      
+      # Computes the complete, namespaced cache key for +state+.
+      def state_cache_key(state, key_parts={})
+        expand_cache_key([cell_name, state, key_parts])
       end
 
-      def expire_cache_key(key, opts=nil)
-        cache_store.delete(key, opts)
+      def expire_cache_key(key, *args)
+        cache_store.delete(key, *args)
       end
       
       def cache?(state)
@@ -92,6 +90,12 @@ module Cell
       end
       
     protected
+      # Compiles cache key and adds :cells namespace to +key+, according to the
+      # ActiveSupport::Cache.expand_cache_key API.
+      def expand_cache_key(key)
+        ::ActiveSupport::Cache.expand_cache_key(key, :cells)
+      end
+      
       def state_cached?(state)
         version_procs.has_key?(state)
       end
@@ -99,10 +103,10 @@ module Cell
 
     def render_state(state, *args)
       return super(state, *args) unless self.class.cache?(state)
-
-      key     = cache_key(state, call_version_proc_for_state(state))
+      
+      key     = self.class.state_cache_key(state, call_version_proc_for_state(state))
       options = self.class.cache_options[state]
-
+      
       self.class.cache_store.fetch(key, options) do
         super(state, *args)
       end
@@ -117,11 +121,6 @@ module Cell
       return version_proc.call(self) if version_proc.kind_of?(Proc)
       send(version_proc)
     end
-
-    def cache_key(state, args = {}) #:nodoc:
-      self.class.cache_key_for(self.class.cell_name, state, args)
-    end
-
     
   end
 end
