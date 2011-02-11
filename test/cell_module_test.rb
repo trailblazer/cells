@@ -151,11 +151,22 @@ class CellModuleTest < ActiveSupport::TestCase
       assert_equal BassistCell, ::Cell::Base.class_from_cell_name('bassist')
     end
     
-    should "provide state_accepts_args?" do
-      assert_not cell(:bassist).state_accepts_args?(:play)
-      assert(cell(:bassist) do 
-        def listen(args) end 
-      end.state_accepts_args?(:listen))
+    context "#state_accepts_args?" do
+      should "be false if state doesn't want args" do
+        assert_not cell(:bassist).state_accepts_args?(:play)
+      end
+      
+      should "be true for one arg" do
+        assert(cell(:bassist) do 
+          def listen(args) end 
+        end.state_accepts_args?(:listen))
+      end
+      
+      should "be true for multiple arg" do
+        assert(cell(:bassist) do 
+          def listen(what, where) end 
+        end.state_accepts_args?(:listen))
+      end
     end
   end
 end
