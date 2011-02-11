@@ -79,6 +79,9 @@ class CellModuleTest < ActiveSupport::TestCase
         MusicianCell.class_eval do
           @builders = false
         end
+        BassistCell.class_eval do
+          @builders = false
+        end
       end
       
       should "execute the block in controller context" do
