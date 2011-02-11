@@ -124,13 +124,16 @@ Cells do strict view caching. No cluttered fragment caching. Add
 
 and your cart will be re-rendered after 10 minutes.
 
-There are multiple advanced options for expiring your view caches, including an expiration lambda.
+You can expand the state's cache key - why not use a versioner block to do just this?
 
   class ShoppingCartCell < Cell::Rails 
-    cache :display do |cell|
-      Item.still_valid?
+    cache :display do |cell, options|
+      options[:items].md5
     end
 
+The return value is appended to the state key: <tt>"cells/shopping_cart/display/0ecb1360644ce665a4ef"</tt>.
+
+API here[http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method].
 
 == Testing
 
