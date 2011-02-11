@@ -49,12 +49,18 @@ module Cell
     abstract!
 
 
-    def initialize(parent_controller, options={})
+    def initialize(parent_controller, *args)
       @parent_controller  = parent_controller
-      @options            = options
-      @opts               = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(self, :options)
+      setup_backwardibility(*args)
     end
-
+    
+    # Some people still like #options and assume it's a hash.
+    def setup_backwardibility(*args)
+      @options = (args.first.is_a?(Hash) and args.size == 1) ? args.first : args
+      @opts    = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(self, :options)
+    end
+    
+    
     def self.view_context_class
       controller = self
 

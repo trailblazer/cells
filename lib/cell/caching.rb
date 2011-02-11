@@ -87,7 +87,7 @@ module Cell
     def render_state(state, *args)
       return super(state, *args) unless self.class.cache?(state)
       
-      key     = self.class.state_cache_key(state, call_state_versioner(state))
+      key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
       options = self.class.cache_options[state]
       
       self.class.cache_store.fetch(key, options) do
@@ -96,11 +96,11 @@ module Cell
     end
     
   protected
-    def call_state_versioner(state)
+    def call_state_versioner(state, *args)
       version_proc = self.class.version_procs[state] or return
       
-      return version_proc.call(self) if version_proc.kind_of?(Proc)
-      send(version_proc)
+      return version_proc.call(self, *args) if version_proc.kind_of?(Proc)
+      state_accepts_args?(state) ?  send(version_proc, *args) : send(version_proc)
     end
     
   end

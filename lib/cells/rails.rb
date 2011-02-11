@@ -17,8 +17,8 @@ module Cells
       #   @box = render_cell(:comments, :top5) do |cell|
       #     cell.markdown! if config.parse_comments?
       #   end
-      def render_cell(name, state, opts={}, &block)
-        ::Cell::Base.render_cell_for(self, name, state, opts, &block)
+      def render_cell(name, state, *args, &block)
+        ::Cell::Base.render_cell_for(self, name, state, *args, &block)
       end
 
       # Expires the cached cell state view, similar to ActionController::expire_fragment.
@@ -49,8 +49,8 @@ module Cells
 
     module ActionView
       # See Cells::Rails::ActionController#render_cell.
-      def render_cell(name, state, opts = {}, &block)
-        ::Cell::Base.render_cell_for(controller, name, state, opts, &block)
+      def render_cell(name, state, *args, &block)
+        ::Cell::Base.render_cell_for(controller, name, state, *args, &block)
       end
     end
 

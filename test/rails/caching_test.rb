@@ -230,9 +230,9 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       end
     end
     
-    should "compute the key with the proc" do
-      @class.cache :count do |cell|
-        (cell.options % 2)==0 ? {:count => "even"} : {:count => "odd"}
+    should "compute the key with a block" do
+      @class.cache :count do |cell, int|
+        (int % 2)==0 ? {:count => "even"} : {:count => "odd"}
       end
       # example cache key: cells/director/count/count=odd
       
@@ -242,25 +242,40 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "2", render_cell(:director, :count, 4)
     end
     
+    should "still be able to use options in the block" do
+      @class.class_eval do
+        def count(args)
+          render :text => args[:int]
+        end
+      end
+      
+      @class.cache :count do |cell, i|
+        (cell.options[:int] % 2)==0 ? {:count => "even"} : {:count => "odd"}
+      end
+      
+      assert_equal "1", render_cell(:director, :count, :int => 1)
+      assert_equal "2", render_cell(:director, :count, :int => 2)
+      assert_equal "1", render_cell(:director, :count, :int => 3)
+      assert_equal "2", render_cell(:director, :count, :int => 4)
+    end
+    
     should "compute the key with an instance method" do
       @class.cache :count, :version
       @class.class_eval do
-        def version
-          (options % 3)==0 ? {:count => "even"} : {:count => "odd"}
+        def version(int)
+          (int % 2)==0 ? {:count => "even"} : {:count => "odd"}
         end
       end
       
       assert_equal "1", render_cell(:director, :count, 1)
-      assert_equal "1", render_cell(:director, :count, 2)
-      assert_equal "3", render_cell(:director, :count, 3)
-      assert_equal "1", render_cell(:director, :count, 4)
-      assert_equal "1", render_cell(:director, :count, 5)
-      assert_equal "3", render_cell(:director, :count, 6)
+      assert_equal "2", render_cell(:director, :count, 2)
+      assert_equal "1", render_cell(:director, :count, 3)
+      assert_equal "2", render_cell(:director, :count, 4)
     end
     
     should "allow returning strings, too" do
-      @class.cache :count do |cell|
-        (cell.options % 2)==0 ? "even" : "odd"
+      @class.cache :count do |cell, int|
+        (int % 2)==0 ? "even" : "odd"
       end
       
       assert_equal "1", render_cell(:director, :count, 1)

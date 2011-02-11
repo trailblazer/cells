@@ -84,8 +84,8 @@ module Cell
       #
       # Example:
       #   assert_equal "Banks kill planet!" cell(:news, :topic => :terror).latest_headline
-      def cell(name, opts={}, &block)
-        cell = ::Cell::Base.create_cell_for(@controller, name, opts)
+      def cell(name, *args, &block)
+        cell = ::Cell::Base.create_cell_for(@controller, name, *args)
         cell.instance_eval &block if block_given?
         cell
       end

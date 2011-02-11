@@ -4,9 +4,25 @@ class RailsIntegrationTest < ActionController::TestCase
   tests MusicianController
   
   context "A Rails controller" do
-    should "respond to render_cell" do
+    should "respond to #render_cell" do
       get 'promotion'
       assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
+    end
+    
+    should "respond to #render_cell with arbitrary options" do
+      BassistCell.class_eval do
+        def enjoy(what, where)
+          render :text => "I like #{what} in #{where}."
+        end
+      end
+      
+      @controller.instance_eval do
+        def promotion
+          render :text => render_cell(:bassist, :enjoy, "The Stranglers", "my room")
+        end
+      end
+      get 'promotion'
+      assert_equal "I like The Stranglers in my room.", @response.body
     end
     
     should "be able to pass a block to #render_cell" do

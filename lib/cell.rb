@@ -4,19 +4,19 @@ module Cell
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def render_cell_for(controller, name, state, opts={})
-      cell = create_cell_for(controller, name, opts)  # DISCUSS: we always save options.
+    def render_cell_for(controller, name, state, *args)
+      cell = create_cell_for(controller, name, *args)  # DISCUSS: we always save options.
       yield cell if block_given?
       
-      return cell.render_state(state, opts) if cell.state_accepts_args?(state)
+      return cell.render_state(state, *args) if cell.state_accepts_args?(state)
       cell.render_state(state)  # backward-compat.
     end
     
     # Creates a cell instance. Note that this method calls builders which were attached to the
     # class with Cell::Base.build - this might lead to a different cell being returned.
-    def create_cell_for(controller, name, opts={})
-      build_class_for(controller, class_from_cell_name(name), opts).
-      new(controller, opts)
+    def create_cell_for(controller, name, *args)
+      build_class_for(controller, class_from_cell_name(name), *args).
+      new(controller, *args)
     end
     
     # Adds a builder to the cell class. Builders are used in #render_cell to find out the concrete
@@ -49,9 +49,9 @@ module Cell
       builders << block
     end
     
-    def build_class_for(controller, target_class, opts)
+    def build_class_for(controller, target_class, *args)
       target_class.builders.each do |blk|
-        res = controller.instance_exec(opts, &blk) and return res
+        res = controller.instance_exec(*args, &blk) and return res
       end
       target_class
     end
