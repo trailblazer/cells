@@ -95,6 +95,7 @@ module Cell
       end
     end
     
+  protected
     def call_state_versioner(state)
       version_proc = self.class.version_procs[state] or return
       
