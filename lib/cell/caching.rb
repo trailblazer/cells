@@ -21,7 +21,7 @@ module Cell
       #
       # If you need your own granular cache keys, pass a versioner block.
       #
-      #   cache :show do |cell|
+      #   cache :show do |cell, options|
       #     "user/#{cell.options[:id]}"
       #   end
       #
@@ -30,7 +30,7 @@ module Cell
       # Alternatively, use an instance method.
       #
       #   cache :show, :versioner
-      #   def versioner
+      #   def versioner(options)
       #     "user/#{options[:id]}"
       #   end
       #

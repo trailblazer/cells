@@ -1,10 +1,21 @@
+h2. 3.5.2
+  
+h3. Bugfixes
+  * Controller#render_cell now accepts multiple args as options.
+
+h3. Changes
+  * Caching versioners now can accept state-args or options from the #render_cell call. This way, you don't have to access #options at all anymore.
+
+
 h2. 3.5.1
+
   * No longer pass an explicit Proc but a versioner block to @Cell.Base.cache@. Example: @cache :show do "v1" end@
   * Caching.cache_key_for now uses @ActiveSupport::Cache.expand_cache_key@. Consequently, a key which used to be like @"cells/director/count/a=1/b=2"@ now is @cells/director/count/a=1&b=2@ and so on. Be warned that this might break your home-made cache expiry.
   * Controller#expire_cell_state now expects the cell class as first arg. Example: @expire_cell_state(DirectorCell, :count)@
   
 h3. Bugfixes
   * Passing options to @render :state@ in views finally works: @render({:state => :list_item}, item, i)@
+
 
 h2. 3.5.0
 
