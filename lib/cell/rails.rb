@@ -60,7 +60,6 @@ module Cell
       @opts    = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(self, :options)
     end
     
-    
     def self.view_context_class
       controller = self
 

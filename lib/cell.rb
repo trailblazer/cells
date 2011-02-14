@@ -91,7 +91,7 @@ module Cell
     end
     
     def state_accepts_args?(state)
-      method(state).arity > 0
+      method(state).arity != 0
     end
   end
 end

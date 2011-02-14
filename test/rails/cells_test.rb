@@ -34,6 +34,15 @@ class RailsCellsTest < ActiveSupport::TestCase
       end
       assert_equal "D", cell(:bassist).render_state(:listen, :note => "D")
     end
+    
+    should "accept state-args with default parameters" do
+      BassistCell.class_eval do
+        def listen(first, second="D")
+          render :text => first+second
+        end
+      end
+      assert_equal "AD", cell(:bassist).render_state(:listen, "A")
+    end
   end
   
   context "A rails cell" do

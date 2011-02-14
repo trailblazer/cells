@@ -170,6 +170,12 @@ class CellModuleTest < ActiveSupport::TestCase
           def listen(what, where) end 
         end.state_accepts_args?(:listen))
       end
+      
+      should "be true for multiple arg with defaults" do
+        assert(cell(:bassist) do 
+          def listen(what, where="") end 
+        end.state_accepts_args?(:listen))
+      end
     end
   end
 end

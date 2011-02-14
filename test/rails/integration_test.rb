@@ -11,7 +11,7 @@ class RailsIntegrationTest < ActionController::TestCase
     
     should "respond to #render_cell with arbitrary options" do
       BassistCell.class_eval do
-        def enjoy(what, where)
+        def enjoy(what, where="the bar")
           render :text => "I like #{what} in #{where}."
         end
       end
