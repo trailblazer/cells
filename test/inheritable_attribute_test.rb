@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class HooksTest < ActiveSupport::TestCase
+class HooksTest < Test::Unit::TestCase
   context "Hooks.define_hook" do
     setup do
       @klass = Class.new(Object) do
