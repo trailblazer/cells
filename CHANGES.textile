@@ -6,7 +6,7 @@ h3. Bugfixes
 h3. Changes
 
   * Cell::Base.view_paths is now setup in an initializer. If you do scary stuff with view_paths this might lead to scary problems.
-  * Cells::DEFAULT_VIEW_PATHS is now Cell::Base::DEFAULT_VIEW_PATHS.
+  * Cells::DEFAULT_VIEW_PATHS is now Cell::Base::DEFAULT_VIEW_PATHS. Note that Cells will set its view_paths to DEFAULT_VIEW_PATHS at initialization time. If you want to alter the view_paths, use Base.append_view_path and friends in a separate initializer.
 
 
 h2. 3.5.2
