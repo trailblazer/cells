@@ -86,8 +86,6 @@ end
 
 Cell::Base = Cell::Rails
 
-Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
-
 
 require "rails/railtie"
 
@@ -96,6 +94,10 @@ class Cells::Railtie < Rails::Railtie
     Cell::Rails.class_eval do
       include app.routes.url_helpers
     end
+  end
+  
+  initializer "cells.setup_view_paths" do |app|
+    Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
   end
   
   rake_tasks do
