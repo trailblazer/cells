@@ -1,9 +1,18 @@
 module Cell
-  autoload :Caching,      'cell/caching'
+  autoload :Caching, 'cell/caching'
 
   extend ActiveSupport::Concern
-
+  
+  DEFAULT_VIEW_PATHS = [
+    File.join('app', 'cells'),
+    File.join('app', 'cells', 'layouts')
+  ]
+    
   module ClassMethods
+    def setup_view_paths!
+      self.view_paths = DEFAULT_VIEW_PATHS if view_paths.blank?
+    end
+    
     def render_cell_for(controller, name, state, *args)
       cell = create_cell_for(controller, name, *args)  # DISCUSS: we always save options.
       yield cell if block_given?

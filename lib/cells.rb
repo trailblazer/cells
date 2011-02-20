@@ -60,17 +60,12 @@
 # this is pretty DRY and object-oriented, isn't it?
 
 require 'cell/rails'
+require 'cells/railtie'
 require 'cells/rails'
 require 'cell/test_case' if Rails.env == "test"
 require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4. # TODO: remove me as soon as we support 3.1, only.
 
 module Cells
-  # Default view paths for Cells.
-  DEFAULT_VIEW_PATHS = [
-    File.join('app', 'cells'),
-    File.join('app', 'cells', 'layouts')
-  ]
-
   # Setup your special needs for Cells here. Use this to add new view paths.
   #
   # Example:
@@ -85,22 +80,3 @@ module Cells
 end
 
 Cell::Base = Cell::Rails
-
-
-require "rails/railtie"
-
-class Cells::Railtie < Rails::Railtie
-  initializer "cells.attach_router" do |app|
-    Cell::Rails.class_eval do
-      include app.routes.url_helpers
-    end
-  end
-  
-  initializer "cells.setup_view_paths" do |app|
-    Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
-  end
-  
-  rake_tasks do
-    load "cells/cells.rake"
-  end
-end

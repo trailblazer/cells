@@ -3,6 +3,11 @@ h2. 3.5.3
 h3. Bugfixes
   * state-args work even if your state method receives optional arguments or default values, like @def show(user, age=18)@.
 
+h3. Changes
+
+  * Cell::Base.view_paths is now setup in an initializer. If you do scary stuff with view_paths this might lead to scary problems.
+  * Cells::DEFAULT_VIEW_PATHS is now Cell::Base::DEFAULT_VIEW_PATHS.
+
 
 h2. 3.5.2
   
