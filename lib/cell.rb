@@ -9,8 +9,9 @@ module Cell
   ]
     
   module ClassMethods
+    # Called in Railtie at initialization time.
     def setup_view_paths!
-      self.view_paths = DEFAULT_VIEW_PATHS if view_paths.blank?
+      self.view_paths = self::DEFAULT_VIEW_PATHS
     end
     
     def render_cell_for(controller, name, state, *args)
