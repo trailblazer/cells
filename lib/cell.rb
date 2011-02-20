@@ -83,9 +83,8 @@ module Cell
       superclass.find_class_view_for_state(state) << view_for_state(state)
     end
 
-    # The cell name, underscored with +_cell+ removed.
-    def cell_name
-      name.underscore.sub(/_cell$/, '')
+    def cell_name # TODO: remove in 3.6.
+      controller_path
     end
 
     # The cell class constant for +cell_name+.
