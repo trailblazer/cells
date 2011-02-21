@@ -1,4 +1,4 @@
-h2. 3.5.3
+h2. 3.5.4
   
 h3. Bugfixes
   * state-args work even if your state method receives optional arguments or default values, like @def show(user, age=18)@.
