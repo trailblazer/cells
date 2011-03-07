@@ -1,3 +1,9 @@
+h2. 3.5.5
+  
+h3. Bugfixes
+  * The generator now places views of namespaced cells into the correct directory. E.g. `rails g Blog::Post display` puts views to `app/cells/blog/post/display.html.erb`.
+
+
 h2. 3.5.4
   
 h3. Bugfixes
