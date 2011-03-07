@@ -9,6 +9,11 @@ module Cells
 
       argument :actions, :type => :array, :default => [], :banner => "action action"
       check_class_collision :suffix => "Cell"
+      
+    private
+      def base_path
+        File.join('app/cells', class_path, file_name)
+      end
     end
   end
 end

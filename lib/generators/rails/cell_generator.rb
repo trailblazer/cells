@@ -6,7 +6,7 @@ module Rails
       source_root File.expand_path('../../templates', __FILE__)
 
       def create_cell_file
-        template 'cell.rb', File.join('app/cells', class_path, "#{file_name}_cell.rb")
+        template 'cell.rb', "#{base_path}_cell.rb"
       end
 
       hook_for(:template_engine)

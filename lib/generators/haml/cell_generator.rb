@@ -8,8 +8,7 @@ module Haml
       def create_views
         for state in actions do
           @state  = state
-          @path   = File.join('app/cells', file_name, "#{state}.html.haml")
-
+          @path   = File.join(base_path, "#{state}.html.haml")  #base_path defined in Cells::Generators::Base.
           template "view.haml", @path
         end
       end
