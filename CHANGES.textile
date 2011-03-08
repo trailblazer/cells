@@ -3,6 +3,8 @@ h2. 3.5.5
 h3. Bugfixes
   * The generator now places views of namespaced cells into the correct directory. E.g. `rails g Blog::Post display` puts views to `app/cells/blog/post/display.html.erb`.
 
+h3. Changes
+  * Gem dependencies changed, we now require @actionpack@ and @railties@ >= 3.0.0 instead of @rails@.
 
 h2. 3.5.4
   
