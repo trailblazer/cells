@@ -157,35 +157,26 @@ module Cell
 
       raise MissingTemplate.new(exception.message, possible_paths)
     end
-
+    
     # Renders the view belonging to the given state. Will raise ActionView::MissingTemplate
     # if it can't find a view.
     def render_view_for(state, *args)
       opts = args.first.is_a?(::Hash) ? args.shift : {}
       
       return "" if opts[:nothing]
-
-      rails_options = [:text, :inline, :file]
-      if (opts.keys & rails_options).present?
-      elsif opts[:state]
-        opts[:text] = render_state(opts[:state], *args)
-      else
-        opts            = defaultize_render_options_for(opts, state)
-        template        = find_family_view_for_state(opts[:view])
-        opts[:template] = template
+      
+      if opts[:state]
+        opts[:text] = render_state(opts.delete(:state), *args)
+      elsif (opts.keys & [:text, :inline, :file]).blank?
+        opts = defaultize_render_options_for(opts, state)
+        opts[:template] = find_family_view_for_state(opts.delete(:view))
       end
-
-      opts = sanitize_render_options(opts)
+      
       render_to_string(opts).html_safe # ActionView::Template::Text doesn't do that for us.
     end
-
-    # Defaultize the passed options from #render.
+    
     def defaultize_render_options_for(opts, state)
       opts.reverse_merge!(:view => state)
-    end
-
-    def sanitize_render_options(opts)
-      opts.except!(:view, :state)
     end
   end
 end
