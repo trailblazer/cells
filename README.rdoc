@@ -45,7 +45,7 @@ Now, render your cart. Why not put it in <tt>layouts/application.html.erb</tt> f
   <div id="header">
     <%= render_cell :shopping_cart, :display, :user => @current_user %>
 
-Feels like rendering a controller action. As additional encapsulation we pass the current +user+ from outside. Call it knowledge hiding.
+Feels like rendering a controller action. For good encapsulation we pass the current +user+ from outside into the cell - a dependency injection.
 
 == Code
 
@@ -60,12 +60,12 @@ Time to improve our cell code. Let's start with <tt>app/cells/shopping_cart_cell
     end
   end
 
-Is that a controller? Hell, yeah. We even got a +render+ method as we know it from the good ol' +ActionController+.
+Is that a controller? Hell, yeah. We even got a +#render+ method as we know it from the good ol' +ActionController+.
 
 
 == Views
 
-Since a plain call to +render+ will start rendering <tt>app/cells/shopping_cart/display.html.haml</tt> we should put some meaningful markup there.
+Since a plain call to +#render+ will start rendering <tt>app/cells/shopping_cart/display.html.haml</tt> we should put some meaningful markup there.
 
   #cart
     You have #{@items.size} items in your shopping cart. 
@@ -131,9 +131,9 @@ You can expand the state's cache key - why not use a versioner block to do just 
       options[:items].md5
     end
 
-The return value is appended to the state key: <tt>"cells/shopping_cart/display/0ecb1360644ce665a4ef"</tt>.
+The block's return value is appended to the state key: <tt>"cells/shopping_cart/display/0ecb1360644ce665a4ef"</tt>.
 
-API here[http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method].
+Check the {API to learn more}[http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method].
 
 == Testing
 

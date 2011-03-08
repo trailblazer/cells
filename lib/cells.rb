@@ -47,7 +47,7 @@
 #
 # == View inheritance
 #
-# Unlike controllers, Cells can form a class hierarchy. Even Views are inherited, which is pretty useful
+# Unlike controllers, Cells can form a class hierarchy. Even views are inherited, which is pretty useful
 # when overriding only small parts of the view.
 #
 # So if you'd need a special "Order!" button with sparkling stars on christmas, your cell would go like this.
