@@ -7,12 +7,13 @@ module Cell
     include AbstractController
     include Rendering, Layouts, Helpers, Callbacks, Translation, Logger
     include ActionController::RequestForgeryProtection
+    include ActionController::UrlFor
 
 
     class View < ActionView::Base
       def render(*args, &block)
         options = args.first.is_a?(::Hash) ? args.first : {}  # this is copied from #render by intention.
-        
+
         return controller.render(*args, &block) if options[:state] or options[:view]
         super
       end
@@ -36,16 +37,16 @@ module Cell
 
     module Metal
       delegate :session, :params, :request, :config, :to => :parent_controller
-    end 
-    
-    
+    end
+
+
     include Metal
     include Rendering
     include Caching
-    
+
     attr_reader :parent_controller
     attr_accessor :options
-    
+
     abstract!
 
 
@@ -53,13 +54,13 @@ module Cell
       @parent_controller  = parent_controller
       setup_backwardibility(*args)
     end
-    
+
     # Some people still like #options and assume it's a hash.
     def setup_backwardibility(*args)
       @options = (args.first.is_a?(Hash) and args.size == 1) ? args.first : args
       @opts    = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(self, :options)
     end
-    
+
     def self.view_context_class
       controller = self
 
@@ -87,7 +88,7 @@ module Cell
     # +:inline+:: Renders an inline template as state view. See ActionView::Base#render for details.
     # +:file+::   Specifies the name of the file template to render.
     # +:nothing+:: Doesn't invoke the rendering process.
-    # +:state+::  Instantly invokes another rendering cycle for the passed state and returns. You may pass arbitrary state-args to the called state.  
+    # +:state+::  Instantly invokes another rendering cycle for the passed state and returns. You may pass arbitrary state-args to the called state.
     #
     # Example:
     #  class MusicianCell < ::Cell::Base
@@ -124,7 +125,7 @@ module Cell
     #
     # === Using states instead of helpers
     #
-    # Sometimes it's useful to not only render a view but also invoke the associated state. This is 
+    # Sometimes it's useful to not only render a view but also invoke the associated state. This is
     # especially helpful when replacing helpers. Do that with <tt>render :state</tt>.
     #
     #   def show_cheap_item(item)
@@ -157,24 +158,24 @@ module Cell
 
       raise MissingTemplate.new(exception.message, possible_paths)
     end
-    
+
     # Renders the view belonging to the given state. Will raise ActionView::MissingTemplate
     # if it can't find a view.
     def render_view_for(state, *args)
       opts = args.first.is_a?(::Hash) ? args.shift : {}
-      
+
       return "" if opts[:nothing]
-      
+
       if opts[:state]
         opts[:text] = render_state(opts.delete(:state), *args)
       elsif (opts.keys & [:text, :inline, :file]).blank?
         opts = defaultize_render_options_for(opts, state)
         opts[:template] = find_family_view_for_state(opts.delete(:view))
       end
-      
+
       render_to_string(opts).html_safe # ActionView::Template::Text doesn't do that for us.
     end
-    
+
     def defaultize_render_options_for(opts, state)
       opts.reverse_merge!(:view => state)
     end
