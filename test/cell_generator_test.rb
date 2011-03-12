@@ -21,6 +21,10 @@ class CellGeneratorTest < Rails::Generators::TestCase
       assert_no_file "app/cells/blog/post.html.haml"
       assert_no_file "app/cells/blog/post.html.haml"
       assert_no_file "app/cells/blog/latest.html.haml"
+
+      assert_no_file "app/cells/blog/post.html.slim"
+      assert_no_file "app/cells/blog/post.html.slim"
+      assert_no_file "app/cells/blog/latest.html.slim"
     end
     
     should "work with namespaces" do
@@ -38,6 +42,33 @@ class CellGeneratorTest < Rails::Generators::TestCase
       assert_file "app/cells/blog/post/latest.html.haml", %r(app/cells/blog/post/latest\.html\.haml)
     end
 
+    should "work with namespaces and slim" do
+      run_generator %w(Blog::Post latest -e slim)
+
+      assert_file "app/cells/blog/post_cell.rb", /class Blog::PostCell < Cell::Rails/
+      assert_file "app/cells/blog/post/latest.html.slim", %r(app/cells/blog/post/latest\.html\.slim)
+    end
+
+    should "create slim assets with -e slim" do
+      run_generator %w(Blog post latest -e slim)
+
+      assert_file "app/cells/blog_cell.rb", /class BlogCell < Cell::Rails/
+      assert_file "app/cells/blog_cell.rb", /def post/
+      assert_file "app/cells/blog_cell.rb", /def latest/
+      assert_file "app/cells/blog/post.html.slim", %r(app/cells/blog/post\.html\.slim)
+      assert_file "app/cells/blog/post.html.slim", %r(p)
+      assert_file "app/cells/blog/latest.html.slim", %r(app/cells/blog/latest\.html\.slim)
+
+
+      assert_no_file "app/cells/blog/post.html.erb"
+      assert_no_file "app/cells/blog/post.html.erb"
+      assert_no_file "app/cells/blog/latest.html.erb"
+
+      assert_no_file "app/cells/blog/post.html.haml"
+      assert_no_file "app/cells/blog/post.html.haml"
+      assert_no_file "app/cells/blog/latest.html.haml"
+    end
+
     should "create haml assets with -e haml" do
       run_generator %w(Blog post latest -e haml)
 
@@ -52,6 +83,10 @@ class CellGeneratorTest < Rails::Generators::TestCase
       assert_no_file "app/cells/blog/post.html.erb"
       assert_no_file "app/cells/blog/post.html.erb"
       assert_no_file "app/cells/blog/latest.html.erb"
+
+      assert_no_file "app/cells/blog/post.html.slim"
+      assert_no_file "app/cells/blog/post.html.slim"
+      assert_no_file "app/cells/blog/latest.html.slim"
     end
 
     should "create test_unit assets with -t test_unit" do

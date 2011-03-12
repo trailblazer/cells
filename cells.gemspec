@@ -5,7 +5,7 @@ $:.unshift lib unless $:.include?(lib)
 require 'cells/version'
 
 Gem::Specification.new do |s|
-  s.name        = "cells-test"
+  s.name        = "cells"
   s.version     = Cells::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Nick Sutterer"]
@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency "shoulda"
   s.add_development_dependency "haml"
+  s.add_development_dependency "slim"
 end
