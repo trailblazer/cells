@@ -40,7 +40,7 @@ That looks very familiar.
 
 == Render the cell
 
-Now, render your cart. Why not put it in <tt>layouts/application.html.erb</tt> for now? 
+Now, render your cart. Why not put it in <tt>layouts/application.html.erb</tt> for now?
 
   <div id="header">
     <%= render_cell :shopping_cart, :display, :user => @current_user %>
@@ -51,11 +51,11 @@ Feels like rendering a controller action. For good encapsulation we pass the cur
 
 Time to improve our cell code. Let's start with <tt>app/cells/shopping_cart_cell.rb</tt>:
 
-  class ShoppingCartCell < Cell::Rails 
+  class ShoppingCartCell < Cell::Rails
     def display(args)
       user    = args[:user]
       @items  = user.items_in_cart
-      
+
       render  # renders display.html.haml
     end
   end
@@ -68,8 +68,8 @@ Is that a controller? Hell, yeah. We even got a +#render+ method as we know it f
 Since a plain call to +#render+ will start rendering <tt>app/cells/shopping_cart/display.html.haml</tt> we should put some meaningful markup there.
 
   #cart
-    You have #{@items.size} items in your shopping cart. 
-  
+    You have #{@items.size} items in your shopping cart.
+
 === ERB? Haml? Builder?
 
 Yes, Cells support all template types that are supported by Rails itself. Remember- it's a controller!
@@ -78,7 +78,7 @@ Yes, Cells support all template types that are supported by Rails itself. Rememb
 
 Yes, Cells have helpers just like controllers. If you need some specific helper, do
 
-  class ShoppingCartCell < Cell::Rails 
+  class ShoppingCartCell < Cell::Rails
     helper MyExtraHelper
 
 and it will be around in your cart views.
@@ -107,7 +107,7 @@ Let +render_cell+ take care of creating the right cell. Just configure your supe
     build do
       UnauthorizedUserCell unless logged_in?
     end
-  
+
 A call to
 
   render_cell(:login, :box)
@@ -119,14 +119,14 @@ will render the configured +UnauthorizedUserCell+ instead of the original +Login
 
 Cells do strict view caching. No cluttered fragment caching. Add
 
-  class ShoppingCartCell < Cell::Rails 
+  class ShoppingCartCell < Cell::Rails
     cache :display, :expires_in => 10.minutes
 
 and your cart will be re-rendered after 10 minutes.
 
 You can expand the state's cache key - why not use a versioner block to do just this?
 
-  class ShoppingCartCell < Cell::Rails 
+  class ShoppingCartCell < Cell::Rails
     cache :display do |cell, options|
       options[:items].md5
     end
@@ -181,7 +181,7 @@ In order to copy the cells rake tasks to your app, run
 Cells can do more.
 
 <b>No Limits</b>::  Have as many cells in your page as you need - no limitation to your +render_cell+ calls.
-<b>Cell Nesting</b>:: Have complex cell hierarchies as you can call +render_cell+ within cells, too. 
+<b>Cell Nesting</b>:: Have complex cell hierarchies as you can call +render_cell+ within cells, too.
 
 Go for it, you'll love it!
 
