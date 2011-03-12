@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency "shoulda"
   s.add_development_dependency "haml"
+  s.add_development_dependency "slim"
 end
