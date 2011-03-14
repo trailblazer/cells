@@ -1,16 +1,14 @@
-require 'generators/cells/base'
+require 'generators/cells/view_generator'
 
 module Haml
   module Generators
-    class CellGenerator < ::Cells::Generators::Base
+    class CellGenerator < ::Cells::Generators::ViewGenerator
+      
       source_root File.expand_path('../../templates', __FILE__)
-
-      def create_views
-        for state in actions do
-          @state  = state
-          @path   = File.join(base_path, "#{state}.html.haml")  #base_path defined in Cells::Generators::Base.
-          template "view.haml", @path
-        end
+      
+    private
+      def handler
+        :haml
       end
     end
   end
