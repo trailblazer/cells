@@ -4,7 +4,7 @@ class MusicianController < ActionController::Base
   end
 
   def promote
-    render :text => render_cell(:bassist, :promote_again)
+    render :text => render_cell(:trumpeter, :promote)
   end
 
   def promotion

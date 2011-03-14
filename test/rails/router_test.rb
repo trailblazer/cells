@@ -8,29 +8,18 @@ module ApplicationTests
           def promote; render; end
         end
 
-        #assert ::Cell::Rails.view_context_class._routes, "Cells::Railtie initializer wasn't invoked."
-        #assert ! ::OmgController.new.respond_to?( :render_cell)
-
         get "index"
         assert_response :success
         assert_equal "Find me at <a href=\"/musician\">vd.com</a>", @response.body
       end
 
-      should "allow cells to use *_url helpers" do
-        BassistCell.class_eval do
-          def promote_again; render; end
-        end
-
-        #assert ::Cell::Rails.view_context_class._routes, "Cells::Railtie initializer wasn't invoked."
-        #assert ! ::OmgController.new.respond_to?( :render_cell)
-
+      should "allow cells to use *_url helpers when mixing in AC::UrlFor" do
         get "promote"
         assert_response :success
-        assert_equal "Find me at <a href=\"http://test.host/\">vd.com</a>", @response.body
+        assert_equal "Find me at <a href=\"http://test.host/\">vd.com</a>\n", @response.body
       end
 
       should "allow cells to use #config" do
-
         BassistCell.class_eval do
           def provoke; render; end
         end
