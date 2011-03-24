@@ -4,7 +4,6 @@ h3. Changes
   * Added a generator for slim. Use it with `-e slim` when generating.
 
 
-
 h2. 3.5.5
   
 h3. Bugfixes
@@ -12,6 +11,7 @@ h3. Bugfixes
 
 h3. Changes
   * Gem dependencies changed, we now require @actionpack@ and @railties@ >= 3.0.0 instead of @rails@.
+
 
 h2. 3.5.4
   
