@@ -75,8 +75,7 @@ module Hooks
     def define_hook_writer(hook, accessor_name)
       instance_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
         def #{hook}(method=nil, &block)
-          callback = block_given? ? block : method
-          #{accessor_name} << callback
+          #{accessor_name} << (block || method)
         end
       RUBY_EVAL
     end
