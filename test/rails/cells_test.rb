@@ -109,7 +109,7 @@ class RailsCellsTest < ActiveSupport::TestCase
           cell(:bassist).find_template("bassist/playyy")
         end
         
-        puts "format: #{cell(:bassist).find_template("bassist/play.js").formats.inspect}"
+        #puts "format: #{cell(:bassist).find_template("bassist/play.js").formats.inspect}"
       end
       
       should "return play.html.erb" do
@@ -156,16 +156,5 @@ class RailsCellsTest < ActiveSupport::TestCase
         assert_equal({"song" => "Creatures"}, cell(:bassist, "song" => "Lockdown").params)
       end
     end
-    
-    
-    # DISCUSS: do we really need that test anymore?
-    should "precede cell ivars over controller ivars" do
-      @controller.instance_variable_set(:@note, "E")
-      BassistCell.class_eval do
-        def slap; @note = "A"; render; end
-      end
-      assert_equal "Boing in A", render_cell(:bassist, :slap)
-    end
-    
   end   
 end
