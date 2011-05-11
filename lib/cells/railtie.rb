@@ -2,7 +2,7 @@ require "rails/railtie"
 
 module Cells
   class Railtie < Rails::Railtie
-    initializer "cells.attach_router" do |app|
+    initializer "cells.attach_router",:after => :set_routes_reloader  do |app|
       Cell::Rails.class_eval do
         include app.routes.url_helpers
       end
