@@ -16,7 +16,7 @@ And the best: You can have as many cells in your page as you need!
 
 It's a gem!
 
-Rails 3:
+Rails 3.x:
 
   gem install cells
 
