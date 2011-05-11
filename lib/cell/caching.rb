@@ -60,7 +60,7 @@ module Cell
       
       # Computes the complete, namespaced cache key for +state+.
       def state_cache_key(state, key_parts={})
-        expand_cache_key([cell_name, state, key_parts])
+        expand_cache_key([controller_path, state, key_parts])
       end
 
       def expire_cache_key(key, *args)
