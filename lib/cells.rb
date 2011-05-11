@@ -58,13 +58,6 @@
 # Beside your new class you'd provide a star-sprangled button view in +xmas_cart/order_button.haml+.
 # When rendering the +cart+ state, the states as well as the "missing" views are inherited from ancesting cells,
 # this is pretty DRY and object-oriented, isn't it?
-
-require 'cell/rails'
-require 'cells/railtie'
-require 'cells/rails'
-require 'cell/test_case' if Rails.env == "test"
-require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4. # TODO: remove me as soon as we support 3.1, only.
-
 module Cells
   # Setup your special needs for Cells here. Use this to add new view paths.
   #
@@ -77,6 +70,28 @@ module Cells
   def self.setup
     yield(Cell::Base)
   end
+  
+  def self.rails3_0?
+    ::Rails::VERSION::MINOR == 0
+  end
+  
+  def self.rails3_1?
+    ::Rails::VERSION::MINOR == 1
+  end
 end
+
+require 'cell/rails'
+require 'cells/railtie'
+require 'cells/rails'
+require 'cell/test_case' if Rails.env == "test"
+
+#if Cells.rails3_0?
+#  puts "yo!"
+#  require 'cells/cell/rails3_0_strategy'
+#elsif Cells.rails3_1?
+#  puts "yeah!"
+#  require 'cells/cell/rails3_1_strategy'
+#end
+require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4. # TODO: remove me as soon as we support 3.1, only.
 
 Cell::Base = Cell::Rails

@@ -91,43 +91,33 @@ class RailsCellsTest < ActiveSupport::TestCase
       assert_equal({:song => "Lockdown"}, cell(:bassist, :song => "Lockdown").options)
     end
     
-    context "invoking defaultize_render_options_for" do
-      should "set default values" do
-        options = cell(:bassist).send(:defaultize_render_options_for, {}, :play)
-        
-        assert_equal :play, options[:view]
-      end
-      
-      should "allow overriding defaults" do
-        assert cell(:bassist).send(:defaultize_render_options_for, {:view => :slap}, :play)[:view] == :slap
-      end
-    end
-    
-    context "invoking find_family_view_for_state" do
-      should "raise an error when a template is missing" do
-        assert_raises ActionView::MissingTemplate do
-          cell(:bassist).find_template("bassist/playyy")
+    if Cells.rails3_0?
+      context "invoking find_family_view_for_state" do
+        should "raise an error when a template is missing" do
+          assert_raises ActionView::MissingTemplate do
+            cell(:bassist).find_template("bassist/playyy")
+          end
+          
+          #puts "format: #{cell(:bassist).find_template("bassist/play.js").formats.inspect}"
         end
         
-        #puts "format: #{cell(:bassist).find_template("bassist/play.js").formats.inspect}"
-      end
-      
-      should "return play.html.erb" do
-        assert_equal "bassist/play", cell(:bassist).send(:find_family_view_for_state, :play).virtual_path
-      end
-      
-      should "find inherited play.html.erb" do
-        assert_equal "bassist/play", cell(:bad_guitarist).send(:find_family_view_for_state, :play).virtual_path
-      end
-      
-      should_eventually "find the EN-version if i18n instructs" do
-        swap I18n, :locale => :en do
-          assert_equal "bassist/yell.en.html.erb", cell(:bassist).find_family_view_for_state(:yell).virtual_path
+        should "return play.html.erb" do
+          assert_equal "bassist/play", cell(:bassist).send(:find_family_view_for_state, :play).virtual_path
         end
+        
+        should "find inherited play.html.erb" do
+          assert_equal "bassist/play", cell(:bad_guitarist).send(:find_family_view_for_state, :play).virtual_path
+        end
+        
+        should_eventually "find the EN-version if i18n instructs" do
+          swap I18n, :locale => :en do
+            assert_equal "bassist/yell.en.html.erb", cell(:bassist).find_family_view_for_state(:yell).virtual_path
+          end
+        end
+        
+        
+        should_eventually "return an already cached family view"
       end
-      
-      
-      should_eventually "return an already cached family view"
     end
     
     context "delegation" do

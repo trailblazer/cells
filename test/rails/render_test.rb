@@ -12,6 +12,13 @@ class RailsRenderTest < ActiveSupport::TestCase
       assert_equal "Doo", render_cell(:bassist, :play)
     end
     
+    should "accept :format" do
+      BassistCell.class_eval do
+        def play; render :format => :js; end
+      end
+      assert_equal "alert(\"Doo\");", render_cell(:bassist, :play)
+    end
+    
     should "also render alternative engines, like haml" do
       BassistCell.class_eval do
         def sing; render; end
@@ -106,11 +113,19 @@ class RailsRenderTest < ActiveSupport::TestCase
         def groove; render; end
       end
       
-      e = assert_raise Cell::Rails::MissingTemplate do
-        render_cell(:bad_guitarist, :groove)
+      if Cells.rails3_0?
+        e = assert_raise Cell::Rails::MissingTemplate do
+          render_cell(:bad_guitarist, :groove)
+        end
+        
+        assert_includes e.message, "Missing template cell/rails/groove with {:handlers=>[:erb, :rjs, :builder, :rhtml, :rxml, :haml], :formats=>[:html, :text, :js, :css, :ics, :csv, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json], :locale=>[:en, :en]} in view paths"
+      else  # 3.1
+        e = assert_raise ActionView::MissingTemplate do
+          render_cell(:bad_guitarist, :groove)
+        end
+        
+        assert_includes e.message, "Missing template bad_guitarist/groove, bassist/groove with {:handlers=>[:erb, :builder, :haml], :formats=>[:html, :text, :js, :css, :ics, :csv, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json], :locale=>[:en, :en]}. Searched in:\n  "
       end
-      
-      assert_includes e.message, "Missing template cell/rails/groove with {:handlers=>[:erb, :rjs, :builder, :rhtml, :rxml, :haml], :formats=>[:html, :text, :js, :css, :ics, :csv, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json], :locale=>[:en, :en]} in view paths"
     end
     
     should "render instance variables from the cell" do

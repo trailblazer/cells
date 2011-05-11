@@ -2,7 +2,10 @@ require "rails/railtie"
 
 module Cells
   class Railtie < Rails::Railtie
-    initializer "cells.attach_router",:after => :set_routes_reloader  do |app|
+    options = {}
+    options[:after] = :set_routes_reloader if Cells.rails3_1?
+    
+    initializer "cells.attach_router", options  do |app|
       Cell::Rails.class_eval do
         include app.routes.url_helpers
       end

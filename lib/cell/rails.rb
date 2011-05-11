@@ -7,8 +7,13 @@ module Cell
     include AbstractController
     include Rendering, Layouts, Helpers, Callbacks, Translation, Logger
     include ActionController::RequestForgeryProtection
-
-
+    
+    if Cells.rails3_0?
+      require 'cell/rails3_0_strategy'
+    elsif Cells.rails3_1?
+      require 'cell/rails3_1_strategy'
+    end
+    
     class View < ActionView::Base
       def render(*args, &block)
         options = args.first.is_a?(::Hash) ? args.first : {}  # this is copied from #render by intention.
@@ -17,15 +22,8 @@ module Cell
         super
       end
     end
-
-
-    class MissingTemplate < ActionView::ActionViewError
-      def initialize(message, possible_paths)
-        super(message + " and possible paths #{possible_paths}")
-      end
-    end
-
-
+    
+    
     module Rendering
       # Invoke the state method for +state+ which usually renders something nice.
       def render_state(state, *args)
@@ -42,6 +40,8 @@ module Cell
     include Metal
     include Rendering
     include Caching
+    include VersionStrategy
+    
     
     attr_reader :parent_controller
     attr_accessor :options
@@ -60,14 +60,6 @@ module Cell
       @opts    = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(self, :options)
     end
     
-    def self.view_context_class
-        @view_context_class ||= begin
-          routes  = _routes  #if respond_to?(:_routes)
-          helpers = _helpers #if respond_to?(:_helpers)
-          View.prepare(routes, helpers)
-        end
-      end
-
     def self.controller_path
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
     end
@@ -138,22 +130,6 @@ module Cell
     end
 
   private
-    # Climbs up the inheritance chain, looking for a view for the current +state+.
-    def find_family_view_for_state(state)
-      exception       = nil
-      possible_paths  = possible_paths_for_state(state)
-
-      possible_paths.each do |template_path|
-        begin
-          template = find_template(template_path)
-          return template if template
-        rescue ::ActionView::MissingTemplate => exception
-        end
-      end
-
-      raise MissingTemplate.new(exception.message, possible_paths)
-    end
-    
     # Renders the view belonging to the given state. Will raise ActionView::MissingTemplate
     # if it can't find a view.
     def render_view_for(state, *args)
@@ -164,15 +140,10 @@ module Cell
       if opts[:state]
         opts[:text] = render_state(opts.delete(:state), *args)
       elsif (opts.keys & [:text, :inline, :file]).blank?
-        opts = defaultize_render_options_for(opts, state)
-        opts[:template] = find_family_view_for_state(opts.delete(:view))
+        process_opts_for(opts, state)
       end
       
       render_to_string(opts).html_safe # ActionView::Template::Text doesn't do that for us.
-    end
-    
-    def defaultize_render_options_for(opts, state)
-      opts.reverse_merge!(:view => state)
     end
   end
 end

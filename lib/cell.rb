@@ -70,23 +70,6 @@ module Cell
       @builders ||= []
     end
 
-    # Return the default view path for +state+. Override this if you cell has a differing naming style.
-    def view_for_state(state)
-      "#{cell_name}/#{state}"
-    end
-
-    # Returns all possible view paths for +state+ by invoking #view_for_state on all classes up
-    # the inheritance chain.
-    def find_class_view_for_state(state)
-      return [view_for_state(state)] unless superclass.respond_to?(:find_class_view_for_state)
-
-      superclass.find_class_view_for_state(state) << view_for_state(state)
-    end
-
-    def cell_name # TODO: remove in 3.6.
-      controller_path
-    end
-
     # The cell class constant for +cell_name+.
     def class_from_cell_name(cell_name)
       "#{cell_name}_cell".classify.constantize
@@ -94,11 +77,6 @@ module Cell
   end
 
   module InstanceMethods
-    # Computes all possible paths for +state+ by traversing up the inheritance chain.
-    def possible_paths_for_state(state)
-      self.class.find_class_view_for_state(state).reverse!
-    end
-    
     def state_accepts_args?(state)
       method(state).arity != 0
     end
