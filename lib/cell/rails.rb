@@ -61,16 +61,12 @@ module Cell
     end
     
     def self.view_context_class
-      controller = self
-
-      View.class_eval do
-        include controller._helpers
-        include controller._routes.url_helpers
+        @view_context_class ||= begin
+          routes  = _routes  #if respond_to?(:_routes)
+          helpers = _helpers #if respond_to?(:_helpers)
+          View.prepare(routes, helpers)
+        end
       end
-
-
-      @view_context_class ||= View
-    end
 
     def self.controller_path
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?

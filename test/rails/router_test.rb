@@ -1,8 +1,14 @@
+require 'test_helper'
+
 module ApplicationTests
   class RouterTest < ActionController::TestCase
     tests MusicianController
 
     context "A Rails app" do
+      should "pass url_helpers to the cell instance" do
+        assert_equal "/", BassistCell.new(@controller).root_path
+      end
+      
       should "allow cells to use url_helpers" do
         BassistCell.class_eval do
           def promote; render; end
