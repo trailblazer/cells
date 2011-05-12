@@ -33,7 +33,7 @@ module Cell
 
 
     module Metal
-      delegate :session, :params, :request, :config, :to => :parent_controller
+      delegate :session, :params, :request, :config, :env, :to => :parent_controller
     end 
     
     

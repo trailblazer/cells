@@ -85,13 +85,6 @@ require 'cells/railtie'
 require 'cells/rails'
 require 'cell/test_case' if Rails.env == "test"
 
-#if Cells.rails3_0?
-#  puts "yo!"
-#  require 'cells/cell/rails3_0_strategy'
-#elsif Cells.rails3_1?
-#  puts "yeah!"
-#  require 'cells/cell/rails3_1_strategy'
-#end
 require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4. # TODO: remove me as soon as we support 3.1, only.
 
 Cell::Base = Cell::Rails
