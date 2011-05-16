@@ -16,7 +16,7 @@ require "hooks/inheritable_attribute"
 #
 #   cat.run_hook :after_dinner
 module Hooks
-  VERSION = "0.1.3"
+  VERSION = "0.1.4"
   
   def self.included(base)
     base.extend InheritableAttribute

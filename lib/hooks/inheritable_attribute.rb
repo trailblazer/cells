@@ -24,8 +24,8 @@ module Hooks
         end
         
         def #{name}
-          return @#{name} unless superclass.respond_to?(:#{name})
-          @#{name} ||= superclass.#{name}.clone # only do this once.
+          return @#{name} unless superclass.respond_to?(:#{name}) and value = superclass.#{name}
+          @#{name} ||= value.clone # only do this once.
         end
       }
     end

@@ -11,8 +11,14 @@ class HooksTest < Test::Unit::TestCase
       @klass.inheritable_attr :drinks
     end
     
-    should "provide a reader with inherited attributes, already" do
+    should "provide a reader with empty inherited attributes, already" do
       assert_equal nil, @klass.drinks
+    end
+    
+    should "provide a reader with empty inherited attributes in a derived class" do
+      assert_equal nil, Class.new(@klass).drinks
+      #@klass.drinks = true
+      #Class.new(@klass).drinks # TODO: crashes.
     end
     
     should "provide an attribute copy in subclasses" do
