@@ -1,0 +1,4 @@
+h2. 0.1.4
+
+h3. Bugfixes
+  * An uninitialized @inheritable_attr@ doesn't crash since it is not cloned anymore. Note that an uncloneable attribute value still causes an exception.
