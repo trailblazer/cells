@@ -92,6 +92,7 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     if Cells.rails3_0?
+      puts "rails-3.0"
       context "invoking find_family_view_for_state" do
         should "raise an error when a template is missing" do
           assert_raises ActionView::MissingTemplate do
@@ -108,15 +109,6 @@ class RailsCellsTest < ActiveSupport::TestCase
         should "find inherited play.html.erb" do
           assert_equal "bassist/play", cell(:bad_guitarist).send(:find_family_view_for_state, :play).virtual_path
         end
-        
-        should_eventually "find the EN-version if i18n instructs" do
-          swap I18n, :locale => :en do
-            assert_equal "bassist/yell.en.html.erb", cell(:bassist).find_family_view_for_state(:yell).virtual_path
-          end
-        end
-        
-        
-        should_eventually "return an already cached family view"
       end
     end
     
