@@ -16,8 +16,12 @@ if defined?(Rails)
       if plugin.engine? && File.exists?(engine_cells_dir)
         # propagate the view- and code path of this engine-cell:
         ::Cell::Base.view_paths << engine_cells_dir
-        ::ActiveSupport::Dependencies.load_paths << engine_cells_dir
-
+        if ::ActiveSupport::Dependencies.respond_to?(:autoload_paths)
+          ::ActiveSupport::Dependencies.autoload_paths << engine_cells_dir
+        else
+          ::ActiveSupport::Dependencies.load_paths << engine_cells_dir
+        end
+        
         # if a path is in +load_once_path+ it won't be reloaded between requests.
         unless config.reload_plugins?
           ::ActiveSupport::Dependencies.load_once_paths << engine_cells_dir
