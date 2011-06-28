@@ -1,3 +1,9 @@
+h2. 3.6.1
+
+h3. Changes
+  * Added the @:format@ option allowing @#render@ to set different template types, e.g. @render :format => :json@.
+
+
 h2. 3.6.0
 
 h3. Changes
