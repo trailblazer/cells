@@ -76,6 +76,7 @@ module Cell
     # +:file+::   Specifies the name of the file template to render.
     # +:nothing+:: Doesn't invoke the rendering process.
     # +:state+::  Instantly invokes another rendering cycle for the passed state and returns. You may pass arbitrary state-args to the called state.  
+    # +:format+:: Sets a different template format, e.g. +:json+.
     #
     # Example:
     #  class MusicianCell < ::Cell::Base

@@ -19,6 +19,8 @@ module Cell
   private    
     def process_opts_for(opts, state)
       opts[:action] = opts[:view] || state
+      
+      lookup_context.formats = opts.delete(:format) if opts[:format]
     end
   end
 end

@@ -16,7 +16,7 @@ class RailsRenderTest < ActiveSupport::TestCase
       BassistCell.class_eval do
         def play; render :format => :js; end
       end
-      assert_equal "alert(\"Doo\");", render_cell(:bassist, :play)
+      assert_equal "alert(\"Doo\");\n", render_cell(:bassist, :play)
     end
     
     should "also render alternative engines, like haml" do
