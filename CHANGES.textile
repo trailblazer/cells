@@ -1,3 +1,8 @@
+h2. 3.6.2
+
+h3. Bugfixes
+  * Fixed cells.gemspec to allow Rails 3.x.
+
 h2. 3.6.1
 
 h3. Changes
