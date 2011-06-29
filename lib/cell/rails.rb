@@ -33,14 +33,14 @@ module Cell
 
 
     module Metal
-      delegate :session, :params, :request, :config, :env, :to => :parent_controller
+      delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
     end 
     
     
+    include VersionStrategy
     include Metal
     include Rendering
     include Caching
-    include VersionStrategy
     
     
     attr_reader :parent_controller
