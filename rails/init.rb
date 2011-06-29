@@ -5,10 +5,12 @@ require 'cells'
 #
 #   * +app/cells+
 #
-if ::ActiveSupport::Dependencies.respond_to?(:autoload_paths)
-  ActiveSupport::Dependencies.autoload_paths << Rails.root.join(*%w[app cells])
+dep = ::ActiveSupport::Dependencies
+
+if dep.respond_to?(:autoload_paths)
+  dep.autoload_paths << Rails.root.join(*%w[app cells])
 else
-  ActiveSupport::Dependencies.load_paths << Rails.root.join(*%w[app cells])
+  dep.load_paths << Rails.root.join(*%w[app cells])
 end
 
 # Rails initialization hook.
@@ -20,18 +22,18 @@ if defined?(Rails)
       if plugin.engine? && File.exists?(engine_cells_dir)
         # propagate the view- and code path of this engine-cell:
         ::Cell::Base.view_paths << engine_cells_dir
-        if ::ActiveSupport::Dependencies.respond_to?(:autoload_paths)
-          ::ActiveSupport::Dependencies.autoload_paths << engine_cells_dir
+        if dep.respond_to?(:autoload_paths)
+          dep.autoload_paths << engine_cells_dir
         else
-          ::ActiveSupport::Dependencies.load_paths << engine_cells_dir
+          dep.load_paths << engine_cells_dir
         end
         
         # if a path is in +load_once_path+ it won't be reloaded between requests.
         unless config.reload_plugins?
-          if ::ActiveSupport::Dependencies.respond_to?(:autoload_once_paths)
-            ::ActiveSupport::Dependencies.autoload_once_paths << engine_cells_dir
+          if dep.respond_to?(:autoload_once_paths)
+            dep.autoload_once_paths << engine_cells_dir
           else
-            ::ActiveSupport::Dependencies.load_once_paths << engine_cells_dir
+            dep.load_once_paths << engine_cells_dir
           end
         end
       end
