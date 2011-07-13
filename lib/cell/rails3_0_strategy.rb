@@ -13,10 +13,10 @@ module Cell
     module ClassMethods
       def view_context_class
         @view_context_class ||= begin
-          klass = Class.new(Cell::Rails::View)
-          klass.send(:include, _helpers)
-          klass.send(:include, _routes.url_helpers)
-          klass
+          Class.new(Cell::Rails::View).tap do |klass|
+            klass.send(:include, _helpers)
+            klass.send(:include, _routes.url_helpers)
+          end
         end
       end
       

@@ -1,4 +1,7 @@
 require 'test_helper'
+require 'app/cells/club_security'
+require 'app/cells/club_security/guard_cell'
+require 'app/cells/club_security/medic_cell'
 
 module StringHelper
   def pick; "plong"; end
@@ -42,6 +45,18 @@ class HelperTest < ActionController::TestCase
     
     should "have access to methods provided by helper" do
       assert_equal "plong", render_cell(:drummer, :assist)
+    end
+    
+    should "mix in required helpers, only" do
+      assert_equal "false true", render_cell(:"club_security/medic", :help)
+      assert_equal "true false", render_cell(:"club_security/guard", :help)
+    end
+    
+    should "include helpers only once" do
+      assert_equal "false true", render_cell(:"club_security/medic", :help)
+      assert_equal "true false", render_cell(:"club_security/guard", :help)
+      assert_equal "false true", render_cell(:"club_security/medic", :help)
+      assert_equal "true false", render_cell(:"club_security/guard", :help)
     end
   end
 end
