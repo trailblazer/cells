@@ -1,9 +1,19 @@
 require 'test_helper'
+require 'app/cells/club_security'
+require 'app/cells/club_security/guard_cell'
+require 'app/cells/club_security/medic_cell'
 
 class RailsRenderTest < ActiveSupport::TestCase
   include Cell::TestCase::TestMethods
   
   context "Invoking render" do
+
+    should "not mess up with helpers" do
+      assert_equal "false true", render_cell(:"club_security/medic", :help)
+      assert_equal "true false", render_cell(:"club_security/guard", :help)
+      assert_equal "false true", render_cell(:"club_security/medic", :help)
+      assert_equal "true false", render_cell(:"club_security/guard", :help)
+    end
     
     should "render a plain view" do
       BassistCell.class_eval do
