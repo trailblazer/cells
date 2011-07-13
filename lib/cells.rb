@@ -83,8 +83,6 @@ end
 require 'cell/rails'
 require 'cells/railtie'
 require 'cells/rails'
-require 'cell/test_case' if Rails.env == "test"
-
 require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4. # TODO: remove me as soon as we support 3.1, only.
 
 Cell::Base = Cell::Rails
