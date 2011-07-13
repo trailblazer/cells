@@ -1,3 +1,9 @@
+h2. 3.6.3
+
+h3. Bugfixes
+  * Helpers are now properly included (only once) with Rails 3.0. Thanks to [paneq] for a fix.
+  
+
 h2. 3.6.2
 
 h3. Bugfixes
