@@ -18,9 +18,6 @@ require "rails/test_help" # adds stuff like @routes, etc.
 gem_dir       = File.join(File.dirname(__FILE__), '..')
 test_app_dir  = File.join(gem_dir, 'test', 'app')
 
-# Important: Load any test ApplicationHelper before loading cells.
-Dir[File.join(test_app_dir, *%w[helpers ** *.rb]).to_s].each { |f| require f }
-
 require 'cells'
 
 Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
