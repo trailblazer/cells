@@ -18,6 +18,17 @@ module ApplicationTests
         assert_response :success
         assert_equal "Find me at <a href=\"/musician\">vd.com</a>", @response.body
       end
+      
+      should "delegate #url_options to the parent_controller" do
+        @controller.instance_eval do
+          def default_url_options
+            {:host => "cells.rails.org"}
+          end
+          
+        end
+        
+        assert_equal "http://cells.rails.org/", BassistCell.new(@controller).root_url
+      end
 
       should "allow cells to use *_url helpers when mixing in AC::UrlFor" do
         get "promote"
