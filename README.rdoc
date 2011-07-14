@@ -22,19 +22,19 @@ Rails 3.x:
 
 Rails 2.3:
 
-  gem install cells -v 3.3.5
+  gem install cells -v 3.3.8
 
 
 == Generate
 
 Creating a cell is nothing more than
 
-  $ rails generate cell ShoppingCart display -e haml
+  $ rails generate cell cart display -e haml
     create  app/cells/
-    create  app/cells/shopping_cart
-    create  app/cells/shopping_cart_cell.rb
-    create  app/cells/shopping_cart/display.html.haml
-    create  test/cells/shopping_cart_test.rb
+    create  app/cells/cart
+    create  app/cells/cart_cell.rb
+    create  app/cells/cart/display.html.haml
+    create  test/cells/cart_test.rb
 
 That looks very familiar.
 
@@ -43,15 +43,15 @@ That looks very familiar.
 Now, render your cart. Why not put it in <tt>layouts/application.html.erb</tt> for now?
 
   <div id="header">
-    <%= render_cell :shopping_cart, :display, :user => @current_user %>
+    <%= render_cell :cart, :display, :user => @current_user %>
 
 Feels like rendering a controller action. For good encapsulation we pass the current +user+ from outside into the cell - a dependency injection.
 
 == Code
 
-Time to improve our cell code. Let's start with <tt>app/cells/shopping_cart_cell.rb</tt>:
+Time to improve our cell code. Let's start with <tt>app/cells/cart_cell.rb</tt>:
 
-  class ShoppingCartCell < Cell::Rails
+  class CartCell < Cell::Rails
     def display(args)
       user    = args[:user]
       @items  = user.items_in_cart
@@ -65,7 +65,7 @@ Is that a controller? Hell, yeah. We even got a +#render+ method as we know it f
 
 == Views
 
-Since a plain call to +#render+ will start rendering <tt>app/cells/shopping_cart/display.html.haml</tt> we should put some meaningful markup there.
+Since a plain call to +#render+ will start rendering <tt>app/cells/cart/display.html.haml</tt> we should put some meaningful markup there.
 
   #cart
     You have #{@items.size} items in your shopping cart.
@@ -78,7 +78,7 @@ Yes, Cells support all template types that are supported by Rails itself. Rememb
 
 Yes, Cells have helpers just like controllers. If you need some specific helper, do
 
-  class ShoppingCartCell < Cell::Rails
+  class CartCell < Cell::Rails
     helper MyExtraHelper
 
 and it will be around in your cart views.
@@ -119,19 +119,19 @@ will render the configured +UnauthorizedUserCell+ instead of the original +Login
 
 Cells do strict view caching. No cluttered fragment caching. Add
 
-  class ShoppingCartCell < Cell::Rails
+  class CartCell < Cell::Rails
     cache :display, :expires_in => 10.minutes
 
 and your cart will be re-rendered after 10 minutes.
 
 You can expand the state's cache key - why not use a versioner block to do just this?
 
-  class ShoppingCartCell < Cell::Rails
+  class CartCell < Cell::Rails
     cache :display do |cell, options|
       options[:items].md5
     end
 
-The block's return value is appended to the state key: <tt>"cells/shopping_cart/display/0ecb1360644ce665a4ef"</tt>.
+The block's return value is appended to the state key: <tt>"cells/cart/display/0ecb1360644ce665a4ef"</tt>.
 
 Check the {API to learn more}[http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method].
 
@@ -141,9 +141,9 @@ Another big advantage compared to monolithic controller/helper/partial piles is 
 
 === Test::Unit
 
-So what if you wanna test the cart cell? Use the generated <tt>test/cells/shopping_cart_cell_test.rb</tt> test.
+So what if you wanna test the cart cell? Use the generated <tt>test/cells/cart_cell_test.rb</tt> test.
 
-  class ShoppingCartCellTest < Cell::TestCase
+  class CartCellTest < Cell::TestCase
     test "display" do
       invoke :display, :user => @user_fixture
       assert_select "#cart", "You have 3 items in your shopping cart."
