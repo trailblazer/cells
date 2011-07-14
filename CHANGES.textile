@@ -1,8 +1,12 @@
 h2. 3.6.3
 
 h3. Bugfixes
-  * Helpers are now properly included (only once) with Rails 3.0. Thanks to [paneq] for a fix.
-  
+  * [Rails 3.0] Helpers are now properly included (only once). Thanks to [paneq] for a fix.
+  * `#url_options` in the Metal module is now delegated to `parent_controller` which propagates global URL setting like relative URLs to your cells.
+
+h3. Changes
+  * `cells/test_case` is no longer required as it should be loaded automatically.
+
 
 h2. 3.6.2
 
