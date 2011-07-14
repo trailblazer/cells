@@ -97,6 +97,15 @@ class RailsRenderTest < ActiveSupport::TestCase
       assert_equal "<b>Doo</b>", render_cell(:bassist, :play)
     end
     
+    should "respect the #layout class method" do
+      puts 
+      class VanHalenBassistCell < BassistCell
+        layout 'b'
+        def play; render; end
+      end
+      assert_equal "<b>Doo</b>", render_cell("rails_render_test/van_halen_bassist", :play)
+    end
+    
     should "raise an error for a non-existent template" do
       BassistCell.class_eval do
         def groove; render; end
