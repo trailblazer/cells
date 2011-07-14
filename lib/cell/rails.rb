@@ -50,6 +50,7 @@ module Cell
 
 
     def initialize(parent_controller, *args)
+      super
       @parent_controller  = parent_controller
       setup_backwardibility(*args)
     end
