@@ -1,3 +1,9 @@
+h2. 3.6.4
+
+h3. Bugfixes
+  * Fixes @ArgumentError: wrong number of arguments (1 for 0)@ in @#render_cell@ for Ruby 1.8.
+
+
 h2. 3.6.3
 
 h3. Bugfixes
