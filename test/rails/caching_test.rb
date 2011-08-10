@@ -283,5 +283,28 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "1", render_cell(:director, :count, 3)
       assert_equal "2", render_cell(:director, :count, 4)
     end
+    
+    should "be able to use caching conditionally" do
+      @class.cache :count, :if => proc { |cell, int| (int % 2) != 0 }
+      
+      assert_equal "1", render_cell(:director, :count, 1)
+      assert_equal "2", render_cell(:director, :count, 2)
+      assert_equal "1", render_cell(:director, :count, 3)
+      assert_equal "4", render_cell(:director, :count, 4)
+    end
+    
+    should "cache conditionally with an instance method" do
+      @class.cache :count, :if => :odd?
+      @class.class_eval do
+        def odd?(int)
+          (int % 2) != 0
+        end
+      end
+      
+      assert_equal "1", render_cell(:director, :count, 1)
+      assert_equal "2", render_cell(:director, :count, 2)
+      assert_equal "1", render_cell(:director, :count, 3)
+      assert_equal "4", render_cell(:director, :count, 4)
+    end
   end
 end
