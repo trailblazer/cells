@@ -40,12 +40,17 @@ module Cell
       def cache(state, *args, &block)
         options = args.extract_options!
         
-        version_procs[state]  = args.first || block
-        cache_options[state]  = options
+        conditional_procs[state] = options.delete(:if)
+        version_procs[state]     = args.first || block
+        cache_options[state]     = options
       end
 
       def version_procs
         @version_procs ||= {}
+      end
+
+      def conditional_procs
+        @conditional_procs ||= {}
       end
 
       def cache_options
@@ -85,7 +90,7 @@ module Cell
     end
 
     def render_state(state, *args)
-      return super(state, *args) unless self.class.cache?(state)
+      return super(state, *args) unless cache?(state, *args)
       
       key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
       options = self.class.cache_options[state]
@@ -95,12 +100,24 @@ module Cell
       end
     end
     
+    def cache?(state, *args)
+      self.class.cache?(state) and call_state_conditional(state, *args)
+    end
+    
   protected
+    def call_proc_or_method(state, method, *args)
+      return method.call(self, *args) if method.kind_of?(Proc)
+      state_accepts_args?(state) ?  send(method, *args) : send(method)
+    end
+    
     def call_state_versioner(state, *args)
-      version_proc = self.class.version_procs[state] or return
-      
-      return version_proc.call(self, *args) if version_proc.kind_of?(Proc)
-      state_accepts_args?(state) ?  send(version_proc, *args) : send(version_proc)
+      method = self.class.version_procs[state] or return
+      call_proc_or_method state, method, *args
+    end
+    
+    def call_state_conditional(state, *args)
+      method = self.class.conditional_procs[state] or return true
+      call_proc_or_method state, method, *args
     end
     
   end
