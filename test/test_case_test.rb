@@ -67,6 +67,10 @@ class TestCaseTest < Cell::TestCase
           #assert_equal "Doo", invoke(:play)
         end
         
+        should "provide #invoke accepting args" do
+          assert_equal "*shouts* Listen!\n", invoke(:shout, :words => "Listen!")
+        end
+        
         should "provide assert_select" do
           invoke :promote
           assert_select "a", "vd.com"
