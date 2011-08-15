@@ -1,3 +1,9 @@
+h2. 3.6.5
+
+h3. Bugfixes
+  * `Cell::TestCase#invoke` now properly accepts state-args.
+
+
 h2. 3.6.4
 
 h3. Bugfixes

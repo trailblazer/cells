@@ -18,8 +18,7 @@ module Cell
       cell = create_cell_for(controller, name, *args)  # DISCUSS: we always save options.
       yield cell if block_given?
       
-      return cell.render_state(state, *args) if cell.state_accepts_args?(state)
-      cell.render_state(state)  # backward-compat.
+      cell.render_state_with_args(state, *args)
     end
     
     # Creates a cell instance. Note that this method calls builders which were attached to the
@@ -77,6 +76,11 @@ module Cell
   end
 
   module InstanceMethods
+    def render_state_with_args(state, *args)  # TODO: remove me in 4.0.
+      return render_state(state, *args) if state_accepts_args?(state)
+      render_state(state)  # backward-compat.
+    end
+    
     def state_accepts_args?(state)
       method(state).arity != 0
     end

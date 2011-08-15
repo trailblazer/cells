@@ -124,7 +124,7 @@ module Cell
     attr_reader :last_invoke
 
     def invoke(state, *args)
-      @last_invoke = self.class.controller_class.new(@controller, *args).render_state(state, *args)
+      @last_invoke = self.class.controller_class.new(@controller, *args).render_state_with_args(state, *args)
     end
   end
 end
