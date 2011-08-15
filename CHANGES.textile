@@ -3,6 +3,9 @@ h2. 3.6.5
 h3. Bugfixes
   * `Cell::TestCase#invoke` now properly accepts state-args.
 
+h3. Changes
+  * Added the `:if` option to `Base.cache` which allows adding a conditional proc or instance method to the cache definition. If it doesn't return true, caching for that state is skipped. 
+
 
 h2. 3.6.4
 

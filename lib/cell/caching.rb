@@ -19,6 +19,11 @@ module Cell
       #
       #   cache :show, :expires_in => 10.minutes
       #
+      # The +:if+ option lets you define a conditional proc or instance method. If it doesn't
+      # return a true value, caching for that state is skipped.
+      #
+      #   cache :show, :if => proc { |cell, options| options[:enable_cache] }
+      #
       # If you need your own granular cache keys, pass a versioner block.
       #
       #   cache :show do |cell, options|
@@ -112,12 +117,12 @@ module Cell
     
     def call_state_versioner(state, *args)
       method = self.class.version_procs[state] or return
-      call_proc_or_method state, method, *args
+      call_proc_or_method(state, method, *args)
     end
     
     def call_state_conditional(state, *args)
       method = self.class.conditional_procs[state] or return true
-      call_proc_or_method state, method, *args
+      call_proc_or_method(state, method, *args)
     end
     
   end
