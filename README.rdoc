@@ -149,7 +149,9 @@ So what if you wanna test the cart cell? Use the generated <tt>test/cells/cart_c
       assert_select "#cart", "You have 3 items in your shopping cart."
     end
 
-Run your tests with
+Don't forget to put <tt>require 'cell/test_case'</tt> in your project's <tt>test/test_helper.rb</tt> file.
+
+Then, run your tests with
 
   $ rake test:cells
 
