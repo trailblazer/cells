@@ -42,10 +42,10 @@ module Cells
     #   * +app/cells+
     #   * +app/cells/layouts+
     #
-    def self.view_paths
+    def view_paths
       ::Cell::Base.view_paths
     end
-    def self.view_paths=(paths)
+    def view_paths=(paths)
       ::Cell::Base.view_paths = paths
     end
   end
