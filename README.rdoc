@@ -9,6 +9,7 @@ _Hooks_ lets you define hooks declaratively in your ruby class. You can add call
 
 It's almost like ActiveSupport::Callbacks but 76,6% less complex. Instead, it is not more than 60 lines of code, one method compilation, no +method_missing+ and no magic.
 
+Also, you may pass additional arguments to your callbacks when invoking a hook.
 
 == Example
 
