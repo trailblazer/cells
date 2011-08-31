@@ -13,6 +13,8 @@ It's almost like ActiveSupport::Callbacks but 76,6% less complex. Instead, it is
 == Example
 
 Let's take... a cat.
+  
+  require 'hooks'
 
   class Cat
     include Hooks
@@ -37,56 +39,32 @@ Running the callbacks happens on instances. It will run the block and #have_a_de
   # => Ice cream!
        Hell, yeah!
 
-A complete example to put it all together:
 
-  require 'hooks'
+== Inheritance
 
-  # That's the generic cat. It does pretty much nothing.
-  # It's not really a *cat* by the way, just a Ruby class.
-  # Don't forget to document this properly, cats are literate coders.
-  class Cat
-    include Hooks
-
-    @likes = 'food'
-    define_hook :after_dinner # void default implementation
-
-    def dinner_time!
-      puts "It's dinner time!"
-      run_hook :after_dinner, @likes
-    end
-  end
-
-  # But here's *my* REAL cat. It's dumb and hangry. It's a cat.
-  # MY CAT.
-  class MyCat < Cat
-    def initialize(likes = nil)
-      @likes = likes ? likes : 'food'
-    end
-
-    after_dinner do |what|
-      puts "I had a great time. I'd like some more #{what}!"
-    end
-
+Hooks are inherited, here's a complete example to put it all together.
+  
+  class Garfield < Cat
+    
     after_dinner :want_some_more
 
-    def want_some_more(what)
-      puts "No, really, is there some more #{@likes}?"
+    def want_some_more
+      puts "Is that all?"
     end
   end
 
-  # dumb cat
-  Cat.new.dinner_time! # => It's dinner time!
 
-  # dumber cat
-  my_cat = MyCat.new('fish')
-  my_cat.dinner_time!  # => It's dinner time!
-                      # => I had a great time. I'd like some more fish!
-                      # => No, really, is there some more fish?
+  Garfield.new.run_hook :after_dinner
+  # => Ice cream!
+       Hell, yeah!
+       Is that all?
+  
+Note how the callbacks are invoked in the order they were inherited.
 
 
-== Options
+== Options for Callbacks
 
-You're free to pass any number of arguments to #run_callback.
+You're free to pass any number of arguments to #run_callback, those will be passed to the callbacks.
 
   cat.run_hook :before_dinner, cat, Time.now
 
@@ -106,13 +84,6 @@ Not sure why a cat should have ice cream for dinner. Beside that, I was tempted 
 == Installation
 
   gem install hooks
-
-
-== Dependencies
-
-The current gem requires
-
-* active_support 2.3.x
 
 
 == Anybody using it?
