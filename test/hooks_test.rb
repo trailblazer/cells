@@ -1,15 +1,18 @@
 require 'test_helper'
 
 class HooksTest < Test::Unit::TestCase
+  class TestClass
+    include Hooks
+    
+    def executed
+      @executed ||= [];
+    end
+  end
+  
+  
   context "Hooks.define_hook" do
     setup do
-      @klass = Class.new(Object) do
-        include Hooks
-        
-        def executed
-          @executed ||= [];
-        end
-      end
+      @klass = Class.new(TestClass)
       
       @mum = @klass.new
       @mum.class.define_hook :after_eight
@@ -102,14 +105,8 @@ class HooksTest < Test::Unit::TestCase
   end
   
   context "Deriving" do
-    setup do  # FIXME: use from upper test case.
-      @klass = Class.new(Object) do
-        include Hooks
-        
-        def executed
-          @executed ||= [];
-        end
-      end
+    setup do
+      @klass = Class.new(TestClass)
       
       @mum = @klass.new
       @mum.class.define_hook :after_eight
