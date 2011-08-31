@@ -100,4 +100,39 @@ class HooksTest < Test::Unit::TestCase
       end
     end
   end
+  
+  context "Deriving" do
+    setup do  # FIXME: use from upper test case.
+      @klass = Class.new(Object) do
+        include Hooks
+        
+        def executed
+          @executed ||= [];
+        end
+      end
+      
+      @mum = @klass.new
+      @mum.class.define_hook :after_eight
+    end
+    
+    should "inherit the hook" do
+      @klass.class_eval do
+        after_eight :take_shower
+        
+        def take_shower
+          executed << :take_shower
+        end
+      end
+      
+      @kid = Class.new(@klass) do
+        after_eight :have_dinner
+        
+        def have_dinner
+          executed << :have_dinner
+        end
+      end.new
+      
+      assert_equal [:take_shower, :have_dinner], @kid.run_hook(:after_eight)
+    end
+  end
 end
