@@ -48,7 +48,7 @@ class RailsCellsTest < ActiveSupport::TestCase
   
   context "A rails cell" do
     should "respond to DEFAULT_VIEW_PATHS" do
-      assert_equal ["app/cells", "app/cells/layouts"], Cell::Base::DEFAULT_VIEW_PATHS
+      assert_equal ["app/cells"], Cell::Base::DEFAULT_VIEW_PATHS
     end
     
     should "respond to .setup_view_paths!" do
