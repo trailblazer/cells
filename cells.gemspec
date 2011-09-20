@@ -22,7 +22,9 @@ Gem::Specification.new do |s|
   s.add_dependency "actionpack",  "~> 3.0"
   s.add_dependency "railties",    "~> 3.0"
   
+  s.add_development_dependency "rake"
   s.add_development_dependency "shoulda"
   s.add_development_dependency "haml"
   s.add_development_dependency "slim"
+  s.add_development_dependency "tzinfo" # FIXME: why the hell do we need this for 3.1?
 end
