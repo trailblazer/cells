@@ -5,7 +5,6 @@ module Cell
   
   DEFAULT_VIEW_PATHS = [
     File.join('app', 'cells'),
-    File.join('app', 'cells', 'layouts')
   ]
     
   module ClassMethods
