@@ -18,7 +18,7 @@ class RailsRenderTest < ActiveSupport::TestCase
       assert_equal "alert(\"Doo\");\n", render_cell(:bassist, :play)
     end
     
-    should "accept :format without messing up following render calls" do
+    should_eventually "accept :format without messing up following render calls" do
       BassistCell.class_eval do
         def play; render(:format => :js) + render; end
       end
