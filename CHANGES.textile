@@ -1,3 +1,9 @@
+h2. 3.6.6
+
+h3. Changes
+  * Added the @:format@ option for @#render@ which should be used with caution. Sorry for that.
+  * Removed the useless @layouts/@ view path from Cell::Base. 
+
 h2. 3.6.5
 
 h3. Bugfixes
