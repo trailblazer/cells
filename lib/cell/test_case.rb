@@ -60,53 +60,57 @@ module Cell
     end
 
     module TestMethods
-      def setup
-        @controller = Class.new(ActionController::Base).new
-        @request    = ::ActionController::TestRequest.new
-        @response   = ::ActionController::TestResponse.new
-        @controller.request = @request
-        @controller.response = @response
-        @controller.params = {}
-      end
+      extend ActiveSupport::Concern
 
-      # Use this for functional tests of your application cells.
-      #
-      # Example:
-      #   should "spit out a h1 title" do
-      #     html = render_cell(:news, :latest)
-      #     assert_selekt html, "h1", "The latest and greatest!"
-      def render_cell(*args)
-        @controller.render_cell(*args)
-      end
+      module InstanceMethods
+        def setup
+          @controller = Class.new(ActionController::Base).new
+          @request    = ::ActionController::TestRequest.new
+          @response   = ::ActionController::TestResponse.new
+          @controller.request = @request
+          @controller.response = @response
+          @controller.params = {}
+        end
 
-      # Builds an instance of <tt>name</tt>Cell for unit testing.
-      # Passes the optional block to <tt>cell.instance_eval</tt>.
-      #
-      # Example:
-      #   assert_equal "Banks kill planet!" cell(:news, :topic => :terror).latest_headline
-      def cell(name, *args, &block)
-        cell = ::Cell::Base.create_cell_for(@controller, name, *args)
-        cell.instance_eval &block if block_given?
-        cell
-      end
-      
-      # Execute the passed +block+ in a real view context of +cell_class+. 
-      # Usually you'd test helpers here.
-      #
-      # Example:
-      #
-      #   assert_equal("<h1>Modularity rocks.</h1>", in_view do content_tag(:h1, "Modularity rocks."))
-      def in_view(cell_class, &block)
-        subject = cell(cell_class, :block => block)
-        setup_test_states_in(subject) # add #in_view to subject cell.
-        subject.render_state(:in_view)
-      end
-      
-    protected
-      def setup_test_states_in(cell)
-        cell.instance_eval do
-          def in_view
-            render :inline => "<%= instance_exec(&block) %>", :locals => {:block => options[:block]}
+        # Use this for functional tests of your application cells.
+        #
+        # Example:
+        #   should "spit out a h1 title" do
+        #     html = render_cell(:news, :latest)
+        #     assert_selekt html, "h1", "The latest and greatest!"
+        def render_cell(*args)
+          @controller.render_cell(*args)
+        end
+
+        # Builds an instance of <tt>name</tt>Cell for unit testing.
+        # Passes the optional block to <tt>cell.instance_eval</tt>.
+        #
+        # Example:
+        #   assert_equal "Banks kill planet!" cell(:news, :topic => :terror).latest_headline
+        def cell(name, *args, &block)
+          cell = ::Cell::Base.create_cell_for(@controller, name, *args)
+          cell.instance_eval &block if block_given?
+          cell
+        end
+
+        # Execute the passed +block+ in a real view context of +cell_class+.
+        # Usually you'd test helpers here.
+        #
+        # Example:
+        #
+        #   assert_equal("<h1>Modularity rocks.</h1>", in_view do content_tag(:h1, "Modularity rocks."))
+        def in_view(cell_class, &block)
+          subject = cell(cell_class, :block => block)
+          setup_test_states_in(subject) # add #in_view to subject cell.
+          subject.render_state(:in_view)
+        end
+
+        protected
+        def setup_test_states_in(cell)
+          cell.instance_eval do
+            def in_view
+              render :inline => "<%= instance_exec(&block) %>", :locals => {:block => options[:block]}
+            end
           end
         end
       end
@@ -119,8 +123,8 @@ module Cell
 
     extend ActionController::TestCase::Behavior::ClassMethods
     class_attribute :_controller_class
-    
-    
+
+
     attr_reader :last_invoke
 
     def invoke(state, *args)
