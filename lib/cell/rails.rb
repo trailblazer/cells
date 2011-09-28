@@ -131,6 +131,24 @@ module Cell
       render_view_for(self.action_name, *args)
     end
 
+    # Renders the cell state and returns the content. You may pass options here, too. They will be
+    # around in @opts.
+    #
+    # Example:
+    #
+    #   @box = render_cell(:posts, :latest, :user => current_user)
+    #
+    # If you need the cell instance before it renders, you can pass a block receiving the cell.
+    #
+    # Example:
+    #
+    #   @box = render_cell(:comments, :top5) do |cell|
+    #     cell.markdown! if config.parse_comments?
+    #   end
+    def render_cell(name, state, *args, &block)
+      ::Cell::Base.render_cell_for(self, name, state, *args, &block)
+    end
+
   private
     # Renders the view belonging to the given state. Will raise ActionView::MissingTemplate
     # if it can't find a view.

@@ -176,6 +176,15 @@ class RailsRenderTest < ActiveSupport::TestCase
     end
   end
   
+  context "Invoking render_cell" do
+    should "render the target cell and state" do
+      TrumpeterCell.class_eval do
+        def chunky_bacon; render_cell :bassist, :shout, :words => 'chunky bacon'; end
+      end
+      assert_equal "*shouts* chunky bacon\n", render_cell(:trumpeter, :chunky_bacon)
+    end
+  end
+
   context "A cell view" do
     # rails view api
     should "allow calls to params/response/..." do
