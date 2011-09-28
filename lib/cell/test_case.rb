@@ -58,80 +58,82 @@ module Cell
         super(HTML::Document.new(last_invoke).root, *args, &block)
       end
     end
+    
+    module CommonTestMethods
+      def setup
+        @controller = Class.new(ActionController::Base).new
+        @request    = ::ActionController::TestRequest.new
+        @response   = ::ActionController::TestResponse.new
+        @controller.request = @request
+        @controller.response = @response
+        @controller.params = {}
+      end
+      
+      # Runs the block while computing the instance variables diff from before and after. 
+      def extract_state_ivars_for(cell)
+        before  = cell.instance_variables
+        yield 
+        after   = cell.instance_variables
+        
+        Hash[(after - before).collect do |var|
+          next if var =~ /^@_/
+          [var[1, var.length].to_sym, cell.instance_variable_get(var)]
+        end]
+      end
+    end
+    
 
     module TestMethods
-      extend ActiveSupport::Concern
-
-      module InstanceMethods
-        def setup
-          @controller = Class.new(ActionController::Base).new
-          @request    = ::ActionController::TestRequest.new
-          @response   = ::ActionController::TestResponse.new
-          @controller.request = @request
-          @controller.response = @response
-          @controller.params = {}
-        end
-
-        # Use this for functional tests of your application cells.
-        #
-        # Example:
-        #   should "spit out a h1 title" do
-        #     html = render_cell(:news, :latest)
-        #     assert_select html, "h1", "The latest and greatest!"
-        def render_cell(name, state, *args)
-          # DISCUSS: should we allow passing a block here, just as in controllers?
-          @subject_cell = ::Cell::Base.create_cell_for(@controller, name, *args)
-          @view_assigns = extract_state_ivars_for(@subject_cell) do
-            @last_invoke = @subject_cell.render_state_with_args(state, *args)
-          end
-          
-          @last_invoke
-        end
-
-        # Builds an instance of <tt>name</tt>Cell for unit testing.
-        # Passes the optional block to <tt>cell.instance_eval</tt>.
-        #
-        # Example:
-        #   assert_equal "Banks kill planet!" cell(:news, :topic => :terror).latest_headline
-        def cell(name, *args, &block)
-          cell = ::Cell::Base.create_cell_for(@controller, name, *args)
-          cell.instance_eval &block if block_given?
-          cell
-        end
-
-        # Execute the passed +block+ in a real view context of +cell_class+.
-        # Usually you'd test helpers here.
-        #
-        # Example:
-        #
-        #   assert_equal("<h1>Modularity rocks.</h1>", in_view do content_tag(:h1, "Modularity rocks."))
-        def in_view(cell_class, &block)
-          subject = cell(cell_class, :block => block)
-          setup_test_states_in(subject) # add #in_view to subject cell.
-          subject.render_state(:in_view)
-        end
-
-      protected
-        def setup_test_states_in(cell)
-          cell.instance_eval do
-            def in_view
-              render :inline => "<%= instance_exec(&block) %>", :locals => {:block => options[:block]}
-            end
-          end
+      include CommonTestMethods
+      
+      attr_reader :last_invoke, :subject_cell, :view_assigns
+      
+      # Use this for functional tests of your application cells.
+      #
+      # Example:
+      #   should "spit out a h1 title" do
+      #     html = render_cell(:news, :latest)
+      #     assert_select html, "h1", "The latest and greatest!"
+      def render_cell(name, state, *args)
+        # DISCUSS: should we allow passing a block here, just as in controllers?
+        @subject_cell = ::Cell::Base.create_cell_for(@controller, name, *args)
+        @view_assigns = extract_state_ivars_for(@subject_cell) do
+          @last_invoke = @subject_cell.render_state_with_args(state, *args)
         end
         
-        # Runs the block while computing the instance variables diff from before and after. 
-        def extract_state_ivars_for(cell)
-          before  = cell.instance_variables
-          yield 
-          after   = cell.instance_variables
-          
-          Hash[(after - before).collect do |var|
-            next if var =~ /^@_/
-            [var[1, var.length].to_sym, cell.instance_variable_get(var)]
-          end]
+        @last_invoke
+      end
+
+      # Builds an instance of <tt>name</tt>Cell for unit testing.
+      # Passes the optional block to <tt>cell.instance_eval</tt>.
+      #
+      # Example:
+      #   assert_equal "Banks kill planet!" cell(:news, :topic => :terror).latest_headline
+      def cell(name, *args, &block)
+        cell = ::Cell::Base.create_cell_for(@controller, name, *args)
+        cell.instance_eval &block if block_given?
+        cell
+      end
+
+      # Execute the passed +block+ in a real view context of +cell_class+.
+      # Usually you'd test helpers here.
+      #
+      # Example:
+      #
+      #   assert_equal("<h1>Modularity rocks.</h1>", in_view do content_tag(:h1, "Modularity rocks."))
+      def in_view(cell_class, &block)
+        subject = cell(cell_class, :block => block)
+        setup_test_states_in(subject) # add #in_view to subject cell.
+        subject.render_state(:in_view)
+      end
+
+    protected
+      def setup_test_states_in(cell)
+        cell.instance_eval do
+          def in_view
+            render :inline => "<%= instance_exec(&block) %>", :locals => {:block => options[:block]}
+          end
         end
-        
       end
     end
 
@@ -143,8 +145,6 @@ module Cell
     extend ActionController::TestCase::Behavior::ClassMethods
     class_attribute :_controller_class
 
-
-    attr_reader :last_invoke, :subject_cell, :view_assigns
 
     def invoke(state, *args)
       @last_invoke = self.class.controller_class.new(@controller, *args).render_state_with_args(state, *args)
