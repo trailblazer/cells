@@ -77,9 +77,16 @@ module Cell
         # Example:
         #   should "spit out a h1 title" do
         #     html = render_cell(:news, :latest)
-        #     assert_selekt html, "h1", "The latest and greatest!"
-        def render_cell(*args)
-          @controller.render_cell(*args)
+        #     assert_select html, "h1", "The latest and greatest!"
+        def render_cell(name, state, *args)
+          # DISCUSS: should we allow passing a block here, just as in controllers?
+          @subject_cell = ::Cell::Base.create_cell_for(@controller, name, *args)
+          content       = ""
+          @view_assigns = extract_state_ivars_for(@subject_cell) do
+            content = @subject_cell.render_state_with_args(state, *args)
+          end
+          
+          content
         end
 
         # Builds an instance of <tt>name</tt>Cell for unit testing.
@@ -105,7 +112,7 @@ module Cell
           subject.render_state(:in_view)
         end
 
-        protected
+      protected
         def setup_test_states_in(cell)
           cell.instance_eval do
             def in_view
@@ -113,6 +120,18 @@ module Cell
             end
           end
         end
+        
+        def extract_state_ivars_for(cell)
+          before  = cell.instance_variables
+          yield 
+          after   = cell.instance_variables
+          
+          Hash[(after - before).collect do |var|
+            next if var =~ /^@_/
+            [var[1, var.length].to_sym, cell.instance_variable_get(var)]
+          end]
+        end
+        
       end
     end
 
@@ -125,7 +144,7 @@ module Cell
     class_attribute :_controller_class
 
 
-    attr_reader :last_invoke
+    attr_reader :last_invoke, :subject_cell, :view_assigns
 
     def invoke(state, *args)
       @last_invoke = self.class.controller_class.new(@controller, *args).render_state_with_args(state, *args)

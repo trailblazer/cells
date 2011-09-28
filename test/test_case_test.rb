@@ -11,7 +11,6 @@ class TestCaseTest < Cell::TestCase
       end
     end
     
-    
     should "respond to #render_cell" do
       assert_equal "Doo", render_cell(:bassist, :play)
     end
@@ -30,6 +29,31 @@ class TestCaseTest < Cell::TestCase
     
     should "respond to #cell with options and block" do
       assert_equal({:topic => :peace}, cell(:bassist, :topic => :peace).options)
+    end
+    
+    context "#subject_cell" do
+      should "return the last rendered cell" do
+        render_cell(:bassist, :play)
+        assert_kind_of BassistCell, subject_cell
+      end
+    end
+    
+    
+    context "#view_assigns" do
+      should "be emtpy when nothing was set" do
+        render_cell(:bassist, :play)
+        assert_equal({}, view_assigns)
+      end
+      
+      should "return the instance variables from the last #render_cell" do
+        BassistCell.class_eval do
+          def sleep
+            @duration = "8h"
+          end
+        end
+        render_cell(:bassist, :sleep)
+        assert_equal({:duration => "8h"}, view_assigns)
+      end
     end
     
     context "in declarative tests" do
