@@ -81,12 +81,11 @@ module Cell
         def render_cell(name, state, *args)
           # DISCUSS: should we allow passing a block here, just as in controllers?
           @subject_cell = ::Cell::Base.create_cell_for(@controller, name, *args)
-          content       = ""
           @view_assigns = extract_state_ivars_for(@subject_cell) do
-            content = @subject_cell.render_state_with_args(state, *args)
+            @last_invoke = @subject_cell.render_state_with_args(state, *args)
           end
           
-          content
+          @last_invoke
         end
 
         # Builds an instance of <tt>name</tt>Cell for unit testing.
@@ -121,6 +120,7 @@ module Cell
           end
         end
         
+        # Runs the block while computing the instance variables diff from before and after. 
         def extract_state_ivars_for(cell)
           before  = cell.instance_variables
           yield 
