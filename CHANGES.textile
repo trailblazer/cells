@@ -1,3 +1,8 @@
+h2. 3.6.7
+
+h3. Changes
+  * Added @view_assigns@ to TestCase. 
+  
 h2. 3.6.6
 
 h3. Changes
