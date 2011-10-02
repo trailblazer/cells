@@ -230,7 +230,7 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       end
     end
     
-    should "compute the key with a block" do
+    should "compute the key with a block receiving state-args" do
       @class.cache :count do |cell, int|
         (int % 2)==0 ? {:count => "even"} : {:count => "odd"}
       end

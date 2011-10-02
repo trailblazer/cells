@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class TestCaseTest < Cell::TestCase
-  
+  include ActiveSupport::Testing::Deprecation
+    
   context "A TestCase" do
     setup do
       @test = Cell::TestCase.new(:cell_test)
@@ -19,16 +20,20 @@ class TestCaseTest < Cell::TestCase
       assert_selector "p", "Doo", "<p>Doo</p>y"
     end
     
-    should "respond to #cell" do
-      assert_kind_of BassistCell, cell(:bassist)
-    end
-    
-    should "respond to #cell with a block" do
-      assert_respond_to cell(:bassist){ def whatever; end }, :whatever
-    end
-    
-    should "respond to #cell with options and block" do
-      assert_equal({:topic => :peace}, cell(:bassist, :topic => :peace).options)
+    context "#cell" do
+      should "create a cell" do
+        assert_kind_of BassistCell, cell(:bassist)
+      end
+      
+      should "accept a block" do
+        assert_respond_to cell(:bassist){ def whatever; end }, :whatever
+      end
+      
+      should "mark options as deprecated" do
+        assert_deprecated do
+          res = cell(:bassist, :song => "Lockdown")
+        end
+      end
     end
     
     context "#subject_cell" do
@@ -103,11 +108,11 @@ class TestCaseTest < Cell::TestCase
       
       context "#setup_test_states_in" do
         should "add the :in_view state" do
-          c = cell(:bassist, :block => lambda{"Cells rock."})
+          c = cell(:bassist)
           assert_not c.respond_to?(:in_view)
           
           setup_test_states_in(c)
-          assert_equal "Cells rock.", c.render_state(:in_view)
+          assert_equal "Cells rock.", c.render_state(:in_view, lambda{"Cells rock."})
         end
       end
       

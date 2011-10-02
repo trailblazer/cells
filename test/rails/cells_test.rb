@@ -77,18 +77,14 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     include ActiveSupport::Testing::Deprecation
-    should "mark @opts as deprecated, but still works" do
+    should "mark @options as deprecated, but still works" do
       res = nil
       assert_deprecated do
         res = cell(:bassist, :song => "Lockdown").instance_eval do
-          @opts[:song]
+          options[:song]
         end
       end
       assert_equal "Lockdown", res
-    end
-    
-    should "respond to #options and return the cell options" do
-      assert_equal({:song => "Lockdown"}, cell(:bassist, :song => "Lockdown").options)
     end
     
     if Cells.rails3_0?

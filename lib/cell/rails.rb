@@ -43,8 +43,8 @@ module Cell
     include Caching
     
     
+    attr_reader :options  # TODO: removed in 3.7.
     attr_reader :parent_controller
-    attr_accessor :options
     
     abstract!
 
@@ -55,10 +55,10 @@ module Cell
       setup_backwardibility(*args)
     end
     
-    # Some people still like #options and assume it's a hash.
+    # Some people still like #options and assume it's a hash. This will be removed in Cells 3.7.
     def setup_backwardibility(*args)
-      @options = (args.first.is_a?(Hash) and args.size == 1) ? args.first : args
-      @opts    = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(self, :options)
+      @_options = (args.first.is_a?(Hash) and args.size == 1) ? args.first : args
+      @options  = ActiveSupport::Deprecation::DeprecatedObjectProxy.new(@_options, "#options is deprecated and will be removed in Cells 3.7. Please use state-args.")
     end
     
     def self.controller_path
