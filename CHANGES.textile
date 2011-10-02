@@ -1,3 +1,9 @@
+h2. 3.6.8
+
+h3. Changes
+  * Removed <code>@opts</code>.
+  * Deprecated @#options@ in favour of state-args. 
+
 h2. 3.6.7
 
 h3. Changes
