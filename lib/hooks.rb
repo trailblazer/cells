@@ -50,7 +50,7 @@ module Hooks
         if callback.kind_of? Symbol
           scope.send(callback, *args)
         else
-          callback.call(*args)
+          scope.instance_exec(*args, &callback)
         end 
       end
     end
