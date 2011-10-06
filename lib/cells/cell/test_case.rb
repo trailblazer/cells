@@ -77,8 +77,26 @@ module Cell
       #   should "spit out a h1 title" do
       #     html = render_cell(:news, :latest)
       #     assert_selekt html, "h1", "The latest and greatest!"
-      def render_cell(*args)
-        @controller.render_cell(*args)
+      def render_cell(name, state, *args)
+        @subject_cell = ::Cell::Base.create_cell_for(@controller, name, *args)
+        @view_assigns = extract_state_ivars_for(@subject_cell) do
+          @last_invoke = @subject_cell.render_state(state, *args)
+        end
+        
+        @last_invoke
+      end
+
+      # Runs the block while computing the instance variables diff from before and after. 
+      def extract_state_ivars_for(cell)
+        before  = cell.instance_variables
+        before += [:@cell, :@state_name]
+        yield 
+        after   = cell.instance_variables
+        
+        Hash[(after - before).collect do |var|
+          next if var =~ /^@_/
+          [var[1, var.length].to_sym, cell.instance_variable_get(var)]
+        end]
       end
       
       # Builds an instance of <tt>name</tt>Cell for unit testing.
@@ -99,7 +117,7 @@ module Cell
     include AssertSelect
     
     
-    attr_reader :last_invoke
+    attr_reader :last_invoke, :subject_cell, :view_assigns
     
     def invoke(state, *args)
       @last_invoke = self.class.controller_class.new(@controller, *args).render_state(state)

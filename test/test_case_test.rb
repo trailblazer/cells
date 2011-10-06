@@ -33,6 +33,23 @@ class TestCaseTest < Cell::TestCase
       assert_equal({:topic => :peace}, cell(:bassist, :topic => :peace) { def opts; @opts; end }.opts)
     end
     
+    context "#view_assigns" do
+      should "be emtpy when nothing was set" do
+        render_cell(:bassist, :play)
+        assert_equal({}, view_assigns)
+      end
+      
+      should "return the instance variables from the last #render_cell" do
+        BassistCell.class_eval do
+          def sleep
+            @duration = "8h"
+          end
+        end
+        render_cell(:bassist, :sleep)
+        assert_equal({:duration => "8h"}, view_assigns)
+      end
+    end
+    
     context "in declarative tests" do
       should "respond to TestCase.tests" do
         self.class.tests BassistCell
