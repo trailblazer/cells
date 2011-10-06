@@ -66,4 +66,4 @@ end
 Cell::Base.view_paths = Cells::DEFAULT_VIEW_PATHS if Cell::Base.view_paths.blank?
 
 require 'cells/rails'
-require 'cells/cell/test_case' if ENV['RAILS_ENV'] = 'test'
+require 'cells/cell/test_case' if ENV['RAILS_ENV'] == 'test'
