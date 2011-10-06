@@ -1,3 +1,7 @@
+- 3.3.9
+  * fixed loading test_case.rb
+  * added TestCase#view_assigns
+
 - 2.3
   * ::Cell::Base#new(controller, opts={})
     We got rid of the second argument cell_name, since it was completely useless.
