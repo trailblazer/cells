@@ -76,7 +76,7 @@ class HooksTest < Test::Unit::TestCase
         assert_equal [2, 0], @mum.executed
       end
 
-      should "execute block hooks within instance" do
+      should "execute block callbacks in instance context" do
         @mum.class.after_eight { executed << :c }
         @mum.run_hook(:after_eight)
         assert_equal [:c], @mum.executed
