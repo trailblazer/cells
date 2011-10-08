@@ -24,7 +24,7 @@ Rails 3.x:
 
 Rails 2.3:
 
-  gem install cells -v 3.3.8
+  gem install cells -v 3.3.9
 
 
 == Generate
