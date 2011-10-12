@@ -128,6 +128,10 @@ class CachingUnitTest < ActiveSupport::TestCase
   context ".cache" do
     setup do
       @proc = Proc.new{}
+
+      @parent = Class.new(@class)
+      @child = Class.new(@parent)
+      @sibbling = Class.new(@parent)
     end
     
     should "accept a state name, only" do
@@ -164,14 +168,34 @@ class CachingUnitTest < ActiveSupport::TestCase
       assert_kind_of Proc, @class.version_procs[:count]
       assert_equal({},    @class.cache_options[:count])
     end
-    
-    should "not inherit caching configuration" do
-      @class.cache :count
-      klass = Class.new(@class)
-      klass.cache :count, @proc
-      
-      assert_not cell(:director).class.version_procs[:count]
-      assert_equal @proc, klass.version_procs[:count]
+
+    should "inherit caching configuration" do
+      @parent.cache :inherited_cache_configuration
+
+      assert @parent.version_procs.has_key?(:inherited_cache_configuration)
+      assert @child.version_procs.has_key?(:inherited_cache_configuration)
+    end
+
+    should "not overwrite caching configuration in the parent class" do
+      @child.cache :inherited_cache_configuration
+
+      assert_not @parent.version_procs.has_key?(:inherited_cache_configuration)
+      assert @child.version_procs.has_key?(:inherited_cache_configuration)
+    end
+
+    should "not overwrite caching configuration in a sibbling class" do
+      @sibbling.cache :inherited_cache_configuration
+
+      assert_not @child.version_procs.has_key?(:inherited_cache_configuration)
+      assert @sibbling.version_procs.has_key?(:inherited_cache_configuration)
+    end
+
+    should "overwrite caching configuration in a child class" do
+      @class.cache :inherited_cache_configuration
+      @child.cache :inherited_cache_configuration, @proc
+
+      assert_not @parent.version_procs[:inherited_cache_configuration]
+      assert_equal @proc, @child.version_procs[:inherited_cache_configuration]
     end
   end
 end

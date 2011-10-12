@@ -5,6 +5,13 @@ module Cell
   module Caching
     extend ActiveSupport::Concern
 
+    included do
+      class_attribute :version_procs, :conditional_procs, :cache_options
+      self.version_procs = {}
+      self.conditional_procs = {}
+      self.cache_options = {}
+    end
+
     module ClassMethods
       # Caches the rendered view of +state+.
       #
@@ -41,25 +48,13 @@ module Cell
       #
       # Two things to mention here.
       # * The return value of the method/block is <em>appended</em> to the state cache key.
-      # * You may return a string, a hash, an array, ActiveSupport::Caching will compile it. 
+      # * You may return a string, a hash, an array, ActiveSupport::Caching will compile it.
       def cache(state, *args, &block)
         options = args.extract_options!
-        
-        conditional_procs[state] = options.delete(:if)
-        version_procs[state]     = args.first || block
-        cache_options[state]     = options
-      end
 
-      def version_procs
-        @version_procs ||= {}
-      end
-
-      def conditional_procs
-        @conditional_procs ||= {}
-      end
-
-      def cache_options
-        @cache_options ||= {}
+        self.conditional_procs = conditional_procs.merge(state => options.delete(:if))
+        self.version_procs     = version_procs.merge(state => (args.first || block))
+        self.cache_options     = cache_options.merge(state => options)
       end
 
       def cache_store
