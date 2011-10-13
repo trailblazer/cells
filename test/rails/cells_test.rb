@@ -20,10 +20,10 @@ class RailsCellsTest < ActiveSupport::TestCase
     should "work without args" do
       BassistCell.class_eval do
         def listen
-          render :text => options[:note]
+          render :text => "That's a D!"
         end
       end
-      assert_equal "D", cell(:bassist, :note => "D").render_state(:listen)
+      assert_equal "That's a D!", cell(:bassist).render_state(:listen)
     end
     
     should "accept state-args" do
@@ -76,16 +76,6 @@ class RailsCellsTest < ActiveSupport::TestCase
       assert_equal({}, cell(:bassist).config)
     end
     
-    include ActiveSupport::Testing::Deprecation
-    should "mark @options as deprecated, but still works" do
-      res = nil
-      assert_deprecated do
-        res = cell(:bassist, :song => "Lockdown").instance_eval do
-          options[:song]
-        end
-      end
-      assert_equal "Lockdown", res
-    end
     
     if Cells.rails3_0?
       puts "rails-3.0"

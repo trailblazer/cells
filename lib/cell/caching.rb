@@ -107,7 +107,7 @@ module Cell
   protected
     def call_proc_or_method(state, method, *args)
       return method.call(self, *args) if method.kind_of?(Proc)
-      state_accepts_args?(state) ?  send(method, *args) : send(method)
+      send(method, *args)
     end
     
     def call_state_versioner(state, *args)

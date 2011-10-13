@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class MusicianCell < Cell::Base
-  
 end
 
 class PianistCell < MusicianCell
@@ -32,24 +31,6 @@ class CellModuleTest < ActiveSupport::TestCase
         assert_equal "Doo", html
         assert flag
       end
-      
-      should "make options available in #options if not receiving state-args" do
-        BassistCell.class_eval do
-          def listen
-            render :text => options[:note]
-          end
-        end
-        assert_equal "C-minor", Cell::Base.render_cell_for(@controller, :bassist, :listen, :note => "C-minor")
-      end
-      
-      should "pass options as state-args and still set #options otherwise" do
-        BassistCell.class_eval do
-          def listen(args)
-            render :text => args[:note] + options[:note].to_s
-          end
-        end
-        assert_equal "C-minorC-minor", Cell::Base.render_cell_for(@controller, :bassist, :listen, :note => "C-minor")
-      end
     end
     
     context "create_cell_for" do
@@ -64,7 +45,7 @@ class CellModuleTest < ActiveSupport::TestCase
       end
     end
     
-    context "calling build" do
+    context "#create_cell_for with #build" do
       setup do
         @controller.class_eval do
           attr_accessor :bassist
@@ -86,13 +67,13 @@ class CellModuleTest < ActiveSupport::TestCase
       
       should "execute the block in controller context" do
         @controller.bassist = true
-        assert_equal BassistCell,  Cell::Base.build_class_for(@controller, MusicianCell, {})
+        assert_is_a BassistCell,  Cell::Base.create_cell_for(@controller, :musician, {})
       end
       
       should "limit the builder to the receiving class" do
-        assert_equal PianistCell,   Cell::Base.build_class_for(@controller, PianistCell, {})   # don't inherit anything.
+        assert_is_a PianistCell,   Cell::Base.create_cell_for(@controller, :pianist, {})   # don't inherit anything.
         @controller.bassist = true
-        assert_equal BassistCell,   Cell::Base.build_class_for(@controller, MusicianCell, {})
+        assert_is_a BassistCell,   Cell::Base.create_cell_for(@controller, :musician, {})
       end
       
       should "chain build blocks and execute them by ORing them in the same order" do
@@ -104,13 +85,13 @@ class CellModuleTest < ActiveSupport::TestCase
           UnknownCell # should never be executed.
         end
         
-        assert_equal PianistCell, Cell::Base.build_class_for(@controller, MusicianCell, {})  # bassist is false.
+        assert_is_a PianistCell, Cell::Base.create_cell_for(@controller, :musician, {})  # bassist is false.
         @controller.bassist = true
-        assert_equal BassistCell, Cell::Base.build_class_for(@controller, MusicianCell, {})
+        assert_is_a BassistCell, Cell::Base.create_cell_for(@controller, :musician, {})
       end
       
       should "use the original cell if no builder matches" do
-        assert_equal MusicianCell, Cell::Base.build_class_for(@controller, MusicianCell, {})  # bassist is false.
+        assert_is_a MusicianCell, Cell::Base.create_cell_for(@controller, :musician, {})  # bassist is false.
       end
       
       should "stop at the first builder returning a valid cell" do
@@ -121,16 +102,16 @@ class CellModuleTest < ActiveSupport::TestCase
         BassistCell.build do |opts|
           SingerCell if opts[:sing_the_song]
         end
-        assert_equal BassistCell, Cell::Base.build_class_for(@controller, BassistCell, {})
-        assert_equal SingerCell,  Cell::Base.build_class_for(@controller, BassistCell, {:sing_the_song => true})
+        assert_kind_of BassistCell, Cell::Base.create_cell_for(@controller, :bassist, {})
+        assert_kind_of SingerCell,  Cell::Base.create_cell_for(@controller, :bassist, {:sing_the_song => true})
       end
       
       should "create the original target class if no block matches" do
-        assert_equal PianistCell, Cell::Base.build_class_for(@controller, PianistCell, {})
+        assert_kind_of PianistCell, Cell::Base.create_cell_for(@controller, :pianist, {})
       end
       
       should "builders should return an empty array per default" do
-        assert_equal [], PianistCell.builders
+        assert_equal [], PianistCell.send(:builders)
       end
     end
     
@@ -152,30 +133,6 @@ class CellModuleTest < ActiveSupport::TestCase
         end
         
         assert_equal "cell_module_test/singer", CellModuleTest::SingerCell.cell_name
-      end
-    end
-    
-    context "#state_accepts_args?" do
-      should "be false if state doesn't want args" do
-        assert_not cell(:bassist).state_accepts_args?(:play)
-      end
-      
-      should "be true for one arg" do
-        assert(cell(:bassist) do 
-          def listen(args) end 
-        end.state_accepts_args?(:listen))
-      end
-      
-      should "be true for multiple arg" do
-        assert(cell(:bassist) do 
-          def listen(what, where) end 
-        end.state_accepts_args?(:listen))
-      end
-      
-      should "be true for multiple arg with defaults" do
-        assert(cell(:bassist) do 
-          def listen(what, where="") end 
-        end.state_accepts_args?(:listen))
       end
     end
   end

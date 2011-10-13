@@ -28,6 +28,10 @@ ActiveSupport::TestCase.class_eval do
   def assert_not(assertion)
     assert !assertion
   end
+  
+  def assert_is_a(klass, object)
+    assert object.is_a?(klass)
+  end
 end
 
 # Enable dynamic states so we can do Cell.class_eval { def ... } at runtime.

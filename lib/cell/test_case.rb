@@ -98,7 +98,7 @@ module Cell
         # DISCUSS: should we allow passing a block here, just as in controllers?
         @subject_cell = ::Cell::Base.create_cell_for(@controller, name, *args)
         @view_assigns = extract_state_ivars_for(@subject_cell) do
-          @last_invoke = @subject_cell.render_state_with_args(state, *args)
+          @last_invoke = @subject_cell.render_state(state, *args)
         end
         
         @last_invoke
@@ -148,7 +148,7 @@ module Cell
 
 
     def invoke(state, *args)
-      @last_invoke = self.class.controller_class.new(@controller, *args).render_state_with_args(state, *args)
+      @last_invoke = self.class.controller_class.new(@controller).render_state(state, *args)
     end
   end
 end

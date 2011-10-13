@@ -266,26 +266,10 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "2", render_cell(:director, :count, 4)
     end
     
-    should "still be able to use options in the block" do
-      @class.class_eval do
-        def count(args)
-          render :text => args[:int]
-        end
-      end
-      
-      @class.cache :count do |cell, i|
-        (cell.options[:int] % 2)==0 ? {:count => "even"} : {:count => "odd"}
-      end
-      
-      assert_equal "1", render_cell(:director, :count, :int => 1)
-      assert_equal "2", render_cell(:director, :count, :int => 2)
-      assert_equal "1", render_cell(:director, :count, :int => 3)
-      assert_equal "2", render_cell(:director, :count, :int => 4)
-    end
-    
     should "compute the key with an instance method" do
       @class.cache :count, :version
       @class.class_eval do
+        private
         def version(int)
           (int % 2)==0 ? {:count => "even"} : {:count => "odd"}
         end
