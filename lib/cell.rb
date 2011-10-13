@@ -3,28 +3,31 @@ module Cell
 
   extend ActiveSupport::Concern
   
-  DEFAULT_VIEW_PATHS = [
-    File.join('app', 'cells'),
-  ]
-    
+  DEFAULT_VIEW_PATHS = [File.join('app', 'cells')]
+  
   module ClassMethods
     # Called in Railtie at initialization time.
     def setup_view_paths!
       self.view_paths = self::DEFAULT_VIEW_PATHS
     end
     
+    # Main entry point for #render_cell.
     def render_cell_for(controller, name, state, *args)
-      cell = create_cell_for(controller, name, *args)  # DISCUSS: we always save options.
+      cell = create_cell_for(controller, name, *args)
       yield cell if block_given?
       
-      cell.render_state_with_args(state, *args)
+      cell.render_state(state, *args)
     end
     
     # Creates a cell instance. Note that this method calls builders which were attached to the
     # class with Cell::Base.build - this might lead to a different cell being returned.
     def create_cell_for(controller, name, *args)
-      build_class_for(controller, class_from_cell_name(name), *args).
-      new(controller, *args)
+      class_from_cell_name(name).build_for(controller, *args)
+    end
+    
+    def build_for(controller, *args)
+      build_class_for(controller, *args).
+      new(controller)
     end
     
     # Adds a builder to the cell class. Builders are used in #render_cell to find out the concrete
@@ -57,31 +60,21 @@ module Cell
       builders << block
     end
     
-    def build_class_for(controller, target_class, *args)
-      target_class.builders.each do |blk|
-        res = controller.instance_exec(*args, &blk) and return res
-      end
-      target_class
-    end
-    
-    def builders
-      @builders ||= []
-    end
-
     # The cell class constant for +cell_name+.
     def class_from_cell_name(cell_name)
       "#{cell_name}_cell".classify.constantize
     end
-  end
-
-  module InstanceMethods
-    def render_state_with_args(state, *args)  # TODO: remove me in 4.0.
-      return render_state(state, *args) if state_accepts_args?(state)
-      render_state(state)  # backward-compat.
+    
+  protected
+    def build_class_for(controller, *args)
+      builders.each do |blk|
+        klass = controller.instance_exec(*args, &blk) and return klass
+      end
+      self
     end
     
-    def state_accepts_args?(state)
-      method(state).arity != 0
+    def builders
+      @builders ||= []
     end
   end
 end
