@@ -1,3 +1,11 @@
+h2. 3.7.0
+
+h3. Changes
+  * Cache settings using @Base.cache@ are now inherited.
+  * Removed <code>@opts</code>.
+  * Removed @#options@ in favor of state-args. If you still want the old behaviour, include the @Deprecations@ module in your cell.
+  * The build process is now instantly delegated to Base.build_for on the concrete cell class.
+
 h2. 3.6.8
 
 h3. Changes
