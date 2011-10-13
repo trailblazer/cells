@@ -49,6 +49,9 @@ module Cell
       # Two things to mention here.
       # * The return value of the method/block is <em>appended</em> to the state cache key.
       # * You may return a string, a hash, an array, ActiveSupport::Caching will compile it.
+      #
+      # == Inheritance
+      # Please note that cache configuration is inherited to derived cells.
       def cache(state, *args, &block)
         options = args.extract_options!
 
