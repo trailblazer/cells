@@ -108,10 +108,11 @@ module Cell
       # Passes the optional block to <tt>cell.instance_eval</tt>.
       #
       # Example:
-      #   assert_equal "Banks kill planet!" cell(:news, :topic => :terror).latest_headline
+      #   assert_equal "Doo Dumm Dumm..." cell(:bassist).play
       def cell(name, *args, &block)
         cell = ::Cell::Base.create_cell_for(@controller, name, *args)
         cell.instance_eval &block if block_given?
+        ActiveSupport::Deprecation.warn("Passing options to TestCase#cell is deprecated, please use state-args in #render_cell.", caller) if args.present?
         cell
       end
 
@@ -122,16 +123,16 @@ module Cell
       #
       #   assert_equal("<h1>Modularity rocks.</h1>", in_view do content_tag(:h1, "Modularity rocks."))
       def in_view(cell_class, &block)
-        subject = cell(cell_class, :block => block)
+        subject = cell(cell_class)
         setup_test_states_in(subject) # add #in_view to subject cell.
-        subject.render_state(:in_view)
+        subject.render_state(:in_view, block)
       end
 
     protected
       def setup_test_states_in(cell)
         cell.instance_eval do
-          def in_view
-            render :inline => "<%= instance_exec(&block) %>", :locals => {:block => options[:block]}
+          def in_view(block=nil)
+            render :inline => "<%= instance_exec(&block) %>", :locals => {:block => block}
           end
         end
       end
