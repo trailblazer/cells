@@ -1,3 +1,7 @@
+- 3.3.10
+  * TestCase#render_cell now processes options properly.
+  * added TestCase#assigns.
+
 - 3.3.9
   * fixed loading test_case.rb
   * added TestCase#view_assigns
