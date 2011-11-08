@@ -80,7 +80,7 @@ module Cell
       def render_cell(name, state, *args)
         @subject_cell = ::Cell::Base.create_cell_for(@controller, name, *args)
         @view_assigns = extract_state_ivars_for(@subject_cell) do
-          @last_invoke = @subject_cell.render_state(state, *args)
+          @last_invoke = @subject_cell.render_state(state)
         end
         
         @last_invoke
@@ -108,6 +108,10 @@ module Cell
         cell = ::Cell::Base.create_cell_for(@controller, name, opts)
         cell.instance_eval &block if block_given?
         cell
+      end
+
+      def assigns(name)
+        view_assigns[name.to_sym]
       end
     end
     

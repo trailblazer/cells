@@ -48,6 +48,17 @@ class TestCaseTest < Cell::TestCase
         render_cell(:bassist, :sleep)
         assert_equal({:duration => "8h"}, view_assigns)
       end
+
+      should "return the instance variables from the last #render_cell accepting options" do
+        BassistCell.class_eval do
+          def run
+            @duration = @opts[:duration]
+          end
+        end
+        render_cell(:bassist, :run, :duration=> "8h")
+        assert_equal("8h", assigns(:duration))
+      end
+
     end
     
     context "in declarative tests" do
