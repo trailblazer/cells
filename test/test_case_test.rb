@@ -12,8 +12,14 @@ class TestCaseTest < Cell::TestCase
       end
     end
     
-    should "respond to #render_cell" do
-      assert_equal "Doo", render_cell(:bassist, :play)
+    context "#render_cell" do
+      should "invokes the state" do
+        assert_equal "Doo", render_cell(:bassist, :play)
+      end
+      
+      should "accept state args" do
+        assert_equal "*shouts* Listen!\n", render_cell(:bassist, :shout, :words => "Listen!")
+      end
     end
     
     should "respond to #assert_selector with 3 args" do
