@@ -68,7 +68,7 @@ module Cells
   #   end
   #
   def self.setup
-    yield(Cell::Base)
+    yield(Cell::Rails)
   end
   
   def self.rails3_0?
@@ -86,4 +86,4 @@ require 'cells/rails'
 require 'cells/rails_compat'  # fixes a bug in Rails <3.0.4. # TODO: remove me as soon as we support 3.1, only.
 require 'cell/deprecations'
 
-Cell::Base = Cell::Rails
+#Cell::Base = Cell::Rails

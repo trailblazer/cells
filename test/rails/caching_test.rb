@@ -109,11 +109,11 @@ class CachingUnitTest < ActiveSupport::TestCase
     
     should "accept cache options" do
       key = @class.state_cache_key(:tock, :volume => 9)
-      assert Cell::Base.cache_store.write(key, 'ONE!')
+      assert Cell::Rails.cache_store.write(key, 'ONE!')
    
       MusicianController.new.expire_cell_state(DirectorCell, :tock, :volume => 9)
       assert_equal "1", @class.cache_store.read(@key)
-      assert_not ::Cell::Base.cache_store.read(key)
+      assert_not ::Cell::Rails.cache_store.read(key)
     end
     
     should "raise a deprecation notice when passing in a :symbol" do

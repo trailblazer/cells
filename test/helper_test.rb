@@ -7,7 +7,7 @@ module StringHelper
   def pick; "plong"; end
 end
 
-class DrummerCell < Cell::Base
+class DrummerCell < Cell::Rails
   helper StringHelper
           
   def assist

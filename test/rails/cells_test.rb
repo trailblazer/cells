@@ -48,13 +48,13 @@ class RailsCellsTest < ActiveSupport::TestCase
   
   context "A rails cell" do
     should "respond to DEFAULT_VIEW_PATHS" do
-      assert_equal ["app/cells"], Cell::Base::DEFAULT_VIEW_PATHS
+      assert_equal ["app/cells"], Cell::Rails::DEFAULT_VIEW_PATHS
     end
     
     should "respond to .setup_view_paths!" do
-      swap( Cell::Base, :view_paths => [])  do
-        Cell::Base.setup_view_paths!
-        assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS), Cell::Base.view_paths
+      swap( Cell::Rails, :view_paths => [])  do
+        Cell::Rails.setup_view_paths!
+        assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS), Cell::Rails.view_paths
       end
     end
     
@@ -63,8 +63,8 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     should "respond to view_paths=" do
-      swap( Cell::Base, :view_paths => ['you', 'are', 'here'])  do
-        assert_kind_of ActionView::PathSet, Cell::Base.view_paths, "must not wipe out the PathSet"
+      swap( Cell::Rails, :view_paths => ['you', 'are', 'here'])  do
+        assert_kind_of ActionView::PathSet, Cell::Rails.view_paths, "must not wipe out the PathSet"
       end
     end
     

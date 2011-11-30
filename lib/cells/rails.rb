@@ -18,7 +18,7 @@ module Cells
       #     cell.markdown! if config.parse_comments?
       #   end
       def render_cell(name, state, *args, &block)
-        ::Cell::Base.render_cell_for(self, name, state, *args, &block)
+        ::Cell::Rails.render_cell_for(self, name, state, *args, &block)
       end
 
       # Expires the cached cell state view, similar to ActionController::expire_fragment.
@@ -39,7 +39,7 @@ module Cells
       def expire_cell_state(cell_class, state, args={}, opts=nil)
         if cell_class.is_a?(Symbol)
           ActiveSupport::Deprecation.warn "Please pass the cell class into #expire_cell_state, as in expire_cell_state(DirectorCell, :count, :user_id => 1)"
-          cell_class = Cell::Base.class_from_cell_name(cell_class)
+          cell_class = Cell::Rails.class_from_cell_name(cell_class)
         end
         
         key = cell_class.state_cache_key(state, args)
@@ -50,7 +50,7 @@ module Cells
     module ActionView
       # See Cells::Rails::ActionController#render_cell.
       def render_cell(name, state, *args, &block)
-        ::Cell::Base.render_cell_for(controller, name, state, *args, &block)
+        ::Cell::Rails.render_cell_for(controller, name, state, *args, &block)
       end
     end
 

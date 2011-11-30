@@ -1,4 +1,4 @@
-class ClubSecurity::MedicCell < Cell::Base
+class ClubSecurity::MedicCell < Cell::Rails
   module NiceGuy
     def smile; end
   end

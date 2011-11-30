@@ -4,11 +4,11 @@ class CellsModuleTest < ActiveSupport::TestCase
   context "Cells" do
     context "view_paths" do
       setup do
-        @old_view_paths = Cell::Base.view_paths.clone
+        @old_view_paths = Cell::Rails.view_paths.clone
       end
       
       teardown do
-        Cell::Base.view_paths = @old_view_paths
+        Cell::Rails.view_paths = @old_view_paths
       end
       
       should "provide .setup" do
@@ -16,7 +16,7 @@ class CellsModuleTest < ActiveSupport::TestCase
           c.append_view_path "/road/to/nowhere"
         end
         
-        assert_equal "/road/to/nowhere", Cell::Base.view_paths.last.to_s
+        assert_equal "/road/to/nowhere", Cell::Rails.view_paths.last.to_s
       end
     end
     

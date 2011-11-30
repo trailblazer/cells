@@ -1,4 +1,4 @@
-class BassistCell < Cell::Base
+class BassistCell < Cell::Rails
   def play; render; end
 
   def shout(args)

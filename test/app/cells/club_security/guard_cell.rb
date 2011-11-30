@@ -1,4 +1,4 @@
-class ClubSecurity::GuardCell < Cell::Base
+class ClubSecurity::GuardCell < Cell::Rails
   helper do
     def irritate; end
   end

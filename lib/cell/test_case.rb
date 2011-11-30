@@ -96,7 +96,7 @@ module Cell
       #     assert_select html, "h1", "The latest and greatest!"
       def render_cell(name, state, *args)
         # DISCUSS: should we allow passing a block here, just as in controllers?
-        @subject_cell = ::Cell::Base.create_cell_for(@controller, name, *args)
+        @subject_cell = ::Cell::Rails.create_cell_for(@controller, name, *args)
         @view_assigns = extract_state_ivars_for(@subject_cell) do
           @last_invoke = @subject_cell.render_state(state, *args)
         end
@@ -110,7 +110,7 @@ module Cell
       # Example:
       #   assert_equal "Doo Dumm Dumm..." cell(:bassist).play
       def cell(name, *args, &block)
-        cell = ::Cell::Base.create_cell_for(@controller, name, *args)
+        cell = ::Cell::Rails.create_cell_for(@controller, name, *args)
         cell.instance_eval &block if block_given?
         ActiveSupport::Deprecation.warn("Passing options to TestCase#cell is deprecated, please use state-args in #render_cell.", caller) if args.present?
         cell
