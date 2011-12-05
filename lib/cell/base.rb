@@ -1,9 +1,11 @@
 require 'abstract_controller'
 require 'cell'
+require 'cell/builder'
 
 module Cell
   class Base < AbstractController::Base
     include Cell
+    extend Builder
     include AbstractController
     include Rendering, Layouts, Helpers, Callbacks, Translation, Logger
     
