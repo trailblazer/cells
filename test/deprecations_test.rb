@@ -37,7 +37,7 @@ class DeprecationsTest < ActiveSupport::TestCase
           render :text => options[:note]
         end
       end
-      assert_equal "C-minor", Cell::Rails.render_cell_for(@controller, :songwriter, :listen, :note => "C-minor")
+      assert_equal "C-minor", Cell::Rails.render_cell_for(:songwriter, :listen, @controller, :note => "C-minor")
     end
       
     should "pass options as state-args and still set #options otherwise" do
@@ -46,7 +46,7 @@ class DeprecationsTest < ActiveSupport::TestCase
           render :text => args[:note] + options[:note].to_s
         end
       end
-      assert_equal "C-minorC-minor", Cell::Rails.render_cell_for(@controller, :songwriter, :listen, :note => "C-minor")
+      assert_equal "C-minorC-minor", Cell::Rails.render_cell_for(:songwriter, :listen, @controller, :note => "C-minor")
     end
   end
   

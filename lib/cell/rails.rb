@@ -12,6 +12,24 @@ module Cell
     
     include Metal
     
+    
+    class << self
+      def create_cell(controller, *args)
+        new(controller)
+      end
+      
+    private
+      # Run builder block in controller instance context.
+      def run_builder_block(block, controller, *args)
+        controller.instance_exec(*args, &block)
+      end
+      
+      def render_cell_state(cell, state, *args)
+        args.shift  # remove the controller instance.
+        cell.render_state(state, *args)
+      end
+    end
+    
     attr_reader :parent_controller
     
     def initialize(parent_controller)

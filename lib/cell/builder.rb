@@ -2,13 +2,13 @@ module Cell
   module Builder
     # Creates a cell instance. Note that this method calls builders which were attached to the
     # class with Cell::Base.build - this might lead to a different cell being returned.
-    def create_cell_for(controller, name, *args)
-      class_from_cell_name(name).build_for(controller, *args)
+    def create_cell_for(name, *args)
+      class_from_cell_name(name).build_for(*args)
     end
     
-    def build_for(controller, *args)
-      build_class_for(controller, *args).
-      new(controller)
+    def build_for(*args)  # DISCUSS: remove?
+      build_class_for(*args).
+      create_cell(*args)
     end
     
     # Adds a builder to the cell class. Builders are used in #render_cell to find out the concrete
@@ -47,15 +47,19 @@ module Cell
     end
     
   protected
-    def build_class_for(controller, *args)
+    def create_cell(*args)
+      new
+    end
+    
+    def build_class_for(*args)
       builders.each do |blk|
-        klass = run_builder_block(blk, controller, *args) and return klass
+        klass = run_builder_block(blk, *args) and return klass
       end
       self
     end
     
-    def run_builder_block(blk, controller, *args)
-      controller.instance_exec(*args, &blk)
+    def run_builder_block(block, *args)
+      block.call(*args)
     end
     
     def builders
