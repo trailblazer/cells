@@ -1,10 +1,11 @@
 require 'abstract_controller'
-require 'cell'
 require 'cell/builder'
+require 'cell/caching'
 
 module Cell
   class Base < AbstractController::Base
-    include Cell
+    DEFAULT_VIEW_PATHS = [File.join('app', 'cells')]
+    
     extend Builder
     include AbstractController
     include Rendering, Layouts, Helpers, Callbacks, Translation, Logger
@@ -56,6 +57,12 @@ module Cell
     
     abstract!
     
+    
+  
+    # Called in Railtie at initialization time.
+    def self.setup_view_paths!
+      self.view_paths = DEFAULT_VIEW_PATHS
+    end
     
     def self.controller_path
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
