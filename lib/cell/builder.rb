@@ -1,4 +1,5 @@
 module Cell
+  # Contains all methods for dynamically building a cell instance by using decider blocks.
   module Builder
     # Creates a cell instance. Note that this method calls builders which were attached to the
     # class with Cell::Base.build - this might lead to a different cell being returned.
@@ -46,7 +47,8 @@ module Cell
       "#{cell_name}_cell".classify.constantize
     end
     
-  protected
+  private
+    # Override this if you want to receive arguments right in the cell constructor.
     def create_cell(*args)
       new
     end

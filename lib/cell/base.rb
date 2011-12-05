@@ -26,9 +26,26 @@ module Cell
     
     
     module Rendering
+      extend ActiveSupport::Concern
+      
       # Invoke the state method for +state+ which usually renders something nice.
       def render_state(state, *args)
         process(state, *args)
+      end
+      
+      module ClassMethods
+        # Main entry point for #render_cell.
+        def render_cell_for(name, state, *args)
+          cell = create_cell_for(name, *args)
+          yield cell if block_given?
+          
+          render_cell_state(cell, state, *args)
+        end
+      
+      private
+        def render_cell_state(cell, state, *args)
+          cell.render_state(state, *args)
+        end
       end
     end
     
