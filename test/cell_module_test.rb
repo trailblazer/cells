@@ -16,7 +16,7 @@ class CellModuleTest < ActiveSupport::TestCase
   context "Cell::Rails" do
     context "cell without controller" do
       should "still have a working #url_for" do
-        cell = Cell::Base.new(nil)
+        cell = Cell::Base.new
         cell.instance_eval do
           # You can use #default_url_options.
           def default_url_options
