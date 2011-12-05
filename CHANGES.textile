@@ -3,6 +3,7 @@ h2. 3.7.0
 * @Cell::Base@ got rid of the controller dependency. If you want the @ActionController@ instance around in your cell, use @Cell::Rails@ - this should be the default in a standard Rails setup. However, if you plan on using a Cell in a Rack middleware or don't need the controller, use @Cell::Base@.
 * New API for @Rails.create_cell_for@ and @Rails.render_cell_for@: the constructor is now the 3rd argument.
 * Moved builder methods to @Cell::Builder@ module. 
+* @DEFAULT_VIEW_PATHS@ is now in @Cell::Base@.
 
 h2. 3.7.0
 
