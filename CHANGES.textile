@@ -1,3 +1,7 @@
+h2. 3.7.1
+
+* Runs with Rails 3.2 now. Thanks to Mohammad Satrio [tyok] for fixing.
+
 h2. 3.7.0
 
 h3. Changes
