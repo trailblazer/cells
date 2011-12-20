@@ -3,7 +3,7 @@ require 'cell/builder'
 require 'cell/caching'
 require 'cell/rendering'
 require 'cell/rails3_0_strategy' if Cells.rails3_0?
-require 'cell/rails3_1_strategy' if Cells.rails3_1?
+require 'cell/rails3_1_strategy' if Cells.rails3_1_or_more?
     
 module Cell
   class Base < AbstractController::Base
