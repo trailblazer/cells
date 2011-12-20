@@ -10,7 +10,7 @@ module Cell
     
     if Cells.rails3_0?
       require 'cell/rails3_0_strategy'
-    elsif Cells.rails3_1?
+    elsif Cells.rails3_1_or_more?
       require 'cell/rails3_1_strategy'
     end
     
