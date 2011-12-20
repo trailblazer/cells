@@ -78,6 +78,10 @@ module Cells
   def self.rails3_1?
     ::Rails::VERSION::MINOR == 1
   end
+
+  def self.rails3_1_or_more?
+    ::Rails::VERSION::MINOR >= 1
+  end
 end
 
 require 'cell/rails'

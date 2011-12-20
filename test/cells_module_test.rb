@@ -29,5 +29,18 @@ class CellsModuleTest < ActiveSupport::TestCase
         assert ! Cells.rails3_0?
       end
     end
+
+    should "respond to #rails3_1_or_more?" do
+      if Rails::VERSION::MINOR == 0
+        assert ! Cells.rails3_1_or_more?
+        assert Cells.rails3_0?
+      elsif Rails::VERSION::MINOR == 1
+        assert Cells.rails3_1_or_more?
+        assert ! Cells.rails3_0?
+      elsif Rails::VERSION::MINOR == 2
+        assert Cells.rails3_1_or_more?
+        assert ! Cells.rails3_0?
+      end
+    end
   end
 end
