@@ -31,7 +31,7 @@ module Cell
     
     # Called in Railtie at initialization time.
     def self.setup_view_paths!
-      self.view_paths = DEFAULT_VIEW_PATHS
+      self.view_paths = self::DEFAULT_VIEW_PATHS
     end
     
     def self.controller_path
