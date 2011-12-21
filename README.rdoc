@@ -173,6 +173,19 @@ To run your specs we got a rake task, too!
   $ rake spec:cells
 
 
+== Mountable Cells
+
+Cells 3.8 got rid of the ActionController dependency. This essentially means you can mount Cells to routes or use them like a Rack middleware. All you need to do is derive from @Cell::Base@.
+
+  class PostCell < Cell::Base
+  	..
+
+In your @routes.rb@ file, mount the cell like a Rack app.
+
+  match "/posts" => proc { |env|
+    [ 200, {}, [ Cell::Base.render_cell_for(:post, :show) ]]
+  }
+
 == Rails 2.3 note
 
 In order to copy the cells rake tasks to your app, run
