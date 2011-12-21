@@ -9,26 +9,43 @@ end
 class SingerCell < MusicianCell
 end
 
+# Used in CellBaseTest.
+class ShouterCell < Cell::Base
+  def sing
+    render
+  end
+end
+
+
+class CellBaseTest < MiniTest::Spec
+  describe "Cell::Base" do
+    it "still have a working #url_for" do
+      cell = Cell::Base.new
+      cell.instance_eval do
+        # You can use #default_url_options.
+        def default_url_options
+          {:host => "cells-project.org"}
+        end
+        
+      end
+      # You could also use a *_url or *_path helper method here.
+      assert_equal "http://cells-project.org/dashboard/show", cell.url_for(:action => :show, :controller => :dashboard)
+    end
+    
+    describe ".render_cell_for" do
+      it "invokes controller-less cell" do
+        Cell::Base.view_paths= ["test/app/cells"]
+        assert_equal "AAAaaargh!\n", Cell::Base.render_cell_for(:shouter, :sing)
+      end
+    end
+  end
+end
+
+
 
 class CellModuleTest < ActiveSupport::TestCase
   include Cell::TestCase::TestMethods
-  
   context "Cell::Rails" do
-    context "cell without controller" do
-      should "still have a working #url_for" do
-        cell = Cell::Base.new
-        cell.instance_eval do
-          # You can use #default_url_options.
-          def default_url_options
-            {:host => "cells-project.org"}
-          end
-          
-        end
-        # You could also use a *_url or *_path helper method here.
-        assert_equal "http://cells-project.org/dashboard/show", cell.url_for(:action => :show, :controller => :dashboard)
-      end
-    end
-    
     # FUNCTIONAL:
     context "render_cell_for" do
       should "render the actual cell" do
