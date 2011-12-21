@@ -47,12 +47,12 @@ module Cell
       "#{cell_name}_cell".classify.constantize
     end
     
-  private
     # Override this if you want to receive arguments right in the cell constructor.
     def create_cell(*args)
       new
     end
     
+  private
     def build_class_for(*args)
       builders.each do |blk|
         klass = run_builder_block(blk, *args) and return klass
