@@ -9,7 +9,7 @@ module Cells
     end
     
     initializer "cells.setup_view_paths" do |app|
-      Cell::Rails.setup_view_paths!
+      Cell::Base.setup_view_paths!
     end
     
     rake_tasks do
