@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'test/unit'
 require 'shoulda'
+require 'minitest/spec'
 
 # wycats says...
 require 'bundler'
