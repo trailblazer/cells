@@ -42,7 +42,6 @@ class CellBaseTest < MiniTest::Spec
 end
 
 
-
 class CellModuleTest < ActiveSupport::TestCase
   include Cell::TestCase::TestMethods
   context "Cell::Rails" do

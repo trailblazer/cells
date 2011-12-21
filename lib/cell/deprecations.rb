@@ -1,5 +1,6 @@
 module Cell
   # Makes #options available in Cells 3.7, which was removed in favor of state-args.
+  # Note that Deprecations are only available for Cell::Rails.
   module Deprecations
     extend ActiveSupport::Concern
     
@@ -18,7 +19,7 @@ module Cell
     
     module InstanceMethods
       def initialize(parent_controller, *args)
-        super(parent_controller)  # the real Base.new.
+        super(parent_controller)  # the real Rails.new.
         setup_backwardibility(*args)
       end
       
