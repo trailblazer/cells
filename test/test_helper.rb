@@ -4,14 +4,7 @@ require 'test/unit'
 require 'shoulda'
 require 'minitest/spec'
 
-# wycats says...
-require 'bundler'
-Bundler.setup
-
-
 ENV['RAILS_ENV'] = 'test'
-
-$:.unshift File.dirname(__FILE__) # add current dir to LOAD_PATHS
 
 require "dummy/config/environment"
 require "rails/test_help" # adds stuff like @routes, etc.
