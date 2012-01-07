@@ -3,6 +3,7 @@
 <em>View Components for Rails.</em>
 
 {<img src="https://secure.travis-ci.org/apotonick/cells.png" />}[http://travis-ci.org/apotonick/cells]
+{<img src="https://gemnasium.com/apotonick/cells.png" />}[https://gemnasium.com/apotonick/cells]
 
 == Overview
 
