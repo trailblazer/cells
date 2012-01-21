@@ -65,28 +65,41 @@ module Cell
         # This would allow convenient cache settings per cell (if needed).
         ::ActionController::Base.cache_store
       end
-      
+
       # Computes the complete, namespaced cache key for +state+.
       def state_cache_key(state, key_parts={})
-        expand_cache_key([controller_path, state, key_parts])
+        expand_cache_key([controller_path, state, QueryParams.encode(sanitize_cache_key(key_parts))])
       end
 
       def expire_cache_key(key, *args)
         cache_store.delete(key, *args)
       end
-      
+
       def cache?(state)
         # DISCUSS: why is it private?
         ActionController::Base.send(:cache_configured?) and state_cached?(state)
       end
-      
+
     protected
       # Compiles cache key and adds :cells namespace to +key+, according to the
       # ActiveSupport::Cache.expand_cache_key API.
       def expand_cache_key(key)
-        ::ActiveSupport::Cache.expand_cache_key(key, :cells)
+        ::ActiveSupport::Cache.expand_cache_key(sanitize_cache_key(key), :cells)
       end
-      
+
+      def sanitize_cache_key(key)
+        return key.join('/') if key.is_a?(Array)
+
+        key
+      end
+
+      def hash_to_querystring(hash)
+        hash.keys.inject('') do |query_string, key|
+          query_string << '&' unless key == hash.keys.first
+          query_string << "#{URI.encode(key.to_s)}=#{URI.encode(hash[key])}"
+        end
+      end
+
       def state_cached?(state)
         version_procs.has_key?(state)
       end
@@ -94,34 +107,34 @@ module Cell
 
     def render_state(state, *args)
       return super(state, *args) unless cache?(state, *args)
-      
+
       key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
       options = self.class.cache_options[state]
-      
+
       self.class.cache_store.fetch(key, options) do
         super(state, *args)
       end
     end
-    
+
     def cache?(state, *args)
       self.class.cache?(state) and call_state_conditional(state, *args)
     end
-    
+
   protected
     def call_proc_or_method(state, method, *args)
       return method.call(self, *args) if method.kind_of?(Proc)
       send(method, *args)
     end
-    
+
     def call_state_versioner(state, *args)
       method = self.class.version_procs[state] or return
       call_proc_or_method(state, method, *args)
     end
-    
+
     def call_state_conditional(state, *args)
       method = self.class.conditional_procs[state] or return true
       call_proc_or_method(state, method, *args)
     end
-    
+
   end
 end
