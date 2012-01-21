@@ -93,13 +93,6 @@ module Cell
         key
       end
 
-      def hash_to_querystring(hash)
-        hash.keys.inject('') do |query_string, key|
-          query_string << '&' unless key == hash.keys.first
-          query_string << "#{URI.encode(key.to_s)}=#{URI.encode(hash[key])}"
-        end
-      end
-
       def state_cached?(state)
         version_procs.has_key?(state)
       end
