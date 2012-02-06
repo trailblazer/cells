@@ -1,3 +1,7 @@
 rvm: 1.9.2
 notifications:
   irc: "irc.freenode.org#cells"
+gemfile:
+  - Gemfile
+  - gemfiles/Gemfile.rails3-1
+  - gemfiles/Gemfile.rails3-2
