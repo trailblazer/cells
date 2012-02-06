@@ -8,7 +8,7 @@ module ApplicationTests
       should "pass url_helpers to the cell instance" do
         assert_equal "/", BassistCell.new(@controller).root_path
       end
-      
+
       should "allow cells to use url_helpers" do
         BassistCell.class_eval do
           def promote; render; end
@@ -16,17 +16,17 @@ module ApplicationTests
 
         get "index"
         assert_response :success
-        assert_equal "Find me at <a href=\"/musician\">vd.com</a>", @response.body
+        assert_equal "Find me at <a href=\"/\">vd.com</a>", @response.body
       end
-      
+
       should "delegate #url_options to the parent_controller" do
         @controller.instance_eval do
           def default_url_options
             {:host => "cells.rails.org"}
           end
-          
+
         end
-        
+
         assert_equal "http://cells.rails.org/", BassistCell.new(@controller).root_url
       end
 
