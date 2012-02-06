@@ -186,6 +186,10 @@ In your <tt>routes.rb</tt> file, mount the cell like a Rack app.
     [ 200, {}, [ Cell::Base.render_cell_for(:post, :show) ]]
   }
 
+== Cells is Rails::Engine aware!
+
+Now <tt>Rails::Engine</tt>s can contribute to Cells view paths. By default, any 'app/cells' found inside any Engine is automatically included into Cells view paths. If you need to, you can customize the view paths changing/appending to the <tt>'app/cell_views'</tt> path configuration. See the @Cell::EngineIntegration@ for more details.
+
 == Rails 2.3 note
 
 In order to copy the cells rake tasks to your app, run
