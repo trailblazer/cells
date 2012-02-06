@@ -4,7 +4,6 @@ require 'cell/caching'
 require 'cell/rendering'
 require 'cell/rails3_0_strategy' if Cells.rails3_0?
 require 'cell/rails3_1_strategy' if Cells.rails3_1_or_more?
-require 'cell/engine_integration'
 
 module Cell
   class Base < AbstractController::Base
@@ -18,7 +17,6 @@ module Cell
     include VersionStrategy
     include Rendering
     include Caching
-    include EngineIntegration
     
     class View < ActionView::Base
       def render(*args, &block)
@@ -33,7 +31,6 @@ module Cell
     # Called in Railtie at initialization time.
     def self.setup_view_paths!
       self.view_paths = self::DEFAULT_VIEW_PATHS
-      self.append_engines_to_view_path!
     end
     
     def self.controller_path

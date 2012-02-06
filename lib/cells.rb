@@ -81,6 +81,7 @@ module Cells
 end
 
 require 'cell/rails'
-require 'cells/railtie'
 require 'cells/rails'
 require 'cell/deprecations'
+require 'cells/engines'
+require 'cells/railtie'
