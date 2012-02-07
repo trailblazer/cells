@@ -2,7 +2,7 @@
 pkg
 .*~
 .bundle
-Gemfile.lock
+Gemfile*.lock
 test/dummy/log/*.log
 test/dummy/tmp/
 /.rvmrc
