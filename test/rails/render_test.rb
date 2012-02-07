@@ -134,12 +134,12 @@ class RailsRenderTest < ActiveSupport::TestCase
         end
         
         assert_includes e.message, "Missing template cell/rails/groove with {:handlers=>[:erb, :rjs, :builder, :rhtml, :rxml, :haml], :formats=>[:html, :text, :js, :css, :ics, :csv, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json], :locale=>[:en, :en]} in view paths"
-      else  # 3.1
+      else  # >= 3.1
         e = assert_raise ActionView::MissingTemplate do
           render_cell(:bad_guitarist, :groove)
         end
         
-        assert_includes e.message, "Missing template bad_guitarist/groove, bassist/groove with {:handlers=>[:erb, :builder, :haml], :formats=>[:html, :text, :js, :css, :ics, :csv, :xml, :rss, :atom, :yaml, :multipart_form, :url_encoded_form, :json], :locale=>[:en, :en]}. Searched in:\n  "
+        assert_includes e.message, "Missing template bad_guitarist/groove, bassist/groove with"
       end
     end
     

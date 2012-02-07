@@ -16,7 +16,11 @@ class CellsModuleTest < ActiveSupport::TestCase
           c.append_view_path "/road/to/nowhere"
         end
         
-        assert_equal "/road/to/nowhere", Cell::Rails.view_paths.last.to_s
+        if Cells.rails3_2_or_more?
+          assert_equal "/road/to/nowhere", Cell::Rails.view_paths.paths.last.to_s
+        else
+          assert_equal "/road/to/nowhere", Cell::Rails.view_paths.last.to_s
+        end
       end
     end
     

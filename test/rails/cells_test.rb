@@ -54,7 +54,11 @@ class RailsCellsTest < ActiveSupport::TestCase
     should "respond to .setup_view_paths!" do
       swap( Cell::Rails, :view_paths => [])  do
         Cell::Rails.setup_view_paths!
-        assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS), Cell::Rails.view_paths
+        if Cells.rails3_2_or_more?
+          assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS).paths, Cell::Rails.view_paths.paths
+        else
+          assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS), Cell::Rails.view_paths
+        end
       end
     end
     

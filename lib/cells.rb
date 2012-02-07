@@ -78,6 +78,10 @@ module Cells
   def self.rails3_1_or_more?
     ::Rails::VERSION::MINOR >= 1
   end
+  
+  def self.rails3_2_or_more?  # FIXME: move to tests.
+    ::Rails::VERSION::MINOR >= 2
+  end
 end
 
 require 'cell/rails'
