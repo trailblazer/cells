@@ -1,3 +1,4 @@
+# This file contains VersionStrategies for the Cell and Cells module for Rails >= 3.1.
 module Cell
   # Methods to be included in Cell::Rails in 3.1 context.
   module VersionStrategy
@@ -21,6 +22,15 @@ module Cell
       opts[:action] = opts[:view] || state
       
       lookup_context.formats = [opts.delete(:format)] if opts[:format]
+    end
+  end
+end
+
+
+module Cells::Engines
+  module VersionStrategy
+    def registered_engines
+      ::Rails::Application::Railties.engines
     end
   end
 end

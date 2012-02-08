@@ -31,6 +31,8 @@ module Cells
   #   end
   #
   module Engines
+    extend VersionStrategy  # adds #registered_engines.
+    
     # Appends all <tt>Rails::Engine</tt>s cell-views path to Cell::Base#view_paths
     # 
     # All <tt>Rails::Engine</tt>s specified at <tt>config.view_path_engines</tt> will have its cell-views path appended to Cell::Base#view_paths
@@ -40,7 +42,7 @@ module Cells
     def self.append_engines_view_paths_for(config)
       return if config.view_path_engines == false
 
-      engines = config.view_path_engines || ::Rails::Application::Railties.engines
+      engines = config.view_path_engines || registered_engines#::Rails::Application::Railties.engines
       engines.each {|engine| append_engine_view_path!(engine) }
     end
 

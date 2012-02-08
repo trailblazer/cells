@@ -53,7 +53,11 @@ class TestCaseTest < Cell::TestCase
     context "#view_assigns" do
       should "be emtpy when nothing was set" do
         render_cell(:bassist, :play)
-        assert_equal({}, view_assigns)
+        if Cells.rails3_0?
+          assert_equal([:lookup_context], view_assigns.keys)
+        else
+          assert_equal({}, view_assigns)
+        end
       end
       
       should "return the instance variables from the last #render_cell" do
@@ -63,7 +67,12 @@ class TestCaseTest < Cell::TestCase
           end
         end
         render_cell(:bassist, :sleep)
-        assert_equal({:duration => "8h"}, view_assigns)
+        if Cells.rails3_0?
+          assert_equal([:lookup_context, :duration], view_assigns.keys)
+          assert_equal("8h", view_assigns[:duration])
+        else
+          assert_equal({:duration => "8h"}, view_assigns)
+        end
       end
     end
     
