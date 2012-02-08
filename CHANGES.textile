@@ -1,3 +1,7 @@
+h2. 3.8.2
+
+* Engines should work in Rails 3.0 now, too.
+
 h2. 3.8.1
 
 * Make it work with Rails 3.2 by removing deprecated stuff.
