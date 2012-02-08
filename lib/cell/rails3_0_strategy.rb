@@ -1,3 +1,4 @@
+# This file contains VersionStrategies for the Cell and Cells module for Rails 3.0.
 module Cell
   # Methods to be included in Cell::Rails in 3.0 context, where there's no view inheritance.
   module VersionStrategy
@@ -28,7 +29,7 @@ module Cell
       # Returns all possible view paths for +state+ by invoking #view_for_state on all classes up
       # the inheritance chain.
       def find_class_view_for_state(state)
-        return [view_for_state(state)] unless superclass.respond_to?(:find_class_view_for_state)
+        return [view_for_state(state)] if superclass.abstract?
 
         superclass.find_class_view_for_state(state) << view_for_state(state)
       end
@@ -64,6 +65,15 @@ module Cell
       lookup_context.formats = opts.delete(:format) if opts[:format]
       
       opts[:template] = find_family_view_for_state(opts.delete(:view) || state)
+    end
+  end
+end
+
+
+module Cells::Engines
+  module VersionStrategy
+    def registered_engines
+      ::Rails::Application.railties.engines
     end
   end
 end

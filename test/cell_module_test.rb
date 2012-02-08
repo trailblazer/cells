@@ -151,7 +151,7 @@ class CellModuleTest < ActiveSupport::TestCase
     
     if Cells.rails3_0?
       should "provide possible_paths_for_state" do
-        assert_equal ["bad_guitarist/play", "bassist/play", "cell/rails/play"], cell(:bad_guitarist).send(:possible_paths_for_state, :play)
+        assert_equal ["bad_guitarist/play", "bassist/play"], cell(:bad_guitarist).send(:possible_paths_for_state, :play)
       end
       
       should "provide Cell.cell_name" do
