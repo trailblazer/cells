@@ -77,3 +77,9 @@ module Cells::Engines
     end
   end
 end
+
+Rails::Paths::Path.class_eval do
+  def existent_directories
+    to_a.select { |d| File.directory?(d) }
+  end
+end
