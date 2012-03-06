@@ -75,11 +75,9 @@ module Cells::Engines
     def registered_engines
       ::Rails::Application.railties.engines
     end
-  end
-end
-
-Rails::Paths::Path.class_eval do
-  def existent_directories
-    to_a.select { |d| File.directory?(d) }
+    
+    def existent_directories_for(path)
+      path.to_a.select { |d| File.directory?(d) }
+    end
   end
 end
