@@ -28,43 +28,23 @@ class CachingUnitTest < ActiveSupport::TestCase
   
   context ".state_cache_key" do
     should "accept state only" do
-      if Cells.rails3_2_or_more?
-        assert_equal "cells/Array/director/count/", @class.state_cache_key(:count)
-      else
-        assert_equal "cells/director/count/", @class.state_cache_key(:count)
-      end
+      assert_equal "cells/director/count/", @class.state_cache_key(:count)
     end
     
     should "accept hash as key parts" do
-      if Cells.rails3_2_or_more?
-        assert_equal "cells/Array/director/count/a=1&b=2", @class.state_cache_key(:count, :b=>2, :a=>1)
-      else
-        assert_equal "cells/director/count/a=1&b=2", @class.state_cache_key(:count, :b=>2, :a=>1)
-      end
+      assert_equal "cells/director/count/a=1&b=2", @class.state_cache_key(:count, :b=>2, :a=>1)
     end
     
     should "accept array as key parts" do
-      if Cells.rails3_2_or_more?
-        assert_equal "cells/Array/director/count/Array/1/2/3", @class.state_cache_key(:count, [1,2,3])
-      else
-        assert_equal "cells/director/count/1/2/3", @class.state_cache_key(:count, [1,2,3])
-      end
+      assert_equal "cells/director/count/1/2/3", @class.state_cache_key(:count, [1,2,3])
     end
     
     should "accept string as key parts" do
-      if Cells.rails3_2_or_more?
-        assert_equal "cells/Array/director/count/1/2", @class.state_cache_key(:count, "1/2")
-      else
-        assert_equal "cells/director/count/1/2", @class.state_cache_key(:count, "1/2")
-      end
+      assert_equal "cells/director/count/1/2", @class.state_cache_key(:count, "1/2")
     end
     
     should "accept nil as key parts" do
-      if Cells.rails3_2_or_more?
-        assert_equal "cells/Array/director/count/", @class.state_cache_key(:count, nil)
-      else
-        assert_equal "cells/director/count/", @class.state_cache_key(:count, nil)
-      end
+      assert_equal "cells/director/count/", @class.state_cache_key(:count, nil)
     end
   end
   
