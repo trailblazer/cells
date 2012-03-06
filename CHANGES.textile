@@ -1,3 +1,7 @@
+h2. 3.8.3
+
+* Added @Engines.existent_directories_for@ to prevent Rails 3.0 from crashing when it detects engines. 
+
 h2. 3.8.2
 
 * Engines should work in Rails 3.0 now, too.
