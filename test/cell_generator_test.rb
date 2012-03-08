@@ -95,6 +95,12 @@ class CellGeneratorTest < Rails::Generators::TestCase
       assert_file "test/cells/blog_cell_test.rb"
     end
 
+    should "work with namespace and test_unit" do
+      run_generator %w(Blog::Post latest -t test_unit)
+
+      assert_file "test/cells/blog/post_cell_test.rb",  /class Blog::PostCellTest < Cell::TestCase/
+    end
+
     should "create test_unit assets with -t rspec" do
       run_generator %w(Blog post latest -t rspec)
 
