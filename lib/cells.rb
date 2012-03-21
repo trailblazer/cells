@@ -64,7 +64,7 @@ module Cells
   # Example:
   #
   #   Cells.setup do |config|
-  #     config.append_view_path << "app/view_models"
+  #     config.append_view_path "app/view_models"
   #   end
   #
   def self.setup
