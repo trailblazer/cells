@@ -192,15 +192,15 @@ Now <tt>Rails::Engine</tt>s can contribute to Cells view paths. By default, any 
 
 == Custom base class
 
-By default, generated cells inherit from +Cell::Rails+. If you want to change this, specify your new class name in +config/application.rb+:
+By default, generated cells inherit from `Cell::Rails`. If you want to change this, specify your new class name in `config/application.rb`:
 
-  module MyApp
-    class Application < Rails::Application
-      config.generators do |g|
-        g.base_cell_class "ApplicationCell"
+    module MyApp
+      class Application < Rails::Application
+        config.generators do |g|
+          g.base_cell_class "ApplicationCell"
+        end
       end
     end
-  end
 
 == Rails 2.3 note
 
