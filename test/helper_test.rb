@@ -9,7 +9,7 @@ end
 
 class DrummerCell < Cell::Rails
   helper StringHelper
-          
+
   def assist
     render :inline => "<%= pick %>"
   end
@@ -18,7 +18,7 @@ end
 
 class HelperTest < ActionController::TestCase
   include Cell::TestCase::TestMethods
-  
+
   context "a cell view" do
     should "have access to all helpers" do
       BassistCell.class_eval do
@@ -26,37 +26,58 @@ class HelperTest < ActionController::TestCase
           render :inline => "<%= submit_tag %>"
         end
       end
-      
+
       assert_equal "<input name=\"commit\" type=\"submit\" value=\"Save changes\" />", render_cell(:bassist, :assist)
     end
-    
+
     should "have access to methods declared with helper_method" do
       BassistCell.class_eval do
         def help; "Great!"; end
         helper_method :help
-          
+
         def assist
           render :inline => "<%= help %>"
         end
       end
-      
+
       assert_equal "Great!", render_cell(:bassist, :assist)
     end
-    
+
     should "have access to methods provided by helper" do
       assert_equal "plong", render_cell(:drummer, :assist)
     end
-    
+
     should "mix in required helpers, only" do
       assert_equal "false true", render_cell(:"club_security/medic", :help)
       assert_equal "true false", render_cell(:"club_security/guard", :help)
     end
-    
+
     should "include helpers only once" do
       assert_equal "false true", render_cell(:"club_security/medic", :help)
       assert_equal "true false", render_cell(:"club_security/guard", :help)
       assert_equal "false true", render_cell(:"club_security/medic", :help)
       assert_equal "true false", render_cell(:"club_security/guard", :help)
+    end
+
+    should "be able to use the #cycle helper" do
+      BassistCell.class_eval do
+        def assist
+          render :view => 'plink_plonk'
+        end
+      end
+
+      assert_equal "plink plonk plink\n", render_cell(:bassist, :assist)
+    end
+
+    should "maintain the #cycle state between cell renders" do
+      BassistCell.class_eval do
+        def assist
+          render :view => 'plink_plonk'
+        end
+      end
+
+      assert_equal "plink plonk plink\n", render_cell(:bassist, :assist)
+      assert_equal "plonk plink plonk\n", render_cell(:bassist, :assist)
     end
   end
 end
