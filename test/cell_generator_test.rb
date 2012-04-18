@@ -26,6 +26,11 @@ class CellGeneratorTest < Rails::Generators::TestCase
       assert_no_file "app/cells/blog/post.html.slim"
       assert_no_file "app/cells/blog/latest.html.slim"
     end
+
+    should "create cell that inherits from custom cell class if specified" do
+      run_generator %w(Blog --base-cell-class=ApplicationCell)
+      assert_file "app/cells/blog_cell.rb", /class BlogCell < ApplicationCell/
+    end
     
     should "work with namespaces" do
       run_generator %w(Blog::Post latest)
