@@ -28,7 +28,7 @@ class CellGeneratorTest < Rails::Generators::TestCase
     end
 
     should "create cell that inherits from custom cell class if specified" do
-      run_generator %w(Blog --base-class=ApplicationCell)
+      run_generator %w(Blog --base-cell-class=ApplicationCell)
       assert_file "app/cells/blog_cell.rb", /class BlogCell < ApplicationCell/
     end
     
