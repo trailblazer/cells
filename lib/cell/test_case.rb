@@ -110,10 +110,9 @@ module Cell
       # Example:
       #   assert_equal "Doo Dumm Dumm..." cell(:bassist).play
       def cell(name, *args, &block)
-        cell = ::Cell::Rails.create_cell_for(name, @controller, *args)
-        cell.instance_eval &block if block_given?
-        ActiveSupport::Deprecation.warn("Passing options to TestCase#cell is deprecated, please use state-args in #render_cell.", caller) if args.present?
-        cell
+        Cell::Rails.create_cell_for(name, @controller, *args).tap do |cell|
+          cell.instance_eval &block if block_given?
+        end
       end
 
       # Execute the passed +block+ in a real view context of +cell_class+.

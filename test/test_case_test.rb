@@ -34,12 +34,6 @@ class TestCaseTest < Cell::TestCase
       should "accept a block" do
         assert_respond_to cell(:bassist){ def whatever; end }, :whatever
       end
-      
-      should "mark options as deprecated" do
-        assert_deprecated do
-          res = cell(:bassist, :song => "Lockdown")
-        end
-      end
     end
     
     context "#subject_cell" do
