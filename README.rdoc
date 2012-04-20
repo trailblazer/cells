@@ -190,6 +190,18 @@ In your <tt>routes.rb</tt> file, mount the cell like a Rack app.
 
 Now <tt>Rails::Engine</tt>s can contribute to Cells view paths. By default, any 'app/cells' found inside any Engine is automatically included into Cells view paths. If you need to, you can customize the view paths changing/appending to the <tt>'app/cell_views'</tt> path configuration. See the @Cell::EngineIntegration@ for more details.
 
+== Custom base class
+
+By default, generated cells inherit from <code>Cell::Rails</code>. If you want to change this, specify your new class name in <code>config/application.rb</code>:
+
+    module MyApp
+      class Application < Rails::Application
+        config.generators do |g|
+          g.base_cell_class "ApplicationCell"
+        end
+      end
+    end
+
 == Rails 2.3 note
 
 In order to copy the cells rake tasks to your app, run
