@@ -37,4 +37,14 @@ module Cell
       @parent_controller = parent_controller
     end
   end
+  
+  class Rack < Base
+    attr_reader :request
+    delegate :session, :params, :to => :request
+    
+    def initialize(request)
+      super()
+      @request = request
+    end
+  end
 end
