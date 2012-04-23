@@ -25,7 +25,7 @@ end
 
 module Cells::Engines
   module VersionStrategy
-    def registered_engines
+    def registered_engines(app)
       ::Rails::Application::Railties.engines
     end
     
