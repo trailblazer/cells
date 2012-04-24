@@ -11,9 +11,8 @@ module Cell
         new(request)
       end
       
-      def render_cell_state(cell, state, *args) # defined in Rendering.
-        args.shift  # remove the request instance.
-        super
+      def render_cell_state(cell, state, request, *args) # defined in Rendering.
+        super(cell, state, *args)
       end
     end
     
@@ -22,6 +21,7 @@ module Cell
       @request = request
     end
   end
+  
   
   class Rails < Rack
     include ActionController::RequestForgeryProtection
@@ -50,6 +50,4 @@ module Cell
       @parent_controller = parent_controller
     end
   end
-  
-  
 end
