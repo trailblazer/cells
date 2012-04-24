@@ -25,5 +25,8 @@ class RackTest < MiniTest::Spec
       assert_equal "Yo!", BassistCell.new(@request).render_state(:sing)
     end
     
+    it "works with #render_cell_for" do
+      assert_equal "ActionDispatch::TestRequest", Cell::Rack.render_cell_for("rack_test/bassist", :play, @request)
+    end
   end
 end

@@ -1,7 +1,29 @@
 require 'cell/base'
 
 module Cell
-  class Rails < Base
+  class Rack < Base
+    attr_reader :request
+    delegate :session, :params, :to => :request
+    
+    class << self
+      # DISCUSS: i don't like these class methods. maybe a RenderingStrategy?
+      def create_cell(request, *args) # defined in Builder.
+        new(request)
+      end
+      
+      def render_cell_state(cell, state, *args) # defined in Rendering.
+        args.shift  # remove the request instance.
+        cell.render_state(state, *args)
+      end
+    end
+    
+    def initialize(request)
+      super()
+      @request = request
+    end
+  end
+  
+  class Rails < Rack
     include ActionController::RequestForgeryProtection
     
     abstract!
@@ -14,37 +36,20 @@ module Cell
     
     
     class << self
-      def create_cell(controller, *args)
-        new(controller)
-      end
-      
     private
       # Run builder block in controller instance context.
       def run_builder_block(block, controller, *args)
         controller.instance_exec(*args, &block)
-      end
-      
-      def render_cell_state(cell, state, *args)
-        args.shift  # remove the controller instance.
-        cell.render_state(state, *args)
       end
     end
     
     attr_reader :parent_controller
     
     def initialize(parent_controller)
-      super()
+      super
       @parent_controller = parent_controller
     end
   end
   
-  class Rack < Base
-    attr_reader :request
-    delegate :session, :params, :to => :request
-    
-    def initialize(request)
-      super()
-      @request = request
-    end
-  end
+  
 end
