@@ -13,7 +13,7 @@ module Cell
       
       def render_cell_state(cell, state, *args) # defined in Rendering.
         args.shift  # remove the request instance.
-        cell.render_state(state, *args)
+        super
       end
     end
     
