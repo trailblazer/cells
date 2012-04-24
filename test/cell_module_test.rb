@@ -11,8 +11,8 @@ end
 
 # Used in CellBaseTest.
 class ShouterCell < Cell::Base
-  def sing
-    render
+  def sing(first)
+    first + render
   end
 end
 
@@ -35,7 +35,7 @@ class CellBaseTest < MiniTest::Spec
     describe ".render_cell_for" do
       it "invokes controller-less cell" do
         Cell::Base.view_paths= ["test/app/cells"]
-        assert_equal "AAAaaargh!\n", Cell::Base.render_cell_for(:shouter, :sing)
+        assert_equal "YAAAaaargh!\n", Cell::Base.render_cell_for(:shouter, :sing, "Y")
       end
     end
   end
