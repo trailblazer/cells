@@ -1,6 +1,18 @@
 require 'cell/base'
 
 module Cell
+  # Use Cell::Rack to mount your cell to a rack-route with a working +session+ and +params+ reference
+  # in the cell. This is especially useful when using gems like devise with your cell, without the
+  # entire Cell::Rails overhead.
+  #
+  # The only dependency these kinds of cells have is a rack-compatible request object.
+  #
+  # Example:
+  #
+  #   match "/dashboard/comments" => proc { |env|
+  #     request = ActionDispatch::Request.new(env)
+  #     [ 200, {}, [ Cell::Rack.render_cell_for(:comments, :show, request) ]]
+  #   }
   class Rack < Base
     attr_reader :request
     delegate :session, :params, :to => :request
