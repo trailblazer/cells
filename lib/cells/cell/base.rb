@@ -162,6 +162,12 @@ module Cells
           self.view_paths << path unless self.view_paths.include?(path)
         end
 
+        # Prepend a path in the list of Cells view paths
+        def prepend_view_path(path)
+          path = File.join(::Rails.root, path) if defined?(::Rails) and ::Rails.respond_to?(:root)
+          self.view_paths.unshift(path) unless self.view_paths.include?(path)
+        end
+
         # Creates a cell instance of the class <tt>name</tt>Cell, passing through
         # <tt>opts</tt>.
         def create_cell_for(controller, name, opts={})
