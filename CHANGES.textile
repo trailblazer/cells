@@ -1,3 +1,9 @@
+h2. 3.8.4
+
+* Added @Cell::Rack@ for request-dependent Cells. This is also the new base class for @Cells::Rails@.
+* Removed deprecation warning from @TestCase#cell@ as it's signature is not deprecated.
+* Added the @base_cell_class@ config option to generator for specifying an alternative base class.
+
 h2. 3.8.3
 
 * Added @Engines.existent_directories_for@ to prevent Rails 3.0 from crashing when it detects engines. 
