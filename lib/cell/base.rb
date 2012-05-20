@@ -2,10 +2,21 @@ require 'abstract_controller'
 require 'cell/builder'
 require 'cell/caching'
 require 'cell/rendering'
-require 'cell/rails3_0_strategy' if Cells.rails3_0?
-require 'cell/rails3_1_strategy' if Cells.rails3_1_or_more?
 
 module Cell
+  def self.rails3_0?
+    ::ActionPack::VERSION::MINOR == 0
+  end
+  
+  def self.rails3_1_or_more?
+    ::ActionPack::VERSION::MINOR >= 1
+  end
+  
+  def self.rails3_2_or_more?  # FIXME: move to tests.
+    ::ActionPack::VERSION::MINOR >= 2
+  end
+  
+  
   class Base < AbstractController::Base
     abstract!
     DEFAULT_VIEW_PATHS = [File.join('app', 'cells')]
@@ -14,6 +25,8 @@ module Cell
     include AbstractController
     include AbstractController::Rendering, Layouts, Helpers, Callbacks, Translation, Logger
     
+    require 'cell/rails3_0_strategy' if Cell.rails3_0?
+    require 'cell/rails3_1_strategy' if Cell.rails3_1_or_more?
     include VersionStrategy
     include Rendering
     include Caching

@@ -12,7 +12,7 @@ module Cell
         @view_context_class ||= begin
           routes  = _routes  #if respond_to?(:_routes)
           helpers = _helpers #if respond_to?(:_helpers)
-          Cell::Rails::View.prepare(routes, helpers)
+          Cell::Base::View.prepare(routes, helpers)
         end
       end
     end

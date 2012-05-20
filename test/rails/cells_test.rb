@@ -54,7 +54,7 @@ class RailsCellsTest < ActiveSupport::TestCase
     should "respond to .setup_view_paths!" do
       swap( Cell::Rails, :view_paths => [])  do
         Cell::Rails.setup_view_paths!
-        if Cells.rails3_2_or_more?
+        if Cell.rails3_2_or_more?
           assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS).paths, Cell::Rails.view_paths.paths
         else
           assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS), Cell::Rails.view_paths
@@ -81,8 +81,7 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
     
     
-    if Cells.rails3_0?
-      puts "rails-3.0"
+    if Cell.rails3_0?
       context "invoking find_family_view_for_state" do
         should "raise an error when a template is missing" do
           assert_raises ActionView::MissingTemplate do

@@ -70,18 +70,6 @@ module Cells
   def self.setup
     yield(Cell::Rails)
   end
-  
-  def self.rails3_0?
-    ::ActionPack::VERSION::MINOR == 0
-  end
-  
-  def self.rails3_1_or_more?
-    ::ActionPack::VERSION::MINOR >= 1
-  end
-  
-  def self.rails3_2_or_more?  # FIXME: move to tests.
-    ::ActionPack::VERSION::MINOR >= 2
-  end
 end
 
 require 'cell/rails'

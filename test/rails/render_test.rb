@@ -128,7 +128,7 @@ class RailsRenderTest < ActiveSupport::TestCase
         def groove; render; end
       end
       
-      if Cells.rails3_0?
+      if Cell.rails3_0?
         e = assert_raise Cell::Rails::MissingTemplate do
           render_cell(:bad_guitarist, :groove)
         end

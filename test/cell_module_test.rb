@@ -149,7 +149,7 @@ class CellModuleTest < ActiveSupport::TestCase
       assert_equal BassistCell, ::Cell::Rails.class_from_cell_name('bassist')
     end
     
-    if Cells.rails3_0?
+    if Cell.rails3_0?
       should "provide possible_paths_for_state" do
         assert_equal ["bad_guitarist/play", "bassist/play"], cell(:bad_guitarist).send(:possible_paths_for_state, :play)
       end
@@ -164,6 +164,19 @@ class CellModuleTest < ActiveSupport::TestCase
         
         assert_equal "cell_module_test/singer", CellModuleTest::SingerCell.cell_name
       end
+    end
+  end
+  
+  should "respond to #rails3_1_or_more?" do
+    if Rails::VERSION::MINOR == 0
+      assert ! Cell.rails3_1_or_more?
+      assert Cell.rails3_0?
+    elsif Rails::VERSION::MINOR == 1
+      assert Cell.rails3_1_or_more?
+      assert ! Cell.rails3_0?
+    elsif Rails::VERSION::MINOR == 2
+      assert Cell.rails3_1_or_more?
+      assert ! Cell.rails3_0?
     end
   end
 end
