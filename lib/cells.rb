@@ -72,15 +72,15 @@ module Cells
   end
   
   def self.rails3_0?
-    ::Rails::VERSION::MINOR == 0
+    ::ActionPack::VERSION::MINOR == 0
   end
   
   def self.rails3_1_or_more?
-    ::Rails::VERSION::MINOR >= 1
+    ::ActionPack::VERSION::MINOR >= 1
   end
   
   def self.rails3_2_or_more?  # FIXME: move to tests.
-    ::Rails::VERSION::MINOR >= 2
+    ::ActionPack::VERSION::MINOR >= 2
   end
 end
 
