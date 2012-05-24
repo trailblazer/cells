@@ -80,6 +80,23 @@ class CachingUnitTest < ActiveSupport::TestCase
         assert_not @cell.class.cache?(:sing)
       end
     end
+    
+    context ".cache_store" do
+      should "return Rails cache store per default" do
+        assert_equal ActionController::Base.cache_store, DirectorCell.cache_store
+      end
+      
+      context "in Cell::Base" do
+        should "be setable from the outside" do
+          klass = Class.new(Cell::Base)
+          assert_equal nil, klass.cache_store
+          klass.cache_store = Object
+          assert_equal Object, klass.cache_store
+        end
+        
+      end
+      
+    end
   end
   
   

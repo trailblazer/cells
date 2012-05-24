@@ -13,6 +13,8 @@ module Cell
     end
 
     module ClassMethods
+      attr_accessor :cache_store  # we want to use DI to set a cache store in cell/rails.
+      
       # Caches the rendered view of +state+.
       #
       # Examples:
@@ -60,12 +62,6 @@ module Cell
         self.cache_options     = cache_options.merge(state => options)
       end
 
-      def cache_store
-        # DISCUSS: move to instance level and delegate to #config/#parent_controller.
-        # This would allow convenient cache settings per cell (if needed).
-        ::ActionController::Base.cache_store
-      end
-      
       # Computes the complete, namespaced cache key for +state+.
       def state_cache_key(state, key_parts={})
         expand_cache_key([controller_path, state, key_parts])
