@@ -72,9 +72,13 @@ module Cell
       end
       
       def cache?(state)
-        # DISCUSS: why is it private?
-        ActionController::Base.send(:cache_configured?) and state_cached?(state)
+        cache_configured? and state_cached?(state)
       end
+      
+      def cache_configured?
+        @cache_configured
+      end
+      attr_writer :cache_configured
       
     protected
       # Compiles cache key and adds :cells namespace to +key+, according to the

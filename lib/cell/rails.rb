@@ -16,6 +16,11 @@ module Cell
         ActionController::Base.cache_store
       end
       
+      def cache_configured?
+        # DISCUSS: why is it private?
+        ActionController::Base.send(:cache_configured?)
+      end
+      
     private
       # Run builder block in controller instance context.
       def run_builder_block(block, controller, *args)

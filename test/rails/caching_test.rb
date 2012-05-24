@@ -86,12 +86,25 @@ class CachingUnitTest < ActiveSupport::TestCase
         assert_equal ActionController::Base.cache_store, DirectorCell.cache_store
       end
       
-      context "in Cell::Base" do
-        should "be setable from the outside" do
-          klass = Class.new(Cell::Base)
-          assert_equal nil, klass.cache_store
-          klass.cache_store = Object
-          assert_equal Object, klass.cache_store
+      context "Cell::Base" do
+        setup do
+          @cell = klass = Class.new(Cell::Base)
+        end
+        
+        context ".cache_store" do
+          should "be setable from the outside" do
+            assert_equal nil, @cell.cache_store
+            @cell.cache_store = Object
+            assert_equal Object, @cell.cache_store
+          end
+        end
+        
+        context ".cache_configured?" do
+          should "be setable from the outside" do
+            assert_equal nil, @cell.cache_configured?
+            @cell.cache_configured = true
+            assert_equal true, @cell.cache_configured?
+          end
         end
         
       end
