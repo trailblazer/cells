@@ -10,9 +10,7 @@ module Cell
     module ClassMethods
       def view_context_class
         @view_context_class ||= begin
-          routes  = _routes  #if respond_to?(:_routes)
-          helpers = _helpers #if respond_to?(:_helpers)
-          Cell::Base::View.prepare(routes, helpers)
+          Cell::Base::View.prepare(_routes, _helpers)
         end
       end
     end
