@@ -8,10 +8,8 @@ module Cell
     
     
     module ClassMethods
-      def view_context_class
-        @view_context_class ||= begin
-          Cell::Base::View.prepare(_routes, _helpers)
-        end
+      def helper_modules
+        [_routes.url_helpers, _routes.mounted_helpers, _helpers]
       end
     end
     

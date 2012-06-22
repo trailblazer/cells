@@ -12,13 +12,8 @@ module Cell
     
     
     module ClassMethods
-      def view_context_class
-        @view_context_class ||= begin
-          Class.new(Cell::Rails::View).tap do |klass|
-            klass.send(:include, _helpers)
-            klass.send(:include, _routes.url_helpers)
-          end
-        end
+      def helper_modules
+        [_helpers, _routes.url_helpers]
       end
       
       # Return the default view path for +state+. Override this if you cell has a differing naming style.
