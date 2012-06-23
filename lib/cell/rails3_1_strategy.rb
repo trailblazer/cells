@@ -4,7 +4,7 @@ module Cell
   module VersionStrategy
     extend ActiveSupport::Concern
     
-    include AbstractController::UrlFor  # must be included before _routes is set in Railstie.
+    include AbstractController::UrlFor  # must be included before _routes is set in Railstie. # TODO: remove that.
     
     
     module ClassMethods
