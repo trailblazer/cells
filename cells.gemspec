@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "shoulda"
   s.add_development_dependency "haml"
   s.add_development_dependency "slim"
+  s.add_development_dependency "simple_form"
   s.add_development_dependency "tzinfo" # FIXME: why the hell do we need this for 3.1?
   s.add_development_dependency "minitest",	">= 2.8.1"
 end
