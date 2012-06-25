@@ -186,11 +186,49 @@ In your <tt>routes.rb</tt> file, mount the cell like a Rack app.
     [ 200, {}, [ Cell::Base.render_cell_for(:post, :show) ]]
   }
 
+
+== Using Rails Gems Like simple_form Outside Of Rails
+
+Cells can be used outside of Rails. A new module brought in 3.8.5 provides the Rails view "API" making it possible to use gems like  the popular {simple_form}[https://github.com/plataformatec/simple_form] outside Rails!
+
+All you need to do is providing the cell with some helpers, usually it's the polymorphic routing paths required by the gems.
+
+  module RoutingHelpers
+    def musician_path(model)
+      "/musicians/#{model.id}"
+    end
+  end
+  
+Then, use the @Cell::Rails::HelperAPI@ module and it should work fine (depending on the quality of the gem you're desiring to use).
+
+  require 'cell/base'
+  require "cell/rails/helper_api"
+  require "simple_form"
+  
+  class BassistCell < Cell::Base
+    include Cell::Rails::HelperAPI
+	  
+    self._helpers = RoutingHelpers
+    
+    def show
+      @musician = Musician.find(:first)
+    end
+  end
+
+Your views can now use the gem's helpers.
+
+  <%= simple_form_for @musician do |f| %>
+    <%= f.input :name %>
+    <%= f.button :submit %>
+  <% end %>
+
+Note that this currently "only" works with Rails 3.2.
+
 == Cells is Rails::Engine aware!
 
 Now <tt>Rails::Engine</tt>s can contribute to Cells view paths. By default, any 'app/cells' found inside any Engine is automatically included into Cells view paths. If you need to, you can customize the view paths changing/appending to the <tt>'app/cell_views'</tt> path configuration. See the @Cell::EngineIntegration@ for more details.
 
-== Custom base class
+== Generators
 
 By default, generated cells inherit from <code>Cell::Rails</code>. If you want to change this, specify your new class name in <code>config/application.rb</code>:
 

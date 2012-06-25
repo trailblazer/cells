@@ -1,3 +1,8 @@
+h2. 3.8.5
+
+* Added @Cell::Rails::HelperAPI@ module to provide the entire Rails view "API" (quotes on purpose!) in cells running completely outside of Rails. This makes it possible to use gems like simple_form in any Ruby environment, especially interesting for people using Sinatra, webmachine, etc.
+* Moved @Caching.expire_cache_key@ to @Rails@. Use @Caching.expire_cache_key_for(key, cache_store, ..)@ if you want to expire caches outside of Rails.
+
 h2. 3.8.4
 
 * Added @Cell::Rack@ for request-dependent Cells. This is also the new base class for @Cells::Rails@.

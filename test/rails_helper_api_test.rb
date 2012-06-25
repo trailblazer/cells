@@ -21,7 +21,7 @@ class RailsHelperAPITest < MiniTest::Spec
   end
 
 
-  class FakeRoutes # should be sinatra's url helper instance
+  class FakeUrlFor # should be sinatra's url helper instance
     def url_for(*)
     end
   end
@@ -37,7 +37,7 @@ class RailsHelperAPITest < MiniTest::Spec
     include Cell::Rails::HelperAPI
     
     self._helpers = FakeHelpers
-    self._routes = FakeRoutes.new
+    self._routes = FakeUrlFor.new
     
     def edit
       @tone = "C"
@@ -53,7 +53,7 @@ class RailsHelperAPITest < MiniTest::Spec
 	<div class="input string required"><label class="string required" for="fruit_title"><abbr title="required">*</abbr> Title</label><input class="string required" id="fruit_title" name="fruit[title]" required="required" size="50" type="text" value="Banana" /></div>
 	<input class="button" name="commit" type="submit" value="Create Fruit" />
 </form>
-', BassistCell.new.render_state(:edit)
+', BassistCell.new.render_state(:edit) if Cell.rails3_1_or_more? and Rails::VERSION::MINOR == 2
     end
   end
 end
