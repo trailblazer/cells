@@ -49,24 +49,24 @@ class CachingUnitTest < ActiveSupport::TestCase
   end
   
   
-  context ".state_cached?" do
+  context "#state_cached?" do
     should "return true for cached" do
-      assert @class.send :state_cached?, :count
+      assert @cell.send :state_cached?, :count
     end
     
     should "return false otherwise" do
-      assert_not @class.send :state_cached?, :sing
+      assert_not @cell.send :state_cached?, :sing
     end
   end
   
   
-  context ".cache?" do
+  context "#cache?" do
     should "return true for cached" do
-      assert @cell.class.cache?(:count)
+      assert @cell.cache?(:count)
     end
     
     should "return false otherwise" do
-      assert_not @cell.class.cache?(:sing)
+      assert_not @cell.cache?(:sing)
     end
     
     context "perform_caching turned off" do
@@ -76,8 +76,8 @@ class CachingUnitTest < ActiveSupport::TestCase
       
       should "always return false if caching turned-off" do
         ::ActionController::Base.perform_caching = false
-        assert_not @cell.class.cache?(:count)
-        assert_not @cell.class.cache?(:sing)
+        assert_not @cell.cache?(:count)
+        assert_not @cell.cache?(:sing)
       end
     end
     
@@ -88,10 +88,11 @@ class CachingUnitTest < ActiveSupport::TestCase
       
       context "Cell::Base" do
         setup do
-          @cell = klass = Class.new(Cell::Base)
+          @class  = Class.new(Cell::Base)
+          @cell   = @class.new
         end
         
-        context ".cache_store" do
+        context "#cache_store" do
           should "be setable from the outside" do
             assert_equal nil, @cell.cache_store
             @cell.cache_store = Object
@@ -99,7 +100,7 @@ class CachingUnitTest < ActiveSupport::TestCase
           end
         end
         
-        context ".cache_configured?" do
+        context "#cache_configured?" do
           should "be setable from the outside" do
             assert_equal nil, @cell.cache_configured?
             @cell.cache_configured = true
@@ -108,7 +109,6 @@ class CachingUnitTest < ActiveSupport::TestCase
         end
         
       end
-      
     end
   end
   
@@ -336,6 +336,27 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "2", render_cell(:director, :count, 2)
       assert_equal "1", render_cell(:director, :count, 3)
       assert_equal "4", render_cell(:director, :count, 4)
+    end
+    
+    should "allow using a different cache store" do
+      class BassistCell < Cell::Base
+        cache :play
+        
+        def play(song)
+          render :text => song
+        end
+      end
+      
+      @cell = BassistCell.new
+      
+      assert_equal "New Years", @cell.render_state(:play, "New Years")
+      assert_equal "Liar", @cell.render_state(:play, "Liar")
+      
+      @cell.cache_configured  = true
+      @cell.cache_store       = ActiveSupport::Cache::MemoryStore.new
+      
+      assert_equal "New Years", @cell.render_state(:play, "New Years")
+      assert_equal "New Years", @cell.render_state(:play, "Liar")
     end
   end
 end
