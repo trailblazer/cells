@@ -13,8 +13,6 @@ module Cell
     end
 
     module ClassMethods
-      attr_accessor :cache_store  # we want to use DI to set a cache store in cell/rails.
-      
       # Caches the rendered view of +state+.
       #
       # Examples:
@@ -67,18 +65,10 @@ module Cell
         expand_cache_key([controller_path, state, key_parts])
       end
 
-      def expire_cache_key(key, *args)
+      def expire_cache_key_for(key, cache_store, *args)
         cache_store.delete(key, *args)
       end
       
-      def cache?(state)
-        cache_configured? and state_cached?(state)
-      end
-      
-      def cache_configured?
-        @cache_configured
-      end
-      attr_writer :cache_configured
       
     protected
       # Compiles cache key and adds :cells namespace to +key+, according to the
@@ -86,11 +76,8 @@ module Cell
       def expand_cache_key(key)
         ::ActiveSupport::Cache.expand_cache_key(key, :cells)
       end
-      
-      def state_cached?(state)
-        version_procs.has_key?(state)
-      end
     end
+
 
     def render_state(state, *args)
       return super(state, *args) unless cache?(state, *args)
@@ -98,16 +85,27 @@ module Cell
       key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
       options = self.class.cache_options[state]
       
-      self.class.cache_store.fetch(key, options) do
+      cache_store.fetch(key, options) do
         super(state, *args)
       end
     end
     
+    def cache_configured?
+      @cache_configured
+    end
+    attr_writer :cache_configured
+    
+    attr_accessor :cache_store  # we want to use DI to set a cache store in cell/rails.
+      
     def cache?(state, *args)
-      self.class.cache?(state) and call_state_conditional(state, *args)
+      cache_configured? and state_cached?(state) and call_state_conditional(state, *args)
     end
     
   protected
+    def state_cached?(state)
+      self.class.version_procs.has_key?(state)
+    end
+      
     def call_proc_or_method(state, method, *args)
       return method.call(self, *args) if method.kind_of?(Proc)
       send(method, *args)

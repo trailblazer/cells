@@ -16,9 +16,8 @@ module Cell
         ActionController::Base.cache_store
       end
       
-      def cache_configured?
-        # DISCUSS: why is it private?
-        ActionController::Base.send(:cache_configured?)
+      def expire_cache_key(key, *args)  # FIXME: move to Rails.
+        expire_cache_key_for(key, cache_store ,*args)
       end
       
     private
@@ -34,6 +33,14 @@ module Cell
     def initialize(parent_controller)
       super
       @parent_controller = parent_controller
+    end
+    
+    def cache_configured?
+      ActionController::Base.send(:cache_configured?) # DISCUSS: why is it private?
+    end
+    
+    def cache_store
+      self.class.cache_store  # in Rails, we have a global cache store.
     end
   end
 end
