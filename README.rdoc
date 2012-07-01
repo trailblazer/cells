@@ -199,7 +199,7 @@ All you need to do is providing the cell with some helpers, usually it's the pol
     end
   end
   
-Then, use the @Cell::Rails::HelperAPI@ module and it should work fine (depending on the quality of the gem you're desiring to use).
+Then, use the Cell::Rails::HelperAPI module and it should work fine (depending on the quality of the gem you're desiring to use).
 
   require 'cell/base'
   require "cell/rails/helper_api"
@@ -207,7 +207,7 @@ Then, use the @Cell::Rails::HelperAPI@ module and it should work fine (depending
   
   class BassistCell < Cell::Base
     include Cell::Rails::HelperAPI
-	  
+    
     self._helpers = RoutingHelpers
     
     def show
