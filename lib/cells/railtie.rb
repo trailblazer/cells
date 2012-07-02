@@ -13,7 +13,7 @@ module Cells
     end
     
     initializer "cells.setup_engines_view_paths" do |app|
-      Cells::Engines.append_engines_view_paths_for(app.config.action_controller, app)
+      Cells::Engines.append_engines_view_paths_for(app)
     end
     
     rake_tasks do

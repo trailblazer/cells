@@ -39,10 +39,10 @@ module Cells
     #  
     # Defaults <tt>config.view_path_engines</tt> to all loaded <tt>Rails::Engine</tt>s.
     #
-    def self.append_engines_view_paths_for(config, app)
-      return if config.view_path_engines == false
+    def self.append_engines_view_paths_for(app)
+      return if Cell::Base.config.view_path_engines == false
 
-      engines = config.view_path_engines || registered_engines(app)  #::Rails::Application::Railties.engines
+      engines = Cell::Base.config.view_path_engines || registered_engines(app)  #::Rails::Application::Railties.engines
       engines.each {|engine| append_engine_view_path!(engine) }
     end
 
