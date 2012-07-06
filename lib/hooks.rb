@@ -5,11 +5,12 @@ require "hooks/inheritable_attribute"
 # Example:
 #
 #   class CatWidget < Apotomo::Widget
-#     define_hook :after_dinner
+#     define_hooks :before_dinner, :after_dinner
 #
 # Now you can add callbacks to your hook declaratively in your class.
 #
-#     after_dinner do puts "Ice cream!" end
+#     before_dinner :wash_paws
+#     after_dinner { puts "Ice cream!" }
 #     after_dinner :have_a_desert   # => refers to CatWidget#have_a_desert
 # 
 # Running the callbacks happens on instances. It will run the block and #have_a_desert from above.
@@ -24,12 +25,15 @@ module Hooks
   end
   
   module ClassMethods
-    def define_hook(name)
-      accessor_name = "_#{name}_callbacks"
-      
-      setup_hook_accessors(accessor_name)
-      define_hook_writer(name, accessor_name)
+    def define_hooks(*names)
+      names.each do |name|
+        accessor_name = "_#{name}_callbacks"
+        
+        setup_hook_accessors(accessor_name)
+        define_hook_writer(name, accessor_name)
+      end
     end
+    alias_method :define_hook, :define_hooks
     
     # Like Hooks#run_hook but for the class. Note that +:callbacks+ must be class methods.
     #

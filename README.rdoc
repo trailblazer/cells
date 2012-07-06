@@ -20,9 +20,11 @@ Let's take... a cat.
   class Cat
     include Hooks
 
-    define_hook :after_dinner
+    define_hooks :before_dinner, :after_dinner
 
 Now you can add callbacks to your hook declaratively in your class.
+
+    before_dinner :wash_paws
 
     after_dinner do
       puts "Ice cream for #{self}!"
