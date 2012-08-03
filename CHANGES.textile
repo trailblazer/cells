@@ -1,3 +1,6 @@
+h2. 0.2.1
+* You can now pass multiple hook names to @#define_hooks@.
+
 h2. 0.2.0
 
 h3. Changes
