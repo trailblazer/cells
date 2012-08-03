@@ -29,6 +29,12 @@ class HooksTest < Test::Unit::TestCase
       @klass.after_eight :dine
       assert_equal [:dine], @klass.callbacks_for_hook(:after_eight)
     end
+
+    should "accept multiple hook names" do
+      @mum.class.define_hooks :before_ten, :after_ten
+      assert_equal [], @klass.callbacks_for_hook(:before_ten)
+      assert_equal [], @klass.callbacks_for_hook(:after_ten)
+    end
   
     context "creates a public writer for the hook that" do
       should "accepts method names" do
