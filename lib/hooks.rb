@@ -27,10 +27,7 @@ module Hooks
   module ClassMethods
     def define_hooks(*names)
       names.each do |name|
-        accessor_name = "_#{name}_callbacks"
-        
-        setup_hook_accessors(accessor_name)
-        define_hook_writer(name, accessor_name)
+        setup_hook(name)
       end
     end
     alias_method :define_hook, :define_hooks
@@ -75,6 +72,13 @@ module Hooks
     end
     
   private
+  
+    def setup_hook(name)
+      accessor_name = "_#{name}_callbacks"
+      
+      setup_hook_accessors(accessor_name)
+      define_hook_writer(name, accessor_name)
+    end
     
     def define_hook_writer(hook, accessor_name)
       instance_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
