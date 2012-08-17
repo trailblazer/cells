@@ -186,6 +186,11 @@ In your <tt>routes.rb</tt> file, mount the cell like a Rack app.
     [ 200, {}, [ Cell::Base.render_cell_for(:post, :show) ]]
   }
 
+=== Cells in ActionMailer
+
+ActionMailer doesn't have request object, so if you inherit from Cell::Rails you will receive an error. Cell::Base will fix that problem, but you will not be able to use any of routes inside your cells.
+
+You can fix that with {actionmailer_with_request}[https://github.com/weppos/actionmailer_with_request] which (suprise!) brings request object to the ActionMailer.
 
 == Using Rails Gems Like simple_form Outside Of Rails
 
@@ -198,18 +203,18 @@ All you need to do is providing the cell with some helpers, usually it's the pol
       "/musicians/#{model.id}"
     end
   end
-  
+
 Then, use the Cell::Rails::HelperAPI module and it should work fine (depending on the quality of the gem you're desiring to use).
 
   require 'cell/base'
   require "cell/rails/helper_api"
   require "simple_form"
-  
+
   class BassistCell < Cell::Base
     include Cell::Rails::HelperAPI
-    
+
     self._helpers = RoutingHelpers
-    
+
     def show
       @musician = Musician.find(:first)
     end
