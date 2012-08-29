@@ -31,11 +31,11 @@ Rails 2.3:
 
 Creating a cell is nothing more than
 
-  $ rails generate cell cart display -e haml
+  $ rails generate cell cart show -e haml
     create  app/cells/
     create  app/cells/cart
     create  app/cells/cart_cell.rb
-    create  app/cells/cart/display.html.haml
+    create  app/cells/cart/show.html.haml
     create  test/cells/cart_test.rb
 
 That looks very familiar.
@@ -45,7 +45,7 @@ That looks very familiar.
 Now, render your cart. Why not put it in <tt>layouts/application.html.erb</tt> for now?
 
   <div id="header">
-    <%= render_cell :cart, :display, :user => @current_user %>
+    <%= render_cell :cart, :show, :user => @current_user %>
 
 Feels like rendering a controller action. For good encapsulation we pass the current +user+ from outside into the cell - a dependency injection.
 
@@ -54,11 +54,11 @@ Feels like rendering a controller action. For good encapsulation we pass the cur
 Time to improve our cell code. Let's start with <tt>app/cells/cart_cell.rb</tt>:
 
   class CartCell < Cell::Rails
-    def display(args)
+    def show(args)
       user    = args[:user]
       @items  = user.items_in_cart
 
-      render  # renders display.html.haml
+      render  # renders show.html.haml
     end
   end
 
@@ -67,7 +67,7 @@ Is that a controller? Hell, yeah. We even got a +#render+ method as we know it f
 
 == Views
 
-Since a plain call to +#render+ will start rendering <tt>app/cells/cart/display.html.haml</tt> we should put some meaningful markup there.
+Since a plain call to +#render+ will start rendering <tt>app/cells/cart/show.html.haml</tt> we should put some meaningful markup there.
 
   #cart
     You have #{@items.size} items in your shopping cart.
@@ -122,18 +122,18 @@ will render the configured +UnauthorizedUserCell+ instead of the original +Login
 Cells do strict view caching. No cluttered fragment caching. Add
 
   class CartCell < Cell::Rails
-    cache :display, :expires_in => 10.minutes
+    cache :show, :expires_in => 10.minutes
 
 and your cart will be re-rendered after 10 minutes.
 
 You can expand the state's cache key - why not use a versioner block to do just this?
 
   class CartCell < Cell::Rails
-    cache :display do |cell, options|
+    cache :show do |cell, options|
       options[:items].md5
     end
 
-The block's return value is appended to the state key: <tt>"cells/cart/display/0ecb1360644ce665a4ef"</tt>.
+The block's return value is appended to the state key: <tt>"cells/cart/show/0ecb1360644ce665a4ef"</tt>.
 
 Check the {API to learn more}[http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method].
 
@@ -146,8 +146,8 @@ Another big advantage compared to monolithic controller/helper/partial piles is 
 So what if you wanna test the cart cell? Use the generated <tt>test/cells/cart_cell_test.rb</tt> test.
 
   class CartCellTest < Cell::TestCase
-    test "display" do
-      invoke :display, :user => @user_fixture
+    test "show" do
+      invoke :show, :user => @user_fixture
       assert_select "#cart", "You have 3 items in your shopping cart."
     end
 
