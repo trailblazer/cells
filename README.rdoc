@@ -94,6 +94,14 @@ The distinction between partials and views is making things more complex, so why
   %p
     = render :view => 'items'
 
+=== Rendering Global Partials
+
+Sometimes you need to render a global partial from <tt>app/views</tt> within a cell. For instance, the +gmaps4rails+ helper depends on a global partial. While this breaks encapsulation it's still possible in cells - just add the global view path.
+
+  class MapCell < Cell::Rails
+    append_view_path "app/views"
+
+
 == View Inheritance
 
 This is where OOP comes back to your view.
