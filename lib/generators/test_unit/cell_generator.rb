@@ -7,7 +7,7 @@ module TestUnit
 
       def create_test
         @states = actions
-        template 'cell_test.rb', File.join('test/cells/', "#{file_name}_cell_test.rb")
+        template 'cell_test.rb', File.join('test/cells/', class_path, "#{file_name}_cell_test.rb")
       end
     end
   end
