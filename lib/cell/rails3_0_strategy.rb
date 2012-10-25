@@ -65,14 +65,16 @@ module Cell
 end
 
 
-module Cells::Engines
-  module VersionStrategy
-    def registered_engines
-      ::Rails::Application.railties.engines
-    end
-    
-    def existent_directories_for(path)
-      path.to_a.select { |d| File.directory?(d) }
+module Cells
+  module Engines
+    module VersionStrategy
+      def registered_engines
+        ::Rails::Application.railties.engines
+      end
+      
+      def existent_directories_for(path)
+        path.to_a.select { |d| File.directory?(d) }
+      end
     end
   end
 end
