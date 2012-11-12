@@ -78,7 +78,7 @@ module Cell
         Hash[(after - before).collect do |var|
           next if var =~ /^@_/
           [var[1, var.length].to_sym, cell.instance_variable_get(var)]
-        end]
+        end.compact]
       end
     end
     
