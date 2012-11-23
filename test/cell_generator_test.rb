@@ -118,8 +118,12 @@ class CellGeneratorTest < Rails::Generators::TestCase
       Rails::Generators.stub :namespace, MyEngine do
         run_generator %w(Blog post)
 
-        assert_file "app/cells/my_engine/blog_cell.rb", /module MyEngine/
-        assert_file "app/cells/my_engine/blog_cell.rb", /class BlogCell < Cell::Rails/
+        if Cell.rails3_2_or_more?
+          assert_file "app/cells/my_engine/blog_cell.rb", /module MyEngine/
+          assert_file "app/cells/my_engine/blog_cell.rb", /class BlogCell < Cell::Rails/
+        else
+          assert_file "app/cells/blog_cell.rb"
+        end
       end
     end
 
@@ -127,7 +131,11 @@ class CellGeneratorTest < Rails::Generators::TestCase
       Rails::Generators.stub :namespace, MyEngine do
         run_generator %w(Blog post -t test_unit)
 
-        assert_file "test/cells/my_engine/blog_cell_test.rb", /module MyEngine/
+        if Cell.rails3_2_or_more?
+          assert_file "test/cells/my_engine/blog_cell_test.rb", /module MyEngine/
+        else
+          assert_file "test/cells/blog_cell_test.rb"
+        end
       end
     end
   end
