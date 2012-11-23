@@ -3,6 +3,7 @@ require 'rubygems'
 require 'test/unit'
 require 'shoulda'
 require 'minitest/spec'
+require 'minitest/mock'
 
 ENV['RAILS_ENV'] = 'test'
 

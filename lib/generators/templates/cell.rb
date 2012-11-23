@@ -1,3 +1,4 @@
+<% module_namespacing do -%>
 class <%= class_name %>Cell < <%= options.base_cell_class %>
 
 <% for action in actions -%>
@@ -7,3 +8,4 @@ class <%= class_name %>Cell < <%= options.base_cell_class %>
 
 <% end -%>
 end
+<% end -%>

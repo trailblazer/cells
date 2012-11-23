@@ -1,5 +1,6 @@
 require 'test_helper'
 
+<% module_namespacing do -%>
 class <%= class_name %>CellTest < Cell::TestCase
 <% for state in @states -%>
   test "<%= state %>" do
@@ -9,3 +10,4 @@ class <%= class_name %>CellTest < Cell::TestCase
   
 <% end %>
 end
+<% end -%>

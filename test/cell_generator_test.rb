@@ -1,6 +1,8 @@
 require 'test_helper'
 require 'generators/rails/cell_generator'
 
+module MyEngine; end
+
 class CellGeneratorTest < Rails::Generators::TestCase
   destination File.join(Rails.root, "tmp")
   setup :prepare_destination
@@ -110,6 +112,31 @@ class CellGeneratorTest < Rails::Generators::TestCase
       run_generator %w(Blog post latest -t rspec)
 
       assert_no_file "test/cells/blog_cell_test.rb"
+    end
+
+    should "work with engines" do
+      Rails::Generators.stub :namespace, MyEngine do
+        run_generator %w(Blog post)
+
+        if Cell.rails3_2_or_more?
+          assert_file "app/cells/my_engine/blog_cell.rb", /module MyEngine/
+          assert_file "app/cells/my_engine/blog_cell.rb", /class BlogCell < Cell::Rails/
+        else
+          assert_file "app/cells/blog_cell.rb"
+        end
+      end
+    end
+
+    should "create a namspaced test unit class" do
+      Rails::Generators.stub :namespace, MyEngine do
+        run_generator %w(Blog post -t test_unit)
+
+        if Cell.rails3_2_or_more?
+          assert_file "test/cells/my_engine/blog_cell_test.rb", /module MyEngine/
+        else
+          assert_file "test/cells/blog_cell_test.rb"
+        end
+      end
     end
   end
 end
