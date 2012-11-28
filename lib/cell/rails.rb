@@ -29,6 +29,7 @@ module Cell
     
     
     attr_reader :parent_controller
+    alias_method :controller, :parent_controller
     
     def initialize(parent_controller)
       super
