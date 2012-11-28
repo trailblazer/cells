@@ -16,11 +16,30 @@ class DrummerCell < Cell::Rails
 end
 
 
-class HelperTest < ActionController::TestCase
+class HelperTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
   
-  context "a cell view" do
-    should "have access to all helpers" do
+  describe "a cell with included helper modules" do
+    class SongCell < Cell::Rails
+      include ActionView::Helpers::AssetTagHelper
+
+      def show
+        image_tag("no-more-the-meek.jpg")
+      end
+
+      def controller
+        parent_controller
+      end
+    end
+
+    it "allows using helpers using #controller on instance level" do
+      assert_equal "<img alt=\"No-more-the-meek\" src=\"/images/no-more-the-meek.jpg\" />", render_cell("helper_test/song", :show)
+    end
+  end
+
+
+  describe "a cell view" do
+    it "have access to all helpers" do
       BassistCell.class_eval do
         def assist
           render :inline => "<%= submit_tag %>"
@@ -30,7 +49,7 @@ class HelperTest < ActionController::TestCase
       assert_equal "<input name=\"commit\" type=\"submit\" value=\"Save changes\" />", render_cell(:bassist, :assist)
     end
     
-    should "have access to methods declared with helper_method" do
+    it "have access to methods declared with #helper_method" do
       BassistCell.class_eval do
         def help; "Great!"; end
         helper_method :help
@@ -43,16 +62,16 @@ class HelperTest < ActionController::TestCase
       assert_equal "Great!", render_cell(:bassist, :assist)
     end
     
-    should "have access to methods provided by helper" do
+    it "have access to methods provided by helper" do
       assert_equal "plong", render_cell(:drummer, :assist)
     end
     
-    should "mix in required helpers, only" do
+    it "mix in required helpers, only" do
       assert_equal "false true", render_cell(:"club_security/medic", :help)
       assert_equal "true false", render_cell(:"club_security/guard", :help)
     end
     
-    should "include helpers only once" do
+    it "include helpers only once" do
       assert_equal "false true", render_cell(:"club_security/medic", :help)
       assert_equal "true false", render_cell(:"club_security/guard", :help)
       assert_equal "false true", render_cell(:"club_security/medic", :help)
