@@ -21,14 +21,11 @@ class HelperTest < MiniTest::Spec
   
   describe "a cell with included helper modules" do
     class SongCell < Cell::Rails
+      include ActionView::Helpers::TagHelper  # for Rails 3.0.
       include ActionView::Helpers::AssetTagHelper
 
       def show
         image_tag("no-more-the-meek.jpg")
-      end
-
-      def controller
-        parent_controller
       end
     end
 
