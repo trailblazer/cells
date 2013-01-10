@@ -1,3 +1,3 @@
 module Cells
-  VERSION = '3.8.6'
+  VERSION = '3.8.7'
 end

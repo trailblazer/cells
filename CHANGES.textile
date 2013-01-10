@@ -1,3 +1,7 @@
+h2. 3.8.7
+
+* Cells runs with Rails 4.
+
 h2. 3.8.6
 
 * @cell/base@ can now be required without trouble.

@@ -18,7 +18,7 @@ And the best: You can have as many cells in your page as you need!
 
 It's a gem!
 
-Rails 3.x:
+Rails >= 3.0:
 
   gem install cells
 
@@ -235,7 +235,7 @@ Your views can now use the gem's helpers.
     <%= f.button :submit %>
   <% end %>
 
-Note that this currently "only" works with Rails 3.2.
+Note that this currently "only" works with Rails 3.2-4.0.
 
 == Cells is Rails::Engine aware!
 
