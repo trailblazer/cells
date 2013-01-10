@@ -54,7 +54,7 @@ class RailsCellsTest < MiniTest::Spec
     it "respond to .setup_view_paths!" do
       swap( Cell::Rails, :view_paths => [])  do
         Cell::Rails.setup_view_paths!
-        if Cell.rails3_2_or_more?
+        if Cell.rails3_2_or_more? or Cell.rails4_0_or_more?
           assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS).paths, Cell::Rails.view_paths.paths
         else
           assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS), Cell::Rails.view_paths

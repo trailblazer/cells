@@ -38,7 +38,11 @@ class CachingUnitTest < MiniTest::Spec
     end
     
     it "accept hash as key parts" do
-      assert_equal "cells/director/count/a=1&b=2", @class.state_cache_key(:count, :b=>2, :a=>1)
+      if Cell.rails4_0_or_more?
+        assert_equal "cells/director/count/b/2/a/1", @class.state_cache_key(:count, :b=>2, :a=>1)
+      else
+        assert_equal "cells/director/count/a=1&b=2", @class.state_cache_key(:count, :b=>2, :a=>1)
+      end
     end
     
     it "accept array as key parts" do
