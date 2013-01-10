@@ -1,7 +1,6 @@
 # encoding: utf-8
 require 'rubygems'
 require 'test/unit'
-require 'shoulda'
 require 'minitest/spec'
 
 ENV['RAILS_ENV'] = 'test'
@@ -18,7 +17,7 @@ Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
 
 require "cell/test_case"
 # Extend TestCase.
-ActiveSupport::TestCase.class_eval do
+MiniTest::Spec.class_eval do
   def assert_not(assertion)
     assert !assertion
   end

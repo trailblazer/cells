@@ -1,22 +1,41 @@
 require 'test_helper'
 
-class ProducerCell < Cell::Base
-  helper ::Cells::Helpers::CaptureHelper
+class ProducerCell < Cell::Rails
+  #helper ::Cells::Helpers::CaptureHelper
   
-  def logger(*args); puts args.inspect; end
 end
 
 class RailsCaptureTest < ActionController::TestCase
-  context "A Rails controller rendering cells" do
-    setup do
-      @routes = ActionDispatch::Routing::RouteSet.new
-      @routes.draw do
-        |map| match ':action', :to => MusicianController
+  tests MusicianController
+
+  test "#content_for" do
+    @controller.class_eval do
+      def featured
+        
+        render :inline => '<%= render_cell(:producer, :content_for, self) %><pre><%= yield :recorded %></pre>'
       end
-      @controller = MusicianController.new
     end
     
-    should "see content from global_capture" do
+    ProducerCell.class_eval do
+      def content_for(tpl); 
+puts tpl
+@tpl = tpl
+
+        render; end
+
+      def global_content_for(*args, &block)
+        @tpl.content_for(*args, &block)
+      end
+      helper_method :global_content_for
+    end
+     
+    get 'featured'
+    assert_equal "\n<pre>DummDooDiiDoo</pre>", @response.body
+  end
+
+
+  describe "what" do
+    it "see content from global_capture" do
       @controller.class_eval do
         def featured
           render :inline => '<h3><%= @recorded %></h3>' << render_cell(:producer, :capture)
@@ -32,7 +51,7 @@ class RailsCaptureTest < ActionController::TestCase
     end
     
     
-    should "see yieldable content from global_content_for" do
+    it "see yieldable content from global_content_for" do
       @controller.class_eval do
         def featured
           render_cell(:producer, :content_for)

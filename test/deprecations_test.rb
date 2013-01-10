@@ -5,11 +5,11 @@ class SongwriterCell < BassistCell
 end
 
 
-class DeprecationsTest < ActiveSupport::TestCase
+class DeprecationsTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
   
-  context "#render_state" do
-    should "work without args and provide #options" do
+  describe "#render_state" do
+    it "work without args and provide #options" do
       SongwriterCell.class_eval do
         def listen
           render :text => options[:note]
@@ -19,7 +19,7 @@ class DeprecationsTest < ActiveSupport::TestCase
     end
     
     include ActiveSupport::Testing::Deprecation
-    should "mark @options as deprecated, but still work" do
+    it "mark @options as deprecated, but still work" do
       res = nil
       assert_deprecated do
         res = cell(:songwriter, :song => "Lockdown").instance_eval do
@@ -30,8 +30,8 @@ class DeprecationsTest < ActiveSupport::TestCase
     end
   end
   
-  context "render_cell_for" do
-    should "make options available in #options if not receiving state-args" do
+  describe "render_cell_for" do
+    it "make options available in #options if not receiving state-args" do
       SongwriterCell.class_eval do
         def listen
           render :text => options[:note]
@@ -40,7 +40,7 @@ class DeprecationsTest < ActiveSupport::TestCase
       assert_equal "C-minor", Cell::Rails.render_cell_for(:songwriter, :listen, @controller, :note => "C-minor")
     end
       
-    should "pass options as state-args and still set #options otherwise" do
+    it "pass options as state-args and still set #options otherwise" do
       SongwriterCell.class_eval do
         def listen(args)
           render :text => args[:note] + options[:note].to_s
@@ -50,32 +50,32 @@ class DeprecationsTest < ActiveSupport::TestCase
     end
   end
   
-  context "#state_accepts_args?" do
-    should "be false if state doesn't want args" do
+  describe "#state_accepts_args?" do
+    it "be false if state doesn't want args" do
       assert_not cell(:songwriter).state_accepts_args?(:play)
     end
     
-    should "be true for one arg" do
+    it "be true for one arg" do
       assert(cell(:songwriter) do 
         def listen(args) end 
       end.state_accepts_args?(:listen))
     end
     
-    should "be true for multiple arg" do
+    it "be true for multiple arg" do
       assert(cell(:songwriter) do 
         def listen(what, where) end 
       end.state_accepts_args?(:listen))
     end
     
-    should "be true for multiple arg with defaults" do
+    it "be true for multiple arg with defaults" do
       assert(cell(:songwriter) do 
         def listen(what, where="") end 
       end.state_accepts_args?(:listen))
     end
   end
   
-  context ".cache" do
-    should "still be able to use options in the block" do
+  describe ".cache" do
+    it "still be able to use options in the block" do
       SongwriterCell.class_eval do
         def count(args)
           render :text => args[:int]

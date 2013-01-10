@@ -1,17 +1,17 @@
 require 'test_helper'
 
-class CellsModuleTest < ActiveSupport::TestCase
-  context "Cells" do
-    context "view_paths" do
-      setup do
+class CellsModuleTest < MiniTest::Spec
+  describe "Cells" do
+    describe "#view_paths" do
+      before do
         @old_view_paths = Cell::Rails.view_paths.clone
       end
       
-      teardown do
+      after do
         Cell::Rails.view_paths = @old_view_paths
       end
       
-      should "provide .setup" do
+      it "provide .before" do
         Cells.setup do |c|
           c.append_view_path "/road/to/nowhere"
         end

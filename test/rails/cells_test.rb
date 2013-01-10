@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RailsCellsTest < ActiveSupport::TestCase
+class RailsCellsTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
   
   def swap(object, new_values)
@@ -16,8 +16,8 @@ class RailsCellsTest < ActiveSupport::TestCase
     end
   end
   
-  context "#render_state" do
-    should "work without args" do
+  describe "#render_state" do
+    it "work without args" do
       BassistCell.class_eval do
         def listen
           render :text => "That's a D!"
@@ -26,7 +26,7 @@ class RailsCellsTest < ActiveSupport::TestCase
       assert_equal "That's a D!", cell(:bassist).render_state(:listen)
     end
     
-    should "accept state-args" do
+    it "accept state-args" do
       BassistCell.class_eval do
         def listen(args)
           render :text => args[:note]
@@ -35,7 +35,7 @@ class RailsCellsTest < ActiveSupport::TestCase
       assert_equal "D", cell(:bassist).render_state(:listen, :note => "D")
     end
     
-    should "accept state-args with default parameters" do
+    it "accept state-args with default parameters" do
       BassistCell.class_eval do
         def listen(first, second="D")
           render :text => first+second
@@ -46,12 +46,12 @@ class RailsCellsTest < ActiveSupport::TestCase
   end
   
   
-  context "A rails cell" do
-    should "respond to DEFAULT_VIEW_PATHS" do
+  describe "A rails cell" do
+    it "respond to DEFAULT_VIEW_PATHS" do
       assert_equal ["app/cells"], Cell::Rails::DEFAULT_VIEW_PATHS
     end
     
-    should "respond to .setup_view_paths!" do
+    it "respond to .setup_view_paths!" do
       swap( Cell::Rails, :view_paths => [])  do
         Cell::Rails.setup_view_paths!
         if Cell.rails3_2_or_more?
@@ -62,28 +62,28 @@ class RailsCellsTest < ActiveSupport::TestCase
       end
     end
     
-    should "respond to view_paths" do
+    it "respond to view_paths" do
       assert_kind_of ActionView::PathSet, Cell::Rails.view_paths, "must be a PathSet for proper template caching/reloading (see issue#2)"
     end
     
-    should "respond to view_paths=" do
+    it "respond to view_paths=" do
       swap( Cell::Rails, :view_paths => ['you', 'are', 'here'])  do
         assert_kind_of ActionView::PathSet, Cell::Rails.view_paths, "must not wipe out the PathSet"
       end
     end
     
-    should "respond to #request" do
+    it "respond to #request" do
       assert_equal @request, cell(:bassist).request
     end
     
-    should "respond to #config" do
+    it "respond to #config" do
       assert_equal({}, cell(:bassist).config)
     end
     
     
     if Cell.rails3_0?
-      context "invoking find_family_view_for_state" do
-        should "raise an error when a template is missing" do
+      describe "invoking find_family_view_for_state" do
+        it "raise an error when a template is missing" do
           assert_raises ActionView::MissingTemplate do
             cell(:bassist).find_template("bassist/playyy")
           end
@@ -91,39 +91,40 @@ class RailsCellsTest < ActiveSupport::TestCase
           #puts "format: #{cell(:bassist).find_template("bassist/play.js").formats.inspect}"
         end
         
-        should "return play.html.erb" do
+        it "return play.html.erb" do
           assert_equal "bassist/play", cell(:bassist).send(:find_family_view_for_state, :play).virtual_path
         end
         
-        should "find inherited play.html.erb" do
+        it "find inherited play.html.erb" do
           assert_equal "bassist/play", cell(:bad_guitarist).send(:find_family_view_for_state, :play).virtual_path
         end
       end
     end
     
-    context "delegation" do
-      setup do
+    describe "delegation" do
+      before do
         @request.env["action_dispatch.request.request_parameters"] = {:song => "Creatures"}
         @controller = Class.new(ActionController::Base).new
         @controller.request = @request
         @cell = cell(:bassist)
       end
       
-      should_eventually "delegate log" do
+      it "delegate log" do
+        skip
         assert_nothing_raised do
           cell(:bassist).class.logger.info("everything is perfect!")
         end
       end
       
-      should "respond to session" do
+      it "respond to session" do
         assert_kind_of Hash, @cell.session
       end
           
-      should "respond to #params and return the request parameters" do
+      it "respond to #params and return the request parameters" do
         assert_equal({"song" => "Creatures"}, cell(:bassist).params)
       end
       
-      should "not merge #params and #options" do
+      it "not merge #params and #options" do
         assert_equal({"song" => "Creatures"}, cell(:bassist, "song" => "Lockdown").params)
       end
     end

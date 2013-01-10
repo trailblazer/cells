@@ -5,15 +5,19 @@ require 'cell/rendering'
 
 module Cell
   def self.rails3_0?
-    ::ActionPack::VERSION::MINOR == 0
+    ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR == 0
   end
   
   def self.rails3_1_or_more?
-    ::ActionPack::VERSION::MINOR >= 1
+    ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 1
   end
   
   def self.rails3_2_or_more?  # FIXME: move to tests.
-    ::ActionPack::VERSION::MINOR >= 2
+    ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2
+  end
+
+  def self.rails4_0_or_more?  # FIXME: move to tests.
+    ::ActionPack::VERSION::MAJOR == 4
   end
   
   
@@ -27,6 +31,7 @@ module Cell
     
     require 'cell/rails3_0_strategy' if Cell.rails3_0?
     require 'cell/rails3_1_strategy' if Cell.rails3_1_or_more?
+    require 'cell/rails4_0_strategy' if Cell.rails4_0_or_more?
     include VersionStrategy
     include Rendering
     include Caching

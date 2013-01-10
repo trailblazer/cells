@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'test_helper'
 
 class DirectorCell < Cell::Rails
@@ -13,12 +14,17 @@ class DirectorCell < Cell::Rails
     @count += 1
     render :text => @count
   end
+
+  cache :utf8
+  def utf8
+    render :text => "æøå" # or any other UTF-8 string
+  end
 end
 
-class CachingUnitTest < ActiveSupport::TestCase
+class CachingUnitTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
   
-  setup do
+  before :each do
     ActionController::Base.cache_store.clear
     ActionController::Base.perform_caching = true
     @cell   = cell(:director)
@@ -26,82 +32,82 @@ class CachingUnitTest < ActiveSupport::TestCase
   end
   
   
-  context ".state_cache_key" do
-    should "accept state only" do
+  describe ".state_cache_key" do
+    it "accept state only" do
       assert_equal "cells/director/count/", @class.state_cache_key(:count)
     end
     
-    should "accept hash as key parts" do
+    it "accept hash as key parts" do
       assert_equal "cells/director/count/a=1&b=2", @class.state_cache_key(:count, :b=>2, :a=>1)
     end
     
-    should "accept array as key parts" do
+    it "accept array as key parts" do
       assert_equal "cells/director/count/1/2/3", @class.state_cache_key(:count, [1,2,3])
     end
     
-    should "accept string as key parts" do
+    it "accept string as key parts" do
       assert_equal "cells/director/count/1/2", @class.state_cache_key(:count, "1/2")
     end
     
-    should "accept nil as key parts" do
+    it "accept nil as key parts" do
       assert_equal "cells/director/count/", @class.state_cache_key(:count, nil)
     end
   end
   
   
-  context "#state_cached?" do
-    should "return true for cached" do
-      assert @cell.send :state_cached?, :count
+  describe "#state_cached?" do
+    it "return true for cached" do
+      assert @cell.send :state_cached?, :tock
     end
     
-    should "return false otherwise" do
+    it "return false otherwise" do
       assert_not @cell.send :state_cached?, :sing
     end
   end
   
   
-  context "#cache?" do
-    should "return true for cached" do
-      assert @cell.cache?(:count)
+  describe "#cache?" do
+    it "return true for cached" do
+      assert @cell.cache?(:tock)
     end
     
-    should "return false otherwise" do
+    it "return false otherwise" do
       assert_not @cell.cache?(:sing)
     end
     
-    context "perform_caching turned off" do
-      teardown do
+    describe "perform_caching turned off" do
+      after :each do
         ::ActionController::Base.perform_caching = true
       end
       
-      should "always return false if caching turned-off" do
+      it "always return false if caching turned-off" do
         ::ActionController::Base.perform_caching = false
         assert_not @cell.cache?(:count)
         assert_not @cell.cache?(:sing)
       end
     end
     
-    context ".cache_store" do
-      should "return Rails cache store per default" do
+    describe ".cache_store" do
+      it "return Rails cache store per default" do
         assert_equal ActionController::Base.cache_store, DirectorCell.cache_store
       end
       
-      context "Cell::Base" do
-        setup do
+      describe "Cell::Base" do
+        before :each do
           @class  = Class.new(Cell::Base)
           @cell   = @class.new
         end
         
-        context "#cache_store" do
-          should "be setable from the outside" do
+        describe "#cache_store" do
+          it "be setable from the outside" do
             assert_equal nil, @cell.cache_store
             @cell.cache_store = Object
             assert_equal Object, @cell.cache_store
           end
         end
         
-        context "#cache_configured?" do
-          should "be setable from the outside" do
+        describe "#cache_configured?" do
+          it "be setable from the outside" do
             assert_equal nil, @cell.cache_configured?
             @cell.cache_configured = true
             assert_equal true, @cell.cache_configured?
@@ -113,24 +119,24 @@ class CachingUnitTest < ActiveSupport::TestCase
   end
   
   
-  context ".expire_cache_key" do
-    setup do
+  describe ".expire_cache_key" do
+    before :each do
       @key = @class.state_cache_key(:tock)
       assert_equal "1", render_cell(:director, :tock)
       assert_equal "1", @class.cache_store.read(@key)
     end
     
-    should "delete the state from cache" do
+    it "delete the state from cache" do
       @class.expire_cache_key(@key)
       assert_not @class.cache_store.read(@key)
     end
     
-    should "be available in controllers for sweepers" do
+    it "be available in controllers for sweepers" do
       MusicianController.new.expire_cell_state(DirectorCell, :tock)
       assert_not @class.cache_store.read(@key)
     end
     
-    should "accept cache options" do
+    it "accept cache options" do
       key = @class.state_cache_key(:tock, :volume => 9)
       assert Cell::Rails.cache_store.write(key, 'ONE!')
    
@@ -139,7 +145,8 @@ class CachingUnitTest < ActiveSupport::TestCase
       assert_not ::Cell::Rails.cache_store.read(key)
     end
     
-    should "raise a deprecation notice when passing in a :symbol" do
+    include ActiveSupport::Testing::Deprecation
+    it "raise a deprecation notice when passing in a :symbol" do
       assert_deprecated do
         MusicianController.new.expire_cell_state(:director, :tock)
       end
@@ -148,95 +155,93 @@ class CachingUnitTest < ActiveSupport::TestCase
   end
   
   
-  context ".cache" do
-    setup do
-      @proc = Proc.new{}
-
-      @parent = Class.new(@class)
-      @child = Class.new(@parent)
-      @sibbling = Class.new(@parent)
-    end
+  describe ".cache" do
+    let (:proc) { Proc.new {} }
+    let (:parent) { Class.new(Cell::Base) }
+    let (:brother) { Class.new(parent) }
+    let (:sister) { Class.new(parent) }
     
-    should "accept a state name, only" do
+    it "accept a state name, only" do
       @class.cache :count
       
       assert_not @class.version_procs[:count]
       assert_equal({}, @class.cache_options[:count])
     end
     
-    should "accept state and cache options" do
+    it "accept state and cache options" do
       @class.cache :count, :expires_in => 10.minutes
       
       assert_not @class.version_procs[:count]
       assert_equal({:expires_in => 10.minutes}, @class.cache_options[:count])
     end
     
-    should "accept args and versioner block" do
+    it "accept args and versioner block" do
       @class.cache :count, :expires_in => 10.minutes do "v1" end
 
       assert_kind_of Proc, @class.version_procs[:count]
       assert_equal({:expires_in => 10.minutes}, @class.cache_options[:count])
     end
     
-    should "stil accept a versioner proc, only" do
-      @class.cache :count, @proc
+    it "stil accept a versioner proc, only" do
+      @class.cache :count, proc
       
-      assert_equal @proc, @class.version_procs[:count]
+      assert_equal proc, @class.version_procs[:count]
       assert_equal({},    @class.cache_options[:count])
     end
     
-    should "stil accept a versioner block" do
+    it "stil accept a versioner block" do
       @class.cache :count do "v1" end
       
       assert_kind_of Proc, @class.version_procs[:count]
       assert_equal({},    @class.cache_options[:count])
     end
 
-    should "inherit caching configuration" do
-      @parent.cache :inherited_cache_configuration
+    it "inherit caching configuration" do
+      parent.cache :inherited_cache_configuration
 
-      assert @parent.version_procs.has_key?(:inherited_cache_configuration)
-      assert @child.version_procs.has_key?(:inherited_cache_configuration)
+      assert parent.version_procs.has_key?(:inherited_cache_configuration)
+      assert brother.version_procs.has_key?(:inherited_cache_configuration)
     end
 
-    should "not overwrite caching configuration in the parent class" do
-      @child.cache :inherited_cache_configuration
+    it "not overwrite caching configuration in the parent class" do
+      brother.cache :inherited_cache_configuration
 
-      assert_not @parent.version_procs.has_key?(:inherited_cache_configuration)
-      assert @child.version_procs.has_key?(:inherited_cache_configuration)
+      puts parent.version_procs.inspect
+      assert ! parent.version_procs.has_key?(:inherited_cache_configuration)
+      assert brother.version_procs.has_key?(:inherited_cache_configuration)
     end
 
-    should "not overwrite caching configuration in a sibbling class" do
-      @sibbling.cache :inherited_cache_configuration
+    it "not overwrite caching configuration in a sibbling class" do
+      sister.cache :inherited_cache_configuration
 
-      assert_not @child.version_procs.has_key?(:inherited_cache_configuration)
-      assert @sibbling.version_procs.has_key?(:inherited_cache_configuration)
+      assert ! brother.version_procs.has_key?(:inherited_cache_configuration)
+      assert sister.version_procs.has_key?(:inherited_cache_configuration)
     end
 
-    should "overwrite caching configuration in a child class" do
+    it "overwrite caching configuration in a child class" do
       @class.cache :inherited_cache_configuration
-      @child.cache :inherited_cache_configuration, @proc
+      brother.cache :inherited_cache_configuration, proc
 
-      assert_not @parent.version_procs[:inherited_cache_configuration]
-      assert_equal @proc, @child.version_procs[:inherited_cache_configuration]
+      assert ! parent.version_procs[:inherited_cache_configuration]
+      assert_equal proc, brother.version_procs[:inherited_cache_configuration]
     end
   end
 end
 
-class CachingFunctionalTest < ActiveSupport::TestCase
+class CachingFunctionalTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
 
-  setup do
+  before :each do
     ActionController::Base.cache_store.clear
     ActionController::Base.perform_caching = true
-    setup # from Cell::TestCase::TestMethods
+    #setup # from Cell::TestCase::TestMethods
     
     @cell   = cell(:director)
     @class  = @cell.class
   end
   
-  context "turned off" do
-    should "not invoke caching" do
+  describe "turned off" do
+    it "not invoke caching" do
       ::ActionController::Base.perform_caching = false
       
       assert_equal "1", @cell.render_state(:tock)
@@ -245,8 +250,8 @@ class CachingFunctionalTest < ActiveSupport::TestCase
   end  
   
   
-  context "without options" do
-    should "cache forever" do
+  describe "without options" do
+    it "cache forever" do
       @class.cache :tock
       assert_equal "1", render_cell(:director, :tock)
       assert_equal "1", render_cell(:director, :tock)
@@ -254,8 +259,8 @@ class CachingFunctionalTest < ActiveSupport::TestCase
   end
   
   
-  context "uncached states" do
-    should "not cache at all" do
+  describe "uncached states" do
+    it "not cache at all" do
       @class.class_eval do
         def dictate
           @count ||= 0
@@ -268,8 +273,8 @@ class CachingFunctionalTest < ActiveSupport::TestCase
     end
   end
   
-  context "with versioner" do
-    setup do
+  describe "with versioner" do
+    before do
       @class.class_eval do
         def count(i)
           render :text => i
@@ -277,7 +282,7 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       end
     end
     
-    should "compute the key with a block receiving state-args" do
+    it "compute the key with a block receiving state-args" do
       @class.cache :count do |cell, int|
         (int % 2)==0 ? {:count => "even"} : {:count => "odd"}
       end
@@ -289,7 +294,7 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "2", render_cell(:director, :count, 4)
     end
     
-    should "compute the key with an instance method" do
+    it "compute the key with an instance method" do
       @class.cache :count, :version
       @class.class_eval do
         private
@@ -304,7 +309,7 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "2", render_cell(:director, :count, 4)
     end
     
-    should "allow returning strings, too" do
+    it "allow returning strings, too" do
       @class.cache :count do |cell, int|
         (int % 2)==0 ? "even" : "odd"
       end
@@ -315,7 +320,7 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "2", render_cell(:director, :count, 4)
     end
     
-    should "be able to use caching conditionally" do
+    it "be able to use caching conditionally" do
       @class.cache :count, :if => proc { |cell, int| (int % 2) != 0 }
       
       assert_equal "1", render_cell(:director, :count, 1)
@@ -324,7 +329,7 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "4", render_cell(:director, :count, 4)
     end
     
-    should "cache conditionally with an instance method" do
+    it "cache conditionally with an instance method" do
       @class.cache :count, :if => :odd?
       @class.class_eval do
         def odd?(int)
@@ -338,7 +343,7 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       assert_equal "4", render_cell(:director, :count, 4)
     end
     
-    should "allow using a different cache store" do
+    it "allow using a different cache store" do
       class BassistCell < Cell::Base
         cache :play
         
@@ -357,6 +362,17 @@ class CachingFunctionalTest < ActiveSupport::TestCase
       
       assert_equal "New Years", @cell.render_state(:play, "New Years")
       assert_equal "New Years", @cell.render_state(:play, "Liar")
+    end
+  end
+
+  describe "utf-8" do
+    before do
+      @key = @class.state_cache_key(:utf8)
+    end
+
+    it "have the correct encoding when reading from cache" do
+      assert_equal "UTF-8", render_cell(:director, :utf8).encoding.to_s
+      assert_equal "UTF-8", @class.cache_store.read(@key).encoding.to_s
     end
   end
 end

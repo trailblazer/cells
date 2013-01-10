@@ -21,7 +21,7 @@ class RailsHelperAPITest < MiniTest::Spec
   end
 
 
-  class FakeUrlFor # should be sinatra's url helper instance
+  class FakeUrlFor # it be sinatra's url helper instance
     def url_for(*)
     end
   end
