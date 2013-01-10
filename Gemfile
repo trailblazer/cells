@@ -2,4 +2,4 @@ source :gemcutter
 
 gemspec
 
-#gem "rails" , :path => "/home/nick/projects/rayls"
+gem "rails" , :path => "../rayls"
