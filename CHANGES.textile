@@ -1,3 +1,7 @@
+h2. 3.8.8
+
+* Maintenance release.
+
 h2. 3.8.7
 
 * Cells runs with Rails 4.
