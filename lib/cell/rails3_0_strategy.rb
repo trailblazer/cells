@@ -69,7 +69,7 @@ module Cells
   module Engines
     module VersionStrategy
       def registered_engines
-        ::Rails::Application.railties.engines
+        ::Rails.application.railties.engines
       end
       
       def existent_directories_for(path)
