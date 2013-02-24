@@ -259,6 +259,9 @@ In order to copy the cells rake tasks to your app, run
 
   $ script/generate cells_install
 
+== Capture Support
+
+If you need a global @#content_for@ use the {cells-capture}[https://github.com/apotonick/cells-capture]@ gem.
 
 == More features
 
