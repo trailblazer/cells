@@ -6,7 +6,7 @@ module Cell
     include ActionController::RequestForgeryProtection
     
     abstract!
-    delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
+    delegate :session, :params, :request, :config, :env, :url_options, :_with_routes, :to => :parent_controller
     
     class << self
       def cache_store
