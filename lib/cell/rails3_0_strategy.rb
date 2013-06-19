@@ -57,7 +57,7 @@ module Cell
     end
     
     def process_opts_for(opts, state)
-      lookup_context.formats = opts.delete(:format) if opts[:format]
+      lookup_context.formats = opts[:format] ? [opts.delete(:format)] : parent_controller.formats
       
       opts[:template] = find_family_view_for_state(opts.delete(:view) || state)
     end
