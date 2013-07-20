@@ -3,7 +3,7 @@ Bundler::GemHelper.install_tasks
 
 require 'rake/testtask'
 
-desc 'Test the cells gem.'
+desc 'Default: run unit tests.'
 task :default => :test
 
 Rake::TestTask.new(:test) do |test|
