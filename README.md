@@ -8,26 +8,26 @@
 
 Say you're writing a Rails online shop - the shopping cart is reappearing again and again in every view. You're thinking about a clean solution for that part. A mixture of controller code, before-filters, partials and helpers?
 
-No. That sucks. Take Cells.
+No. That sucks. _Take Cells._
 
-Cells are View Components for Rails. They look and feel like controllers. They don't have no `DoubleRenderError`. They can be rendered everywhere in your controllers or views. They are cacheable, testable, fast and wonderful. They bring back OOP to your view and improve your software design.
+**Cells** are View Components for Rails. They look and feel like controllers. They don't have no `DoubleRenderError`. They can be rendered everywhere in your controllers or views. They are cacheable, testable, fast and wonderful. They bring back OOP to your view and improve your software design.
 
 And the best: You can have as many cells in your page as you need!
 
 ## Installation
 
-It's a gem!
+Easy as hell. You just need Ruby 1.9.3/2.0.0 and Rails 3/4.
 
-Rails >= 3.0:
+Add Cells to your `Gemfile` for Rails >= 3.0:
 
-```shell
-gem install cells
+```ruby
+gem `cells`
 ```
 
-Rails 2.3:
+For Rails 2.3 (see also <https://github.com/apotonick/cells/tree/rails-2.3>):
 
 ```shell
-gem install cells -v 3.3.9
+gem install cells -v 3.3.10
 ```
 
 ## Generate
@@ -40,9 +40,10 @@ rails generate cell cart show -e haml
 
 ```
 create  app/cells/
-create  app/cells/cart
 create  app/cells/cart_cell.rb
+create  app/cells/cart/
 create  app/cells/cart/show.html.haml
+create  test/cells/
 create  test/cells/cart_test.rb
 ```
 
@@ -50,11 +51,11 @@ That looks very familiar.
 
 ## Render the cell
 
-Now, render your cart. Why not put it in `layouts/application.html.erb` for now?
+Now, render your cart. Why not put it in `layouts/application.html.haml` for now?
 
-```erb
-<div id="header">
-  <%= render_cell :cart, :show, :user => @current_user %>
+```haml
+#header
+  = render_cell :cart, :show, :user => @current_user
 ```
 
 Feels like rendering a controller action. For good encapsulation we pass the current `user` from outside into the cell - a dependency injection.
@@ -65,12 +66,14 @@ Time to improve our cell code. Let's start with `app/cells/cart_cell.rb`:
 
 ```ruby
 class CartCell < Cell::Rails
+
   def show(args)
     user    = args[:user]
     @items  = user.items_in_cart
 
-    render  # renders show.html.haml
+    render # renders show.html.haml
   end
+
 end
 ```
 
@@ -83,12 +86,12 @@ Since a plain call to `#render` will start rendering `app/cells/cart/show.html.h
 
 ```haml
 #cart
-  You have #{@items.size} items in your shopping cart.
+  ! You have #{@items.size} items in your shopping cart.
 ```
 
 ### ERB? Haml? Builder?
 
-Yes, Cells support all template types that are supported by Rails itself. Remember- it's a controller!
+Yes, Cells support all template types that are supported by Rails itself. Remember - it's a controller!
 
 ### Helpers
 
@@ -121,7 +124,6 @@ class MapCell < Cell::Rails
   append_view_path "app/views"
 ```
 
-
 ## View Inheritance
 
 This is where OOP comes back to your view.
@@ -143,11 +145,10 @@ class LoginCell < Cell::Rails
 A call to
 
 ```ruby
-render_cell(:login, :box)
+= render_cell :login, :box
 ```
 
 will render the configured `UnauthorizedUserCell` instead of the original `LoginCell` if the login test fails.
-
 
 ## Caching
 
@@ -170,8 +171,6 @@ class CartCell < Cell::Rails
 ```
 
 The block's return value is appended to the state key: `"cells/cart/show/0ecb1360644ce665a4ef"`.
-
-Check the [API to learn more](http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method).
 
 *Reminder*: If you want to test it in `development`, you need to put `config.action_controller.perform_caching = true` in `development.rb` to see the effect
 
@@ -201,7 +200,6 @@ rake test:cells
 
 That's easy, clean and strongly improves your component-driven software quality. How'd you do that with partials?
 
-
 ### RSpec
 
 If you prefer RSpec examples, use the [rspec-cells](http://github.com/apotonick/rspec-cells) gem for specing.
@@ -218,10 +216,9 @@ To run your specs we got a rake task, too!
 rake spec:cells
 ```
 
-
 ## Mountable Cells
 
-Cells 3.8 got rid of the ActionController dependency. This essentially means you can mount Cells to routes or use them like a Rack middleware. All you need to do is derive from Cell::Base.
+Cells 3.8 got rid of the ActionController dependency. This essentially means you can mount Cells to routes or use them like a Rack middleware. All you need to do is derive from `Cell::Base`.
 
 ```ruby
 class PostCell < Cell::Base
@@ -288,7 +285,7 @@ Note that this currently "only" works with Rails 3.2-4.0.
 
 ## Cells is Rails::Engine aware!
 
-Now `Rails::Engine`s can contribute to Cells view paths. By default, any 'app/cells' found inside any Engine is automatically included into Cells view paths. If you need to, you can customize the view paths changing/appending to the `'app/cell_views'` path configuration. See the `Cell::EngineIntegration` for more details.
+Now `Rails::Engine`s can contribute to Cells view paths. By default, any `app/cells` found inside any Engine is automatically included into Cells view paths.
 
 ## Generators
 
@@ -304,32 +301,17 @@ module MyApp
 end
 ```
 
-## Rails 2.3 note
-
-In order to copy the cells rake tasks to your app, run
-
-```shell
-script/generate cells_install
-```
-
 ## Capture Support
 
 If you need a global `#content_for` use the [cells-capture](https://github.com/apotonick/cells-capture) gem.
 
-## More features
+## Bugs, Community
 
-Cells can do more.
+If you have questions, visit us in the IRC channel #cells at irc.freenode.org.
 
-* __No Limits__. Have as many cells in your page as you need - no limitation to your `render_cell` calls.
-* __Cell Nesting__. Have complex cell hierarchies as you can call `render_cell` within cells, too.
+## License
 
-Go for it, you'll love it!
-
-
-## LICENSE
-
-Copyright (c) 2007-2013, Nick Sutterer
-
+Copyright (c) 2007-2013, Nick Sutterer <apotonick@gmail.com>
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
 Released under the MIT License.
