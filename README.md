@@ -326,7 +326,7 @@ Go for it, you'll love it!
 
 ## LICENSE
 
-Copyright (c) 2007-2011, Nick Sutterer
+Copyright (c) 2007-2013, Nick Sutterer
 
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
