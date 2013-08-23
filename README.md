@@ -173,6 +173,8 @@ The block's return value is appended to the state key: `"cells/cart/show/0ecb136
 
 Check the [API to learn more](http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method).
 
+*Reminder*: If you want to test it in `development`, you need to put `config.action_controller.perform_caching = true` in `development.rb` to see the effect
+
 ## Testing
 
 Another big advantage compared to monolithic controller/helper/partial piles is the ability to test your cells isolated.
