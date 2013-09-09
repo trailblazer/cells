@@ -4,20 +4,22 @@ require 'cell/caching'
 require 'cell/rendering'
 
 module Cell
+  # FIXME: move to tests.
+
   def self.rails3_0?
     ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR == 0
   end
   
   def self.rails3_1_or_more?
-    ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 1
+    (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 1) or ::ActionPack::VERSION::MAJOR > 3
   end
   
-  def self.rails3_2_or_more?  # FIXME: move to tests.
-    ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2
+  def self.rails3_2_or_more?
+    (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2) or ::ActionPack::VERSION::MAJOR > 3
   end
 
-  def self.rails4_0_or_more?  # FIXME: move to tests.
-    ::ActionPack::VERSION::MAJOR == 4
+  def self.rails4_0_or_more?
+    (::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR >= 0) or ::ActionPack::VERSION::MAJOR > 4
   end
   
   
