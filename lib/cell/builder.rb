@@ -6,18 +6,18 @@ module Cell
     def create_cell_for(name, *args)
       class_from_cell_name(name).build_for(*args)
     end
-    
+
     def build_for(*args)  # DISCUSS: remove?
       build_class_for(*args).
       create_cell(*args)
     end
-    
+
     # Adds a builder to the cell class. Builders are used in #render_cell to find out the concrete
     # class for rendering. This is helpful if you frequently want to render subclasses according
     # to different circumstances (e.g. login situations) and you don't want to place these deciders in
     # your view code.
     #
-    # Passes the opts hash from #render_cell into the block. The block is executed in controller context. 
+    # Passes the opts hash from #render_cell into the block. The block is executed in controller context.
     # Multiple build blocks are ORed, if no builder matches the building cell is used.
     #
     # Example:
@@ -41,17 +41,17 @@ module Cell
     def build(&block)
       builders << block
     end
-    
+
     # The cell class constant for +cell_name+.
     def class_from_cell_name(cell_name)
       "#{cell_name}_cell".classify.constantize
     end
-    
+
     # Override this if you want to receive arguments right in the cell constructor.
     def create_cell(*args)
-      new
+      new(*args)
     end
-    
+
   private
     def build_class_for(*args)
       builders.each do |blk|
@@ -59,11 +59,11 @@ module Cell
       end
       self
     end
-    
+
     def run_builder_block(block, *args)
       block.call(*args)
     end
-    
+
     def builders
       @builders ||= []
     end
