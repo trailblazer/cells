@@ -5,7 +5,7 @@ module Cell
   # in the cell. This is especially useful when using gems like devise with your cell, without the
   # entire Cell::Rails overhead.
   #
-  # The only dependency these kinds of cells have is a rack-compatible request object.
+  # The only dependency these kinds of cells have is a Rack-compatible request object.
   #
   # Example:
   #
@@ -16,20 +16,20 @@ module Cell
   class Rack < Base
     attr_reader :request
     delegate :session, :params, :to => :request
-    
+
     class << self
       # DISCUSS: i don't like these class methods. maybe a RenderingStrategy?
       def create_cell(request, *args) # defined in Builder.
         new(request)
       end
-      
+
       def render_cell_state(cell, state, request, *args) # defined in Rendering.
         super(cell, state, *args)
       end
     end
-    
-    def initialize(request)
-      super()
+
+    def initialize(request, *args)
+      super(*args)
       @request = request
     end
   end
