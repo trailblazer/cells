@@ -2,7 +2,7 @@
 #
 # Cells are view components for Rails. Being lightweight controllers with actions and views, cells are the
 # answer to <tt>DoubleRenderError</tt>s and the long awaited ability to render actions within actions.
-# 
+#
 # == Directory structure
 #
 # Cells live in +app/cells/+ and have a similar file layout as controllers.
@@ -17,7 +17,7 @@
 #         box.html.erb
 #
 # == Cell nesting
-# 
+#
 # Is is good practice to split up complex cell views into multiple states or views. Remember, you can always use
 # <tt>render :view => ...</tt> and <tt>render :state => ...</tt> in your views.
 #
@@ -42,7 +42,7 @@
 #     = @item.title
 #
 #   render :state => :order_button
-# 
+#
 # which is more than just a partial, as you may execute additional code in the state method.
 #
 # == View inheritance
@@ -72,6 +72,7 @@ module Cells
   end
 end
 
+require 'cell'
 require 'cell/rails'
 require 'cells/rails'
 require 'cell/deprecations'
