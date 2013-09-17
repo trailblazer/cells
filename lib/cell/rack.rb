@@ -19,10 +19,6 @@ module Cell
 
     class << self
       # DISCUSS: i don't like these class methods. maybe a RenderingStrategy?
-      def create_cell(request, *args) # defined in Builder.
-        new(request)
-      end
-
       def render_cell_state(cell, state, request, *args) # defined in Rendering.
         super(cell, state, *args)
       end
