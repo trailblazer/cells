@@ -1,15 +1,23 @@
 require 'test_helper'
 
-class Musician
-    extend ActiveModel::Naming
+class Song < OpenStruct
+  extend ActiveModel::Naming
 
-    def persisted?
-      false
-    end
+  def persisted?
+    false
   end
+end
 
+# no helper_method calls
+# no instance variables
+# no locals
+# options are automatically made instance methods via constructor.
 class Cell::Rails
   module ViewModel
+    include Cell::OptionsConstructor
+    include ActionView::Helpers::UrlHelper
+    # properties :title, :body
+    # states :show, :next
 
   def initialize(*)
     super
@@ -28,37 +36,39 @@ class Cell::Rails
   end
 end
 
+class SongCell < Cell::Rails
+    include Cell::Rails::ViewModel
+
+    def show
+      render
+    end
+
+    def title
+      song.title.upcase
+    end
+  end
+
 class ViewModelTest < MiniTest::Spec
+
   # change constructor so we can test new(comment).title
   # cell.show
   # views :show, :create #=> wrap in render_state(:show, *)
   include Cell::TestCase::TestMethods
 
-  class CommentsCell < Cell::Rails
-    include Cell::Rails::ViewModel
-    include ActionView::Helpers::UrlHelper
 
-    def show(local)
-      render :locals => {:local => local}
-    end
+  let (:cell) { SongCell.build_for(nil, :title => "Shades Of Truth") }
 
-    def title
-      "Amazing News!"
-    end
-    # override in subclass and call super (by ggg).
-  end
+  it { cell.title.must_equal "Shades Of Truth" }
+ end
 
-  let (:html) { "<h1>\"Comments from <a href=\"/musicians\">Amazing News!</a>\"</h1>\nYo!\n" }
-  it "what" do
-    #render_cell("view_model_test/comments", :show).must_equal html
-  end
+class ViewModelIntegrationTest < ActionController::TestCase
+  tests MusicianController
 
-  it "allows calls to state methods directly" do
-    skip
-    cell("view_model_test/comments").show("Yo!").must_equal html
-  end
+  #let (:song) { Song.new(:title => "Blindfold", :id => 1) }
+  #let (:html) { %{<h1>Shades Of Truth</h1>\n} }
+  #let (:cell) {  }
 
-  it "accepts constructor hash" do
-
-  end
+  test "" do SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1)).show.must_equal %{<h1>BLINDFOLD</h1>
+<a href=\"/songs\">Permalink</a>
+} end
 end
