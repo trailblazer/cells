@@ -5,7 +5,8 @@ module Cell
     # class with Cell::Base.build - this might lead to a different cell being returned.
     def create_cell_for(name, *args)
       class_from_cell_name(name).build_for(*args)
-    end
+    end # TODO: rename to #cell_for.
+    alias_method :cell_for, :create_cell_for
 
     def build_for(*args)  # DISCUSS: remove?
       build_class_for(*args).
