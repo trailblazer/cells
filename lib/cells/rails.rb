@@ -53,12 +53,20 @@ module Cells
     end
 
     module ActionView
+      # Returns the cell instance for +name+. You may pass arbitrary options to your
+      # cell.
+      #
+      #   = cell(:song, :title => "Creeping Out Sara").render(:show)
+      def cell_for(name, *args, &block)
+        controller.cell_for(name, *args, &block)
+      end
+      alias_method :cell, :cell_for # DISCUSS: make this configurable?
+
       # See Cells::Rails::ActionController#render_cell.
       def render_cell(name, state, *args, &block)
         ::Cell::Rails.render_cell_for(name, state, controller, *args, &block)
       end
     end
-
   end
 end
 

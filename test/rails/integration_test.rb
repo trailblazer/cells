@@ -3,6 +3,10 @@ require 'test_helper'
 class ControllerMethodsTest < ActionController::TestCase
   tests MusicianController
 
+  class SongCell < Cell::Rails
+    include Cell::OptionsConstructor
+  end
+
   test "#render_cell" do
     get 'promotion'
     assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
@@ -35,19 +39,24 @@ class ControllerMethodsTest < ActionController::TestCase
   end
 
   test "#cell_for with options" do
-    class SongCell < Cell::Rails
-      include Cell::OptionsConstructor
-    end
-
     @controller.cell_for("controller_methods_test/song", :title => "We Called It America").
       title.must_equal "We Called It America"
-
   end
 end
 
 
 class ViewMethodsTest < ActionController::TestCase
   tests MusicianController
+
+  test "#cell_for" do
+    @controller.instance_eval do
+      def title
+      end
+    end
+
+    get :title
+    @response.body.must_equal "First Call"
+  end
 
   test "#render_cell" do
     get 'featured'
