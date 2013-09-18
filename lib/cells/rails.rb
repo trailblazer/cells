@@ -3,9 +3,14 @@
 module Cells
   module Rails
     module ActionController
+      def cell_for(name, *args, &block)
+        ::Cell::Base.cell_for(name, self, *args, &block)
+      end
+      alias_method :cell, :cell_for # DISCUSS: make this configurable?
+
       # Renders the cell state and returns the content. You may pass options here, too. They will be
       # around in @opts.
-      # 
+      #
       # Example:
       #
       #   @box = render_cell(:posts, :latest, :user => current_user)
@@ -41,7 +46,7 @@ module Cells
           ActiveSupport::Deprecation.warn "Please pass the cell class into #expire_cell_state, as in expire_cell_state(DirectorCell, :count, :user_id => 1)"
           cell_class = Cell::Rails.class_from_cell_name(cell_class)
         end
-        
+
         key = cell_class.state_cache_key(state, args)
         cell_class.expire_cache_key(key, opts)
       end

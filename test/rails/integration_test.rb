@@ -1,76 +1,86 @@
 require 'test_helper'
 
-class RailsIntegrationTest < ActionController::TestCase
+class ControllerMethodsTest < ActionController::TestCase
   tests MusicianController
-  
-  describe "A Rails controller" do
-    it "respond to #render_cell" do
-      get 'promotion'
-      assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
-    end
-    
-    it "respond to #render_cell with arbitrary options" do
-      BassistCell.class_eval do
-        def enjoy(what, where="the bar")
-          render :text => "I like #{what} in #{where}."
-        end
-      end
-      
-      @controller.instance_eval do
-        def promotion
-          render :text => render_cell(:bassist, :enjoy, "The Stranglers", "my room")
-        end
-      end
-      get 'promotion'
-      assert_equal "I like The Stranglers in my room.", @response.body
-    end
-    
-    it "be able to pass a block to #render_cell" do
-      get 'promotion_with_block'
-      assert_equal "Doo",       @response.body
-      assert_equal BassistCell, @controller.flag
-    end
-    
-    it "respond to render_cell in the view without escaping twice" do
-      BassistCell.class_eval do
-        def provoke; render; end
-      end
-      get 'featured'
-      assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
-    end
-    
-    it "respond to render_cell with a block in the view" do
-      get 'featured_with_block'
-      assert_equal "Doo from BassistCell\n", @response.body
-    end
-    
-    it "respond to render_cell in a haml view" do
-      BassistCell.class_eval do
-        def provoke; render; end
-      end
-      get 'hamlet'
-      assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />\n", @response.body
-    end
-    
-    it "make params (and friends) available in a cell" do
-      BassistCell.class_eval do
-        def listen
-          render :text => "That's a #{params[:note]}"
-        end
-      end
-      get 'skills', :note => "D"
-      assert_equal "That's a D", @response.body
-    end
-    
-    it "respond to #config" do
-      BassistCell.class_eval do
-        def listen
-          render :view => 'contact_form'  # form_tag internally calls config.allow_forgery_protection
-        end
-      end
-      get 'skills'
-      assert_equal "<form accept-charset=\"UTF-8\" action=\"musician/index\" method=\"post\"><div style=\"margin:0;padding:0;display:inline\"><input name=\"utf8\" type=\"hidden\" value=\"&#x2713;\" /></div>\n", @response.body
-    end
+
+  test "#render_cell" do
+    get 'promotion'
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
   end
-  
+
+  test "#render_cell with arbitrary options" do
+    BassistCell.class_eval do
+      def enjoy(what, where="the bar")
+        render :text => "I like #{what} in #{where}."
+      end
+    end
+
+    @controller.instance_eval do
+      def promotion
+        render :text => render_cell(:bassist, :enjoy, "The Stranglers", "my room")
+      end
+    end
+    get 'promotion'
+    assert_equal "I like The Stranglers in my room.", @response.body
+  end
+
+  test "#render_cell with block" do
+    get 'promotion_with_block'
+    assert_equal "Doo",       @response.body
+    assert_equal BassistCell, @controller.flag
+  end
+
+  test "#cell_for" do
+    @controller.cell_for(:bassist).must_be_instance_of BassistCell
+  end
+
+  test "#cell_for with options" do
+    class SongCell < Cell::Rails
+      include Cell::OptionsConstructor
+    end
+
+    @controller.cell_for("controller_methods_test/song", :title => "We Called It America").
+      title.must_equal "We Called It America"
+
+  end
+end
+
+
+class ViewMethodsTest < ActionController::TestCase
+  tests MusicianController
+
+  test "#render_cell" do
+    get 'featured'
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
+  end
+
+  test "#render_cell with a block" do
+    get 'featured_with_block'
+    assert_equal "Doo from BassistCell\n", @response.body
+  end
+
+  test "#render_cell in a haml view" do
+    get 'hamlet'
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />\n", @response.body
+  end
+
+  test "make params (and friends) available in a cell" do
+    BassistCell.class_eval do
+      def listen
+        render :text => "That's a #{params[:note]}"
+      end
+    end
+    get 'skills', :note => "D"
+    assert_equal "That's a D", @response.body
+  end
+
+  test "respond to #config" do
+    BassistCell.class_eval do
+      def listen
+        render :view => 'contact_form'  # form_tag internally calls config.allow_forgery_protection
+      end
+    end
+    get 'skills'
+    assert_equal "<form accept-charset=\"UTF-8\" action=\"musician/index\" method=\"post\"><div style=\"margin:0;padding:0;display:inline\"><input name=\"utf8\" type=\"hidden\" value=\"&#x2713;\" /></div>\n", @response.body
+  end
 end
