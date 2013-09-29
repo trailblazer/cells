@@ -1,0 +1,7 @@
+%h1 Dashboard
+
+= SongCell::Lyrics.new(controller, :song => song, :phrases => ["In the Mirror", "I can see"]).show
+
+= SongCell::PlaysCell.new(controller, :song => song).call
+
+= cell("song_cell/plays").call

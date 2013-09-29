@@ -21,6 +21,7 @@ class Cell::Rails
   module ViewModel
     include Cell::OptionsConstructor
     include ActionView::Helpers::UrlHelper
+    include ActionView::Context # this includes CompiledTemplates, too.
     # properties :title, :body
 
     def render(options={})
@@ -33,6 +34,10 @@ class Cell::Rails
       super
     end
 
+    def call
+      render implicit_state
+    end
+
   private
     def view_context
       self
@@ -40,6 +45,10 @@ class Cell::Rails
 
     def state_for_implicit_render()
       caller[1].match(/`(\w+)/)[1]
+    end
+
+    def implicit_state
+      controller_path.split("/").last
     end
   end
 end
@@ -66,14 +75,27 @@ class SongCell < Cell::Rails
     def stats
       render :details
     end
+
+    def info
+      render :info
+    end
+
+    def dashboard
+      render :dashboard
+    end
+
+    class Lyrics < self
+      def show
+        render :lyrics
+      end
+    end
+
+    class PlaysCell < self
+    end
   end
 
 class ViewModelTest < MiniTest::Spec
-  # change constructor so we can test new(comment).title
-  # cell.show
   # views :show, :create #=> wrap in render_state(:show, *)
-
-
   let (:cell) { SongCell.build_for(nil, :title => "Shades Of Truth") }
 
   it { cell.title.must_equal "Shades Of Truth" }
@@ -101,10 +123,21 @@ class ViewModelIntegrationTest < ActionController::TestCase
 
   test "implicit #render" do
     @cell.details.must_equal "<h3>BLINDFOLD</h3>\n"
+    SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1)).details
   end
 
   test "explicit #render with one arg" do
-    #@cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
-    #@cell.stats.must_equal "<h3>BLINDFOLD</h3>\n"
+    @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
+    @cell.stats.must_equal "<h3>BLINDFOLD</h3>\n"
   end
+
+  test "nested render" do
+    @cell.info.must_equal "<li>BLINDFOLD\n</li>\n"
+  end
+
+  test "nested rendering method" do
+    @cell.dashboard.must_equal "<h1>Dashboard</h1>\n<h3>Lyrics for BLINDFOLD</h3>\n<li>\nIn the Mirror\n</li>\n<li>\nI can see\n</li>\n\nPlays: 99\n\nPlays: 99\n\n"
+  end
+
+  # TODO: when we don't pass :song into Lyrics
 end
