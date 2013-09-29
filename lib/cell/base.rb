@@ -2,6 +2,7 @@ require 'abstract_controller'
 require 'cell/builder'
 require 'cell/caching'
 require 'cell/rendering'
+require 'cell/dsl'
 
 module Cell
   def self.rails3_0?
@@ -22,6 +23,8 @@ module Cell
 
 
   class Base < AbstractController::Base
+    # TODO: deprecate Base in favour of Cell.
+
     abstract!
     DEFAULT_VIEW_PATHS = [File.join('app', 'cells')]
 
@@ -35,6 +38,7 @@ module Cell
     include VersionStrategy
     include Rendering
     include Caching
+    include Cell::DSL
 
     def initialize(*args)
       super() # AbC::Base.

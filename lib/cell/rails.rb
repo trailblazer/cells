@@ -43,5 +43,13 @@ module Cell
     def cache_store
       self.class.cache_store  # in Rails, we have a global cache store.
     end
+
+    module DSL
+      def cell(name, *args)
+        # TODO: this method should be an instance method everywhere.
+        Base.cell_for(name, parent_controller, *args)
+      end
+    end
+    include DSL
   end
 end
