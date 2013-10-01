@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'cell/rails/view_model'
 
 class Song < OpenStruct
   extend ActiveModel::Naming
@@ -12,46 +13,7 @@ class Song < OpenStruct
   end
 end
 
-# no helper_method calls
-# no instance variables
-# no locals
-# options are automatically made instance methods via constructor.
-# call "helpers" in class
-class Cell::Rails
-  module ViewModel
-    include Cell::OptionsConstructor
-    include ActionView::Helpers::UrlHelper
-    include ActionView::Context # this includes CompiledTemplates, too.
-    # properties :title, :body
 
-    def render(options={})
-      if options.is_a?(Hash)
-        options.reverse_merge!(:view => state_for_implicit_render)
-      else
-        options = {:view => options.to_s}
-      end
-
-      super
-    end
-
-    def call
-      render implicit_state
-    end
-
-  private
-    def view_context
-      self
-    end
-
-    def state_for_implicit_render()
-      caller[1].match(/`(\w+)/)[1]
-    end
-
-    def implicit_state
-      controller_path.split("/").last
-    end
-  end
-end
 
 class SongCell < Cell::Rails
     include Cell::Rails::ViewModel
