@@ -1,5 +1,5 @@
-<%= simple_form_for @fruit do |f| %>
-	<%= f.input :title %>
+<%= form_for @fruit do |f| %>
+	<%= f.text_field :title %>
 	<%= f.button :submit %>
-<% end %>	
+<% end %>
 <%= url_for(:host => "apotomo.de") %>
