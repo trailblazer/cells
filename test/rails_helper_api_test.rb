@@ -32,7 +32,6 @@ class RailsHelperAPITest < MiniTest::Spec
     end
   end
 
-  require "simple_form"
   class BassistCell < Cell::Base
     include Cell::Rails::HelperAPI
 
