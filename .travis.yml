@@ -1,7 +1,6 @@
 rvm:
   - 1.9.3
   - 2.0.0
-  - rbx-19mode
   - jruby-19mode
 notifications:
   irc: "irc.freenode.org#cells"
