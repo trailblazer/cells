@@ -65,7 +65,7 @@ class ViewMethodsTest < ActionController::TestCase
 
   test "#render_cell with a block" do
     get 'featured_with_block'
-    assert_equal "Doo from BassistCell\n", @response.body
+    assert_equal "Boing in D from BassistCell\n", @response.body
   end
 
   test "#render_cell in a haml view" do

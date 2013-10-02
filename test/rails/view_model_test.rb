@@ -72,15 +72,20 @@ class ViewModelIntegrationTest < ActionController::TestCase
 
   setup do
     @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
+
+    @url = "/songs/1"
+    @url = "http://test.host/songs/1" if Cell.rails4_0_or_more?
   end
 
-  test "URL helpers in view" do
-    @cell.show.must_equal %{<h1>BLINDFOLD</h1>
-<a href=\"/songs/1\">Permalink</a>
+  if Cell.rails3_2_or_more?
+    test "URL helpers in view" do
+      @cell.show.must_equal %{<h1>BLINDFOLD</h1>
+<a href=\"#{@url}\">Permalink</a>
 } end
 
-  test "URL helper in instance" do
-    @cell.self_url.must_equal "/songs/1"
+    test "URL helper in instance" do
+      @cell.self_url.must_equal @url
+    end
   end
 
   test "implicit #render" do
