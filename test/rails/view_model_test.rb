@@ -63,48 +63,49 @@ class ViewModelTest < MiniTest::Spec
   it { cell.title.must_equal "Shades Of Truth" }
  end
 
-class ViewModelIntegrationTest < ActionController::TestCase
-  tests MusicianController
+if Cell.rails3_2_or_more?
+  class ViewModelIntegrationTest < ActionController::TestCase
+    tests MusicianController
 
-  #let (:song) { Song.new(:title => "Blindfold", :id => 1) }
-  #let (:html) { %{<h1>Shades Of Truth</h1>\n} }
-  #let (:cell) {  }
+    #let (:song) { Song.new(:title => "Blindfold", :id => 1) }
+    #let (:html) { %{<h1>Shades Of Truth</h1>\n} }
+    #let (:cell) {  }
 
-  setup do
-    @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
+    setup do
+      @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
 
-    @url = "/songs/1"
-    @url = "http://test.host/songs/1" if Cell.rails4_0_or_more?
-  end
+      @url = "/songs/1"
+      @url = "http://test.host/songs/1" if Cell.rails4_0_or_more?
+    end
 
-  if Cell.rails3_2_or_more?
+
     test "URL helpers in view" do
-      @cell.show.must_equal %{<h1>BLINDFOLD</h1>
+        @cell.show.must_equal %{<h1>BLINDFOLD</h1>
 <a href=\"#{@url}\">Permalink</a>
 } end
 
     test "URL helper in instance" do
       @cell.self_url.must_equal @url
     end
-  end
 
-  test "implicit #render" do
-    @cell.details.must_equal "<h3>BLINDFOLD</h3>\n"
-    SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1)).details
-  end
+    test "implicit #render" do
+      @cell.details.must_equal "<h3>BLINDFOLD</h3>\n"
+      SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1)).details
+    end
 
-  test "explicit #render with one arg" do
-    @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
-    @cell.stats.must_equal "<h3>BLINDFOLD</h3>\n"
-  end
+    test "explicit #render with one arg" do
+      @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
+      @cell.stats.must_equal "<h3>BLINDFOLD</h3>\n"
+    end
 
-  test "nested render" do
-    @cell.info.must_equal "<li>BLINDFOLD\n</li>\n"
-  end
+    test "nested render" do
+      @cell.info.must_equal "<li>BLINDFOLD\n</li>\n"
+    end
 
-  test "nested rendering method" do
-    @cell.dashboard.must_equal "<h1>Dashboard</h1>\n<h3>Lyrics for BLINDFOLD</h3>\n<li>\nIn the Mirror\n</li>\n<li>\nI can see\n</li>\n\nPlays: 99\n\nPlays: 99\n\n"
-  end
+    test "nested rendering method" do
+      @cell.dashboard.must_equal "<h1>Dashboard</h1>\n<h3>Lyrics for BLINDFOLD</h3>\n<li>\nIn the Mirror\n</li>\n<li>\nI can see\n</li>\n\nPlays: 99\n\nPlays: 99\n\n"
+    end
 
-  # TODO: when we don't pass :song into Lyrics
+    # TODO: when we don't pass :song into Lyrics
+  end
 end
