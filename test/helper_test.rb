@@ -9,7 +9,7 @@ end
 
 class DrummerCell < Cell::Rails
   helper StringHelper
-          
+
   def assist
     render :inline => "<%= pick %>"
   end
@@ -18,13 +18,14 @@ end
 
 class HelperTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
-  
+
   describe "a cell with included helper modules" do
     class SongCell < Cell::Rails
       include ActionView::Helpers::TagHelper  # for Rails 3.0.
       include ActionView::Helpers::AssetTagHelper
 
       def show
+        controller.config.relative_url_root = "" if Cell.rails3_0?
         image_tag("no-more-the-meek.jpg")
       end
     end
@@ -42,32 +43,32 @@ class HelperTest < MiniTest::Spec
           render :inline => "<%= submit_tag %>"
         end
       end
-      
+
       assert_equal "<input name=\"commit\" type=\"submit\" value=\"Save changes\" />", render_cell(:bassist, :assist)
     end
-    
+
     it "have access to methods declared with #helper_method" do
       BassistCell.class_eval do
         def help; "Great!"; end
         helper_method :help
-          
+
         def assist
           render :inline => "<%= help %>"
         end
       end
-      
+
       assert_equal "Great!", render_cell(:bassist, :assist)
     end
-    
+
     it "have access to methods provided by helper" do
       assert_equal "plong", render_cell(:drummer, :assist)
     end
-    
+
     it "mix in required helpers, only" do
       assert_equal "false true", render_cell(:"club_security/medic", :help)
       assert_equal "true false", render_cell(:"club_security/guard", :help)
     end
-    
+
     it "include helpers only once" do
       assert_equal "false true", render_cell(:"club_security/medic", :help)
       assert_equal "true false", render_cell(:"club_security/guard", :help)
