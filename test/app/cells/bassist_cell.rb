@@ -9,6 +9,8 @@ class BassistCell < Cell::Rails
   end
 
   def provoke
+    controller.config.relative_url_root = "" if Cell.rails3_0?
+
     render
   end
 end
