@@ -1,3 +1,7 @@
+h2. 3.9.0
+
+* Cells in engines are now recognized under Rails 4.0.
+
 h2. 3.8.8
 
 * Maintenance release.
@@ -24,7 +28,7 @@ h2. 3.8.4
 
 h2. 3.8.3
 
-* Added @Engines.existent_directories_for@ to prevent Rails 3.0 from crashing when it detects engines. 
+* Added @Engines.existent_directories_for@ to prevent Rails 3.0 from crashing when it detects engines.
 
 h2. 3.8.2
 
@@ -40,7 +44,7 @@ h2. 3.8.0
 * New API (note that @controller@ isn't the first argument anymore):
 ** @Rails.create_cell_for(name, controller)@
 ** @Rails.render_cell_for(name, state, controller, *args)@
-* Moved builder methods to @Cell::Builder@ module. 
+* Moved builder methods to @Cell::Builder@ module.
 * @DEFAULT_VIEW_PATHS@ is now in @Cell::Base@.
 * Removed the monkey-patch that made state-args work in Rails <= 3.0.3. Upgrade to +3.0.4.
 
@@ -60,18 +64,18 @@ h2. 3.6.8
 
 h3. Changes
   * Removed <code>@opts</code>.
-  * Deprecated @#options@ in favour of state-args. 
+  * Deprecated @#options@ in favour of state-args.
 
 h2. 3.6.7
 
 h3. Changes
-  * Added @view_assigns@ to TestCase. 
-  
+  * Added @view_assigns@ to TestCase.
+
 h2. 3.6.6
 
 h3. Changes
   * Added the @:format@ option for @#render@ which should be used with caution. Sorry for that.
-  * Removed the useless @layouts/@ view path from Cell::Base. 
+  * Removed the useless @layouts/@ view path from Cell::Base.
 
 h2. 3.6.5
 
@@ -79,7 +83,7 @@ h3. Bugfixes
   * `Cell::TestCase#invoke` now properly accepts state-args.
 
 h3. Changes
-  * Added the `:if` option to `Base.cache` which allows adding a conditional proc or instance method to the cache definition. If it doesn't return true, caching for that state is skipped. 
+  * Added the `:if` option to `Base.cache` which allows adding a conditional proc or instance method to the cache definition. If it doesn't return true, caching for that state is skipped.
 
 
 h2. 3.6.4
@@ -122,7 +126,7 @@ h3. Changes
 
 
 h2. 3.5.5
-  
+
 h3. Bugfixes
   * The generator now places views of namespaced cells into the correct directory. E.g. `rails g Blog::Post display` puts views to `app/cells/blog/post/display.html.erb`.
 
@@ -131,7 +135,7 @@ h3. Changes
 
 
 h2. 3.5.4
-  
+
 h3. Bugfixes
   * state-args work even if your state method receives optional arguments or default values, like @def show(user, age=18)@.
 
@@ -142,7 +146,7 @@ h3. Changes
 
 
 h2. 3.5.2
-  
+
 h3. Bugfixes
   * Controller#render_cell now accepts multiple args as options.
 
@@ -155,7 +159,7 @@ h2. 3.5.1
   * No longer pass an explicit Proc but a versioner block to @Cell.Base.cache@. Example: @cache :show do "v1" end@
   * Caching.cache_key_for now uses @ActiveSupport::Cache.expand_cache_key@. Consequently, a key which used to be like @"cells/director/count/a=1/b=2"@ now is @cells/director/count/a=1&b=2@ and so on. Be warned that this might break your home-made cache expiry.
   * Controller#expire_cell_state now expects the cell class as first arg. Example: @expire_cell_state(DirectorCell, :count)@
-  
+
 h3. Bugfixes
   * Passing options to @render :state@ in views finally works: @render({:state => :list_item}, item, i)@
 
@@ -165,26 +169,26 @@ h2. 3.5.0
 h3. Changes
   * Deprecated @opts, use #options now.
   * Added state-args. State methods can now receive the options as method arguments. This should be the prefered way of parameter exchange with the outer world.
-  * #params, #request, and #config is now delegated to @parent_controller. 
+  * #params, #request, and #config is now delegated to @parent_controller.
   * The generator now is invoked as @rails g cell ...@
     * The `--haml` option is no longer available.
     * The `-t` option now is compatible with the rest of rails generators, now it is used as alias for `--test-framework`. Use the `-e` option	as an alias of `--template-engine`
     Thanks to Jorge Calás Lozano <calas@qvitta.net> for patching this in the most reasonable manner i could imagine.
   * Privatized @#find_family_view_for_state@, @#render_view_for@, and all *ize methods in Cell::Rails.
   * New signature: @#render_view_for(state, *args)@
-  
+
 h2. 3.4.4
 
 h3. Changes
   * Cells.setup now yields Cell::Base, so you can really call append_view_path and friends here.
   * added Cell::Base.build for streamlining the process of deciders around #render_cell, "see here":http://nicksda.apotomo.de/2010/12/pragmatic-rails-thoughts-on-views-inheritance-view-inheritance-and-rails-304
   * added TestCase#in_view to test helpers in a real cell view.
-  
+
 
 h2. 3.4.3
 
 h3. Changes
   * #render_cell now accepts a block which yields the cell instance before rendering.
-  
+
 h3. Bugfixes
   * We no longer use TestTaskWithoutDescription in our rake tasks.
