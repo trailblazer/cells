@@ -117,9 +117,9 @@ class RailsCellsTest < MiniTest::Spec
       end
 
       it "respond to session" do
-        kind = Hash
-        kind = ActionController::TestSession if Cell.rails4_0_or_more?
-        assert_kind_of kind, @cell.session
+        session_kind = Hash
+        session_kind = ActionController::TestSession if Cell.rails4_0_or_more?
+        assert_kind_of session_kind, @cell.session
       end
 
       it "respond to #params and return the request parameters" do

@@ -25,6 +25,7 @@ class HelperTest < MiniTest::Spec
       include ActionView::Helpers::AssetTagHelper
 
       def show
+        controller.config.relative_url_root = "" if Cell.rails3_0?
         image_tag("no-more-the-meek.jpg")
       end
     end
