@@ -61,6 +61,14 @@ class ViewModelTest < MiniTest::Spec
   let (:cell) { SongCell.build_for(nil, :title => "Shades Of Truth") }
 
   it { cell.title.must_equal "Shades Of Truth" }
+
+  class HitCell < Cell::Base
+    include Cell::Rails::ViewModel
+    property :title
+  end
+
+  let (:song) { Song.new(:title => "65") }
+  it { HitCell.new(song).title.must_equal "65" }
  end
 
 if Cell.rails3_2_or_more?

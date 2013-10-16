@@ -9,6 +9,15 @@ class Cell::Rails
     #include ActionView::Helpers::UrlHelper
     include ActionView::Context # this includes CompiledTemplates, too.
     # properties :title, :body
+    attr_reader :model
+
+    module ClassMethods
+      def property(name)
+        delegate name, :to => :model
+      end
+    end
+    extend ActiveSupport::Concern
+
 
     def render(options={})
       if options.is_a?(Hash)
