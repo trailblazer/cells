@@ -12,6 +12,8 @@ Cells are View Components for Rails. They look and feel like controllers. They d
 
 And the best: You can have as many cells in your page as you need!
 
+Note: Since version 3.9 cells comes with two "dialects": You can still use a cell like a controller. However, the new _view model_ "dialect" allows you to treat a cell more object-oriented while providing an alternative approach to helpers.
+
 ## Installation
 
 It's a gem!
@@ -215,6 +217,68 @@ To run your specs we got a rake task, too!
 ```shell
 rake spec:cells
 ```
+
+# View Models
+
+Cells 3.9 brings a new dialect to cells: view models (still experimental!).
+
+Think of a view model as a cell decorating a model or a collection. In this mode, helpers are nothing more than instance methods of your cell class, making helpers predictable and scoped.
+
+```ruby
+class SongCell < Cell::Rails
+  include Cell::Rails::ViewModel
+
+  property :title
+
+
+  def show
+    render
+  end
+
+  def self_link
+    link_to(title, song_url(model))
+  end
+end
+```
+
+Have a look at how to use this cell in your controller view.
+
+```haml
+= cell(:song, Song.find(1)).show # renders its show view.
+```
+
+You no longer use the `#render_cell` helper but grab an instance of your cell using the `#cell` method. The 2nd argument will be the cell's decorated model.
+
+Invoking the cell state (or "action") happens by simply calling this very method on the instance.
+
+### Helpers
+
+Note that this doesn't have to be a rendering state, it could be any instance method (aka "helper").
+
+```haml
+= cell(:song, @song).self_link
+```
+
+As all helpers are now instance methods, the `#self_link` example can use any existing helper like the URL helpers on the instance level.
+
+Attributes declared using ``::property` are automatically delegated to the decorated model.
+
+```ruby
+cell(:song, @song).title # delegated to @song.title
+```
+
+### Views
+
+This greatly reduces wiring in the cell view (which is still in `app/cells/song/show.haml`).
+
+```haml
+%h1
+  = title
+
+Bookmark! #{self_link}
+```
+
+Making the cell instance itself the view context should be an interesting alternative for many views.
 
 
 ## Mountable Cells
