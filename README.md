@@ -242,22 +242,36 @@ class SongCell < Cell::Rails
 end
 ```
 
+### Creation
+
+Creating the view model should usually happen in the controller.
+
+```ruby
+class DashboardController < ApplicationController
+
+def index
+  @song = Song.find(1)
+
+  @cell = cell(:song, @song)
+end
+```
+
+You can now grab an instance of your cell using the `#cell` method. The 2nd argument will be the cell's decorated model.
+
 Have a look at how to use this cell in your controller view.
 
 ```haml
-= cell(:song, @song).show # renders its show view.
+= @cell.show # renders its show view.
 ```
 
-You no longer use the `#render_cell` helper but grab an instance of your cell using the `#cell` method. The 2nd argument will be the cell's decorated model.
-
-You can then call any method on that cell. Usually, this is a state (or "action") like `show`.
+You no longer use the `#render_cell` helper but call any method on that cell. Usually, this is a state (or "action") like `show`.
 
 ### Helpers
 
 Note that this doesn't have to be a rendering state, it could be any instance method (aka "helper").
 
 ```haml
-= cell(:song, @song).self_link
+= @cell.self_link
 ```
 
 As all helpers are now instance methods, the `#self_link` example can use any existing helper (as the URL helpers) on the instance level.
@@ -265,7 +279,7 @@ As all helpers are now instance methods, the `#self_link` example can use any ex
 Attributes declared using ``::property` are automatically delegated to the decorated model.
 
 ```ruby
-cell(:song, @song).title # delegated to @song.title
+@cell.title # delegated to @song.title
 ```
 
 ### Views
