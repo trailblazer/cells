@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://cells.rubyforge.org"
   s.summary     = %q{View Components for Rails.}
   s.description = %q{Cells are view components for Rails. They are lightweight controllers, can be rendered in views and thus provide an elegant and fast way for encapsulation and component-orientation.}
+  s.license     = 'MIT'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
