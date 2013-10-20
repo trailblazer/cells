@@ -2,8 +2,6 @@
 
 **View Components for Rails.**
 
-[![TravisCI Build Status](https://secure.travis-ci.org/apotonick/cells.png)](http://travis-ci.org/apotonick/cells)
-
 ## Overview
 
 Say you're writing a Rails online shop - the shopping cart is reappearing again and again in every view. You're thinking about a clean solution for that part. A mixture of controller code, before-filters, partials and helpers?
