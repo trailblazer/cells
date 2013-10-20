@@ -12,7 +12,8 @@ Cells are View Components for Rails. They look and feel like controllers. They d
 
 And the best: You can have as many cells in your page as you need!
 
-Note: Since version 3.9 cells comes with two "dialects": You can still use a cell like a controller. However, the new _view model_ "dialect" allows you to treat a cell more object-oriented while providing an alternative approach to helpers.
+
+Note: Since version 3.9 cells comes with two "dialects": You can still use a cell like a controller. However, the new [view model](https://github.com/apotonick/cells#view-models) "dialect" allows you to treat a cell more object-oriented while providing an alternative approach to helpers.
 
 ## Installation
 
@@ -244,12 +245,12 @@ end
 Have a look at how to use this cell in your controller view.
 
 ```haml
-= cell(:song, Song.find(1)).show # renders its show view.
+= cell(:song, @song).show # renders its show view.
 ```
 
 You no longer use the `#render_cell` helper but grab an instance of your cell using the `#cell` method. The 2nd argument will be the cell's decorated model.
 
-Invoking the cell state (or "action") happens by simply calling this very method on the instance.
+You can then call any method on that cell. Usually, this is a state (or "action") like `show`.
 
 ### Helpers
 
@@ -259,7 +260,7 @@ Note that this doesn't have to be a rendering state, it could be any instance me
 = cell(:song, @song).self_link
 ```
 
-As all helpers are now instance methods, the `#self_link` example can use any existing helper like the URL helpers on the instance level.
+As all helpers are now instance methods, the `#self_link` example can use any existing helper (as the URL helpers) on the instance level.
 
 Attributes declared using ``::property` are automatically delegated to the decorated model.
 
