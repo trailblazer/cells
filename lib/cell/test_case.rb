@@ -61,8 +61,8 @@ module Cell
     
     module CommonTestMethods
       def setup
-        @controller = Class.new(ActionController::Base).new
-        @request    = ::ActionController::TestRequest.new
+        @controller = Class.new(ActionController::Base).new unless @controller and @controller.kind_of? ActionController::Base
+        @request    = ::ActionController::TestRequest.new unless @request and @request.kind_of? ActionController::TestRequest
         @response   = ::ActionController::TestResponse.new
         @controller.request = @request
         @controller.response = @response
