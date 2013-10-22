@@ -249,11 +249,11 @@ Creating the view model should usually happen in the controller.
 ```ruby
 class DashboardController < ApplicationController
 
-def index
-  @song = Song.find(1)
+  def index
+    @song = Song.find(1)
 
-  @cell = cell(:song, @song)
-end
+    @cell = cell(:song, @song)
+  end
 ```
 
 You can now grab an instance of your cell using the `#cell` method. The 2nd argument will be the cell's decorated model.
