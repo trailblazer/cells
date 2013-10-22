@@ -1,6 +1,10 @@
 h2. 3.9.0
 
 * Cells in engines are now recognized under Rails 4.0.
+* Introducing @#cell@ and @#cell_for@ to instantiate cells in ActionController and ActionView.
+* Adding @Cell::Rails::ViewModel@ as a new "dialect" of working with cells.
+* Add @Cell::Base#process_args@ which is called in the initializer to handle arguments passed into the constructor.
+* Setting @controller in your @Cell::TestCase@ no longer get overridden by us.
 
 h2. 3.8.8
 
