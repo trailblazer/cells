@@ -12,8 +12,10 @@ class Cell::Rails
     attr_reader :model
 
     module ClassMethods
-      def property(name)
-        delegate name, :to => :model
+      def property(*names)
+        names.each do |name|
+          delegate name, :to => :model
+        end
       end
     end
     extend ActiveSupport::Concern

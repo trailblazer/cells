@@ -64,11 +64,12 @@ class ViewModelTest < MiniTest::Spec
 
   class HitCell < Cell::Base
     include Cell::Rails::ViewModel
-    property :title
+    property :title, :artist
   end
 
-  let (:song) { Song.new(:title => "65") }
+  let (:song) { Song.new(:title => "65", artist: "Boss") }
   it { HitCell.new(song).title.must_equal "65" }
+  it { HitCell.new(song).artist.must_equal "The Boss" }
  end
 
 if Cell.rails3_2_or_more?
