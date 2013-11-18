@@ -69,7 +69,7 @@ class ViewModelTest < MiniTest::Spec
 
   let (:song) { Song.new(:title => "65", artist: "Boss") }
   it { HitCell.new(song).title.must_equal "65" }
-  it { HitCell.new(song).artist.must_equal "The Boss" }
+  it { HitCell.new(song).artist.must_equal "Boss" }
  end
 
 if Cell.rails3_2_or_more?
