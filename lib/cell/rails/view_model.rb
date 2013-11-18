@@ -13,9 +13,7 @@ class Cell::Rails
 
     module ClassMethods
       def property(*names)
-        names.each do |name|
-          delegate name, :to => :model
-        end
+        delegate *names, :to => :model
       end
     end
     extend ActiveSupport::Concern
