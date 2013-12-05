@@ -7,13 +7,15 @@ module Cells
       class_option :template_engine
       class_option :test_framework
       class_option :base_cell_class, :type => :string, :default => "Cell::Rails"
+      class_option :base_cell_path
 
       argument :actions, :type => :array, :default => [], :banner => "action action"
       check_class_collision :suffix => "Cell"
-      
+
     private
       def base_path
-        File.join('app/cells', class_path, file_name)
+        path = (options[:base_cell_path] || 'app/cells').to_s
+        File.join(path, class_path, file_name)
       end
     end
   end

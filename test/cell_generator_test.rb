@@ -110,4 +110,9 @@ class CellGeneratorTest < Rails::Generators::TestCase
 
     assert_no_file "test/cells/blog_cell_test.rb"
   end
+
+  test "generate with custom base_path" do
+    run_generator %w(Blog --base-cell-path=app/components)
+    assert_file "app/components/blog_cell.rb"
+  end
 end
