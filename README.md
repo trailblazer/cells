@@ -367,9 +367,12 @@ Note that this currently "only" works with Rails 3.2-4.0.
 
 Now `Rails::Engine`s can contribute to Cells view paths. By default, any 'app/cells' found inside any Engine is automatically included into Cells view paths. If you need to, you can customize the view paths changing/appending to the `'app/cell_views'` path configuration. See the `Cell::EngineIntegration` for more details.
 
-## Generators
+
+## Generator Options
 
 By default, generated cells inherit from `Cell::Rails`. If you want to change this, specify your new class name in `config/application.rb`:
+
+### Base Class
 
 ```ruby
 module MyApp
@@ -378,6 +381,16 @@ module MyApp
       g.base_cell_class "ApplicationCell"
     end
   end
+end
+```
+
+### Base Path
+
+You can configure the cells path in case your cells don't reside in `app/cells`.
+
+```ruby
+config.generators do |g|
+  g.base_cell_path "app/widgets"
 end
 ```
 
