@@ -4,5 +4,5 @@ source "http://rubygems.org"
 gemspec path: '../'
 
 gem 'railties', '4.0.2'
-gem 'minitest', '4.2.0'
 gem 'activemodel', '4.0.2'
+gem 'minitest', '4.7.5'

@@ -5,3 +5,4 @@ gemspec path: '../'
 
 gem 'railties', '4.1.0.beta1'
 gem 'activemodel', '4.1.0.beta1'
+gem 'minitest', '5.2.0'

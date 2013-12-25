@@ -4,3 +4,4 @@ source "http://rubygems.org"
 gemspec path: '../'
 
 gem 'railties', '3.0.20'
+gem 'minitest', '4.7.5'
