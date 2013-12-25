@@ -1,0 +1,7 @@
+source "http://rubygems.org"
+
+# Specify your gem's dependencies in cells.gemspec
+gemspec path: '../'
+
+gem 'railties', '4.1.0.beta1'
+gem 'activemodel', '4.1.0.beta1'
