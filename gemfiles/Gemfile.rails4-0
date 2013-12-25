@@ -3,4 +3,6 @@ source "http://rubygems.org"
 # Specify your gem's dependencies in cells.gemspec
 gemspec path: '../'
 
-gem 'railties', '4.0.0'
+gem 'railties', '4.0.2'
+gem 'minitest', '4.2.0'
+gem 'activemodel', '4.0.2'
