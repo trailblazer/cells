@@ -6,3 +6,5 @@ gemspec path: '../'
 gem 'railties', '4.0.2'
 gem 'activemodel', '4.0.2'
 gem 'minitest', '4.7.5'
+
+gem 'label', :path => "../test/dummy/label"

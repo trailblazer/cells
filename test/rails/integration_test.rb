@@ -42,6 +42,12 @@ class ControllerMethodsTest < ActionController::TestCase
     @controller.cell_for("controller_methods_test/song", :title => "We Called It America").
       title.must_equal "We Called It America"
   end
+
+  if Cell.rails4_0? or Cell.rails4_1_or_more?
+    test "#render_cell for engine" do
+      @controller.render_cell(:label, :show).must_equal "Fat Wreck"
+    end
+  end
 end
 
 
