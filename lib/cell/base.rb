@@ -5,25 +5,29 @@ require 'cell/rendering'
 require 'cell/dsl'
 
 module Cell
-  def self.rails3_0?
-    ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR == 0
-  end
+  module RailsVersion
+    def rails3_0?
+      ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR == 0
+    end
 
-  def self.rails3_1_or_more?
-    (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 1)
-  end
+    def rails3_1_or_more?
+      (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 1)
+    end
 
-  def self.rails3_2_or_more?
-    (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2)
-  end
+    def rails3_2_or_more?
+      (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2)
+    end
 
-  def self.rails4_0?
-    ::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR == 0
-  end
+    def rails4_0?
+      ::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR == 0
+    end
 
-  def self.rails4_1_or_more?
-    (::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR >= 1) or ::ActionPack::VERSION::MAJOR > 4
+    def rails4_1_or_more?
+      (::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR >= 1) or ::ActionPack::VERSION::MAJOR > 4
+    end
   end
+  extend RailsVersion # TODO: deprecate in 3.10.
+
 
   class Base < AbstractController::Base
     # TODO: deprecate Base in favour of Cell.

@@ -1,4 +1,3 @@
-# This file contains VersionStrategies for the Cell and Cells module for Rails >= 3.1.
 module Cell
   Layouts = AbstractController::Layouts
 
