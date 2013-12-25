@@ -106,7 +106,7 @@ class Cell::Rails
   end
 
   # FIXME: fix that in rails core.
-  if Cell.rails4_0_or_more?
+  if Cell.rails4_0?
     include LinkToHelper
   else
     include ActionView::Helpers::UrlHelper

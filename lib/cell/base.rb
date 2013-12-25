@@ -17,10 +17,13 @@ module Cell
     (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2) or ::ActionPack::VERSION::MAJOR > 3
   end
 
-  def self.rails4_0_or_more?
-    (::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR >= 0) or ::ActionPack::VERSION::MAJOR > 4
+  def self.rails4_0?
+    ::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR == 0
   end
 
+  def self.rails4_1_or_more?
+    (::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR >= 1) or ::ActionPack::VERSION::MAJOR > 4
+  end
 
   class Base < AbstractController::Base
     # TODO: deprecate Base in favour of Cell.
@@ -35,7 +38,7 @@ module Cell
 
     require 'cell/rails3_0_strategy' if Cell.rails3_0?
     require 'cell/rails3_1_strategy' if Cell.rails3_1_or_more?
-    require 'cell/rails4_0_strategy' if Cell.rails4_0_or_more?
+    require 'cell/rails4_0_strategy' if Cell.rails4_0?
     include VersionStrategy
     include Rendering
     include Caching

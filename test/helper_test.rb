@@ -32,7 +32,7 @@ class HelperTest < MiniTest::Spec
 
     it "allows using helpers using #controller on instance level" do
       alt = "No-more-the-meek"
-      alt = "No more the meek" if Cell.rails4_0_or_more?
+      alt = "No more the meek" if Cell.rails4_0?
       assert_equal "<img alt=\"#{alt}\" src=\"/images/no-more-the-meek.jpg\" />", render_cell("helper_test/song", :show)
     end
   end

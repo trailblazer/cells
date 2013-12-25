@@ -1,4 +1,4 @@
-require 'test_helper'
+  require 'test_helper'
 require 'cell/rails/view_model'
 
 class Song < OpenStruct
@@ -84,7 +84,7 @@ if Cell.rails3_2_or_more?
       @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
 
       @url = "/songs/1"
-      @url = "http://test.host/songs/1" if Cell.rails4_0_or_more?
+      @url = "http://test.host/songs/1" if Cell.rails4_0?
     end
 
 
