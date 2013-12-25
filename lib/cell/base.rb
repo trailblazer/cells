@@ -10,11 +10,11 @@ module Cell
   end
 
   def self.rails3_1_or_more?
-    (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 1) or ::ActionPack::VERSION::MAJOR > 3
+    (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 1)
   end
 
   def self.rails3_2_or_more?
-    (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2) or ::ActionPack::VERSION::MAJOR > 3
+    (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2)
   end
 
   def self.rails4_0?
@@ -34,12 +34,13 @@ module Cell
     extend Builder
     include AbstractController
     include AbstractController::Rendering, Helpers, Callbacks, Translation, Logger
-    include Layouts
 
     require 'cell/rails3_0_strategy' if Cell.rails3_0?
     require 'cell/rails3_1_strategy' if Cell.rails3_1_or_more?
     require 'cell/rails4_0_strategy' if Cell.rails4_0?
+    require 'cell/rails4_1_strategy' if Cell.rails4_1_or_more?
     include VersionStrategy
+    include Layouts
     include Rendering
     include Caching
     include Cell::DSL
