@@ -81,7 +81,7 @@ if Cell.rails3_2_or_more?
     #let (:cell) {  }
 
     setup do
-      @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
+      @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => "1"))
 
       @url = "/songs/1"
       @url = "http://test.host/songs/1" if Cell.rails4_0?
