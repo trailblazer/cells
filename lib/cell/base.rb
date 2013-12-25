@@ -30,7 +30,8 @@ module Cell
 
     extend Builder
     include AbstractController
-    include AbstractController::Rendering, Layouts, Helpers, Callbacks, Translation, Logger
+    include AbstractController::Rendering, Helpers, Callbacks, Translation, Logger
+    include Layouts
 
     require 'cell/rails3_0_strategy' if Cell.rails3_0?
     require 'cell/rails3_1_strategy' if Cell.rails3_1_or_more?
