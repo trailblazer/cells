@@ -29,7 +29,7 @@ module Cells
   module Engines
     module VersionStrategy
       def registered_engines
-        ::Rails::Engine::Railties
+        ::Rails::Engine::Railties.new
       end
 
       def existent_directories_for(path)
