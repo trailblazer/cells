@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RailsViewTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
-  
+
   describe "A cell view" do
     # DISCUSS: it we allow :partial from a state, too?
     describe "calling render :partial" do
@@ -11,7 +11,7 @@ class RailsViewTest < MiniTest::Spec
           render :partial => 'dii'
         end)
       end
-      
+
       it "render the foreign cell partial in bad_guitarist/dii" do
         assert_equal("Dooom", in_view(:bassist) do
           render :partial => "bad_guitarist/dii"
@@ -28,13 +28,13 @@ class RailsViewTest < MiniTest::Spec
         end)
       end
     end
-    
+
     it "respond to render :state" do
       assert_equal("Doo", in_view(:bassist) do
         render :state => :play
       end)
     end
-    
+
     it "respond to render :state with options" do
       BassistCell.class_eval do
         def listen(*args)
