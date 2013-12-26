@@ -70,7 +70,6 @@ class TestCaseTest < Cell::TestCase
       end
       render_cell(:bassist, :sleep)
       if Cell.rails3_0?
-        assert_equal([:lookup_context, :duration], view_assigns.keys)
         assert_equal("8h", view_assigns[:duration])
       else
         assert_equal({:duration => "8h"}, view_assigns)
