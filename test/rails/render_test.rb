@@ -3,27 +3,29 @@ require 'test_helper'
 class RailsRenderTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
 
+  let (:bassist) { cell(:bassist) }
+
   describe "Invoking render" do
     it "render a plain view" do
-      BassistCell.class_eval do
+      bassist.instance_eval do
         def play; render; end
       end
-      assert_equal "Doo", render_cell(:bassist, :play)
+      assert_equal "Doo", bassist.render_state(:play)
     end
 
     it "accept :format" do
-      BassistCell.class_eval do
+      bassist.instance_eval do
         def play; render :format => :js; end
       end
-      assert_equal "alert(\"Doo\");\n", render_cell(:bassist, :play)
+      assert_equal "alert(\"Doo\");\n", bassist.render_state(:play)
     end
 
     it "accept :format without messing up following render calls" do
       skip
-      BassistCell.class_eval do
+      bassist.instance_eval do
         def play; render(:format => :js) + render; end
       end
-      assert_equal "alert(\"Doo\");\nDoo\n", render_cell(:bassist, :play)
+      assert_equal "alert(\"Doo\");\nDoo\n", bassist.render_state(:play)
     end
 
     it "also render alternative engines, like haml" do
@@ -99,10 +101,10 @@ class RailsRenderTest < MiniTest::Spec
 
     # layout
     it "accept the :layout option" do
-      BassistCell.class_eval do
+      bassist.instance_eval do
         def play; render :layout => 'b'; end
       end
-      assert_equal "<b>Doo</b>", render_cell(:bassist, :play)
+      assert_equal "<b>Doo</b>", bassist.render_state(:play)
     end
 
     it "respect the #layout class method" do
