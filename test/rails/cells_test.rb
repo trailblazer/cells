@@ -54,7 +54,7 @@ class RailsCellsTest < MiniTest::Spec
     it "respond to .setup_view_paths!" do
       swap( Cell::Rails, :view_paths => [])  do
         Cell::Rails.setup_view_paths!
-        if Cell.rails3_2_or_more? or Cell.rails4_0?
+        if Cell.rails3_2_or_more? or Cell.rails4_0? or Cell.rails4_1?
           assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS).paths, Cell::Rails.view_paths.paths
         else
           assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS), Cell::Rails.view_paths
@@ -118,7 +118,7 @@ class RailsCellsTest < MiniTest::Spec
 
       it "respond to session" do
         session_kind = Hash
-        session_kind = ActionController::TestSession if Cell.rails4_0?
+        session_kind = ActionController::TestSession if Cell.rails4_0? or Cell.rails4_1?
         assert_kind_of session_kind, @cell.session
       end
 

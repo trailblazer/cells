@@ -20,7 +20,7 @@ MiniTest::Spec.class_eval do
   def assert_not(assertion)
     assert !assertion
   end
-  
+
   def assert_is_a(klass, object)
     assert object.is_a?(klass)
   end
@@ -37,3 +37,15 @@ require File.join(test_app_dir, 'cells', 'bad_guitarist_cell')
 
 require "haml"
 require "haml/template" # Thanks, Nathan!
+
+ActiveSupport::TestCase.class_eval do # this is only needed in integration tests (AC::TestCase).
+  def fix_relative_url_root
+    return unless Cell.rails3_0?
+
+    @controller.config.instance_eval do
+      def relative_url_root
+        ""
+      end
+    end
+end
+end

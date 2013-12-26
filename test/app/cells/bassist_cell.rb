@@ -13,4 +13,13 @@ class BassistCell < Cell::Rails
 
     render
   end
+
+  def promote
+    render
+  end
+
+  def slap
+    @note = "D"
+    render
+  end
 end

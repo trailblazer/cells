@@ -178,7 +178,12 @@ class CellModuleTest < MiniTest::Spec
         assert ! Cell.rails3_0?
       end
     elsif Rails::VERSION::MAJOR == 4
-      assert Cell.rails4_0?
+      if Rails::VERSION::MINOR == 0
+        assert ! Cell.rails3_1_or_more?
+        assert Cell.rails4_0?
+      elsif Rails::VERSION::MINOR == 1
+        assert Cell.rails4_1?
+      end
     end
   end
 end
