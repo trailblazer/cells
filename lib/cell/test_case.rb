@@ -149,5 +149,15 @@ module Cell
     def invoke(state, *args)
       @last_invoke = self.class.controller_class.new(@controller).render_state(state, *args)
     end
+
+    if Cell.rails4_0? or Cell.rails4_1?
+      include ActiveSupport::Testing::ConstantLookup
+      def self.determine_default_controller_class(name) # FIXME: fix that in Rails 4.x.
+        determine_constant_from_test_name(name) do |constant|
+          Class === constant #&& constant < ActionController::Metal
+        end
+      end
+    end
+
   end
 end

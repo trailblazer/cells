@@ -25,6 +25,7 @@ module Cell
     def rails4_1_or_more?
       (::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR >= 1) or ::ActionPack::VERSION::MAJOR > 4
     end
+    alias_method :rails4_1?, :rails4_1_or_more?
   end
   extend RailsVersion # TODO: deprecate in 3.10.
 
