@@ -1,3 +1,8 @@
+h2. 3.9.1
+
+* Runs with Rails 4.1 now.
+* Internal changes on `Layouts` to prepare 4.1 compat.
+
 h2. 3.9.0
 
 * Cells in engines are now recognized under Rails 4.0.
