@@ -68,8 +68,8 @@ module Cell
       def expire_cache_key_for(key, cache_store, *args)
         cache_store.delete(key, *args)
       end
-      
-      
+
+
     protected
       # Compiles cache key and adds :cells namespace to +key+, according to the
       # ActiveSupport::Cache.expand_cache_key API.
@@ -80,46 +80,46 @@ module Cell
 
 
     def render_state(state, *args)
-      return super(state, *args) unless cache?(state, *args)
-      
       key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
       options = self.class.cache_options[state]
-      
+
+      return super(state, *args) unless cache?(state, *args)
+
       cache_store.fetch(key, options) do
         super(state, *args)
       end
     end
-    
+
     def cache_configured?
       @cache_configured
     end
     attr_writer :cache_configured
-    
+
     attr_accessor :cache_store  # we want to use DI to set a cache store in cell/rails.
-      
+
     def cache?(state, *args)
       cache_configured? and state_cached?(state) and call_state_conditional(state, *args)
     end
-    
+
   protected
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
     end
-      
+
     def call_proc_or_method(state, method, *args)
       return method.call(self, *args) if method.kind_of?(Proc)
       send(method, *args)
     end
-    
+
     def call_state_versioner(state, *args)
       method = self.class.version_procs[state] or return
       call_proc_or_method(state, method, *args)
     end
-    
+
     def call_state_conditional(state, *args)
       method = self.class.conditional_procs[state] or return true
       call_proc_or_method(state, method, *args)
     end
-    
+
   end
 end
