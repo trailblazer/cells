@@ -6,9 +6,10 @@ module Cell
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :version_procs, :conditional_procs, :cache_options
+      class_attribute :version_procs, :conditional_procs, :cache_options, :cache_options_procs
       self.version_procs = {}
       self.conditional_procs = {}
+      self.cache_options_procs = {}
       self.cache_options = {}
     end
 
@@ -55,9 +56,10 @@ module Cell
       def cache(state, *args, &block)
         options = args.extract_options!
 
-        self.conditional_procs = conditional_procs.merge(state => options.delete(:if))
-        self.version_procs     = version_procs.merge(state => (args.first || block))
-        self.cache_options     = cache_options.merge(state => options)
+        self.conditional_procs   = conditional_procs.merge(state => options.delete(:if))
+        self.version_procs       = version_procs.merge(state => (args.first || block))
+        self.cache_options       = cache_options.merge(state => options)
+        self.cache_options_procs = cache_options_procs.merge(state => options.delete(:cache_options))
       end
 
       # Computes the complete, namespaced cache key for +state+.
@@ -83,7 +85,7 @@ module Cell
       return super(state, *args) unless cache?(state, *args)
       
       key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
-      options = self.class.cache_options[state]
+      options = self.class.cache_options[state].merge(call_state_cache_options(state, *args) || {})
       
       cache_store.fetch(key, options) do
         super(state, *args)
@@ -118,6 +120,11 @@ module Cell
     
     def call_state_conditional(state, *args)
       method = self.class.conditional_procs[state] or return true
+      call_proc_or_method(state, method, *args)
+    end
+
+    def call_state_cache_options(state, *args)
+      method = self.class.cache_options_procs[state] or return
       call_proc_or_method(state, method, *args)
     end
     
