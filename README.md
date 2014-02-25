@@ -161,6 +161,20 @@ class CartCell < Cell::Rails
 
 and your cart will be re-rendered after 10 minutes.
 
+You can add other dynamic cache options:
+
+```ruby
+class CartCell < Cell::Rails
+  cache :show, :expires_in => 10.minutes, :cache_options => ->(cell, options) { ... }
+
+class CartCell < Cell::Rails
+  cache :show, :expires_in => 10.minutes, :cache_options => :cache_options
+
+  def cache_options(options)
+    ...
+  end
+```
+
 You can expand the state's cache key - why not use a versioner block to do just this?
 
 ```ruby
