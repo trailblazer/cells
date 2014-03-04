@@ -179,6 +179,14 @@ class CachingUnitTest < MiniTest::Spec
       assert_equal({:expires_in => 10.minutes}, @class.cache_options[:count])
     end
 
+    it "accept dynamic cache options" do
+      @class.cache :count, :expires_in => 10.minutes, :cache_options => proc { {:tags => {:item_id => 1}} }
+
+      assert_not @class.version_procs[:count]
+      assert_kind_of Proc, @class.cache_options_procs[:count]
+      assert_equal({:expires_in => 10.minutes}, @class.cache_options[:count])
+    end
+
     it "accept args and versioner block" do
       @class.cache :count, :expires_in => 10.minutes do "v1" end
 
@@ -204,30 +212,37 @@ class CachingUnitTest < MiniTest::Spec
       parent.cache :inherited_cache_configuration
 
       assert parent.version_procs.has_key?(:inherited_cache_configuration)
+      assert parent.cache_options_procs.has_key?(:inherited_cache_configuration)
       assert brother.version_procs.has_key?(:inherited_cache_configuration)
+      assert brother.cache_options_procs.has_key?(:inherited_cache_configuration)
     end
 
     it "not overwrite caching configuration in the parent class" do
       brother.cache :inherited_cache_configuration
 
-      puts parent.version_procs.inspect
-      assert ! parent.version_procs.has_key?(:inherited_cache_configuration)
+      assert !parent.version_procs.has_key?(:inherited_cache_configuration)
+      assert !parent.cache_options_procs.has_key?(:inherited_cache_configuration)
       assert brother.version_procs.has_key?(:inherited_cache_configuration)
+      assert brother.cache_options_procs.has_key?(:inherited_cache_configuration)
     end
 
     it "not overwrite caching configuration in a sibbling class" do
       sister.cache :inherited_cache_configuration
 
-      assert ! brother.version_procs.has_key?(:inherited_cache_configuration)
+      assert !brother.version_procs.has_key?(:inherited_cache_configuration)
+      assert !brother.cache_options_procs.has_key?(:inherited_cache_configuration)
       assert sister.version_procs.has_key?(:inherited_cache_configuration)
+      assert sister.cache_options_procs.has_key?(:inherited_cache_configuration)
     end
 
     it "overwrite caching configuration in a child class" do
       @class.cache :inherited_cache_configuration
-      brother.cache :inherited_cache_configuration, proc
+      brother.cache :inherited_cache_configuration, proc, :cache_options => proc
 
-      assert ! parent.version_procs[:inherited_cache_configuration]
+      assert !parent.version_procs[:inherited_cache_configuration]
+      assert !parent.cache_options_procs[:inherited_cache_configuration]
       assert_equal proc, brother.version_procs[:inherited_cache_configuration]
+      assert_equal proc, brother.cache_options_procs[:inherited_cache_configuration]
     end
   end
 end
