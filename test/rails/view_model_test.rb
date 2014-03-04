@@ -1,5 +1,4 @@
-  require 'test_helper'
-require 'cell/rails/view_model'
+require 'test_helper'
 
 class Song < OpenStruct
   extend ActiveModel::Naming

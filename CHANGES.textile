@@ -1,3 +1,7 @@
+h2 3.9.2
+
+* Autoload `Cell::Rails::ViewModel`.
+
 h2. 3.9.1
 
 * Runs with Rails 4.1 now.

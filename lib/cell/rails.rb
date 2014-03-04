@@ -51,5 +51,7 @@ module Cell
       end
     end
     include DSL
+
+    autoload :ViewModel, "cell/rails/view_model"
   end
 end
