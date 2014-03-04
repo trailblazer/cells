@@ -221,7 +221,7 @@ rake spec:cells
 
 # View Models
 
-Cells 3.9 brings a new dialect to cells: view models (still experimental!).
+Cells 3.9 brings a new dialect to cells: view models.
 
 Think of a view model as a cell decorating a model or a collection. In this mode, helpers are nothing more than instance methods of your cell class, making helpers predictable and scoped.
 
