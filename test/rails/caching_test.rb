@@ -381,4 +381,36 @@ class CachingFunctionalTest < MiniTest::Spec
       end
     end
   end
+
+
+  describe "lambda as options" do
+    let (:cache_store) {
+      Object.new.instance_eval do
+        def fetch(state, options)
+          return "cached!" if options == {:expires_in => 9, :tags => "1,2,3"}
+          nil
+        end
+        self
+      end
+    }
+
+    it "runs lamda at render-time" do
+      @class.cache :count, :expires_in => 9, :tags => lambda { |cell, one, two, three| "#{one},#{two},#{three}" }
+
+      cs = cache_store
+
+      @cell.instance_eval do
+        def count(*)
+          "this should never be returned!"
+        end
+
+        @cache_store = cs
+        def cache_store
+          @cache_store
+        end
+      end
+
+      @cell.render_state(:count, 1, 2, 3).must_equal "cached!"
+    end
+  end
 end

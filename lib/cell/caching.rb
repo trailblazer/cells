@@ -26,6 +26,12 @@ module Cell
       #
       #   cache :show, :expires_in => 10.minutes
       #
+      # Options are dynamically evaluated at render-time when you pass in a lambda.
+      #
+      #   cache :show, tags: lambda { |cell, *args| cell.tags }
+      #
+      # As the options are passed directly into the cache store, this is useful when using rails-cache-tags.
+      #
       # The +:if+ option lets you define a conditional proc or instance method. If it doesn't
       # return a true value, caching for that state is skipped.
       #
@@ -68,8 +74,8 @@ module Cell
       def expire_cache_key_for(key, cache_store, *args)
         cache_store.delete(key, *args)
       end
-      
-      
+
+
     protected
       # Compiles cache key and adds :cells namespace to +key+, according to the
       # ActiveSupport::Cache.expand_cache_key API.
@@ -81,45 +87,66 @@ module Cell
 
     def render_state(state, *args)
       return super(state, *args) unless cache?(state, *args)
-      
+
       key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
-      options = self.class.cache_options[state]
-      
+      options = Options.new(self.class.cache_options[state]).evaluate(self, *args)
+
       cache_store.fetch(key, options) do
         super(state, *args)
       end
     end
-    
+
     def cache_configured?
       @cache_configured
     end
     attr_writer :cache_configured
-    
+
     attr_accessor :cache_store  # we want to use DI to set a cache store in cell/rails.
-      
+
     def cache?(state, *args)
       cache_configured? and state_cached?(state) and call_state_conditional(state, *args)
     end
-    
+
   protected
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
     end
-      
+
     def call_proc_or_method(state, method, *args)
       return method.call(self, *args) if method.kind_of?(Proc)
       send(method, *args)
     end
-    
+
     def call_state_versioner(state, *args)
       method = self.class.version_procs[state] or return
       call_proc_or_method(state, method, *args)
     end
-    
+
     def call_state_conditional(state, *args)
       method = self.class.conditional_procs[state] or return true
       call_proc_or_method(state, method, *args)
     end
-    
+
+
+    # TODO: check performance. apply Options pattern to versioner, etc.
+    class Options
+      def initialize(options)
+        @options = options
+      end
+
+      def evaluate(context, *args)
+        {}.tap do |evaluated|
+          @options.each do |k,v|
+            evaluated[k] = evaluate_for(context, v, *args)
+          end
+        end
+      end
+
+    private
+      def evaluate_for(context, proc, *args)
+        return proc unless proc.kind_of?(Proc) # TODO: improve and abstract.
+        proc.call(context, *args) # TODO: change to context.instance_exec and deprecate first argument.
+      end
+    end
   end
 end

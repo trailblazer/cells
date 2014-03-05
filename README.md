@@ -161,6 +161,12 @@ class CartCell < Cell::Rails
 
 and your cart will be re-rendered after 10 minutes.
 
+Cache options are passed directly to the cache store. If you need dynamic options evaluated at render-time, use a lambda.
+
+```ruby
+  cache :show, :tags => lambda { |cell, *args| cell.tags }
+```
+
 You can expand the state's cache key - why not use a versioner block to do just this?
 
 ```ruby
