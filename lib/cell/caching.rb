@@ -61,9 +61,9 @@ module Cell
       def cache(state, *args, &block)
         options = args.extract_options!
 
-        self.conditional_procs = conditional_procs.merge(state => options.delete(:if))
-        self.version_procs     = version_procs.merge(state => (args.first || block))
-        self.cache_options     = cache_options.merge(state => options)
+        conditional_procs[state]  = options.delete(:if)
+        version_procs[state]      = (args.first || block)
+        cache_options[state]      = options
       end
 
       # Computes the complete, namespaced cache key for +state+.
@@ -107,7 +107,7 @@ module Cell
       cache_configured? and state_cached?(state) and call_state_conditional(state, *args)
     end
 
-  protected
+  private
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
     end
