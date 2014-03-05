@@ -1,6 +1,7 @@
 h2 3.9.2
 
 * Autoload `Cell::Rails::ViewModel`.
+* Implement dynamic cache options by allowing lambdas that are executed at render-time - Thanks to @bibendi for this idea.
 
 h2. 3.9.1
 
