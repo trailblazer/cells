@@ -1,5 +1,6 @@
 require 'active_support/concern'
 require 'active_support/cache'
+require 'uber/options'
 
 module Cell
   module Caching
@@ -9,7 +10,7 @@ module Cell
       class_attribute :version_procs, :conditional_procs, :cache_options
       self.version_procs = {}
       self.conditional_procs = {}
-      self.cache_options = {}
+      self.cache_options = Uber::Options.new({})
     end
 
     module ClassMethods
@@ -63,7 +64,7 @@ module Cell
 
         self.conditional_procs = conditional_procs.merge(state => options.delete(:if))
         self.version_procs     = version_procs.merge(state => (args.first || block))
-        self.cache_options     = cache_options.merge(state => options)
+        self.cache_options     = Uber::Options.new(cache_options.merge(state => options))
       end
 
       # Computes the complete, namespaced cache key for +state+.
@@ -89,7 +90,9 @@ module Cell
       return super(state, *args) unless cache?(state, *args)
 
       key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
-      options = Options.new(self.class.cache_options[state]).evaluate(self, *args)
+      options = self.class.cache_options.eval(state, self, *args)
+      puts "======================= #{self.class.cache_options.inspect}"
+      puts options.inspect
 
       cache_store.fetch(key, options) do
         super(state, *args)
@@ -125,28 +128,6 @@ module Cell
     def call_state_conditional(state, *args)
       method = self.class.conditional_procs[state] or return true
       call_proc_or_method(state, method, *args)
-    end
-
-
-    # TODO: check performance. apply Options pattern to versioner, etc.
-    class Options
-      def initialize(options)
-        @options = options
-      end
-
-      def evaluate(context, *args)
-        {}.tap do |evaluated|
-          @options.each do |k,v|
-            evaluated[k] = evaluate_for(context, v, *args)
-          end
-        end
-      end
-
-    private
-      def evaluate_for(context, proc, *args)
-        return proc unless proc.kind_of?(Proc) # TODO: improve and abstract.
-        proc.call(context, *args) # TODO: change to context.instance_exec and deprecate first argument.
-      end
     end
   end
 end
