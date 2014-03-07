@@ -226,7 +226,7 @@ class CachingFunctionalTest < MiniTest::Spec
       assert_equal "2", render_cell(:director, :count, 4)
     end
 
-    it "compute the key with an instance method xxx" do
+    it "compute the key with an instance method" do
       @class.cache :count, :version
       @class.class_eval do
       private

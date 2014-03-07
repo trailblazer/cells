@@ -1,13 +1,18 @@
 require 'active_support/concern'
 require 'active_support/cache'
 require 'uber/options'
+require 'uber/inheritable_attr'
 
 module Cell
   module Caching
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :version_procs, :conditional_procs, :cache_options
+      extend Uber::InheritableAttr
+      inheritable_attr :version_procs
+      inheritable_attr :conditional_procs
+      inheritable_attr :cache_options
+
       self.version_procs = {}
       self.conditional_procs = {}
       self.cache_options = Uber::Options.new({})
@@ -62,9 +67,9 @@ module Cell
       def cache(state, *args, &block)
         options = args.extract_options!
 
-        self.conditional_procs = conditional_procs.merge(state => options.delete(:if))
-        self.version_procs     = version_procs.merge(state => (args.first || block))
-        self.cache_options     = Uber::Options.new(cache_options.merge(state => options))
+        self.conditional_procs[state] = Uber::Options::Value.new(options.delete(:if) || true, :instance_method => true)
+        self.version_procs[state] = Uber::Options::Value.new(versioner_for(args, block), :instance_method => true)
+        self.cache_options[state] = Uber::Options.new(options)
       end
 
       # Computes the complete, namespaced cache key for +state+.
@@ -77,11 +82,14 @@ module Cell
       end
 
 
-    protected
-      # Compiles cache key and adds :cells namespace to +key+, according to the
-      # ActiveSupport::Cache.expand_cache_key API.
+    private
       def expand_cache_key(key)
         ::ActiveSupport::Cache.expand_cache_key(key, :cells)
+      end
+
+      def versioner_for(args, block)
+        ActiveSupport::Deprecation.warn('Passing a Proc to ::cache is deprecated, please pass a versioner block as documented.') if args.first
+        args.first || block # TODO: always use block in >= 3.11.
       end
     end
 
@@ -91,8 +99,6 @@ module Cell
 
       key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
       options = self.class.cache_options.eval(state, self, *args)
-      puts "======================= #{self.class.cache_options.inspect}"
-      puts options.inspect
 
       cache_store.fetch(key, options) do
         super(state, *args)
@@ -107,27 +113,16 @@ module Cell
     attr_accessor :cache_store  # we want to use DI to set a cache store in cell/rails.
 
     def cache?(state, *args)
-      cache_configured? and state_cached?(state) and call_state_conditional(state, *args)
+      cache_configured? and state_cached?(state) and self.class.conditional_procs[state].evaluate(self, *args)
     end
 
-  protected
+  private
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
     end
 
-    def call_proc_or_method(state, method, *args)
-      return method.call(self, *args) if method.kind_of?(Proc)
-      send(method, *args)
-    end
-
     def call_state_versioner(state, *args)
-      method = self.class.version_procs[state] or return
-      call_proc_or_method(state, method, *args)
-    end
-
-    def call_state_conditional(state, *args)
-      method = self.class.conditional_procs[state] or return true
-      call_proc_or_method(state, method, *args)
+      self.class.version_procs[state].evaluate(self, *args)
     end
   end
 end
