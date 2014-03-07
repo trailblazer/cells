@@ -1,3 +1,8 @@
+h2. 3.10.0
+
+* Deprecated passing in a Proc to `::cache` (it was undocumented anyway).
+* Use [`uber` gem](https://github.com/apotonick/uber) for inheritable class attributes and dynamic options.
+
 h2 3.9.2
 
 * Autoload `Cell::Rails::ViewModel`.
