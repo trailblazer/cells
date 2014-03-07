@@ -126,6 +126,7 @@ class CachingUnitTest < MiniTest::Spec
   describe ".expire_cache_key" do
     before :each do
       @key = @class.state_cache_key(:tock)
+      puts "====== key is #{@key}"
       assert_equal "1", render_cell(:director, :tock)
       assert_equal "1", @class.cache_store.read(@key)
     end
@@ -155,79 +156,6 @@ class CachingUnitTest < MiniTest::Spec
         MusicianController.new.expire_cell_state(:director, :tock)
       end
       assert_not @class.cache_store.read(@key)
-    end
-  end
-
-
-  describe ".cache" do
-    let (:proc) { Proc.new {} }
-    let (:parent) { Class.new(Cell::Base) }
-    let (:brother) { Class.new(parent) }
-    let (:sister) { Class.new(parent) }
-
-    it "accept a state name, only" do
-      @class.cache :count
-
-      assert_not @class.version_procs[:count]
-      assert_equal({}, @class.cache_options[:count])
-    end
-
-    it "accept state and cache options" do
-      @class.cache :count, :expires_in => 10.minutes
-
-      assert_not @class.version_procs[:count]
-      assert_equal({:expires_in => 10.minutes}, @class.cache_options[:count])
-    end
-
-    it "accept args and versioner block" do
-      @class.cache :count, :expires_in => 10.minutes do "v1" end
-
-      assert_kind_of Proc, @class.version_procs[:count]
-      assert_equal({:expires_in => 10.minutes}, @class.cache_options[:count])
-    end
-
-    it "stil accept a versioner proc, only" do
-      @class.cache :count, proc
-
-      assert_equal proc, @class.version_procs[:count]
-      assert_equal({},    @class.cache_options[:count])
-    end
-
-    it "stil accept a versioner block" do
-      @class.cache :count do "v1" end
-
-      assert_kind_of Proc, @class.version_procs[:count]
-      assert_equal({},    @class.cache_options[:count])
-    end
-
-    it "inherit caching configuration" do
-      parent.cache :inherited_cache_configuration
-
-      assert parent.version_procs.has_key?(:inherited_cache_configuration)
-      assert brother.version_procs.has_key?(:inherited_cache_configuration)
-    end
-
-    it "not overwrite caching configuration in the parent class" do
-      brother.cache :inherited_cache_configuration
-
-      puts parent.version_procs.inspect
-      assert ! parent.version_procs.has_key?(:inherited_cache_configuration)
-      assert brother.version_procs.has_key?(:inherited_cache_configuration)
-    end
-
-    it "not overwrite caching configuration in a sibbling class" do
-      sister.cache :inherited_cache_configuration
-
-      assert ! brother.version_procs.has_key?(:inherited_cache_configuration)
-      assert sister.version_procs.has_key?(:inherited_cache_configuration)
-    end
-
-    it "overwrite caching configuration in a child class" do
-      @class.cache :inherited_cache_configuration
-      brother.cache :inherited_cache_configuration, proc
-
-      assert ! parent.version_procs[:inherited_cache_configuration]
-      assert_equal proc, brother.version_procs[:inherited_cache_configuration]
     end
   end
 end
@@ -298,10 +226,10 @@ class CachingFunctionalTest < MiniTest::Spec
       assert_equal "2", render_cell(:director, :count, 4)
     end
 
-    it "compute the key with an instance method" do
+    it "compute the key with an instance method xxx" do
       @class.cache :count, :version
       @class.class_eval do
-        private
+      private
         def version(int)
           (int % 2)==0 ? {:count => "even"} : {:count => "odd"}
         end
@@ -313,7 +241,7 @@ class CachingFunctionalTest < MiniTest::Spec
       assert_equal "2", render_cell(:director, :count, 4)
     end
 
-    it "allow returning strings, too" do
+    it "allows returning strings, too" do
       @class.cache :count do |cell, int|
         (int % 2)==0 ? "even" : "odd"
       end
@@ -383,34 +311,152 @@ class CachingFunctionalTest < MiniTest::Spec
   end
 
 
-  describe "lambda as options" do
-    let (:cache_store) {
-      Object.new.instance_eval do
-        def fetch(state, options)
-          return "cached!" if options == {:expires_in => 9, :tags => "1,2,3"}
-          nil
-        end
-        self
+  def cache_store(&block)
+    Object.new.instance_eval do
+      @block = block
+      def fetch(key, options)
+        @block.call(key, options)
       end
-    }
+      self
+    end
+  end
 
+  def cached(&block)
+    cs = cache_store(&block)
+
+    @cell.instance_eval do
+      def count(*)
+        "this should never be returned!"
+      end
+
+      @cache_store = cs
+      def cache_store
+        @cache_store
+      end
+    end
+
+    @cell
+  end
+
+  # ::cache
+
+  describe "with state name, only" do
+    it do
+      @class.cache :count
+
+      cached do |key, options|
+        if options == {} and key == "cells/director/count/"
+          "cached!"
+        end
+      end.render_state(:count, 1, 2, 3).must_equal "cached!"
+    end
+  end
+
+  describe "with cache store options" do
+    it do
+      @class.cache :count, :expires_in => 10.minutes
+
+      cached do |key, options|
+        if options == {:expires_in => 600}
+          "cached!"
+        end
+      end.render_state(:count, 1, 2, 3).must_equal "cached!"
+    end
+  end
+
+  describe "with proc object" do
+    it "still accepts it but warns about deprecation" do
+      @class.cache :count, Proc.new { "v2" }
+
+      cached do |key, options|
+        if options == {} and key == "cells/director/count/v2"
+          "cached!"
+        end
+      end.render_state(:count).must_equal "cached!"
+    end
+  end
+
+  describe "with versioner block" do
+    it do
+      @class.cache :count do "v3" end
+
+      cached do |key, options|
+        if options == {} and key == "cells/director/count/v3"
+          "cached!"
+        end
+      end.render_state(:count).must_equal "cached!"
+    end
+  end
+
+  describe "with store options and versioner block" do
+    it do
+      @class.cache :count, :expires_in => 10.minutes do "v1" end
+
+      cached do |key, options|
+        if options == {:expires_in => 600} and key == "cells/director/count/v1"
+          "cached!"
+        end
+      end.render_state(:count, 1, 2, 3).must_equal "cached!"
+    end
+  end
+
+  describe "lambda and options as options" do
     it "runs lamda at render-time" do
       @class.cache :count, :expires_in => 9, :tags => lambda { |cell, one, two, three| "#{one},#{two},#{three}" }
 
-      cs = cache_store
-
-      @cell.instance_eval do
-        def count(*)
-          "this should never be returned!"
+      cached do |key, options|
+        if options == {:expires_in => 9, :tags => "1,2,3"}
+          "cached!"
         end
-
-        @cache_store = cs
-        def cache_store
-          @cache_store
-        end
-      end
-
-      @cell.render_state(:count, 1, 2, 3).must_equal "cached!"
+      end.render_state(:count, 1, 2, 3).must_equal "cached!"
     end
+  end
+end
+
+
+class CachingInheritanceTest < CachingFunctionalTest
+  class DirectorCell < ::DirectorCell
+    cache :count, :expires_in => 10.minutes do
+      "v1"
+    end
+  end
+
+  class DirectorsSonCell < DirectorCell
+  end
+
+  class DirectorsDaughterCell < ::DirectorCell
+    cache :count, :expires_in => 9.minutes do
+      "v2"
+    end
+  end
+
+  it do
+    @cell = DirectorCell.new(@controller)
+
+    cached do |key, options|
+      if options == {:expires_in => 600} and key == "cells/caching_inheritance_test/director/count/v1"
+        "cached!"
+      end
+    end.render_state(:count).must_equal "cached!"
+  end
+
+  it do
+    @cell = DirectorsDaughterCell.new(@controller)
+
+    cached do |key, options|
+      if options == {:expires_in => 540} and key == "cells/caching_inheritance_test/directors_daughter/count/v2"
+        "cached!"
+      end
+    end.render_state(:count).must_equal "cached!"
+  end
+
+  it do
+    @cell = DirectorsSonCell.new(@controller)
+
+    cached do |key, options|
+      if options == {:expires_in => 600} and key == "cells/caching_inheritance_test/directors_son/count/v1"
+        "cached!"
+      end
+    end.render_state(:count).must_equal "cached!"
   end
 end
