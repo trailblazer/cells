@@ -67,8 +67,8 @@ module Cell
       def cache(state, *args, &block)
         options = args.extract_options!
 
-        self.conditional_procs[state] = Uber::Options::Value.new(options.delete(:if) || true, :instance_method => true)
-        self.version_procs[state] = Uber::Options::Value.new(versioner_for(args, block), :instance_method => true)
+        self.conditional_procs[state] = Uber::Options::Value.new(options.delete(:if) || true)
+        self.version_procs[state] = Uber::Options::Value.new(versioner_for(args, block))
         self.cache_options[state] = Uber::Options.new(options)
       end
 
@@ -87,6 +87,7 @@ module Cell
         ::ActiveSupport::Cache.expand_cache_key(key, :cells)
       end
 
+      # FIXME: remove in 3.11.
       def versioner_for(args, block)
         ActiveSupport::Deprecation.warn('Passing a Proc to ::cache is deprecated, please pass a versioner block as documented.') if args.first
         args.first || block # TODO: always use block in >= 3.11.
