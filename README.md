@@ -152,22 +152,50 @@ will render the configured `UnauthorizedUserCell` instead of the original `Login
 
 ## Caching
 
-Cells do strict view caching. No cluttered fragment caching. Add
+Cells allow you to cache per state. It's simple: the rendered result of a state method is cached and expired as you configure it.
+
+To cache forever, don't configure anything
 
 ```ruby
 class CartCell < Cell::Rails
-  cache :show, :expires_in => 10.minutes
+  cache :show
+
+  def show
+    render
+  end
 ```
 
-and your cart will be re-rendered after 10 minutes.
+This will run `#show` only once, after that the rendered view comes from the cache.
 
-Cache options are passed directly to the cache store. If you need dynamic options evaluated at render-time, use a lambda.
+### Cache Options
+
+Note that you can pass arbitrary options through to your cache store. Symbols are evaluated as instance methods, callable objects (e.g. lambdas) are evaluated in the cell instance context allowing you to call instance methods and access instance variables. All arguments passed to your state (e.g. via `render_cell`) are propagated to the block.
 
 ```ruby
-  cache :show, :tags => lambda { |*args| tags }
+cache :show, :expires_in => 10.minutes
 ```
 
-You can expand the state's cache key - why not use a versioner block to do just this?
+If you need dynamic options evaluated at render-time, use a lambda.
+
+```ruby
+cache :show, :tags => lambda { |*args| tags }
+```
+
+If you don't like blocks, use instance methods instead.
+
+```ruby
+class CartCell < Cell::Rails
+  cache :show, :tags => :cache_tags
+
+  def cache_tags(*args)
+    # do your magic..
+  end
+```
+
+### Cache Keys
+
+
+You can expand the state's cache key by appending a versioner block to the `::cache` call. This way you can expire state caches yourself.
 
 ```ruby
 class CartCell < Cell::Rails
@@ -180,7 +208,12 @@ The block's return value is appended to the state key: `"cells/cart/show/0ecb136
 
 Check the [API to learn more](http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method).
 
-*Reminder*: If you want to test it in `development`, you need to put `config.action_controller.perform_caching = true` in `development.rb` to see the effect
+### A Note On Fragment Caching
+
+Fragment caching is [not implemented in Cells per design](http://nicksda.apotomo.de/2011/02/rails-misapprehensions-caching-views-is-not-the-views-job/) - Cells tries to move caching to the class layer rather than cluttering your views with caching blocks.
+
+*Reminder*: If you want to test it in `development`, you need to put `config.action_controller.perform_caching = true` in `development.rb` to see the effect.
+
 
 ## Testing
 
