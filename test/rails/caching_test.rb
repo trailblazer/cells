@@ -215,7 +215,7 @@ class CachingFunctionalTest < MiniTest::Spec
     end
 
     it "compute the key with a block receiving state-args" do
-      @class.cache :count do |cell, int|
+      @class.cache :count do |int|
         (int % 2)==0 ? {:count => "even"} : {:count => "odd"}
       end
       # example cache key: cells/director/count/count=odd
@@ -242,7 +242,7 @@ class CachingFunctionalTest < MiniTest::Spec
     end
 
     it "allows returning strings, too" do
-      @class.cache :count do |cell, int|
+      @class.cache :count do |int|
         (int % 2)==0 ? "even" : "odd"
       end
 
@@ -253,7 +253,7 @@ class CachingFunctionalTest < MiniTest::Spec
     end
 
     it "be able to use caching conditionally" do
-      @class.cache :count, :if => proc { |cell, int| (int % 2) != 0 }
+      @class.cache :count, :if => lambda { |int| (int % 2) != 0 }
 
       assert_equal "1", render_cell(:director, :count, 1)
       assert_equal "2", render_cell(:director, :count, 2)
@@ -364,18 +364,6 @@ class CachingFunctionalTest < MiniTest::Spec
     end
   end
 
-  describe "with proc object" do
-    it "still accepts it but warns about deprecation" do
-      @class.cache :count, Proc.new { "v2" }
-
-      cached do |key, options|
-        if options == {} and key == "cells/director/count/v2"
-          "cached!"
-        end
-      end.render_state(:count).must_equal "cached!"
-    end
-  end
-
   describe "with versioner block" do
     it do
       @class.cache :count do "v3" end
@@ -402,7 +390,7 @@ class CachingFunctionalTest < MiniTest::Spec
 
   describe "lambda and options as options" do
     it "runs lamda at render-time" do
-      @class.cache :count, :expires_in => 9, :tags => lambda { |cell, one, two, three| "#{one},#{two},#{three}" }
+      @class.cache :count, :expires_in => 9, :tags => lambda { |one, two, three| "#{one},#{two},#{three}" }
 
       cached do |key, options|
         if options == {:expires_in => 9, :tags => "1,2,3"}

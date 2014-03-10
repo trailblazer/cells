@@ -34,20 +34,23 @@ module Cell
       #
       # Options are dynamically evaluated at render-time when you pass in a lambda.
       #
-      #   cache :show, tags: lambda { |cell, *args| cell.tags }
+      #   cache :show, tags: lambda { |*args| cell.tags }
       #
       # As the options are passed directly into the cache store, this is useful when using rails-cache-tags.
       #
       # The +:if+ option lets you define a conditional proc or instance method. If it doesn't
       # return a true value, caching for that state is skipped.
       #
-      #   cache :show, :if => proc { |cell, options| options[:enable_cache] }
+      #   cache :show, :if => lambda { |options| options[:enable_cache] }
       #
       # If you need your own granular cache keys, pass a versioner block.
       #
-      #   cache :show do |cell, options|
-      #     "user/#{cell.options[:id]}"
+      #   cache :show do |options|
+      #     "user/#{options[:id]}"
       #   end
+      #
+      # All blocks are executed in the cell instance context, allowing you to call methods or access instance
+      # variables.
       #
       # This will result in a cache key like <tt>cells/cart/show/user/1</tt>.
       #
@@ -68,7 +71,7 @@ module Cell
         options = args.extract_options!
 
         self.conditional_procs[state] = Uber::Options::Value.new(options.delete(:if) || true)
-        self.version_procs[state] = Uber::Options::Value.new(versioner_for(args, block))
+        self.version_procs[state] = Uber::Options::Value.new(args.first || block)
         self.cache_options[state] = Uber::Options.new(options)
       end
 
@@ -86,19 +89,13 @@ module Cell
       def expand_cache_key(key)
         ::ActiveSupport::Cache.expand_cache_key(key, :cells)
       end
-
-      # FIXME: remove in 3.11.
-      def versioner_for(args, block)
-        ActiveSupport::Deprecation.warn('Passing a Proc to ::cache is deprecated, please pass a versioner block as documented.') if args.first
-        args.first || block # TODO: always use block in >= 3.11.
-      end
     end
 
 
     def render_state(state, *args)
       return super(state, *args) unless cache?(state, *args)
 
-      key     = self.class.state_cache_key(state, call_state_versioner(state, *args))
+      key     = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))
       options = self.class.cache_options.eval(state, self, *args)
 
       cache_store.fetch(key, options) do
@@ -120,10 +117,6 @@ module Cell
   private
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
-    end
-
-    def call_state_versioner(state, *args)
-      self.class.version_procs[state].evaluate(self, *args)
     end
   end
 end
