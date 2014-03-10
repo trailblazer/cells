@@ -3,6 +3,8 @@
 * API CHANGE: Blocks passed to `::cache` and `::cache ... if: ` no longer receive the cell instance as the first argument. Instead, they're executed in cell instance context. Change your code like this:
 ```ruby
 cache :show do |cell, options|
+  cell.version
+end
 # and
 cache :show, if: lambda {|cell, options| .. }
 ```
@@ -10,6 +12,8 @@ should become
 
 ```ruby
 cache :show do |options|
+  version
+end
 # and
 cache :show, if: lambda {|options| .. }
 ```
