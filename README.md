@@ -210,9 +210,13 @@ Check the [API to learn more](http://rdoc.info/gems/cells/Cell/Caching/ClassMeth
 
 ### A Note On Fragment Caching
 
-Fragment caching is [not implemented in Cells per design](http://nicksda.apotomo.de/2011/02/rails-misapprehensions-caching-views-is-not-the-views-job/) - Cells tries to move caching to the class layer rather than cluttering your views with caching blocks.
+Fragment caching is [not implemented in Cells per design](http://nicksda.apotomo.de/2011/02/rails-misapprehensions-caching-views-is-not-the-views-job/) - Cells tries to move caching to the class layer enforcing an object-oriented design rather than cluttering your views with caching blocks.
 
-*Reminder*: If you want to test it in `development`, you need to put `config.action_controller.perform_caching = true` in `development.rb` to see the effect.
+If you need to cache a part of your view, implement that as another cell state.
+
+### Testing Caching
+
+If you want to test it in `development`, you need to put `config.action_controller.perform_caching = true` in `development.rb` to see the effect.
 
 
 ## Testing
