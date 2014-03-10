@@ -1,19 +1,36 @@
-h2. 3.10.0
+## 3.10.0
 
-* Deprecated passing in a Proc to `::cache` (it was undocumented anyway).
+* API CHANGE: Blocks passed to `::cache` and `::cache ... if: ` no longer receive the cell instance as the first argument. Instead, they're executed in cell instance context. Change your code like this:
+```ruby
+cache :show do |cell, options|
+# and
+cache :show, if: lambda {|cell, options| .. }
+```
+should become
+
+```ruby
+cache :show do |options|
+# and
+cache :show, if: lambda {|options| .. }
+```
+
+Since the blocks are run in cell context, self will point to what was `cell` before.
+
+
+* `::cache` doesn't accept a `Proc` instance anymore, only blocks (was undocumented anyway).
 * Use [`uber` gem](https://github.com/apotonick/uber) for inheritable class attributes and dynamic options.
 
-h2 3.9.2
+## 3.9.2
 
 * Autoload `Cell::Rails::ViewModel`.
 * Implement dynamic cache options by allowing lambdas that are executed at render-time - Thanks to @bibendi for this idea.
 
-h2. 3.9.1
+## 3.9.1
 
 * Runs with Rails 4.1 now.
 * Internal changes on `Layouts` to prepare 4.1 compat.
 
-h2. 3.9.0
+## 3.9.0
 
 * Cells in engines are now recognized under Rails 4.0.
 * Introducing @#cell@ and @#cell_for@ to instantiate cells in ActionController and ActionView.
@@ -21,43 +38,43 @@ h2. 3.9.0
 * Add @Cell::Base#process_args@ which is called in the initializer to handle arguments passed into the constructor.
 * Setting @controller in your @Cell::TestCase@ no longer get overridden by us.
 
-h2. 3.8.8
+## 3.8.8
 
 * Maintenance release.
 
-h2. 3.8.7
+## 3.8.7
 
 * Cells runs with Rails 4.
 
-h2. 3.8.6
+## 3.8.6
 
 * @cell/base@ can now be required without trouble.
 * Generated test files now respect namespaced cells.
 
-h2. 3.8.5
+## 3.8.5
 
 * Added @Cell::Rails::HelperAPI@ module to provide the entire Rails view "API" (quotes on purpose!) in cells running completely outside of Rails. This makes it possible to use gems like simple_form in any Ruby environment, especially interesting for people using Sinatra, webmachine, etc.
 * Moved @Caching.expire_cache_key@ to @Rails@. Use @Caching.expire_cache_key_for(key, cache_store, ..)@ if you want to expire caches outside of Rails.
 
-h2. 3.8.4
+## 3.8.4
 
 * Added @Cell::Rack@ for request-dependent Cells. This is also the new base class for @Cells::Rails@.
 * Removed deprecation warning from @TestCase#cell@ as it's signature is not deprecated.
 * Added the @base_cell_class@ config option to generator for specifying an alternative base class.
 
-h2. 3.8.3
+## 3.8.3
 
 * Added @Engines.existent_directories_for@ to prevent Rails 3.0 from crashing when it detects engines.
 
-h2. 3.8.2
+## 3.8.2
 
 * Engines should work in Rails 3.0 now, too.
 
-h2. 3.8.1
+## 3.8.1
 
 * Make it work with Rails 3.2 by removing deprecated stuff.
 
-h2. 3.8.0
+## 3.8.0
 
 * @Cell::Base@ got rid of the controller dependency. If you want the @ActionController@ instance around in your cell, use @Cell::Rails@ - this should be the default in a standard Rails setup. However, if you plan on using a Cell in a Rack middleware or don't need the controller, use @Cell::Base@.
 * New API (note that @controller@ isn't the first argument anymore):
@@ -67,11 +84,11 @@ h2. 3.8.0
 * @DEFAULT_VIEW_PATHS@ is now in @Cell::Base@.
 * Removed the monkey-patch that made state-args work in Rails <= 3.0.3. Upgrade to +3.0.4.
 
-h2. 3.7.1
+## 3.7.1
 
 * Works with Rails 3.2, too. Hopefully.
 
-h2. 3.7.0
+## 3.7.0
 
 h3. Changes
   * Cache settings using @Base.cache@ are now inherited.
@@ -79,24 +96,24 @@ h3. Changes
   * Removed @#options@ in favor of state-args. If you still want the old behaviour, include the @Deprecations@ module in your cell.
   * The build process is now instantly delegated to Base.build_for on the concrete cell class.
 
-h2. 3.6.8
+## 3.6.8
 
 h3. Changes
   * Removed <code>@opts</code>.
   * Deprecated @#options@ in favour of state-args.
 
-h2. 3.6.7
+## 3.6.7
 
 h3. Changes
   * Added @view_assigns@ to TestCase.
 
-h2. 3.6.6
+## 3.6.6
 
 h3. Changes
   * Added the @:format@ option for @#render@ which should be used with caution. Sorry for that.
   * Removed the useless @layouts/@ view path from Cell::Base.
 
-h2. 3.6.5
+## 3.6.5
 
 h3. Bugfixes
   * `Cell::TestCase#invoke` now properly accepts state-args.
@@ -105,13 +122,13 @@ h3. Changes
   * Added the `:if` option to `Base.cache` which allows adding a conditional proc or instance method to the cache definition. If it doesn't return true, caching for that state is skipped.
 
 
-h2. 3.6.4
+## 3.6.4
 
 h3. Bugfixes
   * Fixes @ArgumentError: wrong number of arguments (1 for 0)@ in @#render_cell@ for Ruby 1.8.
 
 
-h2. 3.6.3
+## 3.6.3
 
 h3. Bugfixes
   * [Rails 3.0] Helpers are now properly included (only once). Thanks to [paneq] for a fix.
@@ -121,30 +138,30 @@ h3. Changes
   * `cells/test_case` is no longer required as it should be loaded automatically.
 
 
-h2. 3.6.2
+## 3.6.2
 
 h3. Bugfixes
   * Fixed cells.gemspec to allow Rails 3.x.
 
-h2. 3.6.1
+## 3.6.1
 
 h3. Changes
   * Added the @:format@ option allowing @#render@ to set different template types, e.g. @render :format => :json@.
 
 
-h2. 3.6.0
+## 3.6.0
 
 h3. Changes
   * Cells runs with Rails 3.0 and 3.1.
 
 
-h2. 3.5.6
+## 3.5.6
 
 h3. Changes
   * Added a generator for slim. Use it with `-e slim` when generating.
 
 
-h2. 3.5.5
+## 3.5.5
 
 h3. Bugfixes
   * The generator now places views of namespaced cells into the correct directory. E.g. `rails g Blog::Post display` puts views to `app/cells/blog/post/display.html.erb`.
@@ -153,7 +170,7 @@ h3. Changes
   * Gem dependencies changed, we now require @actionpack@ and @railties@ >= 3.0.0 instead of @rails@.
 
 
-h2. 3.5.4
+## 3.5.4
 
 h3. Bugfixes
   * state-args work even if your state method receives optional arguments or default values, like @def show(user, age=18)@.
@@ -164,7 +181,7 @@ h3. Changes
   * Cells::DEFAULT_VIEW_PATHS is now Cell::Base::DEFAULT_VIEW_PATHS. Note that Cells will set its view_paths to DEFAULT_VIEW_PATHS at initialization time. If you want to alter the view_paths, use Base.append_view_path and friends in a separate initializer.
 
 
-h2. 3.5.2
+## 3.5.2
 
 h3. Bugfixes
   * Controller#render_cell now accepts multiple args as options.
@@ -173,7 +190,7 @@ h3. Changes
   * Caching versioners now can accept state-args or options from the #render_cell call. This way, you don't have to access #options at all anymore.
 
 
-h2. 3.5.1
+## 3.5.1
 
   * No longer pass an explicit Proc but a versioner block to @Cell.Base.cache@. Example: @cache :show do "v1" end@
   * Caching.cache_key_for now uses @ActiveSupport::Cache.expand_cache_key@. Consequently, a key which used to be like @"cells/director/count/a=1/b=2"@ now is @cells/director/count/a=1&b=2@ and so on. Be warned that this might break your home-made cache expiry.
@@ -183,7 +200,7 @@ h3. Bugfixes
   * Passing options to @render :state@ in views finally works: @render({:state => :list_item}, item, i)@
 
 
-h2. 3.5.0
+## 3.5.0
 
 h3. Changes
   * Deprecated @opts, use #options now.
@@ -196,7 +213,7 @@ h3. Changes
   * Privatized @#find_family_view_for_state@, @#render_view_for@, and all *ize methods in Cell::Rails.
   * New signature: @#render_view_for(state, *args)@
 
-h2. 3.4.4
+## 3.4.4
 
 h3. Changes
   * Cells.setup now yields Cell::Base, so you can really call append_view_path and friends here.
@@ -204,7 +221,7 @@ h3. Changes
   * added TestCase#in_view to test helpers in a real cell view.
 
 
-h2. 3.4.3
+## 3.4.3
 
 h3. Changes
   * #render_cell now accepts a block which yields the cell instance before rendering.
