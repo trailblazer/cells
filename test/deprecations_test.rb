@@ -87,8 +87,8 @@ class DeprecationsTest < MiniTest::Spec
           render :text => args[:int]
         end
 
-        cache :count do |cell, i|
-          (cell.options[:int] % 2)==0 ? {:count => "even"} : {:count => "odd"}
+        cache :count do |i|
+          (options[:int] % 2)==0 ? {:count => "even"} : {:count => "odd"}
         end
       end
 

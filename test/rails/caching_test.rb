@@ -374,6 +374,20 @@ class CachingFunctionalTest < MiniTest::Spec
         end
       end.render_state(:count).must_equal "cached!"
     end
+
+    it "is executed in instance context" do
+      @class.cache :count do version end
+
+      @cell.instance_eval do
+        def version; "v3"; end
+      end
+
+      cached do |key, options|
+        if options == {} and key == "cells/director/count/v3"
+          "cached!"
+        end
+      end.render_state(:count).must_equal "cached!"
+    end
   end
 
   describe "with store options and versioner block" do
