@@ -194,7 +194,6 @@ class CartCell < Cell::Rails
 
 ### Cache Keys
 
-
 You can expand the state's cache key by appending a versioner block to the `::cache` call. This way you can expire state caches yourself.
 
 ```ruby
@@ -208,11 +207,13 @@ The block's return value is appended to the state key: `"cells/cart/show/0ecb136
 
 Check the [API to learn more](http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method).
 
+
 ### A Note On Fragment Caching
 
 Fragment caching is [not implemented in Cells per design](http://nicksda.apotomo.de/2011/02/rails-misapprehensions-caching-views-is-not-the-views-job/) - Cells tries to move caching to the class layer enforcing an object-oriented design rather than cluttering your views with caching blocks.
 
 If you need to cache a part of your view, implement that as another cell state.
+
 
 ### Testing Caching
 
