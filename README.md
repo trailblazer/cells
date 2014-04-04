@@ -130,6 +130,7 @@ This is where OOP comes back to your view.
 * __Inherit code__ into your cells by deriving more abstract cells.
 * __Inherit views__ from parent cells.
 
+
 ### Builders
 
 Let `render_cell` take care of creating the right cell. Just configure your super-cell properly.
@@ -167,6 +168,7 @@ class CartCell < Cell::Rails
 
 This will run `#show` only once, after that the rendered view comes from the cache.
 
+
 ### Cache Options
 
 Note that you can pass arbitrary options through to your cache store. Symbols are evaluated as instance methods, callable objects (e.g. lambdas) are evaluated in the cell instance context allowing you to call instance methods and access instance variables. All arguments passed to your state (e.g. via `render_cell`) are propagated to the block.
@@ -192,6 +194,14 @@ class CartCell < Cell::Rails
   end
 ```
 
+### Conditional Caching
+
+The +:if+ option lets you define a condition. If it doesn't return a true value, caching for that state is skipped.
+
+```ruby
+cache :show, :if => lambda { |*| has_changed? }
+```
+
 ### Cache Keys
 
 You can expand the state's cache key by appending a versioner block to the `::cache` call. This way you can expire state caches yourself.
@@ -205,7 +215,11 @@ class CartCell < Cell::Rails
 
 The block's return value is appended to the state key: `"cells/cart/show/0ecb1360644ce665a4ef"`.
 
-Check the [API to learn more](http://rdoc.info/gems/cells/Cell/Caching/ClassMethods#cache-instance_method).
+
+### Inheritance
+
+Cache configuration is inherited to derived cells.
+
 
 
 ### A Note On Fragment Caching

@@ -18,7 +18,7 @@ end
 cache :show, if: lambda {|options| .. }
 ```
 
-Since the blocks are run in cell context, self will point to what was `cell` before.
+Since the blocks are run in cell context, `self` will point to what was `cell` before.
 
 
 * `::cache` doesn't accept a `Proc` instance anymore, only blocks (was undocumented anyway).
