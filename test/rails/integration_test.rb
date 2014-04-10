@@ -103,8 +103,6 @@ class ViewMethodsTest < ActionController::TestCase
     end
     get 'skills'
 
-    form = "<form accept-charset=\"UTF-8\" action=\"musician/index\" method=\"post\"><div style=\"margin:0;padding:0;display:inline\"><input name=\"utf8\" type=\"hidden\" value=\"&#x2713;\" /></div>\n"
-    form_4_1 = "<form accept-charset=\"UTF-8\" action=\"musician/index\" method=\"post\"><div style=\"display:none\"><input name=\"utf8\" type=\"hidden\" value=\"&#x2713;\" /></div>" if Cell.rails4_1_or_more?
-    assert_equal form, @response.body
+    @response.body.must_match /<form.*action="musician\/index"/
   end
 end
