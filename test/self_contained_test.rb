@@ -9,12 +9,16 @@ class AlbumCell < Cell::Rails
   end
 end
 
-class SelfContainedTest < MiniTest::Spec
-  include Cell::TestCase::TestMethods
+unless Cell.rails3_0?
 
-  let (:album) { cell(:album) }
+  class SelfContainedTest < MiniTest::Spec
+    include Cell::TestCase::TestMethods
 
-  it "renders views from album/views/" do
-   album.render_state(:cover).must_equal "<h3>The Sufferer &amp; The Witness</h3>\n"
+    let (:album) { cell(:album) }
+
+    it "renders views from album/views/" do
+     album.render_state(:cover).must_equal "<h3>The Sufferer &amp; The Witness</h3>\n"
+    end
   end
+
 end
