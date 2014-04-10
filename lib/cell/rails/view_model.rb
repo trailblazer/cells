@@ -3,6 +3,9 @@
 # no locals
 # options are automatically made instance methods via constructor.
 # call "helpers" in class
+
+# TODO: warn when using ::property but not passing in model in constructor.
+
 class Cell::Rails
   module ViewModel
     include Cell::OptionsConstructor

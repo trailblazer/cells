@@ -90,5 +90,24 @@ module Cell
     def self.controller_path
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
     end
+
+
+    # Enforces the new trailblazer directory layout where cells (or concepts in general) are fully self-contained in its own directory.
+    module SelfContained
+      def self_contained!
+        include Prefixes
+      end
+
+      module Prefixes
+        def _prefixes
+          @_prefixes ||= begin
+            super.tap do |prefixes|
+              prefixes[-1] = "#{controller_path}/views" # replace comment/.
+            end
+          end
+        end
+      end
+    end
+    extend SelfContained
   end
 end
