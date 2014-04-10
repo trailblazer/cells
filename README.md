@@ -113,6 +113,43 @@ The distinction between partials and views is making things more complex, so why
   = render :view => 'items'
 ```
 
+## File Structure
+
+In Cells 3.10 we introduce a new _optional_ file structure integrating with [trailblazer](https://github.com/apotonick/trailblazer)'s "concept-oriented" layout.
+
+This new file layout makes a cell fully self-contained so it can be moved around just by grabbing one single directory.
+
+Activate it with
+
+```ruby
+class Comment::Cell
+  self_contained!
+
+  # ...
+end
+```
+
+Now, the cell directory ideally looks like the following.
+
+```
+app
+├── cells
+│   ├── comment
+│   │   ├── cell.rb
+│   │   ├── views
+│   │   │   ├── show.haml
+│   │   │   ├── list.haml
+│   │   │   ├── script.js.coffee
+│   │   │   ├── style.css.sass
+```
+
+As you can see, both the cell class _and_ views _plus_ cell assets like CoffeeScript all live in the `comment` directory.
+
+You can use the new views directory along with leaving your cell _class_ at `app/cells/comment_cell.rb`, if you fancy that.
+
+[**Note:** Packaging assets is not yet implemented]
+
+
 ### Rendering Global Partials
 
 Sometimes you need to render a global partial from `app/views` within a cell. For instance, the `gmaps4rails` helper depends on a global partial. While this breaks encapsulation it's still possible in cells - just add the global view path.
@@ -285,7 +322,7 @@ Think of a view model as a cell decorating a model or a collection. In this mode
 
 ```ruby
 class SongCell < Cell::Rails
-  include Cell::Rails::ViewModel
+  include ViewModel
 
   property :title
 
