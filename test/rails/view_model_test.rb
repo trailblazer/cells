@@ -56,6 +56,12 @@ class SongCell < Cell::Rails
   end
 
 class ViewModelTest < MiniTest::Spec
+  # class PianoSongCell < Cell::Rails
+  #   include ViewModel
+
+  #   property :title
+  # end
+
   # views :show, :create #=> wrap in render_state(:show, *)
   let (:cell) { SongCell.build_for(nil, :title => "Shades Of Truth") }
 
@@ -85,6 +91,13 @@ if Cell.rails3_2_or_more?
       @url = "/songs/1"
       @url = "http://test.host/songs/1" if Cell.rails4_0?
     end
+
+
+    # test "instantiating without model, but call to ::property" do
+    #   assert_raises do
+    #     @controller.cell("view_model_test/piano_song")
+    #   end
+    # end
 
 
     test "URL helpers in view" do
