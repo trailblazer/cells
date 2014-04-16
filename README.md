@@ -139,6 +139,7 @@ app
 │   │   ├── views
 │   │   │   ├── show.haml
 │   │   │   ├── list.haml
+```
 
 
 Here, cell class and associated views are in the same self-contained `comment` directory.
@@ -154,7 +155,7 @@ Note: This feature is **still experimental** and the API (file name conventions,
 
 Assets per default sit in the cell's `assets/` directory.
 
-
+```
 app
 ├── cells
 │   ├── comment
