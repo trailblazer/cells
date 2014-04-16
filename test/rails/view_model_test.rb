@@ -1,5 +1,7 @@
 require 'test_helper'
 
+# TODO: test if nested state renders are html_safe.
+
 class Song < OpenStruct
   extend ActiveModel::Naming
 
