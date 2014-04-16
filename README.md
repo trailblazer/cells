@@ -117,7 +117,7 @@ The distinction between partials and views is making things more complex, so why
 
 In Cells 3.10 we introduce a new _optional_ file structure integrating with [trailblazer](https://github.com/apotonick/trailblazer)'s "concept-oriented" layout.
 
-This new file layout makes a cell fully self-contained so it can be moved around just by grabbing one single directory.
+This new file layout makes a cell fully **self-contained** so it can be moved around just by grabbing one single directory.
 
 Activate it with
 
@@ -139,16 +139,60 @@ app
 │   │   ├── views
 │   │   │   ├── show.haml
 │   │   │   ├── list.haml
-│   │   │   ├── script.js.coffee
-│   │   │   ├── style.css.sass
-```
 
-As you can see, both the cell class _and_ views _plus_ cell assets like CoffeeScript all live in the `comment` directory.
+
+Here, cell class and associated views are in the same self-contained `comment` directory.
 
 You can use the new views directory along with leaving your cell _class_ at `app/cells/comment_cell.rb`, if you fancy that.
 
-[**Note:** Packaging assets is not yet implemented]
 
+## Asset Pipeline
+
+Cells can also package their own assets like JavaScript, CoffeeScript, Sass and stylesheets. When configured, those files go directly into Rails' asset pipeline. This is a great way to clean up your assets by pushing scripts and styles into the component they belong to. It makes it so much easier to find out which files are actually involved per "widget".
+
+Note: This feature is **still experimental** and the API (file name conventions, configuration, etc.) might change.
+
+Assets per default sit in the cell's `assets/` directory.
+
+
+app
+├── cells
+│   ├── comment
+│   │   ├── views
+│   │   ├── ..
+│   │   ├── assets
+│   │   │   ├── comment.js.coffee
+│   │   │   ├── comment.css.sass
+```
+
+Adding the assets files to the asset pipeline currently involves two steps (I know it feels a bit clumsy, but I'm sure we'll find a way to make it better soon).
+
+1. Tell Rails that this cell provides its own self-contained assets.
+
+```ruby
+Gemgem::Application.configure do
+  # ...
+
+  config.cells.with_assets = %w(comment)
+```
+
+This will add `app/cells/comment/assets/` to the asset pipeline's paths.
+
+2. Include the assets in `application.js` and `application.css.sass`
+
+In `app/assets/application.js`, you have to add the cell assets manually.
+
+```javascript
+//=# require comments
+```
+
+Same goes into `app/assets/application.css.sass`.
+
+```sass
+@import 'comments';
+```
+
+In future versions, we wanna improve this by automatically including cell assets and avoiding name clashes. If you have ideas, suggestions, I'd love to hear them.
 
 ### Rendering Global Partials
 
