@@ -1,3 +1,7 @@
+## 3.10.1
+
+Allow packaging assets for Rails' asset pipeline into cells. This is still experimental but works great. I love it.
+
 ## 3.10.0
 
 * API CHANGE: Blocks passed to `::cache` and `::cache ... if: ` no longer receive the cell instance as the first argument. Instead, they're executed in cell instance context. Change your code like this:
