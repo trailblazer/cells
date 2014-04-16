@@ -170,28 +170,28 @@ Adding the assets files to the asset pipeline currently involves two steps (I kn
 
 1. Tell Rails that this cell provides its own self-contained assets.
 
-```ruby
-Gemgem::Application.configure do
-  # ...
+    ```ruby
+    Gemgem::Application.configure do
+      # ...
 
-  config.cells.with_assets = %w(comment)
-```
+      config.cells.with_assets = %w(comment)
+    ```
 
-This will add `app/cells/comment/assets/` to the asset pipeline's paths.
+    This will add `app/cells/comment/assets/` to the asset pipeline's paths.
 
 2. Include the assets in `application.js` and `application.css.sass`
 
-In `app/assets/application.js`, you have to add the cell assets manually.
+    In `app/assets/application.js`, you have to add the cell assets manually.
 
-```javascript
-//=# require comments
-```
+    ```javascript
+    //=# require comments
+    ```
 
-Same goes into `app/assets/application.css.sass`.
+    Same goes into `app/assets/application.css.sass`.
 
-```sass
-@import 'comments';
-```
+    ```sass
+    @import 'comments';
+    ```
 
 In future versions, we wanna improve this by automatically including cell assets and avoiding name clashes. If you have ideas, suggestions, I'd love to hear them.
 
