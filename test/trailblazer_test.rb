@@ -76,15 +76,6 @@ class TrailblazerTest < MiniTest::Spec
     end
 
 
-    class BandCell < Cell::Rails
-      self_contained!
-      class SongCell < self
-      end
-    end
 
-    describe "#_prefixes with self_contained!" do
-      it { cell("trailblazer_test/band")._prefixes.must_equal(["trailblazer_test/band/views"]) }
-      it { cell("trailblazer_test/band_cell/song")._prefixes.must_equal(["trailblazer_test/band_cell/song/views", "trailblazer_test/band/views"]) } # this is semi-cool, but the old behaviour.
-    end
   end
 end
