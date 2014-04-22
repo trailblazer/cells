@@ -167,14 +167,6 @@ class RailsRenderTest < MiniTest::Spec
       end
       assert_equal "<h1>Laaa</h1>\n<h1>Laaa</h1>\n<h1>Laaa</h1>\n", render_cell(:bassist, :sing)
     end
-
-    # inheriting
-    it "inherit play.html.erb from BassistCell" do
-      BassistCell.class_eval do
-        def play; render; end
-      end
-      assert_equal "Doo", render_cell(:bad_guitarist, :play)
-    end
   end
 
   describe "A cell view" do
