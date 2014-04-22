@@ -100,11 +100,13 @@ module Cell
 
       module Prefixes
         def _prefixes
-          @_prefixes ||= begin
+         @_prefixes ||= begin
             super.tap do |prefixes|
-              prefixes[-1] = "#{controller_path}/views" # replace comment/.
+              prefixes.each_with_index do |prefix, i|
+                prefixes[i] = "#{prefixes[i]}/views" # FIXME: why isn't this properly done in Rails core? _prefixes should return "prefix/views" from parent.
+              end
             end
-          end
+         end
         end
       end
     end
