@@ -19,6 +19,7 @@ module Cells
       Cells::Engines.append_engines_view_paths_for(app.config.action_controller)
     end
 
+    # ruthlessly stolen from the zurb-foundation gem.
     add_paths_block = lambda do |app|
       (app.config.cells.with_assets or []).each do |name|
         # FIXME: this doesn't take engine cells into account.
