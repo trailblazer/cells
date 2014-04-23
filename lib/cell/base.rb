@@ -99,6 +99,7 @@ module Cell
       end
 
       module Prefixes
+        # TODO: fix that in rails core. parent_prefixes should simply call parent_controller._prefixes.
         def _prefixes
          @_prefixes ||= begin
             super.tap do |prefixes|
