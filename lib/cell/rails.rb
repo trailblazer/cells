@@ -8,6 +8,12 @@ module Cell
     abstract!
     delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
 
+    class Builder < Base::Builder
+      def run_builder_block(block, controller, *args)
+        super(block, *args)
+      end
+    end
+
     class << self
       def cache_store
         # FIXME: i'd love to have an initializer in the cells gem that _sets_ the cache_store attr instead of overriding here.
@@ -22,9 +28,8 @@ module Cell
 
       # Main entry point for instantiating cells.
 
-    private
-      def build_for(constant, controller, *args)
-        Builder.new(constant, controller).cell_for(controller, *args)
+      def cell_for(name, controller, *args)
+        Builder.new(name, controller).cell_for(controller, *args) # use Cell::Rails::Builder.
       end
     end
 

@@ -58,25 +58,27 @@ module Cell
     end
 
 
-    class << self
-      # Main entry point for instantiating cells.
-      def cell_for(name, *args)
+    class Builder < Cell::Builder
+      def initialize(name, exec_context)
         constant = class_from_cell_name(name)
-        build_for(constant, *args)
-      end
-
-      alias_method :create_cell_for, :cell_for # TODO: remove us in 3.12.
-      ActiveSupport::Deprecation.deprecate_methods(self, :create_cell_for => :cell_for)
-
-    private
-      def build_for(constant, *args) # private
-        Builder.new(constant, self).cell_for(*args)
+        super(constant, exec_context)
       end
 
       # Infers the cell name, old style, where cells were named CommentCell.
       def class_from_cell_name(name)
         "#{name}_cell".classify.constantize
       end
+    end
+
+
+    class << self
+      # Main entry point for instantiating cells.
+      def cell_for(name, *args)
+        Builder.new(name, self).cell_for(*args)
+      end
+
+      alias_method :create_cell_for, :cell_for # TODO: remove us in 3.12.
+      ActiveSupport::Deprecation.deprecate_methods(self, :create_cell_for => :cell_for)
     end
 
   private
