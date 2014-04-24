@@ -8,29 +8,34 @@ class RecordCell < Cell::Rails
   end
 end
 
-Cell::Rails.class_eval do
-  module Concept
-    module ClassMethods
-      def controller_path
-        # TODO: cache on class level
-        # DISCUSS: only works with trailblazer style directories. this is a bit risky but i like it.
-        # applies to Comment::Cell, Comment::Cell::Form, etc.
-        name.sub(/::Cell/, '').underscore  unless anonymous?
-      end
+module Cell::Rails::Concept
+  def self.cell(name, controller, *args)
+    Cell::Builder.new(name.classify.constantize, controller).cell_for(controller, *args)
+  end
 
-      def inherit_views(parent)
-        # define_method :parent_prefixes do
-        #   ["record"]
-        # end
-        #_prefixes = _prefixes + [parent._prefixes]
-      end
+  module ClassMethods
+
+
+    def controller_path
+      # TODO: cache on class level
+      # DISCUSS: only works with trailblazer style directories. this is a bit risky but i like it.
+      # applies to Comment::Cell, Comment::Cell::Form, etc.
+      name.sub(/::Cell/, '').underscore  unless anonymous?
     end
 
-    extend ActiveSupport::Concern
-    included do
-      extend ClassMethods
+    def inherit_views(parent)
+      # define_method :parent_prefixes do
+      #   ["record"]
+      # end
+      #_prefixes = _prefixes + [parent._prefixes]
     end
   end
+
+  extend ActiveSupport::Concern
+  included do
+    extend ClassMethods
+  end
+
 end
 
 # Trailblazer style:
@@ -61,7 +66,7 @@ module Record
 end
 
 
-class TrailblazerTest < MiniTest::Spec
+class ConceptTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
 
     describe "::controller_path" do
@@ -78,8 +83,8 @@ class TrailblazerTest < MiniTest::Spec
 
 
     describe "#cell" do
-      it { cell("record").must_be_instance_of(      Record::Cell) } # record/cell
-      it { cell("record/song").must_be_instance_of  Record::Cell::Song } # record/cell/song
+      it { Cell::Rails::Concept.cell("record/cell", @controller).must_be_instance_of(      Record::Cell) }
+      it { Cell::Rails::Concept.cell("record/cell/song", @controller).must_be_instance_of  Record::Cell::Song }
       # cell("song", concept: "record/compilation") # record/compilation/cell/song
     end
 
@@ -113,8 +118,8 @@ class TrailblazerTest < MiniTest::Spec
     end
 
     describe "#_prefixes" do
-      it { cell("trailblazer_test/album")._prefixes.must_equal(          ["trailblazer_test/album"]) }
-      it { cell("trailblazer_test/album_cell/song")._prefixes.must_equal(["trailblazer_test/album_cell/song", "trailblazer_test/album"]) } # this is semi-cool, but the old behaviour.
+      it { cell("concept_test/album")._prefixes.must_equal(          ["concept_test/album"]) }
+      it { cell("concept_test/album_cell/song")._prefixes.must_equal(["concept_test/album_cell/song", "concept_test/album"]) } # this is semi-cool, but the old behaviour.
     end
 
 
