@@ -44,7 +44,7 @@ module Cells
       def expire_cell_state(cell_class, state, args={}, opts=nil)
         if cell_class.is_a?(Symbol)
           ActiveSupport::Deprecation.warn "Please pass the cell class into #expire_cell_state, as in expire_cell_state(DirectorCell, :count, :user_id => 1)"
-          cell_class = Cell::Rails.class_from_cell_name(cell_class)
+          cell_class = Cell::Rails.send(:class_from_cell_name, cell_class) # TODO: this must be an instance method.
         end
 
         key = cell_class.state_cache_key(state, args)

@@ -144,7 +144,7 @@ class CellModuleTest < MiniTest::Spec
     end
 
     it "provide class_from_cell_name" do
-      assert_equal BassistCell, ::Cell::Rails.class_from_cell_name('bassist')
+      assert_equal BassistCell, ::Cell::Rails.send(:class_from_cell_name, 'bassist')
     end
 
     if Cell.rails3_0?
