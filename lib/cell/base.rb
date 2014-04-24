@@ -36,7 +36,6 @@ module Cell
     abstract!
     DEFAULT_VIEW_PATHS = [File.join('app', 'cells')]
 
-    extend Builder
     include AbstractController
     include AbstractController::Rendering, Helpers, Callbacks, Translation, Logger
 
@@ -50,9 +49,31 @@ module Cell
     include Caching
     include Cell::DSL
 
+    extend Builder::ClassMethods # ::build DSL method and ::builders.
+
+
     def initialize(*args)
       super() # AbC::Base.
       process_args(*args)
+    end
+
+    # Main entry point for instantiating cells.
+    def self.cell_for(name, *args)
+      constant = class_from_cell_name(name)
+      build_for(constant, *args)
+    end
+
+    def self.build_for(constant, *args) # private
+      Builder.new(constant, self).cell_for(*args)
+    end
+
+    def self.create_cell_for(*args) # FIXME: deprecate
+      cell_for(*args)
+    end
+
+    # Infers the cell name, old style, where cells were named CommentCell.
+    def self.class_from_cell_name(name)
+      "#{name}_cell".classify.constantize
     end
 
   private

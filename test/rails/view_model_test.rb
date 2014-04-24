@@ -65,7 +65,7 @@ class ViewModelTest < MiniTest::Spec
   # end
 
   # views :show, :create #=> wrap in render_state(:show, *)
-  let (:cell) { SongCell.build_for(nil, :title => "Shades Of Truth") }
+  let (:cell) { SongCell.new(nil, :title => "Shades Of Truth") }
 
   it { cell.title.must_equal "Shades Of Truth" }
 
@@ -88,7 +88,7 @@ if Cell.rails3_2_or_more?
     #let (:cell) {  }
 
     setup do
-      @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => "1"))
+      @cell = SongCell.new(@controller, :song => Song.new(:title => "Blindfold", :id => "1"))
 
       @url = "/songs/1"
       @url = "http://test.host/songs/1" if Cell.rails4_0?
@@ -113,11 +113,11 @@ if Cell.rails3_2_or_more?
 
     test "implicit #render" do
       @cell.details.must_equal "<h3>BLINDFOLD</h3>\n"
-      SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1)).details
+      SongCell.new(@controller, :song => Song.new(:title => "Blindfold", :id => 1)).details
     end
 
     test "explicit #render with one arg" do
-      @cell = SongCell.build_for(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
+      @cell = SongCell.new(@controller, :song => Song.new(:title => "Blindfold", :id => 1))
       @cell.stats.must_equal "<h3>BLINDFOLD</h3>\n"
     end
 

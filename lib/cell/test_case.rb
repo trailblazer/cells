@@ -96,7 +96,7 @@ module Cell
       #     assert_select html, "h1", "The latest and greatest!"
       def render_cell(name, state, *args)
         # DISCUSS: should we allow passing a block here, just as in controllers?
-        @subject_cell = ::Cell::Rails.create_cell_for(name, @controller, *args)
+        @subject_cell = ::Cell::Rails.cell_for(name, @controller, *args)
         @view_assigns = extract_state_ivars_for(@subject_cell) do
           @last_invoke = @subject_cell.render_state(state, *args)
         end
@@ -110,7 +110,7 @@ module Cell
       # Example:
       #   assert_equal "Doo Dumm Dumm..." cell(:bassist).play
       def cell(name, *args, &block)
-        Cell::Rails.create_cell_for(name, @controller, *args).tap do |cell|
+        Cell::Rails.cell_for(name, @controller, *args).tap do |cell|
           cell.instance_eval &block if block_given?
         end
       end

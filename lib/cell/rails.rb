@@ -20,10 +20,11 @@ module Cell
         expire_cache_key_for(key, cache_store ,*args)
       end
 
+      # Main entry point for instantiating cells.
+
     private
-      # Run builder block in controller instance context.
-      def run_builder_block(block, controller, *args)
-        controller.instance_exec(*args, &block)
+      def build_for(constant, controller, *args)
+        Builder.new(constant, controller).cell_for(controller, *args)
       end
     end
 
