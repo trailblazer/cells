@@ -44,3 +44,21 @@ class PrefixesTest < MiniTest::Spec
 
   # it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
 end
+
+class InheritViewsTest < MiniTest::Spec
+  include Cell::TestCase::TestMethods
+
+  class SlapperCell < Cell::Rails
+    inherit_views ::BassistCell
+
+    def play
+      render
+    end
+  end
+
+  class FunkerCell < SlapperCell
+  end
+
+  it { cell("inherit_views_test/slapper").render_state(:play).must_equal "Doo" }
+  it { cell("inherit_views_test/funker").render_state(:play).must_equal "Doo" }
+end

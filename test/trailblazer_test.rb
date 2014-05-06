@@ -21,12 +21,6 @@ module Cell::Rails::Concept
         # applies to Comment::Cell, Comment::Cell::Form, etc.
         name.sub(/::Cell/, '').underscore unless anonymous?
       end
-
-      def inherit_views(parent)
-        define_method :_prefixes do
-          super() + parent._prefixes
-        end
-      end
     end
   end
 
@@ -66,57 +60,41 @@ end
 class ConceptTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
 
-    describe "::controller_path" do
-      it { Record::Cell.new(@controller).controller_path.must_equal "record" }
-      it { Record::Cell::Song.new(@controller).controller_path.must_equal "record/song" }
+  describe "::controller_path" do
+    it { Record::Cell.new(@controller).controller_path.must_equal "record" }
+    it { Record::Cell::Song.new(@controller).controller_path.must_equal "record/song" }
+  end
+
+  describe "#_prefixes" do
+    it { Record::Cell.new(@controller)._prefixes.must_equal       ["record"] }
+    it { Record::Cell::Song.new(@controller)._prefixes.must_equal ["record/song", "record"] }
+  end
+
+  it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
+
+
+  describe "#cell" do
+    it { Cell::Rails::Concept.cell("record/cell", @controller).must_be_instance_of(      Record::Cell) }
+    it { Cell::Rails::Concept.cell("record/cell/song", @controller).must_be_instance_of  Record::Cell::Song }
+    # cell("song", concept: "record/compilation") # record/compilation/cell/song
+  end
+
+
+  describe "::inherit_views" do
+    it { Record::Cell::Hit.new(@controller)._prefixes.must_equal ["record/hit", "record"]  }
+  end
+
+
+
+  # inheriting
+  it "inherit play.html.erb from BassistCell" do
+    BadGuitaristCell.class_eval do
+      def play; render; end
     end
+    assert_equal "Doo", render_cell(:bad_guitarist, :play)
+  end
 
-    describe "#_prefixes" do
-      it { Record::Cell.new(@controller)._prefixes.must_equal       ["record"] }
-      it { Record::Cell::Song.new(@controller)._prefixes.must_equal ["record/song", "record"] }
-    end
-
-    it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
-
-
-    describe "#cell" do
-      it { Cell::Rails::Concept.cell("record/cell", @controller).must_be_instance_of(      Record::Cell) }
-      it { Cell::Rails::Concept.cell("record/cell/song", @controller).must_be_instance_of  Record::Cell::Song }
-      # cell("song", concept: "record/compilation") # record/compilation/cell/song
-    end
-
-
-    describe "::inherit_views" do
-      it { Record::Cell::Hit.new(@controller)._prefixes.must_equal ["record/hit", "record"]  }
-    end
-
-
-
-    # inheriting
-    it "inherit play.html.erb from BassistCell" do
-      BadGuitaristCell.class_eval do
-        def play; render; end
-      end
-      assert_equal "Doo", render_cell(:bad_guitarist, :play)
-    end
-
-    it "inherit show.erb from parent" do
-      render_cell("record_cell/song", :show).must_equal "Rock on!"
-    end
-
-
-
-# default behaviour:
-  unless Cell.rails3_0?
-    # class AlbumCell < Rails::Cell
-    class AlbumCell < Cell::Rails
-      class SongCell < self
-      end
-    end
-
-    describe "#_prefixes" do
-      it { cell("concept_test/album")._prefixes.must_equal(          ["concept_test/album"]) }
-      it { cell("concept_test/album_cell/song")._prefixes.must_equal(["concept_test/album_cell/song", "concept_test/album"]) } # this is semi-cool, but the old behaviour.
-    end
+  it "inherit show.erb from parent" do
+    render_cell("record_cell/song", :show).must_equal "Rock on!"
   end
 end
