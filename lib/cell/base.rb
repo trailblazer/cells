@@ -118,25 +118,11 @@ module Cell
     end
 
 
-    # Enforces the new trailblazer directory layout where cells (or concepts in general) are fully self-contained in its own directory.
-    module SelfContained
-      def self_contained!
-        include Prefixes
-      end
-
-      module Prefixes
-        # TODO: fix that in rails core. parent_prefixes should simply call parent_controller._prefixes.
-        def _prefixes
-         @_prefixes ||= begin
-            super.tap do |prefixes|
-              prefixes.each_with_index do |prefix, i|
-                prefixes[i] = "#{prefixes[i]}/views" # FIXME: why isn't this properly done in Rails core? _prefixes should return "prefix/views" from parent.
-              end
-            end
-         end
-        end
-      end
-    end
+    require 'cell/base/prefixes'
+    include Prefixes
+    require 'cell/base/self_contained'
     extend SelfContained
+
+
   end
 end
