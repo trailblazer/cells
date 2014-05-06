@@ -1,5 +1,10 @@
 require 'test_helper'
 
+class BassistCell::FenderCell < Cell::Rails
+end
+
+class BassistCell::IbanezCell < BassistCell
+end
 
 class PrefixesTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
@@ -33,6 +38,9 @@ class PrefixesTest < MiniTest::Spec
 
   describe "#_prefixes" do
     it { ::BassistCell.new(@controller)._prefixes.must_equal  ["bassist"] }
+    it { ::BassistCell::FenderCell.new(@controller)._prefixes.must_equal ["bassist_cell/fender"] }
+    it { ::BassistCell::IbanezCell.new(@controller)._prefixes.must_equal ["bassist_cell/ibanez", "bassist"] }
+
     it { SingerCell.new(@controller)._prefixes.must_equal   ["prefixes_test/singer"] }
     it { BackgroundVocalsCell.new(@controller)._prefixes.must_equal ["prefixes_test/background_vocals", "prefixes_test/singer"] }
     it { ChorusCell.new(@controller)._prefixes.must_equal   ["prefixes_test/chorus", "prefixes_test/background_vocals", "prefixes_test/singer"] }
@@ -59,6 +67,7 @@ class InheritViewsTest < MiniTest::Spec
   class FunkerCell < SlapperCell
   end
 
+  # test if normal cells inherit views.
   it { cell("inherit_views_test/slapper").render_state(:play).must_equal "Doo" }
   it { cell("inherit_views_test/funker").render_state(:play).must_equal "Doo" }
 end

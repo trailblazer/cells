@@ -1,13 +1,5 @@
 require 'test_helper'
 
-class RecordCell < Cell::Rails
-  class SongCell < self
-    def show
-      render
-    end
-  end
-end
-
 # Trailblazer style:
 module Record
   class Cell < Cell::Rails # cell("record")
@@ -64,9 +56,5 @@ class ConceptTest < MiniTest::Spec
       def play; render; end
     end
     assert_equal "Doo", render_cell(:bad_guitarist, :play)
-  end
-
-  it "inherit show.erb from parent" do
-    render_cell("record_cell/song", :show).must_equal "Rock on!"
   end
 end
