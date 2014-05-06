@@ -217,7 +217,7 @@ This is where OOP comes back to your view.
 
 ### Sharing Views
 
-Sometimes it is handy to reuse an existing view directory from another cell, to avoid to many directories. You could now derive the new cell and inherit the view paths.
+Sometimes it is handy to reuse an existing view directory from another cell, to avoid a growing number of directories. You could derive the new cell and thus inherit the view paths.
 
 ```ruby
 class Comment::FormCell < CommentCell
