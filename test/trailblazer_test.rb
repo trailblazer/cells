@@ -13,29 +13,26 @@ module Cell::Rails::Concept
     Cell::Builder.new(name.classify.constantize, controller).cell_for(controller, *args)
   end
 
-  module ClassMethods
+  module Naming
+    module ClassMethods
+      def controller_path
+        # TODO: cache on class level
+        # DISCUSS: only works with trailblazer style directories. this is a bit risky but i like it.
+        # applies to Comment::Cell, Comment::Cell::Form, etc.
+        name.sub(/::Cell/, '').underscore unless anonymous?
+      end
 
-
-    def controller_path
-      # TODO: cache on class level
-      # DISCUSS: only works with trailblazer style directories. this is a bit risky but i like it.
-      # applies to Comment::Cell, Comment::Cell::Form, etc.
-      name.sub(/::Cell/, '').underscore  unless anonymous?
-    end
-
-    def inherit_views(parent)
-      # define_method :parent_prefixes do
-      #   ["record"]
-      # end
-      #_prefixes = _prefixes + [parent._prefixes]
+      def inherit_views(parent)
+        define_method :_prefixes do
+          super() + parent._prefixes
+        end
+      end
     end
   end
 
-  extend ActiveSupport::Concern
-  included do
-    extend ClassMethods
+  def self.included(base)
+    base.extend Naming::ClassMethods # TODO: separate inherit_view
   end
-
 end
 
 # Trailblazer style:
@@ -121,8 +118,5 @@ class ConceptTest < MiniTest::Spec
       it { cell("concept_test/album")._prefixes.must_equal(          ["concept_test/album"]) }
       it { cell("concept_test/album_cell/song")._prefixes.must_equal(["concept_test/album_cell/song", "concept_test/album"]) } # this is semi-cool, but the old behaviour.
     end
-
-
-
   end
 end
