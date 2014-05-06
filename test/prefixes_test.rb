@@ -1,7 +1,7 @@
 require 'test_helper'
 
 
-class BaseTest < MiniTest::Spec
+class PrefixesTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
 
   class SingerCell < Cell::Base

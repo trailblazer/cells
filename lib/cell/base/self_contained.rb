@@ -1,4 +1,5 @@
-# Enforces the new trailblazer directory layout where cells (or concepts in general) are fully self-contained in its own directory.
+# Enforces the new trailblazer directory layout where cells (or concepts in general) are
+# fully self-contained in its own directory.
 module Cell::Base::SelfContained
   def self_contained!
     extend Prefixes

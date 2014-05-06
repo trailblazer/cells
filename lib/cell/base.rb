@@ -122,7 +122,5 @@ module Cell
     include Prefixes
     require 'cell/base/self_contained'
     extend SelfContained
-
-
   end
 end
