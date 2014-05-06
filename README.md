@@ -104,18 +104,20 @@ and it will be around in your cart views.
 
 ### Partials?
 
-Yeah, we do support rendering partials in views. Nevertheless, we discourage _partials_ at all.
-
-The distinction between partials and views is making things more complex, so why should we have two kinds of view types? Use ordinary views instead, they're fine.
+In Cells, everything template file is a _view_. You're still free to render views within views (aka "partial") but we just call it "_view_". There's no need to have two different types of views. Whenever you're tempted to render a partial, use the cells term `view`.
 
 ```haml
+/ app/cells/comment/show.haml
+
+%h1 All comments
+
 %p
   = render :view => 'items'
 ```
 
 ## File Structure
 
-In Cells 3.10 we introduce a new _optional_ file structure integrating with [trailblazer](https://github.com/apotonick/trailblazer)'s "concept-oriented" layout.
+In Cells 3.10 we introduce a new _optional_ file structure integrating with [Trailblazer](https://github.com/apotonick/trailblazer)'s "concept-oriented" layout.
 
 This new file layout makes a cell fully **self-contained** so it can be moved around just by grabbing one single directory.
 
@@ -212,6 +214,25 @@ This is where OOP comes back to your view.
 * __Inherit code__ into your cells by deriving more abstract cells.
 * __Inherit views__ from parent cells.
 
+
+### Sharing Views
+
+Sometimes it is handy to reuse an existing view directory from another cell, to avoid to many directories. You could now derive the new cell and inherit the view paths.
+
+```ruby
+class Comment::FormCell < CommentCell
+```
+
+This does not only allow view inheritance, but will also inherit all the code from `CommentCell`. This might not be what you want.
+
+If you're just after inheriting the _views_, use `::inherit_views`.
+
+```ruby
+class Comment::FormCell < Cell::Rails
+  inherit_views CommentCell
+```
+
+When rendering views in `FormCell`, the view directories to look for templates will be inherited.
 
 ### Builders
 
