@@ -122,5 +122,8 @@ module Cell
     include Prefixes
     require 'cell/base/self_contained'
     extend SelfContained
+
+
+    autoload :Concept, 'cell/base/concept'
   end
 end

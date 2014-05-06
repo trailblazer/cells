@@ -17,7 +17,7 @@ module Cell::Base::Prefixes
       [controller_path]
     end
 
-    # Allows to inherit views from a parent cell without having to inherit class code from it.
+    # Instructs Cells to inherit views from a parent cell without having to inherit class code.
     def inherit_views(parent)
       define_method :_prefixes do
         super() + parent._prefixes

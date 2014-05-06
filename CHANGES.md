@@ -1,3 +1,10 @@
+## 3.11.0
+
+* Concept
+* ::inherit_views
+* `::build_for` removed/privatized/changed. Use `Cell::Base::cell_for` instead.
+* `Base::_parent_prefixes` is no longer used, if you override that somewhere in your cells it will break. We have our own implementation for computing the controller's prefixes in `Cell::Base::Prefixes` (simpler).
+
 ## 3.10.1
 
 Allow packaging assets for Rails' asset pipeline into cells. This is still experimental but works great. I love it.

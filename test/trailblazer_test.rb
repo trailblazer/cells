@@ -8,33 +8,10 @@ class RecordCell < Cell::Rails
   end
 end
 
-module Cell::Rails::Concept
-  def self.cell(name, controller, *args)
-    Cell::Builder.new(name.classify.constantize, controller).cell_for(controller, *args)
-  end
-
-  module Naming
-    module ClassMethods
-      def controller_path
-        # TODO: cache on class level
-        # DISCUSS: only works with trailblazer style directories. this is a bit risky but i like it.
-        # applies to Comment::Cell, Comment::Cell::Form, etc.
-        name.sub(/::Cell/, '').underscore unless anonymous?
-      end
-    end
-  end
-
-  def self.included(base)
-    base.extend Naming::ClassMethods # TODO: separate inherit_view
-  end
-end
-
 # Trailblazer style:
 module Record
   class Cell < Cell::Rails # cell("record")
     include Concept
-    # prefix: record/
-    #         record/views/
     def show
       render
     end
@@ -42,10 +19,6 @@ module Record
     # cell(:song, concept: :record)
     class Song < self # cell("record/cell/song")
       include Concept
-    # prefix: record/song/
-    #         record/song/views/
-    #         record/
-    #         record/views/
     end
 
     class Hit < ::Cell::Rails
@@ -55,6 +28,10 @@ module Record
     end
   end
 end
+
+# app/cells/comment/views
+# app/cells/comment/form/views
+# app/cells/comment/views/form inherit_views Comment::Cell, render form/show
 
 
 class ConceptTest < MiniTest::Spec
@@ -66,8 +43,9 @@ class ConceptTest < MiniTest::Spec
   end
 
   describe "#_prefixes" do
-    it { Record::Cell.new(@controller)._prefixes.must_equal       ["record"] }
-    it { Record::Cell::Song.new(@controller)._prefixes.must_equal ["record/song", "record"] }
+    it { Record::Cell.new(@controller)._prefixes.must_equal       ["record/views"] }
+    it { Record::Cell::Song.new(@controller)._prefixes.must_equal ["record/song/views", "record/views"] }
+    it { Record::Cell::Hit.new(@controller)._prefixes.must_equal  ["record/hit/views", "record/views"]  } # with inherit_views.
   end
 
   it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
@@ -78,12 +56,6 @@ class ConceptTest < MiniTest::Spec
     it { Cell::Rails::Concept.cell("record/cell/song", @controller).must_be_instance_of  Record::Cell::Song }
     # cell("song", concept: "record/compilation") # record/compilation/cell/song
   end
-
-
-  describe "::inherit_views" do
-    it { Record::Cell::Hit.new(@controller)._prefixes.must_equal ["record/hit", "record"]  }
-  end
-
 
 
   # inheriting
