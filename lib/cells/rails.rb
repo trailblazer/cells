@@ -61,6 +61,10 @@ module Cells
       def render_cell(name, state, *args, &block)
         ::Cell::Rails.render_cell_for(name, state, controller, *args, &block)
       end
+
+      def concept(name, *args, &block) # DISCUSS: mix in only conditionally?
+        Cell::Base::Concept.cell(name, controller, *args, &block)
+      end
     end
   end
 end

@@ -1,6 +1,8 @@
 ## 3.11.0
 
-* Concept
+### Concept
+* `#concept` helper is mixed into all views as an alternative to `#cell` and `#render_cell`. Let us know if we should do that conditionally, only.
+
 * Added `::inherit_views` to only inherit views whereas real class inheritance would inherit all the dark past of the class.
 * `::build_for` removed/privatized/changed. Use `Cell::Base::cell_for` instead.
 * `Base::_parent_prefixes` is no longer used, if you override that somewhere in your cells it will break. We have our own implementation for computing the controller's prefixes in `Cell::Base::Prefixes` (simpler).

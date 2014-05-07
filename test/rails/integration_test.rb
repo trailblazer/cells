@@ -85,6 +85,21 @@ class ViewMethodsTest < ActionController::TestCase
     assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />\n", @response.body
   end
 
+
+  class Cell < Cell::Rails
+    include ViewModel
+
+    def show
+      render :text => title
+    end
+  end
+
+  test "#concept" do
+    get :song
+    @response.body.must_equal "Up For Breakfast"
+  end
+
+
   test "make params (and friends) available in a cell" do
     BassistCell.class_eval do
       def listen

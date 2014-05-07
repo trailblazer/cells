@@ -33,4 +33,7 @@ class MusicianController < ActionController::Base
     render :text => html
   end
 
+  def song
+
+  end
 end
