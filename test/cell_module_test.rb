@@ -143,8 +143,11 @@ class CellModuleTest < MiniTest::Spec
       end
     end
 
-    it "provide class_from_cell_name" do
-      assert_equal BassistCell, ::Cell::Rails.send(:class_from_cell_name, 'bassist')
+    include ActiveSupport::Testing::Deprecation
+    it "deprecates class_from_cell_name" do
+      assert_deprecated do
+        assert_equal BassistCell, ::Cell::Rails.send(:class_from_cell_name, 'bassist')
+      end
     end
 
     if Cell.rails3_0?
