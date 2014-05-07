@@ -149,14 +149,6 @@ class CachingUnitTest < MiniTest::Spec
       assert_equal "1", @class.cache_store.read(@key)
       assert_not ::Cell::Rails.cache_store.read(key)
     end
-
-    include ActiveSupport::Testing::Deprecation
-    it "raise a deprecation notice when passing in a :symbol" do
-      assert_deprecated do
-        MusicianController.new.expire_cell_state(:director, :tock)
-      end
-      assert_not @class.cache_store.read(@key)
-    end
   end
 end
 
