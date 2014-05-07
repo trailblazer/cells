@@ -1,9 +1,11 @@
 ## 3.11.0
 
 * Concept
-* ::inherit_views
+* Added `::inherit_views` to only inherit views whereas real class inheritance would inherit all the dark past of the class.
 * `::build_for` removed/privatized/changed. Use `Cell::Base::cell_for` instead.
 * `Base::_parent_prefixes` is no longer used, if you override that somewhere in your cells it will break. We have our own implementation for computing the controller's prefixes in `Cell::Base::Prefixes` (simpler).
+* `Base::class_from_cell_name` deprecated. Cell no longer takes responsibility for computing constants, it's up to you (if you really need it, use `Cell::Base::Builder::class_from_cell_name`).
+* `#expire_cell_state` doesn't take symbols anymore, only the real cell class name.
 
 ## 3.10.1
 
