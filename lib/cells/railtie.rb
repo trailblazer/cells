@@ -7,12 +7,8 @@ module Cells
 
     initializer "cells.attach_router" do |app|
       Cell::Base.class_eval do
-        include app.routes.url_helpers
+        include app.routes.url_helpers # TODO: i hate this, make it better in Rails.
       end
-    end
-
-    initializer "cells.setup_view_paths" do |app|
-      Cell::Base.setup_view_paths!
     end
 
     initializer "cells.setup_engines_view_paths" do |app|

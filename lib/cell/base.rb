@@ -32,12 +32,13 @@ module Cell
 
   class Base < AbstractController::Base
     # TODO: deprecate Base in favour of Cell.
-
     abstract!
-    DEFAULT_VIEW_PATHS = [File.join('app', 'cells')]
 
     include AbstractController
     include AbstractController::Rendering, Helpers, Callbacks, Translation, Logger
+
+    self.view_paths = [File.join('app', 'cells')]
+
 
     require 'cell/rails3_0_strategy' if Cell.rails3_0?
     require 'cell/rails3_1_strategy' if Cell.rails3_1_or_more?
@@ -95,11 +96,6 @@ module Cell
       @view_context_class ||= begin
         Cell::Base::View.prepare(helper_modules)
       end
-    end
-
-    # Called in Railtie at initialization time.
-    def self.setup_view_paths!
-      self.view_paths = self::DEFAULT_VIEW_PATHS
     end
 
     def self.controller_path

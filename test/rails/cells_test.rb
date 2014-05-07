@@ -47,21 +47,6 @@ class RailsCellsTest < MiniTest::Spec
 
 
   describe "A rails cell" do
-    it "respond to DEFAULT_VIEW_PATHS" do
-      assert_equal ["app/cells"], Cell::Rails::DEFAULT_VIEW_PATHS
-    end
-
-    it "respond to .setup_view_paths!" do
-      swap( Cell::Rails, :view_paths => [])  do
-        Cell::Rails.setup_view_paths!
-        if Cell.rails3_2_or_more? or Cell.rails4_0? or Cell.rails4_1?
-          assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS).paths, Cell::Rails.view_paths.paths
-        else
-          assert_equal ActionView::PathSet.new(Cell::Rails::DEFAULT_VIEW_PATHS), Cell::Rails.view_paths
-        end
-      end
-    end
-
     it "respond to view_paths" do
       assert_kind_of ActionView::PathSet, Cell::Rails.view_paths, "must be a PathSet for proper template caching/reloading (see issue#2)"
     end
