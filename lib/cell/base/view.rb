@@ -1,4 +1,3 @@
-# Remove
 class Cell::Base::View < ActionView::Base
   def self.prepare(modules)
     # TODO: remove for 4.0 if PR https://github.com/rails/rails/pull/6826 is merged.
