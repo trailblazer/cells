@@ -40,8 +40,9 @@ class ConceptTest < MiniTest::Spec
     it { Record::Cell::Hit.new(@controller)._prefixes.must_equal  ["record/hit/views", "record/views"]  } # with inherit_views.
   end
 
-  it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
-
+  unless ::Cell.rails3_0?
+    it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
+  end
 
   describe "#cell" do
     it { Cell::Rails::Concept.cell("record/cell", @controller).must_be_instance_of(      Record::Cell) }

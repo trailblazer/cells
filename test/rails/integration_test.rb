@@ -94,9 +94,11 @@ class ViewMethodsTest < ActionController::TestCase
     end
   end
 
-  test "#concept" do
-    get :song
-    @response.body.must_equal "Up For Breakfast"
+  unless ::Cell.rails3_0?
+    test "#concept" do
+      get :song
+      @response.body.must_equal "Up For Breakfast"
+    end
   end
 
 

@@ -67,7 +67,9 @@ class InheritViewsTest < MiniTest::Spec
   class FunkerCell < SlapperCell
   end
 
-  # test if normal cells inherit views.
-  it { cell("inherit_views_test/slapper").render_state(:play).must_equal "Doo" }
-  it { cell("inherit_views_test/funker").render_state(:play).must_equal "Doo" }
+  unless ::Cell.rails3_0?
+    # test if normal cells inherit views.
+    it { cell("inherit_views_test/slapper").render_state(:play).must_equal "Doo" }
+    it { cell("inherit_views_test/funker").render_state(:play).must_equal "Doo" }
+  end
 end

@@ -39,6 +39,7 @@ class FormsTest < MiniTest::Spec
   end
 
   it "renders input fields within the form tag with ERB and ViewModel" do
+    skip if ::Cell.rails3_0?
 
     html = SongFormCell.new(@controller).form
     puts html.to_s
