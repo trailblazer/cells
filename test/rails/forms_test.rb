@@ -65,7 +65,7 @@ class FormsTest < MiniTest::Spec
   end
 
   it "renders input fields within the form tag with HAML and ViewModel" do
-
+    skip
     html = HamlSongFormCell.new(@controller).form
     puts html.to_s
 
