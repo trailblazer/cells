@@ -47,6 +47,10 @@ class SongCell < Cell::Rails
       render :dashboard
     end
 
+    def scale
+      render :layout => 'b'
+    end
+
     class Lyrics < self
       def show
         render :lyrics
@@ -128,6 +132,8 @@ if Cell.rails_version >= "3.2"
     test "nested rendering method" do
       @cell.dashboard.must_equal "<h1>Dashboard</h1>\n<h3>Lyrics for BLINDFOLD</h3>\n<li>\nIn the Mirror\n</li>\n<li>\nI can see\n</li>\n\nPlays: 99\n\nPlays: 99\n\n"
     end
+
+    test( "layout") { @cell.scale.must_equal "<b>A Minor!\n</b>" }
 
     # TODO: when we don't pass :song into Lyrics
   end

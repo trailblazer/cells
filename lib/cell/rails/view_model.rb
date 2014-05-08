@@ -21,6 +21,11 @@ class Cell::Rails
     end
     extend ActiveSupport::Concern
 
+    def initialize(*args)
+      super
+      _prepare_context # happens in AV::Base at the bottom.
+    end
+
 
     def render(options={})
       if options.is_a?(Hash)
