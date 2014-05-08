@@ -9,7 +9,7 @@ class BassistCell < Cell::Rails
   end
 
   def provoke
-    controller.config.relative_url_root = "" if Cell.rails3_0?
+    controller.config.relative_url_root = "" if Cell.rails_version.~ 3.0
 
     render
   end

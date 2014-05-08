@@ -91,7 +91,7 @@ if Cell.rails_version >= "3.2"
       @cell = SongCell.new(@controller, :song => Song.new(:title => "Blindfold", :id => "1"))
 
       @url = "/songs/1"
-      @url = "http://test.host/songs/1" if Cell.rails_version.~("4.0")
+      @url = "http://test.host/songs/1" if Cell.rails_version.>=("4.0")
     end
 
 

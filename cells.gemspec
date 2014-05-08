@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "actionpack",  ">= 3.0"
   s.add_dependency "railties",    ">= 3.0"
-  s.add_dependency "uber",        "~> 0.0.5"
+  s.add_dependency "uber",        "~> 0.0.6"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "haml"
