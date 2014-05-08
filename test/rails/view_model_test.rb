@@ -79,7 +79,7 @@ class ViewModelTest < MiniTest::Spec
   it { HitCell.new(song).artist.must_equal "Boss" }
  end
 
-if Cell.rails3_2_or_more?
+if Cell.rails_version >= "3.2"
   class ViewModelIntegrationTest < ActionController::TestCase
     tests MusicianController
 
@@ -91,7 +91,7 @@ if Cell.rails3_2_or_more?
       @cell = SongCell.new(@controller, :song => Song.new(:title => "Blindfold", :id => "1"))
 
       @url = "/songs/1"
-      @url = "http://test.host/songs/1" if Cell.rails4_0?
+      @url = "http://test.host/songs/1" if Cell.rails_version.~("4.0")
     end
 
 

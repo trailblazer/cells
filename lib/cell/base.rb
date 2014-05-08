@@ -5,29 +5,10 @@ require 'cell/rendering'
 require 'cell/dsl'
 
 module Cell
-  module RailsVersion
-    def rails3_0?
-      ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR == 0
-    end
-
-    def rails3_1_or_more?
-      (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 1)
-    end
-
-    def rails3_2_or_more?
-      (::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2)
-    end
-
-    def rails4_0?
-      ::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR == 0
-    end
-
-    def rails4_1_or_more?
-      (::ActionPack::VERSION::MAJOR == 4 and ::ActionPack::VERSION::MINOR >= 1) or ::ActionPack::VERSION::MAJOR > 4
-    end
-    alias_method :rails4_1?, :rails4_1_or_more?
+  require 'uber/version'
+  def self.rails_version
+    Uber::Version.new(::ActionPack::VERSION::STRING)
   end
-  extend RailsVersion
 
 
   class Base < AbstractController::Base
@@ -40,10 +21,10 @@ module Cell
     self.view_paths = [File.join('app', 'cells')]
 
 
-    require 'cell/rails3_0_strategy' if Cell.rails3_0?
-    require 'cell/rails3_1_strategy' if Cell.rails3_1_or_more?
-    require 'cell/rails4_0_strategy' if Cell.rails4_0?
-    require 'cell/rails4_1_strategy' if Cell.rails4_1_or_more?
+    require 'cell/rails3_0_strategy' if Cell.rails_version.~  "3.0"
+    require 'cell/rails3_1_strategy' if Cell.rails_version.~( "3.1", "3.2")
+    require 'cell/rails4_0_strategy' if Cell.rails_version.~  "4.0"
+    require 'cell/rails4_1_strategy' if Cell.rails_version >= "4.1"
     include VersionStrategy
     include Layouts
     include Rendering

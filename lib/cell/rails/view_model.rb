@@ -109,7 +109,7 @@ class Cell::Rails
   end
 
   # FIXME: fix that in rails core.
-  if Cell.rails4_0?
+  if Cell.rails_version.~("4.0", "4.1")
     include LinkToHelper
   else
     include ActionView::Helpers::UrlHelper

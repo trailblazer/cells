@@ -40,7 +40,7 @@ class ConceptTest < MiniTest::Spec
     it { Record::Cell::Hit.new(@controller)._prefixes.must_equal  ["record/hit/views", "record/views"]  } # with inherit_views.
   end
 
-  unless ::Cell.rails3_0?
+  unless ::Cell.rails_version.~("3.0")
     it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
   end
 

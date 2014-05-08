@@ -25,14 +25,14 @@ class HelperTest < MiniTest::Spec
       include ActionView::Helpers::AssetTagHelper
 
       def show
-        controller.config.relative_url_root = "" if Cell.rails3_0?
+        controller.config.relative_url_root = "" if Cell.rails_version.~("3.0")
         image_tag("no-more-the-meek.jpg")
       end
     end
 
     it "allows using helpers using #controller on instance level" do
       alt = "No-more-the-meek"
-      alt = "No more the meek" if Cell.rails4_0? or Cell.rails4_1?
+      alt = "No more the meek" if Cell.rails_version >= "4.0"
       assert_equal "<img alt=\"#{alt}\" src=\"/images/no-more-the-meek.jpg\" />", render_cell("helper_test/song", :show)
     end
   end

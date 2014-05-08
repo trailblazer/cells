@@ -66,7 +66,7 @@ class RailsCellsTest < MiniTest::Spec
     end
 
 
-    if Cell.rails3_0?
+    if Cell.rails_version.~("3.0")
       describe "invoking find_family_view_for_state" do
         it "raise an error when a template is missing" do
           assert_raises ActionView::MissingTemplate do
@@ -103,7 +103,7 @@ class RailsCellsTest < MiniTest::Spec
 
       it "respond to session" do
         session_kind = Hash
-        session_kind = ActionController::TestSession if Cell.rails4_0? or Cell.rails4_1?
+        session_kind = ActionController::TestSession if Cell.rails_version >= ("4.0")
         assert_kind_of session_kind, @cell.session
       end
 

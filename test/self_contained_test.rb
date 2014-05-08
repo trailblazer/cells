@@ -12,7 +12,7 @@ class AlbumCell < Cell::Rails
   end
 end
 
-unless Cell.rails3_0?
+unless Cell.rails_version.~("3.0")
 
   class SelfContainedTest < MiniTest::Spec
     include Cell::TestCase::TestMethods

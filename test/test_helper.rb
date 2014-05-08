@@ -40,7 +40,7 @@ require "haml/template" # Thanks, Nathan!
 
 ActiveSupport::TestCase.class_eval do # this is only needed in integration tests (AC::TestCase).
   def fix_relative_url_root
-    return unless Cell.rails3_0?
+    return unless Cell.rails_version.~("3.0")
 
     @controller.config.instance_eval do
       def relative_url_root

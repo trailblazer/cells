@@ -55,7 +55,7 @@ class TestCaseTest < Cell::TestCase
   describe "#view_assigns" do
     it "be emtpy when nothing was set" do
       render_cell(:bassist, :play)
-      if Cell.rails3_0?
+      if Cell.rails_version.~("3.0")
         assert_equal([:lookup_context], view_assigns.keys)
       else
         assert_equal({}, view_assigns)
@@ -69,7 +69,7 @@ class TestCaseTest < Cell::TestCase
         end
       end
       render_cell(:bassist, :sleep)
-      if Cell.rails3_0?
+      if Cell.rails_version.~("3.0")
         assert_equal("8h", view_assigns[:duration])
       else
         assert_equal({:duration => "8h"}, view_assigns)

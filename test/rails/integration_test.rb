@@ -45,7 +45,7 @@ class ControllerMethodsTest < ActionController::TestCase
       title.must_equal "We Called It America"
   end
 
-  if Cell.rails4_0? or Cell.rails4_1_or_more?
+  if Cell.rails_version >= "4.0"
     test "#render_cell for engine" do
       @controller.render_cell(:label, :show).must_equal "Fat Wreck"
     end
@@ -94,7 +94,7 @@ class ViewMethodsTest < ActionController::TestCase
     end
   end
 
-  unless ::Cell.rails3_0?
+  unless ::Cell.rails_version.~("3.0")
     test "#concept" do
       get :song
       @response.body.must_equal "Up For Breakfast"

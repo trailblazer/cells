@@ -47,7 +47,7 @@ class RailsHelperAPITest < MiniTest::Spec
 
   describe "Rails::HelperAPI" do
     it "allows accessing the request object" do
-      skip unless Cell.rails3_1_or_more? and Rails::VERSION::MINOR == 2
+      skip unless Cell.rails_version >= ("3.1")
 
       form = BassistCell.new.render_state(:edit)
       form.must_match /<form accept-charset="UTF-8" action="\/fruits"/

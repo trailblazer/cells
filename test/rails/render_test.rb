@@ -122,7 +122,7 @@ class RailsRenderTest < MiniTest::Spec
       end
 
       exception = ActionView::MissingTemplate
-      exception = Cell::VersionStrategy::MissingTemplate if Cell.rails3_0?
+      exception = Cell::VersionStrategy::MissingTemplate if Cell.rails_version.~("3.0")
 
       assert_raises exception do
         render_cell(:bassist, :groove)
@@ -134,7 +134,7 @@ class RailsRenderTest < MiniTest::Spec
         def groove; render; end
       end
 
-      if Cell.rails3_0?
+      if Cell.rails_version.~("3.0")
         e = assert_raises Cell::Rails::MissingTemplate do
           render_cell(:bad_guitarist, :groove)
         end
