@@ -11,6 +11,15 @@ module Record
     # cell(:song, concept: :record)
     class Song < self # cell("record/cell/song")
       include Concept
+
+      def _normalize_layout(value)
+        value
+      end
+
+      def show
+        render :view => :song#, :layout => "layout"
+        # TODO: test layout: .. in ViewModel and here!
+      end
     end
 
     class Hit < ::Cell::Rails
@@ -29,10 +38,12 @@ end
 class ConceptTest < MiniTest::Spec
   include Cell::TestCase::TestMethods
 
+
   describe "::controller_path" do
     it { Record::Cell.new(@controller).controller_path.must_equal "record" }
     it { Record::Cell::Song.new(@controller).controller_path.must_equal "record/song" }
   end
+
 
   describe "#_prefixes" do
     it { Record::Cell.new(@controller)._prefixes.must_equal       ["record/views"] }
@@ -44,10 +55,19 @@ class ConceptTest < MiniTest::Spec
     it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
   end
 
+
   describe "#cell" do
     it { Cell::Rails::Concept.cell("record/cell", @controller).must_be_instance_of(      Record::Cell) }
     it { Cell::Rails::Concept.cell("record/cell/song", @controller).must_be_instance_of  Record::Cell::Song }
     # cell("song", concept: "record/compilation") # record/compilation/cell/song
+  end
+
+
+  # describe "#render with :layout" do
+  #   it { Cell::Rails::Concept.cell("record/cell/song", @controller).show.must_equal "<p>\nLalala\n</p>\n" }
+  # end
+  describe "#render" do
+    it { Cell::Rails::Concept.cell("record/cell/song", @controller).show.must_equal "Lalala" }
   end
 
 

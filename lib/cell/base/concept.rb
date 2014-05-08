@@ -17,5 +17,6 @@ module Cell::Base::Concept
   def self.included(base)
     base.extend Naming::ClassMethods # TODO: separate inherit_view
     base.self_contained!
+    base.send :include, Cell::Rails::ViewModel
   end
 end
