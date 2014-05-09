@@ -20,6 +20,10 @@ module Record
         render :view => :song#, :layout => "layout"
         # TODO: test layout: .. in ViewModel and here!
       end
+
+      def show_with_layout
+        render :view => :song, :layout => "layout"
+      end
     end
 
     class Hit < ::Cell::Rails
@@ -63,9 +67,9 @@ class ConceptTest < MiniTest::Spec
   end
 
 
-  # describe "#render with :layout" do
-  #   it { Cell::Rails::Concept.cell("record/cell/song", @controller).show.must_equal "<p>\nLalala\n</p>\n" }
-  # end
+  describe "#render with :layout" do
+    it { Cell::Rails::Concept.cell("record/cell/song", @controller).show_with_layout.must_equal "<p>\nLalala\n</p>\n" }
+  end
   describe "#render" do
     it { Cell::Rails::Concept.cell("record/cell/song", @controller).show.must_equal "Lalala" }
   end
