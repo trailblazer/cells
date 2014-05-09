@@ -28,6 +28,15 @@ module Cell::Base::Concept
     def view_renderer
       @_view_renderer ||= Renderer.new(lookup_context)
     end
+
+
+    def _normalize_options(options) # FIXME: for rails 3.1, only. in 3.2+ it's _normalize_layout.
+      super
+
+      if options[:layout]
+        options[:layout].sub!("layouts/", "")
+      end
+    end
   end
 
   class Renderer < ActionView::Renderer
@@ -47,12 +56,14 @@ module Cell::Base::Concept
       end
 
       def resolve_layout(layout, keys, formats)
-        details = @details.dup
+        details = @details ? @details.dup : {} # FIXME: provide the entire Renderer layer here. this is to make it compatible with Rails 3.1.
         details[:formats] = formats
 
         case layout
         when String
-          find_template(layout, @options[:prefixes], false, keys, details)
+          find_args = [layout, @options[:prefixes], false, keys, details]
+          find_args = [layout, @options[:prefixes], false, keys] if Cell.rails_version.~ 3.1
+          find_template(*find_args)
         when Proc
           resolve_layout(layout.call, keys, formats)
         else
