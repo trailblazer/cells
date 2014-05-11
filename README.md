@@ -2,33 +2,40 @@
 
 **View Components for Rails.**
 
+
 ## Overview
 
-Say you're writing a Rails online shop - the shopping cart is reappearing again and again in every view. You're thinking about a clean solution for that part. A mixture of controller code, before-filters, partials and helpers?
+Cells allow you to encapsulate parts of your page into a separate MVC component. They look and feel like controllers, can run arbitrary code in an action and render views.
 
-No. That sucks. Take Cells.
+While they improve your overall software architecture by abstracting logic into an encapsulated OOP instance, cells also maximise reuseability within or across projects.
 
-Cells are View Components for Rails. They look and feel like controllers. They don't have no `DoubleRenderError`. They can be rendered everywhere in your controllers or views. They are cacheable, testable, fast and wonderful. They bring back OOP to your view and improve your software design.
-
-And the best: You can have as many cells in your page as you need!
+Basically, cells can be rendered anywhere in your code. Most people use them in views to replace a helper/partial/filter mess, as a mailer renderer substitute or hook them to routes and completely bypass `ActionController`.
 
 
-Note: Since version 3.9 cells comes with two "dialects": You can still use a cell like a controller. However, the new [view model](https://github.com/apotonick/cells#view-models) "dialect" allows you to treat a cell more object-oriented while providing an alternative approach to helpers.
+## View Models
+
+Since version 3.9 cells comes with two "dialects": You can still use a cell like a controller. However, the new [view model](https://github.com/apotonick/cells#view-models-explained) "dialect" allows you to treat a cell more object-oriented while providing an alternative approach to helpers.
+
+While the old dialect still works, we strongly recommend using a cell as a view model.
+
 
 ## Installation
 
-It's a gem!
-
-Rails >= 3.0:
-
-```shell
-gem install cells
+```ruby
+gem 'cells'
 ```
 
-Rails 2.3:
+## File Layout
 
-```shell
-gem install cells -v 3.3.9
+Cells per default are placed in `app/cells`.
+
+```
+app
+├── cells
+│   ├── comment_cell.rb
+│   ├── comment
+│   │   ├── show.haml
+│   │   ├── list.haml
 ```
 
 ## Generate
@@ -380,7 +387,7 @@ To run your specs we got a rake task, too!
 rake spec:cells
 ```
 
-# View Models
+# View Models, Explained
 
 Cells 3.9 brings a new dialect to cells: view models.
 
@@ -557,6 +564,12 @@ end
 
 ## Rails 2.3 note
 
+### Installation
+
+```shell
+gem install cells -v 3.3.9
+```
+
 In order to copy the cells rake tasks to your app, run
 
 ```shell
@@ -579,7 +592,7 @@ Go for it, you'll love it!
 
 ## LICENSE
 
-Copyright (c) 2007-2013, Nick Sutterer
+Copyright (c) 2007-2014, Nick Sutterer
 
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
