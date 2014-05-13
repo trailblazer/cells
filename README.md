@@ -1,6 +1,6 @@
 # Cells
 
-**View Components for Rails.**
+*View Components for Rails.*
 
 
 ## Overview

@@ -1,7 +1,14 @@
 module Cell::Base::Concept
+  # cell("comment/cell", comment)
+  # cell("comment/cell", collection: comments, [:show])
   def self.cell(name, controller, *args)
     Cell::Builder.new(name.classify.constantize, controller).cell_for(controller, *args)
   end
+
+  def self.collection(name, controller, array, method=:show)
+    array.collect { |model| cell(name, controller, model).send(method) }.join("\n")
+  end
+
 
   module Naming
     module ClassMethods

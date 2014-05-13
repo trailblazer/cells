@@ -5,20 +5,20 @@ module Record
   class Cell < Cell::Rails # cell("record")
     include Concept
     def show
-      render
+      render # Party On, #{model}
     end
 
     # cell(:song, concept: :record)
     class Song < self # cell("record/cell/song")
       include Concept
 
-      def _normalize_layout(value)
+      def _normalize_layout(value) # 3.2+
         value
       end
 
       def show
         render :view => :song#, :layout => "layout"
-        # TODO: test layout: .. in ViewModel and here!
+        # TODO: test layout: .. in ViewModel
       end
 
       def show_with_layout
@@ -56,7 +56,7 @@ class ConceptTest < MiniTest::Spec
   end
 
   unless ::Cell.rails_version.~("3.0")
-    it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
+    it { Record::Cell.new(@controller, "Wayne").render_state(:show).must_equal "Party on, Wayne!" }
   end
 
 
@@ -64,6 +64,12 @@ class ConceptTest < MiniTest::Spec
     it { Cell::Rails::Concept.cell("record/cell", @controller).must_be_instance_of(      Record::Cell) }
     it { Cell::Rails::Concept.cell("record/cell/song", @controller).must_be_instance_of  Record::Cell::Song }
     # cell("song", concept: "record/compilation") # record/compilation/cell/song
+  end
+
+
+  describe "#collection" do
+    it { Cell::Rails::Concept.collection("record/cell", @controller, %w{Garth Wayne}).must_equal "Party on, Garth!\nParty on, Wayne!" }
+    it { Cell::Rails::Concept.collection("record/cell/song", @controller, %w{Garth Wayne}, :show_with_layout).must_equal "<p>\nLalala\n</p>\n\n<p>\nLalala\n</p>\n" }
   end
 
 
