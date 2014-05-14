@@ -21,8 +21,9 @@ class Cell::Rails
     end
     extend ActiveSupport::Concern
 
-    # DISCUSS: highest level API method.
+    # DISCUSS: highest level API method. add #cell here.
     def self.collection(name, controller, array, method=:show)
+      # FIXME: this is the problem in Concept cells, we don't wanna call Cell::Rails.cell_for here.
       array.collect { |model| Cell::Rails.cell_for(name, controller, model).send(method) }.join("\n")
     end
 

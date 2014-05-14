@@ -156,4 +156,6 @@ class CollectionTest < MiniTest::Spec
     it { Cell::Rails::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}, :show_more).must_equal "Go nuts, Garth!\nGo nuts, Wayne!" }
   end
 
+  # TODO: test with builders ("polymorphic collections") and document that.
+
 end
