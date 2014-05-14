@@ -138,3 +138,22 @@ if Cell.rails_version >= "3.2"
     # TODO: when we don't pass :song into Lyrics
   end
 end
+
+class CollectionTest < MiniTest::Spec
+  class ReleasePartyCell < Cell::Rails
+    include ViewModel
+
+    def show
+      "Party on, #{model}!"
+    end
+
+    def show_more
+      "Go nuts, #{model}!"
+    end
+  end
+  describe "::collection" do
+    it { Cell::Rails::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}).must_equal "Party on, Garth!\nParty on, Wayne!" }
+    it { Cell::Rails::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}, :show_more).must_equal "Go nuts, Garth!\nGo nuts, Wayne!" }
+  end
+
+end

@@ -8,7 +8,7 @@ module Cell
     abstract!
     delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
 
-    class Builder < Base::Builder
+    class Builder < Cell::Builder
       def run_builder_block(block, controller, *args)
         super(block, *args)
       end
@@ -29,7 +29,8 @@ module Cell
       # Main entry point for instantiating cells.
 
       def cell_for(name, controller, *args)
-        Builder.new(name, controller).call(controller, *args) # use Cell::Rails::Builder.
+        # FIXME: too much redundancy from Base.
+        Builder.new(class_from_cell_name(name), controller).call(controller, *args) # use Cell::Rails::Builder.
       end
     end
 

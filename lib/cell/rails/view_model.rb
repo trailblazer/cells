@@ -21,11 +21,16 @@ class Cell::Rails
     end
     extend ActiveSupport::Concern
 
+    # DISCUSS: highest level API method.
+    def self.collection(name, controller, array, method=:show)
+      array.collect { |model| Cell::Rails.cell_for(name, controller, model).send(method) }.join("\n")
+    end
+
+
     def initialize(*args)
       super
       _prepare_context # happens in AV::Base at the bottom.
     end
-
 
     def render(options={})
       if options.is_a?(Hash)

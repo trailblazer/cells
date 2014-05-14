@@ -39,29 +39,15 @@ module Cell
       process_args(*args)
     end
 
-    def self.class_from_cell_name(*args) # TODO: remove in 3.14.
-      ActiveSupport::Deprecation.warn "Base::class_from_cell_name is deprecated, use Base::Builder::class_from_cell_name"
-      Builder.class_from_cell_name(*args)
-    end
-
-
-    class Builder < Cell::Builder
-      def initialize(name, exec_context)
-        constant = self.class.class_from_cell_name(name)
-        super(constant, exec_context)
-      end
-
-      # Infers the cell name, old style, where cells were named CommentCell.
-      def self.class_from_cell_name(name)
-        "#{name}_cell".classify.constantize
-      end
+    def self.class_from_cell_name(name)
+      "#{name}_cell".classify.constantize
     end
 
 
     class << self
       # Main entry point for instantiating cells.
       def cell_for(name, *args)
-        Builder.new(name, self).call(*args)
+        Builder.new(class_from_cell_name(name), self).call(*args)
       end
 
       alias_method :create_cell_for, :cell_for # TODO: remove us in 3.12.

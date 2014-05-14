@@ -67,12 +67,6 @@ class ConceptTest < MiniTest::Spec
   end
 
 
-  describe "#collection" do
-    it { Cell::Rails::Concept.collection("record/cell", @controller, %w{Garth Wayne}).must_equal "Party on, Garth!\nParty on, Wayne!" }
-    it { Cell::Rails::Concept.collection("record/cell/song", @controller, %w{Garth Wayne}, :show_with_layout).must_equal "<p>\nLalala\n</p>\n\n<p>\nLalala\n</p>\n" }
-  end
-
-
   describe "#render with :layout" do
     it { Cell::Rails::Concept.cell("record/cell/song", @controller).show_with_layout.must_equal "<p>\nLalala\n</p>\n" }
   end
