@@ -18,7 +18,7 @@ module Cell
     include AbstractController
     include AbstractController::Rendering, Helpers, Callbacks, Translation, Logger
 
-    self.view_paths = [File.join('app', 'cells')]
+    self.view_paths = "app/cells"
 
 
     require 'cell/rails3_0_strategy' if Cell.rails_version.~  "3.0"
@@ -61,7 +61,7 @@ module Cell
     class << self
       # Main entry point for instantiating cells.
       def cell_for(name, *args)
-        Builder.new(name, self).cell_for(*args)
+        Builder.new(name, self).call(*args)
       end
 
       alias_method :create_cell_for, :cell_for # TODO: remove us in 3.12.

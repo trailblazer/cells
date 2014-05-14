@@ -14,7 +14,7 @@ module Cell
 
     # Creates a cell instance. Note that this method calls builders which were attached to the
     # class with Cell::Base.build - this might lead to a different cell being returned.
-    def cell_for(*args)
+    def call(*args)
       build_class_for(*args).
       new(*args)
     end

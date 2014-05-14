@@ -29,7 +29,7 @@ module Cell
       # Main entry point for instantiating cells.
 
       def cell_for(name, controller, *args)
-        Builder.new(name, controller).cell_for(controller, *args) # use Cell::Rails::Builder.
+        Builder.new(name, controller).call(controller, *args) # use Cell::Rails::Builder.
       end
     end
 
