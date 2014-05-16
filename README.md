@@ -479,6 +479,8 @@ Bookmark! #{self_link}
 
 Making the cell instance itself the view context should be an interesting alternative for many views.
 
+View model cells are about 25% faster than normal cells and controller views as they don't need to copy instance variables and helpers into the view.
+
 
 ## Mountable Cells
 
