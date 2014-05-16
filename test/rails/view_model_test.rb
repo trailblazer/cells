@@ -190,11 +190,15 @@ class CollectionTest < MiniTest::Spec
       "Go nuts, #{model}!"
     end
   end
+
+
   describe "::collection" do
     it { Cell::Rails::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}).must_equal "Party on, Garth!\nParty on, Wayne!" }
     it { Cell::Rails::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}, :show_more).must_equal "Go nuts, Garth!\nGo nuts, Wayne!" }
   end
-
   # TODO: test with builders ("polymorphic collections") and document that.
 
+  describe "::cell" do
+    it { Cell::Rails::ViewModel.cell("collection_test/release_party", @controller, "Garth").call.must_equal "Party on, Garth!" }
+  end
 end
