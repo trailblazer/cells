@@ -319,11 +319,22 @@ You can expand the state's cache key by appending a versioner block to the `::ca
 ```ruby
 class CartCell < Cell::Rails
   cache :show do |options|
-    options[:items].md5
+    order.id
   end
 ```
 
-The block's return value is appended to the state key: `"cells/cart/show/0ecb1360644ce665a4ef"`.
+The versioner block is executed in the cell instance context, allowing you to access all stakeholder objects you need to compute a cache key. The return value is appended to the state key: `"cells/cart/show/1"`.
+
+As everywhere in Rails, you can also return an array.
+
+```ruby
+class CartCell < Cell::Rails
+  cache :show do |options|
+    [id, options[:items].md5]
+  end
+```
+
+Resulting in: `"cells/cart/show/1/0ecb1360644ce665a4ef"`.
 
 
 ### Inheritance
