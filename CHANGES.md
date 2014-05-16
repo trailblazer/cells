@@ -1,5 +1,7 @@
 ## 3.11.0
 
+* `ViewModel#call`
+
 ### Concept
 * `#concept` helper is mixed into all views as an alternative to `#cell` and `#render_cell`. Let us know if we should do that conditionally, only.
 

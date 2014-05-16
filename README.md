@@ -412,6 +412,11 @@ end
 
 ### Creation
 
+<!--
+TODO: call(state=:show)
+in Concept: call(state=controller_path.last)
+-->
+
 Creating the view model should usually happen in the controller.
 
 ```ruby

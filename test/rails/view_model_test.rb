@@ -76,12 +76,51 @@ class ViewModelTest < MiniTest::Spec
   class HitCell < Cell::Base
     include Cell::Rails::ViewModel
     property :title, :artist
+
+    def show
+      "Great!"
+    end
+
+    def rate
+      "Fantastic!"
+    end
+
+    attr_accessor :count
+    cache :count
   end
 
   let (:song) { Song.new(:title => "65", artist: "Boss") }
   it { HitCell.new(song).title.must_equal "65" }
   it { HitCell.new(song).artist.must_equal "Boss" }
- end
+
+
+  describe "#call" do
+    let (:cell) { HitCell.new(song) }
+
+    it { cell.call.must_equal "Great!" }
+    it { cell.call(:rate).must_equal "Fantastic!" }
+
+    it "no caching" do
+      cell.count = 1
+      cell.call(:count).must_equal 1
+      cell.count = 2
+      cell.call(:count).must_equal 2
+    end
+
+    it "with caching" do
+      cell.instance_eval do
+        self.cache_store = ActiveSupport::Cache::MemoryStore.new
+        self.cache_configured = true
+      end
+
+      cell.count = 1
+      cell.call(:count).must_equal 1
+      cell.count = 2
+      cell.call(:count).must_equal 1
+    end
+  end
+end
+
 
 if Cell.rails_version >= "3.2"
   class ViewModelIntegrationTest < ActionController::TestCase

@@ -43,8 +43,9 @@ class Cell::Rails
       super
     end
 
-    def call
-      render implicit_state
+    def call(state=:show)
+      # IN CONCEPT: render implicit_state
+      render_state(state)
     end
 
   private
@@ -56,9 +57,9 @@ class Cell::Rails
       caller[1].match(/`(\w+)/)[1]
     end
 
-    def implicit_state
-      controller_path.split("/").last
-    end
+    # def implicit_state
+    #   controller_path.split("/").last
+    # end
   end
 
 
