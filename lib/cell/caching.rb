@@ -67,12 +67,26 @@ module Cell
   private
     def fetch_from_cache_for(key, options)
       cache_store.fetch(key, options) do
-       yield
+        yield
       end
     end
 
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
     end
-  end
+
+
+    module Notifications
+      def fetch_from_cache_for(key, options)
+        ActiveSupport::Notifications.instrument("read_fragment.action_controller", :key => key) do
+          cache_store.fetch(key, options) do
+            ActiveSupport::Notifications.instrument("write_fragment.action_controller", :key => key) do
+              yield
+            end
+          end
+        end
+      end
+    end
+    #include Notifications
+  end # Caching
 end

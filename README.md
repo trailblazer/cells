@@ -337,6 +337,20 @@ class CartCell < Cell::Rails
 Resulting in: `"cells/cart/show/1/0ecb1360644ce665a4ef"`.
 
 
+### Debugging Cache
+
+When caching is turned on, you might wanna see notifications. Just like a controller, Cells gives you the following notifications.
+
+* `write_fragment.action_controller` for cache miss.
+* `read_fragment.action_controller` for cache hits.
+
+To activate notifications, include the `Notifications` module in your cell.
+
+```ruby
+class Comment::Cell < Cell::Rails
+  include Cell::Caching::Notifications
+```
+
 ### Inheritance
 
 Cache configuration is inherited to derived cells.
