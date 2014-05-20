@@ -50,9 +50,7 @@ module Cell
       key     = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))
       options = self.class.cache_options.eval(state, self, *args)
 
-      cache_store.fetch(key, options) do
-        super(state, *args)
-      end
+      fetch_from_cache_for(key, options) { super(state, *args) }
     end
 
     def cache_configured?
@@ -67,6 +65,12 @@ module Cell
     end
 
   private
+    def fetch_from_cache_for(key, options)
+      cache_store.fetch(key, options) do
+       yield
+      end
+    end
+
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
     end
