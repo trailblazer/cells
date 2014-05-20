@@ -87,6 +87,5 @@ module Cell
         end
       end
     end
-    #include Notifications
   end # Caching
 end
