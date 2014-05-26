@@ -124,6 +124,8 @@ In Cells, everything template file is a _view_. You're still free to render view
 
 ## File Structure
 
+TODO: rails g concept Song => show.haml,
+
 In Cells 3.10 we introduce a new _optional_ file structure integrating with [Trailblazer](https://github.com/apotonick/trailblazer)'s "concept-oriented" layout.
 
 This new file layout makes a cell fully **self-contained** so it can be moved around just by grabbing one single directory.
