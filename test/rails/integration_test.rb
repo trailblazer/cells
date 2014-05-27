@@ -1,5 +1,49 @@
 require 'test_helper'
 
+class MusicianController < ActionController::Base
+  def index
+    render :text => render_cell(:bassist, :promote)
+  end
+
+  def promote
+    render :text => render_cell(:trumpeter, :promote)
+  end
+
+  def promotion
+    render :text => render_cell(:bassist, :provoke)
+  end
+
+  def featured
+  end
+
+  def featured_with_block
+  end
+
+  def skills
+    render :text => render_cell(:bassist, :listen)
+  end
+
+  def hamlet
+  end
+
+  attr_reader :flag
+  def promotion_with_block
+    html = render_cell(:bassist, :play) do |cell|
+      @flag = cell.class
+    end
+
+    render :text => html
+  end
+
+  def song
+    render :inline => %{<%= concept("view_methods_test/cell", :title => "Up For Breakfast").show %>}
+  end
+
+  def album
+    render :inline => %{<%= cell("view_methods_test/album", "Rise and Fall, Rage and Grace").call %>}
+  end
+end
+
 class ControllerMethodsTest < ActionController::TestCase
   tests MusicianController
 
@@ -36,12 +80,12 @@ class ControllerMethodsTest < ActionController::TestCase
     assert_equal BassistCell, @controller.flag
   end
 
-  test "#cell_for" do
-    @controller.cell_for(:bassist).must_be_instance_of BassistCell
+  test "#cell" do
+    @controller.cell(:bassist).must_be_instance_of BassistCell
   end
 
-  test "#cell_for with options" do
-    @controller.cell_for("controller_methods_test/song", :title => "We Called It America").
+  test "#cell with options" do
+    @controller.cell("controller_methods_test/song", :title => "We Called It America").
       title.must_equal "We Called It America"
   end
 
@@ -86,18 +130,35 @@ class ViewMethodsTest < ActionController::TestCase
   end
 
 
-  class Cell < Cell::Rails
-    include ViewModel
-
-    def show
-      render :text => title
-    end
-  end
 
   unless ::Cell.rails_version.~("3.0")
+
+    class Cell < Cell::Rails
+      include ViewModel
+
+      def show
+        render :text => title
+      end
+    end
+
     test "#concept" do
       get :song
       @response.body.must_equal "Up For Breakfast"
+    end
+
+
+
+    class AlbumCell < ::Cell::Rails
+      include ViewModel
+
+      def show
+        model
+      end
+    end
+
+    test "#cell for view model" do
+      get :album
+      @response.body.must_equal "Rise and Fall, Rage and Grace"
     end
   end
 
