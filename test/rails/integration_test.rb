@@ -36,15 +36,15 @@ class MusicianController < ActionController::Base
   end
 
   def song
-    render :inline => %{<%= concept("view_methods_test/cell", :title => "Up For Breakfast").show %>}
+    render :inline => %{<%= concept("view_methods_test/cell", :title => "Up For Breakfast").show %>} # TODO: concept doesn't need .call
   end
 
   def album
-    render :inline => %{<%= cell("view_methods_test/album", "Rise and Fall, Rage and Grace").call %>}
+    render :inline => %{<%= cell("view_methods_test/album", "Rise and Fall, Rage and Grace").call %>} # DISCUSS: make .call in #cell?
   end
 
   def albums
-    render :inline => %{<%= cell("view_methods_test/album", :collection => %w{Dreiklang Coaster}).call %>}
+    render :inline => %{<%= cell("view_methods_test/album", :collection => %w{Dreiklang Coaster}) %>}
   end
 end
 

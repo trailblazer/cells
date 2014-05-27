@@ -4,6 +4,7 @@ module Cells
   module Rails
     module ActionController
       def cell_for(name, *args, &block)
+        return Cell::Rails::ViewModel.cell(name, self, *args, &block) if args.first.is_a?(Hash) and args.first[:collection] # FIXME: we only want this feature in view models for now.
         ::Cell::Base.cell_for(name, self, *args, &block)
       end
       alias_method :cell, :cell_for # DISCUSS: make this configurable?
