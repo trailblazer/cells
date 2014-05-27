@@ -42,6 +42,10 @@ class MusicianController < ActionController::Base
   def album
     render :inline => %{<%= cell("view_methods_test/album", "Rise and Fall, Rage and Grace").call %>}
   end
+
+  def albums
+    render :inline => %{<%= cell("view_methods_test/album", :collection => %w{Dreiklang Coaster}).call %>}
+  end
 end
 
 class ControllerMethodsTest < ActionController::TestCase
@@ -156,9 +160,16 @@ class ViewMethodsTest < ActionController::TestCase
       end
     end
 
+    # cell(:album, "Dreiklang").call
     test "#cell for view model" do
       get :album
       @response.body.must_equal "Rise and Fall, Rage and Grace"
+    end
+
+    # cell(:album, collection: [..]).call
+    test "#cell with collection for view model" do
+      get :albums
+      @response.body.must_equal "Dreiklang\nCoaster"
     end
   end
 
