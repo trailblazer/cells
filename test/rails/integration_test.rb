@@ -36,11 +36,15 @@ class MusicianController < ActionController::Base
   end
 
   def song
-    render :inline => %{<%= concept("view_methods_test/cell", :title => "Up For Breakfast").show %>} # TODO: concept doesn't need .call
+    render :inline => %{<%= concept("view_methods_test/cell", "Up For Breakfast").call %>} # TODO: concept doesn't need .call
+  end
+
+  def songs
+    render :inline => %{<%= concept("view_methods_test/cell", :collection => %w{Alltax Ronny}).call %>} # TODO: concept doesn't need .call
   end
 
   def album
-    render :inline => %{<%= cell("view_methods_test/album", "Rise and Fall, Rage and Grace").call %>} # DISCUSS: make .call in #cell?
+    render :inline => %{<%= cell("view_methods_test/album", "Dreiklang").call %>} # DISCUSS: make .call in #cell?
   end
 
   def albums
@@ -141,14 +145,22 @@ class ViewMethodsTest < ActionController::TestCase
       include ViewModel
 
       def show
-        render :text => title
+        render :text => model
       end
     end
 
+    # concept(:song, "Alltax").call
     test "#concept" do
       get :song
       @response.body.must_equal "Up For Breakfast"
     end
+
+    # concept(:song, collection: [..])
+    test "#concept with collection" do
+      get :songs
+      @response.body.must_equal "Alltax\nRonny"
+    end
+
 
 
 
@@ -163,10 +175,10 @@ class ViewMethodsTest < ActionController::TestCase
     # cell(:album, "Dreiklang").call
     test "#cell for view model" do
       get :album
-      @response.body.must_equal "Rise and Fall, Rage and Grace"
+      @response.body.must_equal "Dreiklang"
     end
 
-    # cell(:album, collection: [..]).call
+    # cell(:album, collection: [..])
     test "#cell with collection for view model" do
       get :albums
       @response.body.must_equal "Dreiklang\nCoaster"
