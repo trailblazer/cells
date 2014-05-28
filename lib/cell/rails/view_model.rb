@@ -15,6 +15,12 @@ class Cell::Rails
     attr_reader :model
 
 
+    def self.included(*)
+      ActiveSupport::Deprecation.warn("The Cell::Rails::ViewModel module is deprecated and will be removed in Cells 4.0. Please inherit: `class SongCell < Cell::ViewModel`. Thanks and don't forget to smile.")
+      super
+    end
+
+
 
     module Helpers
       # DISCUSS: highest level API method. add #cell here.
