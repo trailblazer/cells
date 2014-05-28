@@ -31,6 +31,10 @@ module Cell::Base::Concept
     end
   end
 
+  def concept(name, *args, &block)
+    Cell::Base::Concept.cell(name, parent_controller, *args, &block)
+  end
+
   def self.included(base)
     base.extend Naming::ClassMethods # TODO: separate inherit_view
     base.self_contained!

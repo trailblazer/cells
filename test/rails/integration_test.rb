@@ -151,26 +151,26 @@ class ViewMethodsTest < ActionController::TestCase
 
 
       class Collection < ::Cell::Rails
-        include ViewModel
+        include Concept
 
         def show
-          cell("view_methods_test/cell", "Dreiklang").call
+          concept("view_methods_test/cell", "Dreiklang").call
         end
 
         def collection
-          cell("view_methods_test/cell", :collection => %w{Dreiklang Coaster})
+          concept("view_methods_test/cell", :collection => %w{Dreiklang Coaster})
         end
       end
     end
 
     # Concept#concept(:album, "Dreiklang").call
     test "Concept#cell" do # FIXME: move to HelperTest.
-      AlbumsCell.new(@controller).call.must_equal "<b>Dreiklang</b>"
+      Cell::Collection.new(@controller).call.must_equal "<b>Dreiklang</b>"
     end
 
     # Concept#concept(:album, collection: [])
     test "Concept#cell collection: []" do # FIXME: move to HelperTest.
-      AlbumsCell.new(@controller).call(:collection).must_equal "<b>Dreiklang</b>\n<b>Coaster</b>"
+      Cell::Collection.new(@controller).call(:collection).must_equal "<b>Dreiklang</b>\n<b>Coaster</b>"
     end
 
 
