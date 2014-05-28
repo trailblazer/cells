@@ -99,6 +99,12 @@ class ViewModelTest < MiniTest::Spec
     it { cell.call(:rate).must_equal "Fantastic!" }
 
     it "no caching" do
+      cell.instance_eval do
+        def cache_configured?
+          false
+        end
+      end
+
       cell.count = 1
       cell.call(:count).must_equal "1"
       cell.count = 2
