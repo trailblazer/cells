@@ -58,7 +58,7 @@ module Cell
       end
     end
     include DSL
-
-    autoload :ViewModel, "cell/rails/view_model" # TODO: remove in 4.0.
   end
 end
+
+require "cell/rails/view_model" # TODO: remove in 4.0.
