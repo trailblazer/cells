@@ -4,7 +4,8 @@ class Cell::Concept < Cell::Rails
   # cell("comment/cell", comment)
   # cell("comment/cell", collection: comments, [:show])
   # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
-    def self.cell(name, controller, *args, &block) # classic Rails fuzzy API.
+  class << self
+    def cell(name, controller, *args, &block) # classic Rails fuzzy API.
       if args.first.is_a?(Hash) and array = args.first[:collection]
         return collection(name, controller, array) # from ViewModel.
       end
@@ -12,24 +13,20 @@ class Cell::Concept < Cell::Rails
       cell_for(name, controller, *args, &block)
     end
 
-    def self.collection(name, controller, array, method=:show, builder=self)
+    def collection(name, controller, array, method=:show)
       # FIXME: this is the problem in Concept cells, we don't wanna call Cell::Rails.cell_for here.
-      array.collect { |model| builder.cell_for(name, controller, model).call(method) }.join("\n").html_safe
+      array.collect { |model| cell_for(name, controller, model).call(method) }.join("\n").html_safe
     end
 
-  def self.cell_for(name, controller, *args)
-    Cell::Builder.new(name.classify.constantize, controller).call(controller, *args)
-  end
+    def cell_for(name, controller, *args)
+      Cell::Builder.new(name.classify.constantize, controller).call(controller, *args)
+    end
 
-
-  module Naming
-    module ClassMethods
-      def controller_path
-        # TODO: cache on class level
-        # DISCUSS: only works with trailblazer style directories. this is a bit risky but i like it.
-        # applies to Comment::Cell, Comment::Cell::Form, etc.
-        name.sub(/::Cell/, '').underscore unless anonymous?
-      end
+    def controller_path
+      # TODO: cache on class level
+      # DISCUSS: only works with trailblazer style directories. this is a bit risky but i like it.
+      # applies to Comment::Cell, Comment::Cell::Form, etc.
+      name.sub(/::Cell/, '').underscore unless anonymous?
     end
   end
 
@@ -37,8 +34,6 @@ class Cell::Concept < Cell::Rails
     self.class.cell(name, parent_controller, *args, &block)
   end
 
-
-  extend Naming::ClassMethods # TODO: separate inherit_view
   self_contained!
   include ViewModel
 
