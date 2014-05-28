@@ -63,7 +63,7 @@ class ControllerMethodsTest < ActionController::TestCase
     fix_relative_url_root
 
     get 'promotion'
-    assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"/assets/me.png\" />", @response.body
   end
 
   test "#render_cell with arbitrary options" do
@@ -122,7 +122,7 @@ class ViewMethodsTest < ActionController::TestCase
     fix_relative_url_root
 
     get 'featured'
-    assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"/assets/me.png\" />", @response.body
   end
 
   test "#render_cell with a block" do
@@ -134,7 +134,7 @@ class ViewMethodsTest < ActionController::TestCase
     fix_relative_url_root
 
     get 'hamlet'
-    assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />\n", @response.body
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"/assets/me.png\" />\n", @response.body
   end
 
 

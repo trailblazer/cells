@@ -39,7 +39,7 @@ module ApplicationTests
 
       get "promotion"
       assert_response :success
-      assert_equal "That's me, naked <img alt=\"Me\" src=\"/images/me.png\" />", @response.body
+      assert_equal "That's me, naked <img alt=\"Me\" src=\"/assets/me.png\" />", @response.body
     end
   end
 end
