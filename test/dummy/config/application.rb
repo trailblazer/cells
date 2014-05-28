@@ -25,6 +25,6 @@ module Dummy
 
     config.secret_token = "some secret phrase of at least 30 characters"
 
-    config.cells.with_assets = ["album"]
+    config.cells.with_assets = ["album", "song"]
   end
 end

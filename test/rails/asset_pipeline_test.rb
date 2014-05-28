@@ -11,5 +11,6 @@ class AssetPipelineTest < MiniTest::Spec
   it "what" do
     visit "assets/application.js"
     page.text.must_include 'var Album = {};'
+    page.text.must_include 'var Songs = [];'
   end
 end

@@ -20,6 +20,7 @@ module Cells
       (app.config.cells.with_assets or []).each do |name|
         # FIXME: this doesn't take engine cells into account.
         app.config.assets.paths << "#{app.root}/app/cells/#{name}/assets"
+        app.config.assets.paths << "#{app.root}/app/concepts/#{name}/assets" # TODO: find out type.
       end
     end
 

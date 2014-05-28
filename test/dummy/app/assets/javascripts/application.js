@@ -1,1 +1,2 @@
 //= require album
+//= require songs
