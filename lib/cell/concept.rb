@@ -1,10 +1,10 @@
 class Cell::Concept < Cell::Rails
   abstract!
 
-  # cell("comment/cell", comment)
-  # cell("comment/cell", collection: comments, [:show])
   # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
   class << self
+    # cell("comment/cell", comment)
+    # cell("comment/cell", collection: comments, [:show])
     def cell(name, controller, *args, &block) # classic Rails fuzzy API.
       if args.first.is_a?(Hash) and array = args.first[:collection]
         return collection(name, controller, array) # from ViewModel.
@@ -14,7 +14,6 @@ class Cell::Concept < Cell::Rails
     end
 
     def collection(name, controller, array, method=:show)
-      # FIXME: this is the problem in Concept cells, we don't wanna call Cell::Rails.cell_for here.
       array.collect { |model| cell_for(name, controller, model).call(method) }.join("\n").html_safe
     end
 
@@ -36,7 +35,6 @@ class Cell::Concept < Cell::Rails
 
   self_contained!
   include ViewModel
-
 
 
   # DISCUSS: experimental, allows to render layouts from the partial view directory instead of a global one.
