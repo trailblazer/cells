@@ -4,20 +4,6 @@ class Cell::Concept < Cell::ViewModel
 
   # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
   class << self
-    # cell("comment/cell", comment)
-    # cell("comment/cell", collection: comments, [:show])
-    def cell(name, controller, *args, &block) # classic Rails fuzzy API.
-      if args.first.is_a?(Hash) and array = args.first[:collection]
-        return collection(name, controller, array) # from ViewModel.
-      end
-
-      cell_for(name, controller, *args, &block)
-    end
-
-    def collection(name, controller, array, method=:show)
-      array.collect { |model| cell_for(name, controller, model).call(method) }.join("\n").html_safe
-    end
-
     def cell_for(name, controller, *args)
       Cell::Builder.new(name.classify.constantize, controller).call(controller, *args)
     end
@@ -35,8 +21,6 @@ class Cell::Concept < Cell::ViewModel
   end
 
   self_contained!
-  # include ViewModel
-
 
   # DISCUSS: experimental, allows to render layouts from the partial view directory instead of a global one.
   module Rendering
