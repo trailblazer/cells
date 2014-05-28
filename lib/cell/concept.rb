@@ -1,4 +1,6 @@
-module Cell::Base::Concept
+class Cell::Concept < Cell::Rails
+  abstract!
+
   # cell("comment/cell", comment)
   # cell("comment/cell", collection: comments, [:show])
   # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
@@ -32,16 +34,14 @@ module Cell::Base::Concept
   end
 
   def concept(name, *args, &block)
-    Cell::Base::Concept.cell(name, parent_controller, *args, &block)
+    self.class.cell(name, parent_controller, *args, &block)
   end
 
-  def self.included(base)
-    base.extend Naming::ClassMethods # TODO: separate inherit_view
-    base.self_contained!
-    base.send :include, Cell::Rails::ViewModel
 
-    base.send :include, Rendering
-  end
+  extend Naming::ClassMethods # TODO: separate inherit_view
+  self_contained!
+  include ViewModel
+
 
 
   # DISCUSS: experimental, allows to render layouts from the partial view directory instead of a global one.
@@ -92,5 +92,7 @@ module Cell::Base::Concept
         end
       end
     end
-  end
+  end # Rendering
+
+  include Rendering
 end

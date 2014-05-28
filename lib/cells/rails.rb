@@ -10,7 +10,7 @@ module Cells
       alias_method :cell, :cell_for # DISCUSS: make this configurable?
 
       def concept_for(name, *args, &block)
-        return Cell::Rails::Concept.cell(name, self, *args, &block)
+        return Cell::Concept.cell(name, self, *args, &block)
       end
       alias_method :concept, :concept_for
 

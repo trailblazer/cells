@@ -142,17 +142,13 @@ class ViewMethodsTest < ActionController::TestCase
   unless ::Cell.rails_version.~("3.0")
 
     # concept -------------------
-    class Cell < Cell::Rails
-      include Concept
-
+    class Cell < Cell::Concept
       def show
         render :text => "<b>#{model}</b>"
       end
 
 
-      class Collection < ::Cell::Rails
-        include Concept
-
+      class Collection < ::Cell::Concept
         def show
           concept("view_methods_test/cell", "Dreiklang").call
         end

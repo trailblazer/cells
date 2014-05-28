@@ -2,16 +2,13 @@ require 'test_helper'
 
 # Trailblazer style:
 module Record
-  class Cell < Cell::Rails # cell("record")
-    include Concept
+  class Cell < Cell::Concept # cell("record")
     def show
       render # Party On, #{model}
     end
 
     # cell(:song, concept: :record)
     class Song < self # cell("record/cell/song")
-      include Concept
-
       def _normalize_layout(value) # 3.2+
         value
       end
@@ -26,9 +23,7 @@ module Record
       end
     end
 
-    class Hit < ::Cell::Rails
-      include Concept
-
+    class Hit < ::Cell::Concept
       inherit_views Record::Cell
     end
   end
@@ -61,17 +56,17 @@ class ConceptTest < MiniTest::Spec
 
 
   describe "#cell" do
-    it { Cell::Rails::Concept.cell("record/cell", @controller).must_be_instance_of(      Record::Cell) }
-    it { Cell::Rails::Concept.cell("record/cell/song", @controller).must_be_instance_of  Record::Cell::Song }
+    it { Cell::Concept.cell("record/cell", @controller).must_be_instance_of(      Record::Cell) }
+    it { Cell::Concept.cell("record/cell/song", @controller).must_be_instance_of  Record::Cell::Song }
     # cell("song", concept: "record/compilation") # record/compilation/cell/song
   end
 
 
   describe "#render with :layout" do
-    it { Cell::Rails::Concept.cell("record/cell/song", @controller).show_with_layout.must_equal "<p>\nLalala\n</p>\n" }
+    it { Cell::Concept.cell("record/cell/song", @controller).show_with_layout.must_equal "<p>\nLalala\n</p>\n" }
   end
   describe "#render" do
-    it { Cell::Rails::Concept.cell("record/cell/song", @controller).show.must_equal "Lalala" }
+    it { Cell::Concept.cell("record/cell/song", @controller).show.must_equal "Lalala" }
   end
 
 
