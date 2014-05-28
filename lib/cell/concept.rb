@@ -1,4 +1,5 @@
-class Cell::Concept < Cell::Rails
+# TODO: deprecate parent_controller, ViewModel
+class Cell::Concept < Cell::ViewModel
   abstract!
 
   # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
@@ -34,7 +35,7 @@ class Cell::Concept < Cell::Rails
   end
 
   self_contained!
-  include ViewModel
+  # include ViewModel
 
 
   # DISCUSS: experimental, allows to render layouts from the partial view directory instead of a global one.
