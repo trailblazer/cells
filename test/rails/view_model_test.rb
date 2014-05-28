@@ -16,8 +16,7 @@ end
 
 
 
-class SongCell < Cell::Rails
-    include Cell::Rails::ViewModel
+class SongCell < Cell::ViewModel
 
     def show
       render
@@ -73,8 +72,7 @@ class ViewModelTest < MiniTest::Spec
 
   it { cell.title.must_equal "Shades Of Truth" }
 
-  class HitCell < Cell::Base
-    include Cell::Rails::ViewModel
+  class HitCell < Cell::ViewModel
     property :title, :artist
 
     def show
@@ -90,12 +88,12 @@ class ViewModelTest < MiniTest::Spec
   end
 
   let (:song) { Song.new(:title => "65", artist: "Boss") }
-  it { HitCell.new(song).title.must_equal "65" }
-  it { HitCell.new(song).artist.must_equal "Boss" }
+  it { HitCell.new(nil, song).title.must_equal "65" }
+  it { HitCell.new(nil, song).artist.must_equal "Boss" }
 
 
   describe "#call" do
-    let (:cell) { HitCell.new(song) }
+    let (:cell) { HitCell.new(nil, song) }
 
     it { cell.call.must_equal "Great!" }
     it { cell.call(:rate).must_equal "Fantastic!" }
@@ -179,9 +177,7 @@ if Cell.rails_version >= "3.2"
 end
 
 class CollectionTest < MiniTest::Spec
-  class ReleasePartyCell < Cell::Rails
-    include ViewModel
-
+  class ReleasePartyCell < Cell::ViewModel
     def show
       "Party on, #{model}!"
     end
@@ -193,12 +189,12 @@ class CollectionTest < MiniTest::Spec
 
 
   describe "::collection" do
-    it { Cell::Rails::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}).must_equal "Party on, Garth!\nParty on, Wayne!" }
-    it { Cell::Rails::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}, :show_more).must_equal "Go nuts, Garth!\nGo nuts, Wayne!" }
+    it { Cell::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}).must_equal "Party on, Garth!\nParty on, Wayne!" }
+    it { Cell::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}, :show_more).must_equal "Go nuts, Garth!\nGo nuts, Wayne!" }
   end
   # TODO: test with builders ("polymorphic collections") and document that.
 
   describe "::cell" do
-    it { Cell::Rails::ViewModel.cell("collection_test/release_party", @controller, "Garth").call.must_equal "Party on, Garth!" }
+    it { Cell::ViewModel.cell("collection_test/release_party", @controller, "Garth").call.must_equal "Party on, Garth!" }
   end
 end

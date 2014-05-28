@@ -77,5 +77,6 @@ module Cell
     extend SelfContained
   end
 
-  autoload :Concept, 'cell/concept'
+  autoload :ViewModel, 'cell/view_model'
+  autoload :Concept,   'cell/concept'
 end
