@@ -19,9 +19,9 @@ class Cell::ViewModel < Cell::Rails
 
   module Helpers
     # DISCUSS: highest level API method. add #cell here.
-    def collection(name, controller, array, method=:show, builder=Cell::Rails)
+    def collection(name, controller, array, method=:show)
       # FIXME: this is the problem in Concept cells, we don't wanna call Cell::Rails.cell_for here.
-      array.collect { |model| builder.cell_for(name, controller, model).call(method) }.join("\n").html_safe
+      array.collect { |model| cell_for(name, controller, model).call(method) }.join("\n").html_safe
     end
 
     # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
@@ -30,7 +30,7 @@ class Cell::ViewModel < Cell::Rails
         return collection(name, controller, array)
       end
 
-      Cell::Rails.cell_for(name, controller, *args, &block)
+      cell_for(name, controller, *args, &block)
     end
   end
   extend Helpers # FIXME: do we really need ViewModel::cell/::collection ?
