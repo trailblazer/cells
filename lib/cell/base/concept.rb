@@ -1,7 +1,21 @@
 module Cell::Base::Concept
   # cell("comment/cell", comment)
   # cell("comment/cell", collection: comments, [:show])
-  def self.cell(name, controller, *args)
+  # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
+    def self.cell(name, controller, *args, &block) # classic Rails fuzzy API.
+      if args.first.is_a?(Hash) and array = args.first[:collection]
+        return collection(name, controller, array) # from ViewModel.
+      end
+
+      cell_for(name, controller, *args, &block)
+    end
+
+    def self.collection(name, controller, array, method=:show, builder=self)
+      # FIXME: this is the problem in Concept cells, we don't wanna call Cell::Rails.cell_for here.
+      array.collect { |model| builder.cell_for(name, controller, model).call(method) }.join("\n").html_safe
+    end
+
+  def self.cell_for(name, controller, *args)
     Cell::Builder.new(name.classify.constantize, controller).call(controller, *args)
   end
 

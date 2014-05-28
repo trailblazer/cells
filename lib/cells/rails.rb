@@ -9,6 +9,11 @@ module Cells
       end
       alias_method :cell, :cell_for # DISCUSS: make this configurable?
 
+      def concept_for(name, *args, &block)
+        return Cell::Rails::Concept.cell(name, self, *args, &block)
+      end
+      alias_method :concept, :concept_for
+
       # Renders the cell state and returns the content. You may pass options here, too. They will be
       # around in @opts.
       #
@@ -63,8 +68,8 @@ module Cells
         ::Cell::Rails.render_cell_for(name, state, controller, *args, &block)
       end
 
-      def concept(name, *args, &block) # DISCUSS: mix in only conditionally?
-        Cell::Base::Concept.cell(name, controller, *args, &block)
+      def concept(name, *args, &block)
+        controller.concept_for(name, *args, &block)
       end
     end
   end

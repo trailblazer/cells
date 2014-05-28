@@ -102,9 +102,9 @@ class ViewModelTest < MiniTest::Spec
 
     it "no caching" do
       cell.count = 1
-      cell.call(:count).must_equal 1
+      cell.call(:count).must_equal "1"
       cell.count = 2
-      cell.call(:count).must_equal 2
+      cell.call(:count).must_equal "2"
     end
 
     it "with caching" do
@@ -114,9 +114,9 @@ class ViewModelTest < MiniTest::Spec
       end
 
       cell.count = 1
-      cell.call(:count).must_equal 1
+      cell.call(:count).must_equal "1"
       cell.count = 2
-      cell.call(:count).must_equal 1
+      cell.call(:count).must_equal "1"
     end
   end
 end

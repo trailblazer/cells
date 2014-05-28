@@ -40,7 +40,7 @@ class MusicianController < ActionController::Base
   end
 
   def songs
-    render :inline => %{<%= concept("view_methods_test/cell", :collection => %w{Alltax Ronny}).call %>} # TODO: concept doesn't need .call
+    render :inline => %{<%= concept("view_methods_test/cell", :collection => %w{Alltax Ronny}) %>} # TODO: concept doesn't need .call
   end
 
   def album
@@ -141,47 +141,94 @@ class ViewMethodsTest < ActionController::TestCase
 
   unless ::Cell.rails_version.~("3.0")
 
+    # concept -------------------
     class Cell < Cell::Rails
-      include ViewModel
+      include Concept
 
       def show
-        render :text => model
+        render :text => "<b>#{model}</b>"
+      end
+
+
+      class Collection < ::Cell::Rails
+        include ViewModel
+
+        def show
+          cell("view_methods_test/cell", "Dreiklang").call
+        end
+
+        def collection
+          cell("view_methods_test/cell", :collection => %w{Dreiklang Coaster})
+        end
       end
     end
+
+    # Concept#concept(:album, "Dreiklang").call
+    test "Concept#cell" do # FIXME: move to HelperTest.
+      AlbumsCell.new(@controller).call.must_equal "<b>Dreiklang</b>"
+    end
+
+    # Concept#concept(:album, collection: [])
+    test "Concept#cell collection: []" do # FIXME: move to HelperTest.
+      AlbumsCell.new(@controller).call(:collection).must_equal "<b>Dreiklang</b>\n<b>Coaster</b>"
+    end
+
 
     # concept(:song, "Alltax").call
     test "#concept" do
       get :song
-      @response.body.must_equal "Up For Breakfast"
+      @response.body.must_equal "<b>Up For Breakfast</b>"
     end
 
     # concept(:song, collection: [..])
     test "#concept with collection" do
       get :songs
-      @response.body.must_equal "Alltax\nRonny"
+      @response.body.must_equal "<b>Alltax</b>\n<b>Ronny</b>"
     end
 
 
 
-
+    # view model ------------------
     class AlbumCell < ::Cell::Rails
       include ViewModel
 
       def show
-        model
+        "<b>#{model}</b>"
       end
     end
+
+    class AlbumsCell < ::Cell::Rails
+      include ViewModel
+
+      def show
+        cell("view_methods_test/album", "Dreiklang").call
+      end
+
+      def collection
+        cell("view_methods_test/album", :collection => %w{Dreiklang Coaster})
+      end
+    end
+
+    # ViewModel#cell(:album, "Dreiklang").call
+    test "ViewModel#cell" do # FIXME: move to HelperTest.
+      AlbumsCell.new(@controller).call.must_equal "<b>Dreiklang</b>"
+    end
+
+    test "ViewModel#cell collection: []" do # FIXME: move to HelperTest.
+      AlbumsCell.new(@controller).call(:collection).must_equal "<b>Dreiklang</b>\n<b>Coaster</b>"
+    end
+
 
     # cell(:album, "Dreiklang").call
     test "#cell for view model" do
       get :album
-      @response.body.must_equal "Dreiklang"
+      @response.body.must_equal "<b>Dreiklang</b>"
     end
 
     # cell(:album, collection: [..])
     test "#cell with collection for view model" do
       get :albums
-      @response.body.must_equal "Dreiklang\nCoaster"
+      @response.body.must_equal "<b>Dreiklang</b>\n<b>Coaster</b>"
     end
   end
 

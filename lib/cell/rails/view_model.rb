@@ -14,26 +14,39 @@ class Cell::Rails
     # properties :title, :body
     attr_reader :model
 
+
+
+    module Helpers
+      # DISCUSS: highest level API method. add #cell here.
+      def collection(name, controller, array, method=:show, builder=Cell::Rails)
+        # FIXME: this is the problem in Concept cells, we don't wanna call Cell::Rails.cell_for here.
+        array.collect { |model| builder.cell_for(name, controller, model).call(method) }.join("\n").html_safe
+      end
+
+      # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
+      def cell(name, controller, *args, &block) # classic Rails fuzzy API.
+        if args.first.is_a?(Hash) and array = args.first[:collection]
+          return collection(name, controller, array)
+        end
+
+        Cell::Rails.cell_for(name, controller, *args, &block)
+      end
+    end
+    extend Helpers # FIXME: do we really need ViewModel::cell/::collection ?
+
+
     module ClassMethods
       def property(*names)
         delegate *names, :to => :model
       end
+
+      include Helpers
     end
     extend ActiveSupport::Concern
 
-    # DISCUSS: highest level API method. add #cell here.
-    def self.collection(name, controller, array, method=:show)
-      # FIXME: this is the problem in Concept cells, we don't wanna call Cell::Rails.cell_for here.
-      array.collect { |model| Cell::Rails.cell_for(name, controller, model).call(method) }.join("\n")
-    end
 
-    # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
-    def self.cell(name, controller, *args, &block) # classic Rails fuzzy API.
-      if args.first.is_a?(Hash) and array = args.first[:collection]
-        return collection(name, controller, array)
-      end
-
-      Cell::Rails.cell_for(name, controller, *args, &block)
+    def cell(name, *args)
+      self.class.cell(name, parent_controller, *args)
     end
 
 
@@ -53,8 +66,9 @@ class Cell::Rails
     end
 
     def call(state=:show)
-      # IN CONCEPT: render( view: implicit_state)
-      render_state(state)
+      # it is ok to call to_s.html_safe here as #call is a defined rendering method.
+      # DISCUSS: IN CONCEPT: render( view: implicit_state)
+      render_state(state).to_s.html_safe
     end
 
   private
