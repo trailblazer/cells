@@ -15,6 +15,7 @@
 ### Concept
 * `#concept` helper is mixed into all views as an alternative to `#cell` and `#render_cell`. Let us know if we should do that conditionally, only.
 * Concept cells look for layouts in their self-contained views directory.
+* Add generator for Concept cells: `rails g concept Comment`
 
 ## 3.10.1
 
