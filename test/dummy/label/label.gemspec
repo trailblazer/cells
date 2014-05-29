@@ -7,8 +7,8 @@ require "label/version"
 Gem::Specification.new do |s|
   s.name        = "label"
   s.version     = Label::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
+  s.authors     = ["Nick"]
+  s.email       = ["apotonick@gmail.com"]
   s.homepage    = "TODO"
   s.summary     = "TODO: Summary of Label."
   s.description = "TODO: Description of Label."

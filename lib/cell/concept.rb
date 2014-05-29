@@ -44,7 +44,11 @@ class Cell::Concept < Cell::ViewModel
   end
 
   class Renderer < ActionView::Renderer
-    def _template_renderer #:nodoc:
+    def render_template(context, options) # Rails 4.0 # FIXME: make that simpler to override in rails core.
+      TemplateRenderer.new(@lookup_context).render(context, options)
+    end
+
+    def _template_renderer # Rails 3.x
       @_template_renderer ||= TemplateRenderer.new(@lookup_context)
     end
 

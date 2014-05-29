@@ -5,7 +5,7 @@ require "action_controller/railtie"
 require "action_view/railtie"
 
 require "cells"
-require "sprockets/railtie" if Cell.rails_version >= "3.1"
+require "sprockets/railtie"
 
 module Dummy
   class Application < Rails::Application
