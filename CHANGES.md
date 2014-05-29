@@ -1,7 +1,9 @@
 ## 3.11.0
 
+* Deprecated `Cell::Rails::ViewModel`, please inherit: `class SongCell < Cell::ViewModel`.
 * `ViewModel#call`
 * Added `Caching::Notifications`.
+* Added `cell(:song, collection: [song1, song2])` to render collections. This only works with ViewModel (and, of course, Concept, too).
 
 ### Concept
 * `#concept` helper is mixed into all views as an alternative to `#cell` and `#render_cell`. Let us know if we should do that conditionally, only.
@@ -9,7 +11,6 @@
 * Added `::inherit_views` to only inherit views whereas real class inheritance would inherit all the dark past of the class.
 * `::build_for` removed/privatized/changed. Use `Cell::Base::cell_for` instead.
 * `Base::_parent_prefixes` is no longer used, if you override that somewhere in your cells it will break. We have our own implementation for computing the controller's prefixes in `Cell::Base::Prefixes` (simpler).
-* `Base::class_from_cell_name` deprecated. Cell no longer takes responsibility for computing constants, it's up to you (if you really need it, use `Cell::Base::Builder::class_from_cell_name`).
 * `#expire_cell_state` doesn't take symbols anymore, only the real cell class name.
 * Remove `Cell::Base.setup_view_paths!` and `Cell::Base::DEFAULT_VIEW_PATHS` and the associated Railtie. I don't know why this code survived 3 major versions, if you wanna set you own view paths just use `Cell::Base.view_paths=`.
 

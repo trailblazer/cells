@@ -27,7 +27,7 @@ gem 'cells'
 
 ## File Layout
 
-Cells per default are placed in `app/cells`.
+Cells are placed in `app/cells`.
 
 ```
 app
@@ -37,6 +37,7 @@ app
 │   │   ├── show.haml
 │   │   ├── list.haml
 ```
+
 
 ## Generate
 
@@ -416,86 +417,138 @@ rake spec:cells
 
 # View Models, Explained
 
-Cells 3.9 brings a new dialect to cells: view models.
+View models supersede the old controller-like cells. View models feel more natural as they wrap domain models and then add decorating methods for the view.
 
-Think of a view model as a cell decorating a model or a collection. In this mode, helpers are nothing more than instance methods of your cell class, making helpers predictable and scoped.
+They are also significantly faster since they don't need to copy helpers and instance variables to the view: The view model itself is the view context. That means, methods called in the view are invoked on your cell instance.
+
 
 ```ruby
-class SongCell < Cell::Rails
-  include ViewModel
-
-  property :title
-
-
-  def show
-    render
-  end
-
-  def self_link
-    link_to(title, song_url(model))
-  end
+# app/cells/song_cell.rb
+class SongCell < Cell::ViewModel
 end
 ```
 
 ### Creation
 
-<!--
-TODO: call(state=:show)
-in Concept: call(state=controller_path.last)
--->
+Instantiating the view model should happen in controllers and views, but you can virtually use them anywhere.
 
-Creating the view model should usually happen in the controller.
+A default workflow for creating and rendering a view model looks as the following.
 
 ```ruby
-class DashboardController < ApplicationController
+song = Song.find(1)
 
-  def index
-    @song = Song.find(1)
+@cell = cell(:song, song).call
+```
 
-    @cell = cell(:song, @song)
+The `#cell` helper gives you an instance of the `SongCell` cell and wraps the `song` object.
+
+The `call` invocation instructs the cell to render. You can basically call any method you want (and define) on that cell, nevertheless, a view model should only expose the `#show` method per convention - `#show` is invoked by `call`.
+
+It is important to understand this convention: Internally, you may render multiple views, combine them, use instance methods to render and format values, and so on. Externally, exposing only one "public", rendering method defines a strong interface for your view model.
+
+```ruby
+class SongCell < Cell::ViewModel
+  def show
+    render
   end
+end
 ```
 
-You can now grab an instance of your cell using the `#cell` method. The 2nd argument will be the cell's decorated model.
-
-Have a look at how to use this cell in your controller view.
-
-```haml
-= @cell.show # renders its show view.
-```
-
-You no longer use the `#render_cell` helper but call any method on that cell. Usually, this is a state (or "action") like `show`.
-
-### Helpers
-
-Note that this doesn't have to be a rendering state, it could be any instance method (aka "helper").
-
-```haml
-= @cell.self_link
-```
-
-As all helpers are now instance methods, the `#self_link` example can use any existing helper (as the URL helpers) on the instance level.
-
-Attributes declared using ``::property` are automatically delegated to the decorated model.
-
-```ruby
-@cell.title # delegated to @song.title
-```
+The `render` call will render the cell's `show` view.
 
 ### Views
 
-This greatly reduces wiring in the cell view (which is still in `app/cells/song/show.haml`).
-
 ```haml
-%h1
-  = title
+- # app/cells/song/show.haml
 
-Bookmark! #{self_link}
+%h1 #{title}
+
+%p Written at #{composed_at}
+
+= author_box
 ```
 
-Making the cell instance itself the view context should be an interesting alternative for many views.
+We strongly recommend to invoke methods, only, in views and not to use instance variables and locals. In a view model template (or, view), methods are called on the view model instance itself, meaning you can easily expose "helpers" by defining instance methods.
 
-View model cells are about 25% faster than normal cells and controller views as they don't need to copy instance variables and helpers into the view.
+### Helpers
+
+```ruby
+class SongCell < Cell::ViewModel
+  include TimeagoHelper
+
+  def show
+    render
+  end
+
+  def composed_at
+    timeago(model.created_at)
+  end
+end
+```
+
+In other words, using `composed_at` in the view will call `SongCell#composed_at`. Note that you have to `include` additional helpers into the class.
+
+The `#model` methods lets you access the wrapped `Song` instance we passed into the cell when creating it.
+
+### Properties
+
+Often, it is helpful to automatically expose some reader methods to the model. You can do that with `::property`.
+
+```ruby
+class SongCell < Cell::ViewModel
+  include TimeagoHelper
+
+  property :title
+
+  # ...
+end
+```
+
+You can now safely use `#title` in the view (and, in the cell class), it is delegated to `model.title`.
+
+### Nested Rendering
+
+When extracting parts of your view into a partial, as we did for the author section, you're free to render additional views using `#render`. Again, wrap render calls in instance methods, otherwise you'll end up with to much logic in your view.
+
+```ruby
+class SongCell < Cell::ViewModel
+  include TimeagoHelper
+
+  property :title
+
+  # ...
+
+  def author_box
+    render view: :author
+  end
+end
+```
+
+This will simply render the `author.haml` template in the same context as the `show` view, meaning you might use helpers, again.
+
+### Encapsulation
+
+If in doubt, encapsulate nested parts of your view into a separate cell. You can use the `#cell` method in your cell to instantiate a nested cell.
+
+Designing view models to create kickass UIs for your domain layer is discussed in 50+ pages in [my upcoming book](http://nicksda.apotomo.de).
+
+### Alternative Instantiation
+
+You don't need to pass in a model, it can also be a hash for a composition.
+
+```ruby
+  cell(album, song: song, composer: album.composer)
+```
+
+This will create two readers in the cell for you automatically: `#song` and `#composer`.
+
+
+Note that we are still working on a declarative API for compositions. It will be similar to the one found in Reform, Disposable::Twin and Representable:
+
+```ruby
+  property :title, on: :song
+  property :last_name, on: :composer
+```
 
 
 ## Mountable Cells
