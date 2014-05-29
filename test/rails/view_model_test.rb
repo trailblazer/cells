@@ -117,6 +117,11 @@ class ViewModelTest < MiniTest::Spec
       cell.call(:count).must_equal "1"
     end
   end
+
+
+  # describe "::helper" do
+  #   it { assert_raises { HitCell.helper Module.new } }
+  # end
 end
 
 
