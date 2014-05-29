@@ -444,7 +444,9 @@ The `#cell` helper gives you an instance of the `SongCell` cell and wraps the `s
 
 ### Rendering
 
-The `call` invocation instructs the cell to render. You can basically call any method you want (and define) on that cell, nevertheless, a view model should only expose the `#show` method per convention - `#show` is invoked by `call`.
+The `call` invocation instructs the cell to render. Internally, that runs `render_state(:show)` per default.
+
+You can basically invoke any method you want on that cell. Nevertheless, a view model should only expose the `#show` method per convention, which is reflected by the `#call` alias.
 
 It is important to understand this convention: Internally, you may render multiple views, combine them, use instance methods to render and format values, and so on. Externally, exposing only one "public", rendering method defines a strong interface for your view model.
 
