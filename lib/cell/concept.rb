@@ -28,12 +28,17 @@ class Cell::Concept < Cell::ViewModel
       @_view_renderer ||= Renderer.new(lookup_context)
     end
 
+    if Cell.rails_version >= 3.2
+      def _normalize_layout(value) # 3.2+
+        value
+      end
+    else
+      def _normalize_options(options) # FIXME: for rails 3.1, only. in 3.2+ it's _normalize_layout.
+        super
 
-    def _normalize_options(options) # FIXME: for rails 3.1, only. in 3.2+ it's _normalize_layout.
-      super
-
-      if options[:layout]
-        options[:layout].sub!("layouts/", "")
+        if options[:layout]
+          options[:layout].sub!("layouts/", "")
+        end
       end
     end
   end

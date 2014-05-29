@@ -52,6 +52,13 @@ class MusicianController < ActionController::Base
   end
 end
 
+ActionController::TestCase.class_eval do
+  def png_src
+    return "/assets/me.png" if Cell.rails_version >= 3.1
+    "/images/me.png"
+  end
+end
+
 class ControllerMethodsTest < ActionController::TestCase
   tests MusicianController
 
@@ -63,7 +70,7 @@ class ControllerMethodsTest < ActionController::TestCase
     fix_relative_url_root
 
     get 'promotion'
-    assert_equal "That's me, naked <img alt=\"Me\" src=\"/assets/me.png\" />", @response.body
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"#{png_src}\" />", @response.body
   end
 
   test "#render_cell with arbitrary options" do
@@ -102,6 +109,49 @@ class ControllerMethodsTest < ActionController::TestCase
       @controller.render_cell(:label, :show).must_equal "Fat Wreck"
     end
   end
+
+
+
+
+
+
+ test "pass url_helpers to the cell instance" do
+    assert_equal "/musicians", BassistCell.new(@controller).musicians_path
+  end
+
+  test "allow cells to use url_helpers" do
+    get "index"
+    assert_response :success
+    assert_equal "Find me at <a href=\"/musicians\">vd.com</a>\n", @response.body
+  end
+
+  test "delegate #url_options to the parent_controller" do
+    @controller.instance_eval do
+      def default_url_options
+        {:host => "cells.rails.org"}
+      end
+    end
+
+    assert_equal "http://cells.rails.org/musicians", BassistCell.new(@controller).musicians_url
+  end
+
+  test "allow cells to use *_url helpers when mixing in AC::UrlFor" do
+    get "promote"
+    assert_response :success
+    assert_equal "Find me at <a href=\"http://test.host/musicians\">vd.com</a>\n", @response.body
+  end
+
+  test "allow cells to use #config" do
+    BassistCell.class_eval do
+      def provoke; render; end
+    end
+
+    fix_relative_url_root
+
+    get "promotion"
+    assert_response :success
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"#{png_src}\" />", @response.body
+  end
 end
 
 
@@ -122,7 +172,7 @@ class ViewMethodsTest < ActionController::TestCase
     fix_relative_url_root
 
     get 'featured'
-    assert_equal "That's me, naked <img alt=\"Me\" src=\"/assets/me.png\" />", @response.body
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"#{png_src}\" />", @response.body
   end
 
   test "#render_cell with a block" do
@@ -134,7 +184,7 @@ class ViewMethodsTest < ActionController::TestCase
     fix_relative_url_root
 
     get 'hamlet'
-    assert_equal "That's me, naked <img alt=\"Me\" src=\"/assets/me.png\" />\n", @response.body
+    assert_equal "That's me, naked <img alt=\"Me\" src=\"#{png_src}\" />\n", @response.body
   end
 
 

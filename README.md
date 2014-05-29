@@ -442,6 +442,8 @@ song = Song.find(1)
 
 The `#cell` helper gives you an instance of the `SongCell` cell and wraps the `song` object.
 
+### Rendering
+
 The `call` invocation instructs the cell to render. You can basically call any method you want (and define) on that cell, nevertheless, a view model should only expose the `#show` method per convention - `#show` is invoked by `call`.
 
 It is important to understand this convention: Internally, you may render multiple views, combine them, use instance methods to render and format values, and so on. Externally, exposing only one "public", rendering method defines a strong interface for your view model.
@@ -508,7 +510,7 @@ You can now safely use `#title` in the view (and, in the cell class), it is dele
 
 ### Nested Rendering
 
-When extracting parts of your view into a partial, as we did for the author section, you're free to render additional views using `#render`. Again, wrap render calls in instance methods, otherwise you'll end up with to much logic in your view.
+When extracting parts of your view into a partial, as we did for the author section, you're free to render additional views using `#render`. Again, wrap render calls in instance methods, otherwise you'll end up with too much logic in your view.
 
 ```ruby
 class SongCell < Cell::ViewModel
@@ -519,7 +521,7 @@ class SongCell < Cell::ViewModel
   # ...
 
   def author_box
-    render view: :author
+    render :author # same as render view: :author
   end
 end
 ```

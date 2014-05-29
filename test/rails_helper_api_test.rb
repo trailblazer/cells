@@ -34,6 +34,7 @@ class RailsHelperAPITest < MiniTest::Spec
 
   class BassistCell < Cell::Base
     include Cell::Rails::HelperAPI
+    include AbstractController::Helpers
 
     self._helpers = FakeHelpers
     self._routes = FakeUrlFor.new
