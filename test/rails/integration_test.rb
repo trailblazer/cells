@@ -185,17 +185,13 @@ class ViewMethodsTest < ActionController::TestCase
 
 
     # view model ------------------
-    class AlbumCell < ::Cell::Rails
-      include ViewModel
-
+    class AlbumCell < ::Cell::ViewModel
       def show
         "<b>#{model}</b>"
       end
     end
 
-    class AlbumsCell < ::Cell::Rails
-      include ViewModel
-
+    class AlbumsCell < ::Cell::ViewModel
       def show
         cell("view_methods_test/album", "Dreiklang").call
       end

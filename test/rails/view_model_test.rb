@@ -61,12 +61,6 @@ class SongCell < Cell::ViewModel
   end
 
 class ViewModelTest < MiniTest::Spec
-  # class PianoSongCell < Cell::Rails
-  #   include ViewModel
-
-  #   property :title
-  # end
-
   # views :show, :create #=> wrap in render_state(:show, *)
   let (:cell) { SongCell.new(nil, :title => "Shades Of Truth") }
 
