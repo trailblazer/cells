@@ -55,12 +55,9 @@ class Cell::ViewModel < Cell::Rails
     _prepare_context # happens in AV::Base at the bottom.
   end
 
+  # render :show
   def render(options={})
-    if options.is_a?(Hash)
-      options.reverse_merge!(:view => state_for_implicit_render)
-    else
-      options = {:view => options.to_s}
-    end
+    options = options_for(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
 
     super
   end
@@ -76,8 +73,16 @@ private
     self
   end
 
-  def state_for_implicit_render()
-    caller[1].match(/`(\w+)/)[1]
+  def options_for(options, caller)
+    if options.is_a?(Hash)
+      options.reverse_merge(:view => state_for_implicit_render(caller)) # TODO: test implicit render!
+    else
+      {:view => options.to_s}
+    end
+  end
+
+  def state_for_implicit_render(caller)
+    caller[0].match(/`(\w+)/)[1]
   end
 
   # def implicit_state
