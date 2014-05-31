@@ -1,3 +1,10 @@
+## 3.11.1
+
+* Override `ActionView::Helpers::UrlHelper#url_for` in Rails 4.x as it is troublesome. That removes the annoying
+    `arguments passed to url_for can't be handled. Please require routes or provide your own implementation`
+    exception when using simple_form, form_for, etc with a view model.
+
+
 ## 3.11.0
 
 * Deprecated `Cell::Rails::ViewModel`, please inherit: `class SongCell < Cell::ViewModel`.
