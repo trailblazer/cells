@@ -472,7 +472,7 @@ The `render` call will render the cell's `show` view.
 = author_box
 ```
 
-We strongly recommend to invoke methods, only, in views and not to use instance variables and locals. In a view model template (or, view), methods are called on the view model instance itself, meaning you can easily expose "helpers" by defining instance methods.
+We strongly recommend to only invoke _methods_ in views and _not_ to use instance variables and locals. In a view model template (or, view), methods are called on the view model instance itself, meaning you can easily expose "helpers" by defining instance methods.
 
 ### Helpers
 
