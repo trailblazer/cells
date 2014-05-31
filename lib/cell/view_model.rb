@@ -6,6 +6,7 @@
 
 # TODO: warn when using ::property but not passing in model in constructor.
 
+# ViewModel is only supported in Rails +3.1. If you need it in Rails 3.0, let me know.
 class Cell::ViewModel < Cell::Rails
   abstract!
 
@@ -86,64 +87,25 @@ private
 
   # FIXME: this module is to fix a design flaw in Rails 4.0. the problem is that AV::UrlHelper mixes in the wrong #url_for.
   # if we could mix in everything else from the helper except for the #url_for, it would be fine.
-  module LinkToHelper
-    include ActionView::Helpers::TagHelper
-
-    def link_to(name = nil, options = nil, html_options = nil, &block)
-      html_options, options, name = options, name, block if block_given?
-      options ||= {}
-
-      html_options = convert_options_to_data_attributes(options, html_options)
-
-      url = url_for(options)
-      html_options['href'] ||= url
-
-      content_tag(:a, name || url, html_options, &block)
-    end
-
-    def convert_options_to_data_attributes(options, html_options)
-      if html_options
-        html_options = html_options.stringify_keys
-        html_options['data-remote'] = 'true' if link_to_remote_options?(options) || link_to_remote_options?(html_options)
-
-        disable_with = html_options.delete("disable_with")
-        confirm = html_options.delete('confirm')
-        method  = html_options.delete('method')
-
-        if confirm
-          message = ":confirm option is deprecated and will be removed from Rails 4.1. " \
-                    "Use 'data: { confirm: \'Text\' }' instead."
-          ActiveSupport::Deprecation.warn message
-
-          html_options["data-confirm"] = confirm
-        end
-
-        add_method_to_attributes!(html_options, method) if method
-
-        if disable_with
-          message = ":disable_with option is deprecated and will be removed from Rails 4.1. " \
-                    "Use 'data: { disable_with: \'Text\' }' instead."
-          ActiveSupport::Deprecation.warn message
-
-          html_options["data-disable-with"] = disable_with
-        end
-
-        html_options
-      else
-        link_to_remote_options?(options) ? {'data-remote' => 'true'} : {}
-      end
-    end
-
-    def link_to_remote_options?(options)
-      if options.is_a?(Hash)
-        options.delete('remote') || options.delete(:remote)
-      end
-    end
-  end
-
   # FIXME: fix that in rails core.
   if Cell.rails_version.~("4.0", "4.1")
-    include LinkToHelper
+    include ActionView::Helpers::UrlHelper # gives us breaking #url_for.
+
+    def url_for(options = nil) # from ActionDispatch:R:UrlFor.
+      case options
+      when nil
+        _routes.url_for(url_options.symbolize_keys)
+      when Hash
+        _routes.url_for(options.symbolize_keys.reverse_merge!(url_options))
+      when String
+        options
+      when Array
+        polymorphic_url(options, options.extract_options!)
+      else
+        polymorphic_url(options)
+      end
+    end
+    public :url_for
   else
     include ActionView::Helpers::UrlHelper
   end
