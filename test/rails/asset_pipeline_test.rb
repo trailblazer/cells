@@ -11,7 +11,7 @@ if Cell.rails_version >= 3.1
     register_spec_type(/integration$/, self)
 
     it "what" do
-      visit "assets/application.js"
+      visit "/assets/application.js"
       page.text.must_include 'var Album = {};'
       page.text.must_include 'var Songs = [];'
     end
