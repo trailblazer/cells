@@ -35,7 +35,6 @@ require File.join(test_app_dir, 'cells', 'trumpeter_cell')
 require File.join(test_app_dir, 'cells', 'bad_guitarist_cell')
 
 require "haml"
-require "haml/template" # Thanks, Nathan!
 
 ActiveSupport::TestCase.class_eval do # this is only needed in integration tests (AC::TestCase).
   def fix_relative_url_root

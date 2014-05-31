@@ -1,5 +1,9 @@
 require 'test_helper'
 
+Cell::Concept.class_eval do
+  self.append_view_path "test/app/concepts"
+end
+
 if Cell.rails_version >= 3.1
   # Trailblazer style:
   module Record
