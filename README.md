@@ -14,12 +14,14 @@ Basically, cells can be rendered anywhere in your code. Most people use them in 
 
 ## View Models
 
-Since version 3.9 cells comes with two "dialects": You can still use a cell like a controller. However, the new [view model](https://github.com/apotonick/cells#view-models-explained) "dialect" allows you to treat a cell more object-oriented while providing an alternative approach to helpers.
+Since version 3.9 cells comes with two "dialects": You can still use a cell like a controller. However, the new [view model](https://github.com/apotonick/cells#view-models-explained) "dialect" supercedes the traditional cell. It allows you to treat a cell more object-oriented while providing an alternative approach to helpers.
 
 While the old dialect still works, we strongly recommend using a cell as a view model.
 
 
 ## Installation
+
+Cells run with all Rails >= 3.0. For 2.3 support [see below](#rails-23-note).
 
 ```ruby
 gem 'cells'
