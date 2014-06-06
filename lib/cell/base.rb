@@ -22,8 +22,7 @@ module Cell
 
 
     require 'cell/rails3_0_strategy' if Cell.rails_version.~  "3.0"
-    require 'cell/rails3_1_strategy' if Cell.rails_version.~( "3.1", "3.2")
-    require 'cell/rails4_0_strategy' if Cell.rails_version.~  "4.0"
+    require 'cell/rails4_0_strategy' if Cell.rails_version.~( '3.1', '3.2', '4.0')
     require 'cell/rails4_1_strategy' if Cell.rails_version >= "4.1"
     include VersionStrategy
     include Layouts

@@ -2,7 +2,7 @@
 module Cell
   Layouts = ActionView::Layouts
 
-  # Methods to be included in Cell::Rails in 3.1 context.
+  # Methods to be included in Cell::Rails in 4.1 context.
   module VersionStrategy
     extend ActiveSupport::Concern
 
@@ -24,17 +24,4 @@ module Cell
   end
 end
 
-
-module Cells
-  module Engines
-    module VersionStrategy
-      def registered_engines
-        ::Rails::Engine::Railties.new
-      end
-
-      def existent_directories_for(path)
-        path.existent_directories
-      end
-    end
-  end
-end
+require_relative 'engines'
