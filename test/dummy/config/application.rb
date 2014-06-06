@@ -16,6 +16,7 @@ module Dummy
 
     config.cache_store = :memory_store
     config.secret_token = "some secret phrase of at least 30 characters"
+    config.eager_load = false
 
     # enable asset pipeline as in development.
     if Cell.rails_version >= "3.1"
