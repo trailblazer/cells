@@ -1,1 +1,0 @@
-require_relative 'rails4_0_strategy'
