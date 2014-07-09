@@ -216,11 +216,14 @@ Sometimes you need to render a global partial from `app/views` within a cell. Fo
 ```ruby
 class MapCell < Cell::Rails
   append_view_path "app/views"
+
+  def show
+    render partial: 'shared/map_form'
+  end
 ```
-Also, when rendering a global partial from a cell's view use `render partial: 'some_partial'`, instead of `render view: ...`. For example, if the above MapCell had a 'show' view that in turn needs to use a header partial (one that is common to both views and cells and is located in `app/views/headers/map_header.html.erb`), then this will work:
-```erb
-<%= render partial: "headers/map_header" %>
-```
+
+Note that you have to use `render partial:` which will then look in the global view directory and render the partial found at `app/views/shared/map_form.html.haml`.
+
 
 ## View Inheritance
 
