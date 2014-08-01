@@ -5,10 +5,13 @@
 # call "helpers" in class
 
 # TODO: warn when using ::property but not passing in model in constructor.
+require 'uber/delegates'
 
 # ViewModel is only supported in Rails +3.1. If you need it in Rails 3.0, let me know.
 class Cell::ViewModel < Cell::Rails
   abstract!
+
+  extend Uber::Delegates
 
   include Cell::OptionsConstructor
   #include ActionView::Helpers::UrlHelper
@@ -39,7 +42,7 @@ class Cell::ViewModel < Cell::Rails
 
   class << self
     def property(*names)
-      delegate *names, :to => :model
+      delegates :model, *names # Uber::Delegates.
     end
 
     include Helpers

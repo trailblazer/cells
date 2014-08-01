@@ -518,6 +518,77 @@ end
 
 You can now safely use `#title` in the view (and, in the cell class), it is delegated to `model.title`.
 
+
+## Using Decorators (Twins)
+
+With Cells 3.12, a new experimental concept enters the stage: Decorators in view models. As the view model should only contain logic related to presentation (which can get quite a bit), decorators - called _Twins_ -  can be defined and automatically setup for your model.
+
+Twins are a general concept in Trailblazer and are used everywhere where representers, forms, operations or cells need additional logic that has to be shared between layers. So, this extra step allows re-using your decorator for presentations other than the cell, e.g. in a JSON API, tests, etc.
+
+Also, logic that simply doesn't belong to in a view-related class goes into a twin. That could be code to figure out if a user in logged in.
+
+```ruby
+class SongCell < Cell::ViewModel
+  include Properties
+
+  class Twin < Cell::Twin # this is your decorator
+    property :title
+    property :id
+    option :in_stock?
+  end
+
+  properties Twin
+
+  def show
+    if in_stock?
+      "You're lucky #{title} (#{id}) is in stock!"
+    end
+  end
+end
+```
+
+In this example, we define the twin _in_ the cell itself. That could be done anywhere, as long as you tell the cell where to find the twin (`properties Twin`).
+
+### Creating A Twin Cell
+
+You create your cell as follows.
+
+```ruby
+cell("song", Song.find(1), in_stock?: true)
+```
+
+Internally, a twin is created from the arguments and passed to the view model. The view model cell now only works on the twin, not on the model anymore.
+
+The twin simply acts as a delegator between the cell and the model: attributes defined with `property` are copied from the model, `option` values _have_ to be passed explicitely to the constructor.
+
+Another awesome thing is that you can now easily test your cell by "mocking" values.
+
+```ruby
+it "renders nicely" do
+  cell("song", song, in_stock?: true, title: "Mocked Song Title").must_match ...
+end
+```
+
+The twin will simply use the passed `:title` and not copy the title from the song model, making it really easy to test edge cases in your view model.
+
+### Extending Decorators
+
+A decorator without any logic only gives you a tiny improvement, they become really helpful when including your own decorator logic.
+
+```ruby
+class Twin < Cell::Twin # this is your decorator
+  property :title
+  property :id
+  option :in_stock?
+
+  def title
+    super.downcase # super to retrieve the original title from model!
+  end
+end
+```
+
+The same logic can now be used in a cell, a JSON or XML API endpoint or in the model layer.
+
 ### Nested Rendering
 
 When extracting parts of your view into a partial, as we did for the author section, you're free to render additional views using `#render`. Again, wrap render calls in instance methods, otherwise you'll end up with too much logic in your view.
