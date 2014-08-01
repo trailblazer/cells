@@ -521,6 +521,12 @@ You can now safely use `#title` in the view (and, in the cell class), it is dele
 
 ## Using Decorators (Twins)
 
+You need to include the `disposable` gem in order to use this.
+
+````ruby
+gem "disposable"
+```
+
 With Cells 3.12, a new experimental concept enters the stage: Decorators in view models. As the view model should only contain logic related to presentation (which can get quite a bit), decorators - called _Twins_ -  can be defined and automatically setup for your model.
 
 Twins are a general concept in Trailblazer and are used everywhere where representers, forms, operations or cells need additional logic that has to be shared between layers. So, this extra step allows re-using your decorator for presentations other than the cell, e.g. in a JSON API, tests, etc.
@@ -559,7 +565,7 @@ cell("song", Song.find(1), in_stock?: true)
 
 Internally, a twin is created from the arguments and passed to the view model. The view model cell now only works on the twin, not on the model anymore.
 
-The twin simply acts as a delegator between the cell and the model: attributes defined with `property` are copied from the model, `option` values _have_ to be passed explicitely to the constructor.
+The twin simply acts as a delegator between the cell and the model: attributes defined with `property` are copied from the model, `option` values _have_ to be passed explicitely to the constructor. The twin defines an _interface_ for using your cell.
 
 Another awesome thing is that you can now easily test your cell by "mocking" values.
 
@@ -588,6 +594,8 @@ end
 ```
 
 The same logic can now be used in a cell, a JSON or XML API endpoint or in the model layer.
+
+Note: If there's enough interest, this could also be extended to work with draper and other decoration gems.
 
 ### Nested Rendering
 
