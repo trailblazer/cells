@@ -81,11 +81,19 @@ if Cell.rails_version >= 3.1
 
       attr_accessor :count
       cache :count
+
+      def title
+        super.upcase
+      end
     end
 
-    let (:song) { Song.new(:title => "65", artist: "Boss") }
-    it { HitCell.new(nil, song).title.must_equal "65" }
+    let (:song) { Song.new(:title => "Sixtyfive", artist: "Boss") }
+
+    # ::property creates accessor.
     it { HitCell.new(nil, song).artist.must_equal "Boss" }
+
+    # ::property accessor can be overridden and call super.
+    it { HitCell.new(nil, song).title.must_equal "SIXTYFIVE" }
 
 
     describe "#call" do
