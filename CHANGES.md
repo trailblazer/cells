@@ -1,3 +1,11 @@
+## 3.11.2
+
+* `ViewModel#call` now accepts a block and yields `self` (the cell instance) to it. This is handy to use with `content_for`.
+    ```ruby
+      = cell(:song, Song.last).call(:show) do |cell|
+        content_for :footer, cell.footer
+    ```
+
 ## 3.11.1
 
 * Override `ActionView::Helpers::UrlHelper#url_for` in Rails 4.x as it is troublesome. That removes the annoying
