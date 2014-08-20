@@ -126,6 +126,15 @@ if Cell.rails_version >= 3.1
         cell.count = 2
         cell.call(:count).must_equal "1"
       end
+
+      # call(:show) do .. end
+      it do
+        cell.call(:show) do |c|
+          c.instance_variable_set(:@volume, 9)
+        end.must_equal "Great!"
+
+        cell.instance_variable_get(:@volume).must_equal 9
+      end
     end
 
 

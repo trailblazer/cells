@@ -65,10 +65,14 @@ class Cell::ViewModel < Cell::Rails
     super
   end
 
+  # Invokes the passed state (defaults to :show) by using +render_state+. This will respect caching.
+  # Yields +self+ (the cell instance) to an optional block.
   def call(state=:show)
     # it is ok to call to_s.html_safe here as #call is a defined rendering method.
     # DISCUSS: IN CONCEPT: render( view: implicit_state)
-    render_state(state).to_s.html_safe
+    content = render_state(state)
+    yield self if block_given?
+    content.to_s.html_safe
   end
 
 private
