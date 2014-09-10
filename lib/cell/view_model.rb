@@ -7,7 +7,7 @@
 # TODO: warn when using ::property but not passing in model in constructor.
 require 'uber/delegates'
 
-# ViewModel is only supported in Rails +3.1. If you need it in Rails 3.0, let me know.
+# ViewModel is only supported in Rails +3.1.
 class Cell::ViewModel < Cell::Rails
   abstract!
 
@@ -23,15 +23,20 @@ class Cell::ViewModel < Cell::Rails
 
   module Helpers
     # DISCUSS: highest level API method. add #cell here.
-    def collection(name, controller, array, method=:show)
+    def collection(name, controller, array, options=nil)
+      method = :show
+
+      unless options
+        return array.collect { |model| cell_for(name, *[controller, model]).call(method) }.join("\n").html_safe
+      end
       # FIXME: this is the problem in Concept cells, we don't wanna call Cell::Rails.cell_for here.
-      array.collect { |model| cell_for(name, controller, model).call(method) }.join("\n").html_safe
+      array.collect { |model| cell_for(name, *[controller, model, options]).call(method) }.join("\n").html_safe
     end
 
     # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
     def cell(name, controller, *args, &block) # classic Rails fuzzy API.
       if args.first.is_a?(Hash) and array = args.first[:collection]
-        return collection(name, controller, array)
+        return collection(name, controller, array, args[1])
       end
 
       cell_for(name, controller, *args, &block)
@@ -53,8 +58,13 @@ class Cell::ViewModel < Cell::Rails
   end
 
 
-  def initialize(*args)
-    super
+  def initialize(controller, model=nil, options={})
+    # we do NOT longer call #super here.
+    @_action_has_layout = true # TODO: remove when AV got replaced.
+
+    @parent_controller = controller # TODO: this is removed in 4.0.
+    process_args(model) # FIXME: remove this! it should always be model or model,options.
+
     _prepare_context # happens in AV::Base at the bottom.
   end
 

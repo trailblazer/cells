@@ -223,4 +223,43 @@ if Cell.rails_version >= 3.1
     end
   end
 
+
+  class CollectionWithTwinTest < MiniTest::Spec
+    class ReleasePartyCell < Cell::ViewModel
+      include Cell::Twin::Properties
+
+      class Twin < Cell::Twin
+        property :name
+        option :level
+      end
+      self.twin_class= Twin
+
+      def show
+        "Party on, #{model.name}! #{model.level}"
+      end
+    end
+
+
+    # describe "::collection" do
+    #   it { Cell::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}).must_equal "Party on, Garth!\nParty on, Wayne!" }
+    #   it { Cell::ViewModel.collection("collection_test/release_party", @controller, %w{Garth Wayne}, _method: :show_more).must_equal "Go nuts, Garth!\nGo nuts, Wayne!" }
+    # end
+    # TODO: test with builders ("polymorphic collections") and document that.
+
+    # cell(collection: [..])
+    describe "::cell collection: [..]" do
+      let (:wayne) { Struct.new(:name).new("Wayne") }
+      let (:garth) { Struct.new(:name).new("Garth") }
+
+      it { Cell::ViewModel.cell("collection_with_twin_test/release_party", @controller, {collection: [garth, wayne]}, level: 10).must_equal "Party on, Garth! 10\nParty on, Wayne! 10" }
+    end
+
+    # describe "::cell" do
+    #   it { Cell::ViewModel.cell("collection_test/release_party", @controller, "Garth").call.must_equal "Party on, Garth!" }
+    # end
+  end
+
+
+  # TODO: add test with layout.
+
 end
