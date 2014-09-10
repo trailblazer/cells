@@ -1,5 +1,9 @@
 module Cell
   module OptionsConstructor
+    def self.included(base)
+      warn "[Cells] Cell::OptionsConstructor is deprecated. Please do not use it anymore and switch to ViewModel."
+    end
+
   private
     def process_args(options={})
       if options.is_a?(Hash) # TODO: i don't like this too much.

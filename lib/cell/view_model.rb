@@ -13,7 +13,6 @@ class Cell::ViewModel < Cell::Rails
 
   extend Uber::Delegates
 
-  include Cell::OptionsConstructor
   #include ActionView::Helpers::UrlHelper
   include ActionView::Context # this includes CompiledTemplates, too.
   # properties :title, :body
@@ -63,7 +62,10 @@ class Cell::ViewModel < Cell::Rails
     @_action_has_layout = true # TODO: remove when AV got replaced.
 
     @parent_controller = controller # TODO: this is removed in 4.0.
-    process_args(model) # FIXME: remove this! it should always be model or model,options.
+
+    # TODO: allow including module that creates accessors for hash (when not defined as ::option)
+    @model = model
+      #create_twin(model, options)
 
     _prepare_context # happens in AV::Base at the bottom.
   end
