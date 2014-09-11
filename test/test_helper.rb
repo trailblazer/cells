@@ -6,9 +6,6 @@ ENV['RAILS_ENV'] = 'test'
 require "dummy/config/environment"
 require "rails/test_help" # adds stuff like @routes, etc.
 
-gem_dir       = File.join(File.dirname(__FILE__), '..')
-test_app_dir  = File.join(gem_dir, 'test', 'app')
-
 require 'cells'
 
 # Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
@@ -18,23 +15,13 @@ require 'cells'
 require "cell/test_case"
 # Extend TestCase.
 MiniTest::Spec.class_eval do
-  def assert_not(assertion)
-    assert !assertion
-  end
-
-  def assert_is_a(klass, object)
-    assert object.is_a?(klass)
+  def cell(name, *args) # todo: FUCKING REMOVE THIS HORRIBLE SHIT CONTROLLER!
+    Cell::ViewModel.cell_for(name, nil, *args) # TODO: move to TestCase.
   end
 end
 
-# Enable dynamic states so we can do Cell.class_eval { def ... } at runtime.
-class Cell::Rails
-  def action_method?(*); true; end
+class BassistCell < Cell::ViewModel
 end
-
-require File.join(test_app_dir, 'cells', 'bassist_cell')
-require File.join(test_app_dir, 'cells', 'trumpeter_cell')
-require File.join(test_app_dir, 'cells', 'bad_guitarist_cell')
 
 require "haml"
 

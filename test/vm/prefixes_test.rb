@@ -1,14 +1,12 @@
 require 'test_helper'
 
-class BassistCell::FenderCell < Cell::Rails
+class BassistCell::FenderCell < Cell::ViewModel
 end
 
 class BassistCell::IbanezCell < BassistCell
 end
 
 class PrefixesTest < MiniTest::Spec
-  include Cell::TestCase::TestMethods
-
   class SingerCell < Cell::Base
   end
 
@@ -54,9 +52,9 @@ class PrefixesTest < MiniTest::Spec
 end
 
 class InheritViewsTest < MiniTest::Spec
-  include Cell::TestCase::TestMethods
+  class SlapperCell < Cell::ViewModel
+    self.view_paths = ["test/vm/fixtures"] # todo: REMOVE!
 
-  class SlapperCell < Cell::Rails
     inherit_views ::BassistCell
 
     def play
@@ -67,9 +65,10 @@ class InheritViewsTest < MiniTest::Spec
   class FunkerCell < SlapperCell
   end
 
-  unless ::Cell.rails_version.~("3.0")
-    # test if normal cells inherit views.
-    it { cell("inherit_views_test/slapper").render_state(:play).must_equal "Doo" }
-    it { cell("inherit_views_test/funker").render_state(:play).must_equal "Doo" }
-  end
+  it { SlapperCell.new(nil)._prefixes.must_equal ["inherit_views_test/slapper", "bassist"] }
+  it { FunkerCell.new(nil)._prefixes.must_equal ["inherit_views_test/funker", "inherit_views_test/slapper", "bassist"] }
+
+  # test if normal cells inherit views.
+  it { cell("inherit_views_test/slapper").play.must_equal "Doo" }
+  it { cell("inherit_views_test/funker").play.must_equal "Doo" }
 end

@@ -5,16 +5,18 @@
 # call "helpers" in class
 
 # TODO: warn when using ::property but not passing in model in constructor.
+require 'tilt'
 require 'uber/delegates'
 
 module Cell
-  class ViewModel < AbstractController::Base #< Cell::Rails
+  class ViewModel < AbstractController::Base
     abstract!
 
     extend Uber::InheritableAttr
     inheritable_attr :view_paths
 
     self.view_paths = "app/cells"
+
     require 'cell/base/prefixes'
     include Base::Prefixes
     require 'cell/base/self_contained'
@@ -22,7 +24,15 @@ module Cell
     include Caching
     include Cell::DSL # TODO: dunno, this sucks.
 
+
     extend Builder::ClassMethods
+
+    class Builder < Cell::Builder # TODO: merge with C:Builder.
+      def run_builder_block(block, controller, *args) # DISCUSS: do we _want_ that?
+        super(block, *args)
+      end
+    end
+
 
     def self.controller_path
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
@@ -70,7 +80,6 @@ module Cell
 
 
       def cell_for(name, controller, *args)
-        # FIXME: too much redundancy from Base.
         Builder.new(class_from_cell_name(name), controller).call(controller, *args) # use Cell::Rails::Builder.
       end
 
@@ -103,8 +112,6 @@ module Cell
     end
 
     def render_to_string(options)
-      require 'tilt'
-
       base   = self.class.view_paths.first
       view   = options[:view]
       prefix = _prefixes.first

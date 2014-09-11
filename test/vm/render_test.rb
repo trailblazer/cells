@@ -31,4 +31,6 @@ class RenderTest < MiniTest::Spec
 
   # render string.
   it { SongCell.new(nil).string.must_equal "Right" }
+
+  # call/render_state
 end
