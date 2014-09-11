@@ -34,6 +34,9 @@ module Cell
       @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
     end
 
+    include ActionController::RequestForgeryProtection
+    delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
+
 
     extend Uber::Delegates
 
