@@ -112,18 +112,11 @@ module Cell
     end
 
     def render_to_string(options)
-      base   = self.class.view_paths
-
       template = template_for(options[:view]) # TODO: cache template with path/lookup keys.
-      content = template.render(self)
+      content  = template.render(self)
 
       # TODO: allow other (global) layout dirs.
-      if layout = options[:layout]
-        template = template_for(layout)
-        content = template.render(self) { content }
-      end
-
-      content
+      with_layout(options[:layout], content)
     end
 
 
@@ -143,6 +136,13 @@ module Cell
       base = self.class.view_paths
 
       Templates.new[base, _prefixes, view, formats] or raise
+    end
+
+    def with_layout(layout, content)
+      return content unless layout
+
+      template = template_for(layout)
+      template.render(self) { content }
     end
 
     def options_for(options, caller)
