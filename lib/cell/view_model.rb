@@ -114,12 +114,12 @@ module Cell
     def render_to_string(options)
       base   = self.class.view_paths
 
-      template = Templates.new[base, _prefixes, options[:view], [:haml]] or raise #Tilt.new("#{base}/#{prefix}/#{view}.haml") # cache template with path/lookup keys.
+      template = template_for(options[:view]) # TODO: cache template with path/lookup keys.
       content = template.render(self)
 
       # TODO: allow other (global) layout dirs.
       if layout = options[:layout]
-        template = Templates.new[base, _prefixes, layout, [:haml]] or raise
+        template = template_for(layout)
         content = template.render(self) { content }
       end
 
@@ -138,6 +138,12 @@ module Cell
     end
 
   private
+
+    def template_for(view, formats=[:haml])
+      base = self.class.view_paths
+
+      Templates.new[base, _prefixes, view, formats] or raise
+    end
 
     def options_for(options, caller)
       if options.is_a?(Hash)
