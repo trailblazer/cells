@@ -171,7 +171,7 @@ if Cell.rails_version >= 3.1
       # end
 
 
-      test "URL helpers in view" do
+      test "URL helpers in view XXX" do
           @cell.show.must_equal %{<h1>BLINDFOLD</h1>
 <a href=\"#{@url}\">Permalink</a>
 }     end
@@ -231,6 +231,7 @@ if Cell.rails_version >= 3.1
     end
   end
 
+  require 'cell/twin'
 
   class CollectionWithTwinTest < MiniTest::Spec
     class ReleasePartyCell < Cell::ViewModel
