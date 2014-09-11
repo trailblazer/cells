@@ -29,6 +29,10 @@ if Cell.rails_version >= 3.1
       url_for(model)
     end
 
+    def call_url_helper
+      songs_path
+    end
+
     def details
       render
     end
@@ -195,6 +199,10 @@ if Cell.rails_version >= 3.1
       end
 
       test( "layout") { @cell.scale.must_equal "<b>A Minor!\n</b>" }
+
+      test "call named url helper" do
+        @cell.call_url_helper.must_equal "/songs"
+      end
 
       # TODO: when we don't pass :song into Lyrics
     end
