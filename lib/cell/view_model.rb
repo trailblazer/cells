@@ -30,7 +30,7 @@ module Cell
     require 'cell/base/self_contained'
     extend Base::SelfContained
     include Layouts # TODO: replace!
-    include Rendering
+    # include Rendering
     include Caching
     include Cell::DSL # TODO: dunno, this sucks.
 
@@ -101,16 +101,11 @@ module Cell
 
 
     def initialize(controller, model=nil, options={})
-      # we do NOT longer call #super here.
-      @_action_has_layout = true # TODO: remove when AV got replaced.
-
       @parent_controller = controller # TODO: this is removed in 4.0.
 
       # TODO: allow including module that creates accessors for hash (when not defined as ::option)
       @model = model
         #create_twin(model, options)
-
-      # _prepare_context # happens in AV::Base at the bottom.
     end
     attr_reader :parent_controller
     alias_method :controller, :parent_controller
@@ -120,21 +115,28 @@ module Cell
     def render(options={})
       options = options_for(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
 
-
-      super
+      render_to_string(options)
     end
 
     def render_to_string(options)
       require 'tilt'
 
-      base = self.class.view_paths.first
-      view = options[:view]
+      base   = self.class.view_paths.first
+      view   = options[:view]
+      prefix = _prefixes.first
 
-# raise      Tilt["#{base}/#{view}.html.haml"].inspect
+      template = Tilt.new("#{base}/#{prefix}/#{view}.haml") # cache template with path/lookup keys.
+      content = template.render(self)
 
-      template = Tilt.new("#{base}/song/#{view}.haml") # cache template with path/lookup keys.
-      return template.render(self)
+      # TODO: allow other (global) layout dirs.
+      if layout = options[:layout]
+        template = Tilt.new("#{base}/#{prefix}/#{layout}.haml")# cache template with path/lookup keys.
+        content = template.render(self) { content }
+      end
+
+      content
     end
+
 
     # Invokes the passed state (defaults to :show) by using +render_state+. This will respect caching.
     # Yields +self+ (the cell instance) to an optional block.
