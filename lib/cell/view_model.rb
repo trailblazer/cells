@@ -29,8 +29,6 @@ module Cell
     include Base::Prefixes
     require 'cell/base/self_contained'
     extend Base::SelfContained
-    include Layouts # TODO: replace!
-    # include Rendering
     include Caching
     include Cell::DSL # TODO: dunno, this sucks.
 
