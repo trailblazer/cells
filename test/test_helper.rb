@@ -11,8 +11,8 @@ test_app_dir  = File.join(gem_dir, 'test', 'app')
 
 require 'cells'
 
-Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
-Cell::ViewModel.append_view_path(File.join(test_app_dir, 'cells'))
+# Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
+# Cell::ViewModel.append_view_path(File.join(test_app_dir, 'cells'))
 
 
 require "cell/test_case"

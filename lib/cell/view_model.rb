@@ -12,7 +12,13 @@ module Cell
   class ViewModel < AbstractController::Base #< Cell::Rails
     abstract!
 
-    include AbstractController::Rendering
+    extend Uber::InheritableAttr
+    # def self.view_paths(path)
+    #   @
+    # end
+    inheritable_attr :view_paths
+
+    #include AbstractController::Rendering
     self.view_paths = "app/cells"
     require 'cell/rails3_0_strategy' if Cell.rails_version.~  "3.0"
     require 'cell/rails3_1_strategy' if Cell.rails_version.~( "3.1", "3.2")
@@ -41,7 +47,7 @@ module Cell
     extend Uber::Delegates
 
     #include ActionView::Helpers::UrlHelper
-    include ActionView::Context # this includes CompiledTemplates, too.
+    # include ActionView::Context # this includes CompiledTemplates, too.
     # properties :title, :body
     attr_reader :model
 
@@ -104,7 +110,7 @@ module Cell
       @model = model
         #create_twin(model, options)
 
-      _prepare_context # happens in AV::Base at the bottom.
+      # _prepare_context # happens in AV::Base at the bottom.
     end
     attr_reader :parent_controller
     alias_method :controller, :parent_controller
@@ -114,7 +120,20 @@ module Cell
     def render(options={})
       options = options_for(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
 
+
       super
+    end
+
+    def render_to_string(options)
+      require 'tilt'
+
+      base = self.class.view_paths.first
+      view = options[:view]
+
+# raise      Tilt["#{base}/#{view}.html.haml"].inspect
+
+      template = Tilt.new("#{base}/song/#{view}.haml") # cache template with path/lookup keys.
+      return template.render(self)
     end
 
     # Invokes the passed state (defaults to :show) by using +render_state+. This will respect caching.
