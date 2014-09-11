@@ -7,24 +7,14 @@
 # TODO: warn when using ::property but not passing in model in constructor.
 require 'uber/delegates'
 
-# ViewModel is only supported in Rails +3.1.
 module Cell
   class ViewModel < AbstractController::Base #< Cell::Rails
     abstract!
 
     extend Uber::InheritableAttr
-    # def self.view_paths(path)
-    #   @
-    # end
     inheritable_attr :view_paths
 
-    #include AbstractController::Rendering
     self.view_paths = "app/cells"
-    require 'cell/rails3_0_strategy' if Cell.rails_version.~  "3.0"
-    require 'cell/rails3_1_strategy' if Cell.rails_version.~( "3.1", "3.2")
-    require 'cell/rails4_0_strategy' if Cell.rails_version.~  "4.0"
-    require 'cell/rails4_1_strategy' if Cell.rails_version >= "4.1"
-    include Cell::VersionStrategy
     require 'cell/base/prefixes'
     include Base::Prefixes
     require 'cell/base/self_contained'
@@ -44,11 +34,7 @@ module Cell
 
     extend Uber::Delegates
 
-    #include ActionView::Helpers::UrlHelper
-    # include ActionView::Context # this includes CompiledTemplates, too.
-    # properties :title, :body
     attr_reader :model
-
 
 
     module Helpers
@@ -147,9 +133,6 @@ module Cell
     end
 
   private
-    def view_context
-      self
-    end
 
     def options_for(options, caller)
       if options.is_a?(Hash)
