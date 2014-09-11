@@ -18,6 +18,12 @@ module Cell
 
     self.view_paths = "app/cells"
 
+    class << self
+      def templates
+        @templates ||= Templates.new
+      end
+    end
+
     require 'cell/base/prefixes'
     include Base::Prefixes
     require 'cell/base/self_contained'
@@ -132,10 +138,14 @@ module Cell
 
   private
 
+    def render_state(state)
+      send(state)
+    end
+
     def template_for(view, formats=[:haml])
       base = self.class.view_paths
 
-      Templates.new[base, _prefixes, view, formats] or raise
+      self.class.templates[base, _prefixes, view, formats] or raise
     end
 
     def with_layout(layout, content)
