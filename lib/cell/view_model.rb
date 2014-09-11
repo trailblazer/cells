@@ -7,6 +7,7 @@
 # TODO: warn when using ::property but not passing in model in constructor.
 require 'tilt'
 require 'uber/delegates'
+require 'cell/templates'
 
 module Cell
   class ViewModel < AbstractController::Base
@@ -96,7 +97,6 @@ module Cell
     def initialize(controller, model=nil, options={})
       @parent_controller = controller # TODO: this is removed in 4.0.
 
-      # TODO: allow including module that creates accessors for hash (when not defined as ::option)
       @model = model
         #create_twin(model, options)
     end
@@ -112,16 +112,14 @@ module Cell
     end
 
     def render_to_string(options)
-      base   = self.class.view_paths.first
-      view   = options[:view]
-      prefix = _prefixes.first
+      base   = self.class.view_paths
 
-      template = Tilt.new("#{base}/#{prefix}/#{view}.haml") # cache template with path/lookup keys.
+      template = Templates.new[base, _prefixes, options[:view], [:haml]] or raise #Tilt.new("#{base}/#{prefix}/#{view}.haml") # cache template with path/lookup keys.
       content = template.render(self)
 
       # TODO: allow other (global) layout dirs.
       if layout = options[:layout]
-        template = Tilt.new("#{base}/#{prefix}/#{layout}.haml")# cache template with path/lookup keys.
+        template = Templates.new[base, _prefixes, layout, [:haml]] or raise
         content = template.render(self) { content }
       end
 
