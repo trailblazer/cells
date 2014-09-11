@@ -9,6 +9,10 @@ module Cells
       Cell::Base.class_eval do
         include app.routes.url_helpers # TODO: i hate this, make it better in Rails.
       end
+
+      Cell::ViewModel.class_eval do
+        include app.routes.url_helpers # TODO: i hate this, make it better in Rails.
+      end
     end
 
     initializer "cells.setup_engines_view_paths" do |app|

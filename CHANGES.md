@@ -1,3 +1,7 @@
+## 4.0.0
+
+* `ViewModel.new(song: song)` won't automatically create a reader `#song`. You have to configure the cell to use a Struct twin {TODO: document}
+
 ## 3.11.2
 
 * `ViewModel#call` now accepts a block and yields `self` (the cell instance) to it. This is handy to use with `content_for`.
