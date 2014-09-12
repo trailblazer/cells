@@ -1,5 +1,5 @@
-# encoding: utf-8
 require 'minitest/autorun'
+require 'test_xml/mini_test'
 
 ENV['RAILS_ENV'] = 'test'
 
