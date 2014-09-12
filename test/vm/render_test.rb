@@ -29,6 +29,10 @@ class SongCell < Cell::ViewModel
     render
   end
 
+  def with_view_name
+    render :show
+  end
+
 private
   def title
     "Papertiger"
@@ -55,6 +59,9 @@ class RenderTest < MiniTest::Spec
 
   # allows locals
   it { SongCell.new(nil).with_locals.must_equal "Shot Across The Bow\n280\n" }
+
+  # render :show is a shortcut.
+  it { SongCell.new(nil).with_view_name.must_equal "Papertiger\n" }
 
   # renders ERB.
   it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>\n" }

@@ -112,7 +112,7 @@ module Cell
 
     # render :show
     def render(options={})
-      options = process_options(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
+      options = normalize_options(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
       render_to_string(options)
     end
 
@@ -159,14 +159,20 @@ module Cell
       template.render(self) { content }
     end
 
+    def normalize_options(options, caller)
+      options = if options.is_a?(Hash)
+        options.reverse_merge(:view => state_for_implicit_render(caller)) # TODO: test implicit render!
+      else
+        {:view => options.to_s}
+      end
+
+      process_options!(options)
+      options
+    end
+
     # Overwrite #process_options in included feature modules, but don't forget to call +super+.
     module ProcessOptions
-      def process_options(options, caller)
-        if options.is_a?(Hash)
-          options.reverse_merge(:view => state_for_implicit_render(caller)) # TODO: test implicit render!
-        else
-          {:view => options.to_s}
-        end
+      def process_options!(options)
       end
     end
     include ProcessOptions

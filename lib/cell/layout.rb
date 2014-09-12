@@ -12,7 +12,7 @@ module Cell
       end
     end
 
-    def process_options(options, caller)
+    def process_options!(options)
       options[:layout] ||= self.class.layout_name
       super
     end
