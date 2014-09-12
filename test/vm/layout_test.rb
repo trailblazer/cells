@@ -32,6 +32,10 @@ class SongWithLayoutOnClassCell < SongWithLayoutCell
   def show
     render
   end
+
+  def show_with_layout
+    render layout: :happy
+  end
 end
 
 class LayoutTest < MiniTest::Spec
@@ -49,5 +53,5 @@ class LayoutTest < MiniTest::Spec
   it { SongWithLayoutOnClassCell.new(nil).show.must_equal "Merry Xmas, Papertiger\n" }
 
   # with ::layout and :layout, :layout wins.
-  it { SongWithLayoutOnClassCell.new(nil).show_with_layout.must_equal "Merry Xmas, Papertiger\n" }
+  it { SongWithLayoutOnClassCell.new(nil).show_with_layout.must_equal "Happy Friday\n!\n" }
 end
