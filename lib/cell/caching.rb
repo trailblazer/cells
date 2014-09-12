@@ -1,7 +1,6 @@
 require 'active_support/concern'
 require 'active_support/cache'
 require 'uber/options'
-require 'uber/inheritable_attr'
 
 module Cell
   module Caching
@@ -44,7 +43,7 @@ module Cell
     end
 
 
-    def render_state(state, *args)
+    def call(state, *args)
       return super(state, *args) unless cache?(state, *args)
 
       key     = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))

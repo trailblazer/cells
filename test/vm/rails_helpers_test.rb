@@ -14,10 +14,6 @@ class UrlHelperTest < MiniTest::Spec
     def edit
       render
     end
-
-    def output_buffer
-      @output_buffer ||= []
-    end
   end
 
   # URL helpers work in cell instance.

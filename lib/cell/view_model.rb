@@ -24,12 +24,11 @@ module Cell
       end
     end
 
-    require 'cell/base/prefixes'
-    include Base::Prefixes
-    require 'cell/base/self_contained'
-    extend Base::SelfContained
+    require 'cell/prefixes'
+    include Prefixes
+    require 'cell/self_contained'
+    extend SelfContained
     include Caching
-    include Cell::DSL # TODO: dunno, this sucks.
 
 
     extend Builder::ClassMethods
@@ -137,6 +136,10 @@ module Cell
     end
 
   private
+
+    def output_buffer
+      @output_buffer ||= []
+    end
 
     def render_state(state)
       send(state)

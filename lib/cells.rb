@@ -13,8 +13,12 @@ module Cells
 end
 
 require 'cell'
-require 'cell/rails'
-require 'cells/rails'
-require 'cell/deprecations'
-require 'cells/engines'
+require 'uber/inheritable_attr'
+require 'cell/caching'
+require 'cell/builder'
+
+require 'cell/view_model'
+# require 'cells/engines'
 require 'cells/railtie'
+
+

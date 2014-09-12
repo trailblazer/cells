@@ -1,6 +1,6 @@
 # TODO: merge into Rails core.
 # TODO: cache _prefixes on class layer.
-module Cell::Base::Prefixes
+module Cell::Prefixes
   extend ActiveSupport::Concern
 
   def _prefixes

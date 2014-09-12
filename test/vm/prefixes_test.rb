@@ -7,7 +7,7 @@ class BassistCell::IbanezCell < BassistCell
 end
 
 class PrefixesTest < MiniTest::Spec
-  class SingerCell < Cell::Base
+  class SingerCell < Cell::ViewModel
   end
 
   class BackgroundVocalsCell < SingerCell
