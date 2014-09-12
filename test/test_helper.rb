@@ -43,6 +43,12 @@ end
 
 
 class MusicianController < ActionController::Base
+  def view_with_concept
+    render :inline => %{<%= concept("view_extensions_test/cell", "Up For Breakfast", volume: 1).show %>} # TODO: concept doesn't need .call
+  end
+
+
+
   def index
     render :text => render_cell(:bassist, :promote)
   end

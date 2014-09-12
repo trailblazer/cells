@@ -20,6 +20,9 @@ require 'cell/builder'
 require 'cell/view_model'
 require 'cell/concept'
 # require 'cells/engines'
+
+# TODO: only if Rails?
+require 'cell/rails'
 require 'cells/railtie'
 
 
