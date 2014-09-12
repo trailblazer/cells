@@ -1,7 +1,7 @@
 # TODO: deprecate parent_controller, ViewModel
 class Cell::Concept < Cell::ViewModel
   abstract!
-  self.view_paths = "app/concepts"
+  self.view_paths = ["app/concepts"]
 
   # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
   class << self

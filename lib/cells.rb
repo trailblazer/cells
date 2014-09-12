@@ -18,6 +18,7 @@ require 'cell/caching'
 require 'cell/builder'
 
 require 'cell/view_model'
+require 'cell/concept'
 # require 'cells/engines'
 require 'cells/railtie'
 

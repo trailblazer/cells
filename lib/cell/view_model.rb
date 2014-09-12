@@ -16,12 +16,16 @@ module Cell
     extend Uber::InheritableAttr
     inheritable_attr :view_paths
 
-    self.view_paths = "app/cells"
+    self.view_paths = ["app/cells"] # DISCUSS: provide same API as rails?
 
     class << self
       def templates
         @templates ||= Templates.new
       end
+    end
+
+    def self.layout(*) # TODO: implement me.
+
     end
 
     require 'cell/prefixes'
@@ -118,7 +122,7 @@ module Cell
 
     def render_to_string(options)
       template = template_for(options[:view]) # TODO: cache template with path/lookup keys.
-      content  = template.render(self)
+      content  = template.render(self, options[:locals])
 
       # TODO: allow other (global) layout dirs.
       with_layout(options[:layout], content)
@@ -140,15 +144,16 @@ module Cell
     def output_buffer
       @output_buffer ||= []
     end
+    attr_writer :output_buffer # TODO: test that, this breaks in MM.
 
     def render_state(state)
       send(state)
     end
 
-    def template_for(view, formats=[:haml])
+    def template_for(view, engines=[:haml])
       base = self.class.view_paths
 
-      self.class.templates[base, _prefixes, view, formats] or raise
+      self.class.templates[base, _prefixes, view, engines] or raise TemplateMissingError.new(base, _prefixes, view, engines, nil)
     end
 
     def with_layout(layout, content)

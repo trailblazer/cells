@@ -12,8 +12,17 @@ class SongCell < Cell::ViewModel
     render
   end
 
+  def unknown
+    render
+  end
+
   def string
     "Right"
+  end
+
+  # TODO: just pass hash.
+  def with_locals
+    render locals: {length: 280, title: "Shot Across The Bow"}
   end
 
 private
@@ -33,4 +42,15 @@ class RenderTest < MiniTest::Spec
   it { SongCell.new(nil).string.must_equal "Right" }
 
   # call/render_state
+
+  # throws an exception when not found.
+  it do
+    exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
+    exception.message.must_equal "Template missing: view: `unknown[.haml]` prefixes: [\"song\"] view_paths:[\"test/vm/fixtures\"]"
+  end
+
+  # allows locals
+  it { SongCell.new(nil).with_locals.must_equal "Shot Across The Bow\n280\n" }
 end
+
+# test inheritance

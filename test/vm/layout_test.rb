@@ -32,7 +32,7 @@ class LayoutTest < MiniTest::Spec
 
   # raises exception when layout not found!
 
-  it { assert_raises(RuntimeError) { SongWithLayoutCell.new(nil).unknown } }
+  it { assert_raises(Cell::TemplateMissingError) { SongWithLayoutCell.new(nil).unknown } }
   # assert message of exception.
   it {  }
 end
