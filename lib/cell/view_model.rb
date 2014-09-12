@@ -9,12 +9,15 @@ require 'tilt'
 require 'uber/delegates'
 require 'cell/templates'
 require 'cell/layout'
+require 'cell/prefixes'
+require 'cell/self_contained'
 
 module Cell
   class ViewModel < AbstractController::Base
     abstract!
 
     extend Uber::InheritableAttr
+    extend Uber::Delegates
 
     inheritable_attr :view_paths
     self.view_paths = ["app/cells"] # DISCUSS: provide same API as rails?
@@ -28,13 +31,10 @@ module Cell
       end
     end
 
-    require 'cell/prefixes'
+
     include Prefixes
-    require 'cell/self_contained'
     extend SelfContained
     include Caching
-
-
     extend Builder::ClassMethods
 
     class Builder < Cell::Builder # TODO: merge with C:Builder.
@@ -50,9 +50,6 @@ module Cell
 
     include ActionController::RequestForgeryProtection
     delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
-
-
-    extend Uber::Delegates
 
     attr_reader :model
 
