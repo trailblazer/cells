@@ -25,6 +25,10 @@ class SongCell < Cell::ViewModel
     render locals: {length: 280, title: "Shot Across The Bow"}
   end
 
+  def with_erb
+    render
+  end
+
 private
   def title
     "Papertiger"
@@ -46,11 +50,37 @@ class RenderTest < MiniTest::Spec
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
-    exception.message.must_equal "Template missing: view: `unknown[.haml]` prefixes: [\"song\"] view_paths:[\"test/vm/fixtures\"]"
+    exception.message.must_equal "Template missing: view: `unknown[.haml|.erb]` prefixes: [\"song\"] view_paths:[\"test/vm/fixtures\"]"
   end
 
   # allows locals
   it { SongCell.new(nil).with_locals.must_equal "Shot Across The Bow\n280\n" }
+
+  # renders ERB.
+  it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>\n" }
+
+  # let first engine win over last engine.
 end
 
 # test inheritance
+
+# Tilt::ErubisTemplate.class_eval do
+#     def precompiled_preamble(locals)
+#       #{}"@output_buffer = output_buffer || ActionView::OutputBuffer.new;"
+#       #raise
+#       [super, "#{@outvar} = _buf = ''"].join("\n")
+#     end
+# end
+
+
+class ::Erubis::Eruby
+  BLOCK_EXPR = /\s+(do|\{)(\s*\|[^|]*\|)?\s*\Z/
+
+  def add_expr_literal(src, code)
+    if code =~ BLOCK_EXPR
+      src << '_buf<< ' << code
+    else
+      src << '_buf<< (' << code << ');'
+    end
+  end
+end

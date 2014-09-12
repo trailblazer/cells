@@ -14,9 +14,12 @@ module Cell
     abstract!
 
     extend Uber::InheritableAttr
-    inheritable_attr :view_paths
 
+    inheritable_attr :view_paths
     self.view_paths = ["app/cells"] # DISCUSS: provide same API as rails?
+
+    inheritable_attr :engines
+    self.engines = [:erb]
 
     class << self
       def templates
@@ -25,7 +28,6 @@ module Cell
     end
 
     def self.layout(*) # TODO: implement me.
-
     end
 
     require 'cell/prefixes'
@@ -150,7 +152,7 @@ module Cell
       send(state)
     end
 
-    def template_for(view, engines=[:haml])
+    def template_for(view, engines=self.class.engines)
       base = self.class.view_paths
 
       self.class.templates[base, _prefixes, view, engines] or raise TemplateMissingError.new(base, _prefixes, view, engines, nil)

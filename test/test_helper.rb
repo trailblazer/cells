@@ -8,6 +8,8 @@ require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'
 
+Cell::ViewModel.engines.unshift :haml
+
 # Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
 # Cell::ViewModel.append_view_path(File.join(test_app_dir, 'cells'))
 
