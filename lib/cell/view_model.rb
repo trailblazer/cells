@@ -8,6 +8,7 @@
 require 'tilt'
 require 'uber/delegates'
 require 'cell/templates'
+require 'cell/layout'
 
 module Cell
   class ViewModel < AbstractController::Base
@@ -25,9 +26,6 @@ module Cell
       def templates
         @templates ||= Templates.new
       end
-    end
-
-    def self.layout(*) # TODO: implement me.
     end
 
     require 'cell/prefixes'
@@ -117,8 +115,7 @@ module Cell
 
     # render :show
     def render(options={})
-      options = options_for(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
-
+      options = process_options(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
       render_to_string(options)
     end
 
@@ -165,17 +162,24 @@ module Cell
       template.render(self) { content }
     end
 
-    def options_for(options, caller)
-      if options.is_a?(Hash)
-        options.reverse_merge(:view => state_for_implicit_render(caller)) # TODO: test implicit render!
-      else
-        {:view => options.to_s}
+    # Overwrite #process_options in included feature modules, but don't forget to call +super+.
+    module ProcessOptions
+      def process_options(options, caller)
+        if options.is_a?(Hash)
+          options.reverse_merge(:view => state_for_implicit_render(caller)) # TODO: test implicit render!
+        else
+          {:view => options.to_s}
+        end
       end
     end
+    include ProcessOptions
+
 
     def state_for_implicit_render(caller)
       caller[0].match(/`(\w+)/)[1]
     end
+
+    include Layout
 
     # def implicit_state
     #   controller_path.split("/").last

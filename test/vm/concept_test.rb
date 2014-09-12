@@ -17,23 +17,10 @@ module Record
         render :view => :song#, :layout => "layout"
         # TODO: test layout: .. in ViewModel
       end
-
-      def show_with_layout
-        render :view => :song, :layout => "layout"
-      end
     end
 
     class Hit < ::Cell::Concept
       inherit_views Record::Cell
-    end
-
-    class Track < ::Cell::Concept
-      inherit_views Song
-
-      layout "layout"
-      def show
-        render :song
-      end
     end
   end
 end
@@ -70,13 +57,6 @@ class ConceptTest < MiniTest::Spec
     # cell("song", concept: "record/compilation") # record/compilation/cell/song
   end
 
-
-  describe "#render with :layout" do
-    it { Cell::Concept.cell("record/cell/song", @controller).show_with_layout.must_equal "<p>\nLalala\n</p>\n" }
-  end
-  describe "#render with ::layout" do
-    it { Cell::Concept.cell("record/cell/track", @controller).show.must_equal "<p>\nLalala\n</p>\n" }
-  end
   describe "#render" do
     it { Cell::Concept.cell("record/cell/song", @controller).show.must_equal "Lalala" }
   end

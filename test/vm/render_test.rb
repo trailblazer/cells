@@ -64,6 +64,11 @@ end
 
 # test inheritance
 
+# test view: :bla and :bla
+# with layout and locals.
+# with layout and :text
+
+
 # Tilt::ErubisTemplate.class_eval do
 #     def precompiled_preamble(locals)
 #       #{}"@output_buffer = output_buffer || ActionView::OutputBuffer.new;"
