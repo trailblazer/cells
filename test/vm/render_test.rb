@@ -57,7 +57,7 @@ class RenderTest < MiniTest::Spec
   it { SongCell.new(nil).with_locals.must_equal "Shot Across The Bow\n280\n" }
 
   # renders ERB.
-  it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>\n" }
+  it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
 
   # let first engine win over last engine.
 end
@@ -79,13 +79,38 @@ end
 
 
 class ::Erubis::Eruby
-  BLOCK_EXPR = /\s+(do|\{)(\s*\|[^|]*\|)?\s*\Z/
+  BLOCK_EXPR = /\b(do|\{)(\s*\|[^|]*\|)?\s*\Z/
+
+  def block_start? code
+    code =~ BLOCK_EXPR
+  end
+  def block_start
+    @in_block ||= 0
+    @in_block += 1
+    @bufvar << '_tmp'
+  end
+
+  def block_end? code
+    @in_block != nil && @in_block != 0 && code =~ /\bend\b/
+  end
+  def block_end
+    @in_block -= 1
+    @bufvar.sub! /_tmp\Z/, ''
+  end
 
   def add_expr_literal(src, code)
-    if code =~ BLOCK_EXPR
-      src << '_buf<< ' << code
-    else
-      src << '_buf<< (' << code << ');'
+    src << "#@bufvar << #{code};"
+    if block_start? code
+      block_start
+      src << "#@bufvar = '';"
     end
+
+    src
+  end
+
+  def add_stmt(src, code)
+    block_end if block_end? code
+
+    src << code << ';'
   end
 end
