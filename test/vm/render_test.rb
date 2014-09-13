@@ -91,7 +91,7 @@ class ::Erubis::Eruby
   end
 
   def block_end? code
-    @in_block != nil && @in_block != 0 && code =~ /\bend\b/
+    @in_block != nil && @in_block != 0 && code =~ /\bend\b|}/
   end
   def block_end
     @in_block -= 1
