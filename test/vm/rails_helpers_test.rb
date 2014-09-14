@@ -14,6 +14,10 @@ class UrlHelperTest < MiniTest::Spec
     def edit
       render
     end
+
+    def with_content_tag
+      render
+    end
   end
 
   # URL helpers work in cell instance.
@@ -22,6 +26,11 @@ class UrlHelperTest < MiniTest::Spec
 
   include TestXml::Assertions # TODO: fix in test_xml.
 
+  # content_tag with HAML.
+  it { SongCell.new(controller).with_content_tag.must_equal "" }
+
   # form helpers with block in block work.
   it { SongCell.new(controller).edit.must_equal_xml_structure "<form><div><input/></div><label/><input/><ul><li/></ul></form>" }
 end
+
+# start with content_tag and block (or capture) and find out how sinatra handles that. goal is NOT to use those hacks in haml's action_view_extensions.

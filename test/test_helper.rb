@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'test_xml/mini_test'
+require "haml"
 
 ENV['RAILS_ENV'] = 'test'
 
@@ -7,8 +8,6 @@ require "dummy/config/environment"
 require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'
-
-Cell::ViewModel.engines.unshift :haml
 
 # Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
 # Cell::ViewModel.append_view_path(File.join(test_app_dir, 'cells'))
@@ -25,7 +24,7 @@ end
 class BassistCell < Cell::ViewModel
 end
 
-require "haml"
+
 
 ActiveSupport::TestCase.class_eval do # this is only needed in integration tests (AC::TestCase).
   def fix_relative_url_root

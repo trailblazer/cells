@@ -213,5 +213,9 @@ module Cell
     else
       include ActionView::Helpers::UrlHelper
     end
+
+
+    require 'cell/haml_support_that_SUCKS'
+    include WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
   end
 end

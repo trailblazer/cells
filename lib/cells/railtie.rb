@@ -11,6 +11,13 @@ module Cells
       end
     end
 
+    # DISCUSS: how to detect template engines?
+    initializer "cells.haml" do |app|
+      if Object.const_defined?(:Haml)
+        Cell::ViewModel.engines.unshift :haml
+      end
+    end
+
     # initializer "cells.setup_engines_view_paths" do |app|
     #   Cells::Engines.append_engines_view_paths_for(app.config.action_controller)
     # end
