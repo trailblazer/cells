@@ -75,15 +75,8 @@ end
 # with layout and locals.
 # with layout and :text
 
-
-# Tilt::ErubisTemplate.class_eval do
-#     def precompiled_preamble(locals)
-#       #{}"@output_buffer = output_buffer || ActionView::OutputBuffer.new;"
-#       #raise
-#       [super, "#{@outvar} = _buf = ''"].join("\n")
-#     end
-# end
-
+# render with format (e.g. when using ERB for one view)
+# should we allow changing the format "per run", so a cell can do .js and .haml? or should that be configurable on class level?
 
 class ::Erubis::Eruby
   BLOCK_EXPR = /\b(do|\{)(\s*\|[^|]*\|)?\s*\Z/

@@ -29,7 +29,7 @@ module Cell
 
       return unless File.exists?("#{base}/#{prefix}/#{view}.#{engine}") # DISCUSS: can we use Tilt.new here?
 
-      template = Tilt.new("#{base}/#{prefix}/#{view}.#{engine}")
+      template = Tilt.new("#{base}/#{prefix}/#{view}.#{engine}", :escape_html => false)
 
       vcache[prefix] = template
     end
