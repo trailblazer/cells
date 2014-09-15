@@ -25,7 +25,6 @@ module WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
 
       alias_method :set_output_buffer_without_haml, :output_buffer=
       alias_method :output_buffer=, :set_output_buffer_with_haml
-
     end
   end
 
