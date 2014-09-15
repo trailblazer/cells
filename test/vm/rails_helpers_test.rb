@@ -28,6 +28,15 @@ class UrlHelperTest < MiniTest::Spec
       render
     end
 
+    def with_form_tag
+      form_tag("/songs") + content_tag(:span) + "</form>"
+    end
+
+    include ActionView::Helpers::FormHelper
+    def with_form_for_block
+      render
+    end
+
   private
     def cap
       "yay, #{with_output_buffer { yield } }"
@@ -44,16 +53,20 @@ class UrlHelperTest < MiniTest::Spec
   # content_tag with HAML.
   it { cell.with_content_tag.must_equal "<span>Title:\n<div>Still Knee Deep\n</div>\n</span>\n" }
 
-  # form helpers with block in block work.
+  # form_tag with block in block work.
   it { cell.edit.must_equal_xml_structure "<form><div><input/></div><label/><input/><ul><li/></ul></form>" }
 
+  # form_tag, no block
+  it { cell.with_form_tag.must_equal_xml_structure "<form><div><input/></div><span/></form>" }
 
+  # form_for with block
+  it { cell.with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
 
   # when using yield, haml breaks it (but doesn't escape HTML)
-  it("yyy") { cell.with_block.must_equal "Nice!\nyay, <b>yeah</b>\n" }
+  it { cell.with_block.must_equal "Nice!\nyay, <b>yeah</b>\n" }
 
   # capture
-  it( "xxx") { cell.with_capture.must_equal "Nice!\n<b>Great!</b>\n" }
+  it { cell.with_capture.must_equal "Nice!\n<b>Great!</b>\n" }
 end
 
 # start with content_tag and block (or capture) and find out how sinatra handles that. goal is NOT to use those hacks in haml's action_view_extensions.

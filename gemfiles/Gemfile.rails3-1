@@ -5,3 +5,4 @@ gemspec path: '../'
 
 gem 'railties', '~> 3.1.0'
 gem 'minitest', '4.7.5'
+gem 'haml'

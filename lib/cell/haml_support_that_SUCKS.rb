@@ -61,4 +61,18 @@ module WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
     content = capture(&block)
     "#{form_tag_html(html_options)}" << content << "</form>"
   end
+
+  def form_tag_html(html_options)
+    extra_tags = extra_tags_for_form(html_options)
+    "#{tag(:form, html_options, true) + extra_tags}"
+  end
+
+  # Rails 4.0, TagHelper.
+  def tag_option(key, value, escape)
+    super(key, value, false)
+  end
+
+  def content_tag_string(name, content, options, escape=true)
+    super(name, content, options, false)
+  end
 end
