@@ -13,8 +13,8 @@ module Cells
 
     # DISCUSS: how to detect template engines?
     initializer "cells.haml" do |app|
-      if Object.const_defined?(:Haml)
-        Cell::ViewModel.engines.unshift :haml
+      if defined?(:Haml)
+        Cell::ViewModel.template_engine= "haml"
       end
     end
 

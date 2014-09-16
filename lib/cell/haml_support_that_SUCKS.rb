@@ -54,7 +54,6 @@ module WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
     end
   end
 
-
   # From FormTagHelper. why do they escape every possible string? why?
   def form_tag_in_block(html_options, &block)
     content = capture(&block)

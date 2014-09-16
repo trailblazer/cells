@@ -7,6 +7,8 @@ end
 # Trailblazer style:
 module Record
   class Cell < Cell::Concept # cell("record")
+    self.template_engine = "erb"
+
     def show
       render # Party On, #{model}
     end
@@ -46,9 +48,7 @@ class ConceptTest < MiniTest::Spec
     it { Record::Cell::Hit.new(@controller)._prefixes.must_equal  ["record/hit/views", "record/views"]  } # with inherit_views.
   end
 
-  unless ::Cell.rails_version.~("3.0")
-    it { Record::Cell.new(@controller, "Wayne").render_state(:show).must_equal "Party on, Wayne!" }
-  end
+  it { Record::Cell.new(@controller, "Wayne").render_state(:show).must_equal "Party on, Wayne!" }
 
 
   describe "#cell" do

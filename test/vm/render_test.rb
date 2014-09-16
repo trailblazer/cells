@@ -26,7 +26,7 @@ class SongCell < Cell::ViewModel
   end
 
   def with_erb
-    render
+    render template_engine: :erb
   end
 
   def with_view_name
@@ -54,7 +54,7 @@ class RenderTest < MiniTest::Spec
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
-    exception.message.must_equal "Template missing: view: `unknown[.haml|.erb]` prefixes: [\"song\"] view_paths:[\"test/vm/fixtures\"]"
+    exception.message.must_equal "Template missing: view: `unknown.haml` prefixes: [\"song\"] view_paths:[\"test/vm/fixtures\"]"
   end
 
   # allows locals
@@ -63,7 +63,7 @@ class RenderTest < MiniTest::Spec
   # render :show is a shortcut.
   it { SongCell.new(nil).with_view_name.must_equal "Papertiger\n" }
 
-  # renders ERB.
+  # :template_engine renders ERB.
   it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
 
   # let first engine win over last engine.

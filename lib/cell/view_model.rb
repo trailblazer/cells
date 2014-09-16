@@ -22,8 +22,8 @@ module Cell
     inheritable_attr :view_paths
     self.view_paths = ["app/cells"] # DISCUSS: provide same API as rails?
 
-    inheritable_attr :engines
-    self.engines = [:erb]
+    inheritable_attr :template_engine
+    self.template_engine = "erb"
 
     class << self
       def templates
@@ -117,7 +117,7 @@ module Cell
     end
 
     def render_to_string(options)
-      template = template_for(options[:view]) # TODO: cache template with path/lookup keys.
+      template = template_for(options[:view], options[:template_engine]) # TODO: cache template with path/lookup keys.
       content  = template.render(self, options[:locals])
 
       # TODO: allow other (global) layout dirs.
@@ -146,16 +146,16 @@ module Cell
       send(state)
     end
 
-    def template_for(view, engines=self.class.engines)
+    def template_for(view, engine)
       base = self.class.view_paths
 
-      self.class.templates[base, _prefixes, view, engines] or raise TemplateMissingError.new(base, _prefixes, view, engines, nil)
+      self.class.templates[base, _prefixes, view, engine] or raise TemplateMissingError.new(base, _prefixes, view, engine, nil)
     end
 
     def with_layout(layout, content)
       return content unless layout
 
-      template = template_for(layout)
+      template = template_for(layout, self.class.template_engine) # we could also allow a different layout engine.
       template.render(self) { content }
     end
 
@@ -165,6 +165,8 @@ module Cell
       else
         {:view => options.to_s}
       end
+
+      options[:template_engine] ||= self.class.template_engine # DISCUSS: in separate method?
 
       process_options!(options)
       options
@@ -217,7 +219,5 @@ module Cell
     require 'cell/haml_support_that_SUCKS'
     include ActionView::Helpers::FormTagHelper
     include WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
-
-
   end
 end

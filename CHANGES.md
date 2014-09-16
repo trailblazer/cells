@@ -1,6 +1,15 @@
 ## 4.0.0
 
+* Every cell is a view model - no more copying helpers and instance variables into the view. The cell instance _is_ the view context. Note that `Cell::Rails` and `Cell::Base` got removed.
 * `ViewModel.new(song: song)` won't automatically create a reader `#song`. You have to configure the cell to use a Struct twin {TODO: document}
+* **HTML Escaping:** Output is only escaped once, when using a reader method _in the view_. This highly speeds up rendering and removes the need to use `html_safe` on every string in the stack.
+* *Template Engines:* There's now _one_ template engine (e.g. ERB or HAML) per cell class. It can be set using `ViewModel::template_engine=`. In 99.9% of all cases a single application uses one single template engine application-wide, there's no need to manage code and waste lookup time for two alternative engines within one cell.
+* **File Naming**. The default filename just uses the engine suffix, e.g. `show.haml`. If you have two different formats, use the `format:` option in render {TODO: implement that}.
+
+### Internals
+
+* When using HAML, we do not use any of HAML's helper hacks to "fix" ActionView and XSS. While you might not note this, it removes tons of code from our stack.
+
 
 ## 3.11.2
 
@@ -36,8 +45,8 @@
 * Concept cells look for layouts in their self-contained views directory.
 * Add generator for Concept cells: `rails g concept Comment`
 
-## 3.10.1
 
+## 3.10.1
 Allow packaging assets for Rails' asset pipeline into cells. This is still experimental but works great. I love it.
 
 ## 3.10.0
