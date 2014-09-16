@@ -27,7 +27,6 @@ module Cell
 
     include Prefixes
     extend SelfContained
-    include Caching
     extend Builder::ClassMethods
 
     class Builder < Cell::Builder # TODO: merge with C:Builder.
@@ -118,10 +117,9 @@ module Cell
     end
 
 
-    # Invokes the passed state (defaults to :show) by using +render_state+. This will respect caching.
+    # Invokes the passed method (defaults to :show) by using +render_state+. This will respect caching.
     # Yields +self+ (the cell instance) to an optional block.
     def call(state=:show)
-      # it is ok to call to_s.html_safe here as #call is a defined rendering method.
       # DISCUSS: IN CONCEPT: render( view: implicit_state)
       content = render_state(state)
       yield self if block_given?
@@ -129,15 +127,18 @@ module Cell
     end
 
   private
+    module Rendering
+      def render_state(state)
+        send(state)
+      end
+    end
+    include Rendering
+    include Caching
 
     def output_buffer
       @output_buffer ||= []
     end
     attr_writer :output_buffer # TODO: test that, this breaks in MM.
-
-    def render_state(state)
-      send(state)
-    end
 
     def template_for(view, engine)
       base = self.class.view_paths
@@ -178,7 +179,6 @@ module Cell
     end
 
     include Layout
-    include Caching
 
     # def implicit_state
     #   controller_path.split("/").last

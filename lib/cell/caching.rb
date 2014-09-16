@@ -43,7 +43,7 @@ module Cell
     end
 
 
-    def call(state, *args)
+    def render_state(state, *args)
       return super(state, *args) unless cache?(state, *args)
 
       key     = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))
@@ -57,10 +57,14 @@ module Cell
     end
 
     def cache?(state, *args)
-      cache_store and state_cached?(state) and self.class.conditional_procs[state].evaluate(self, *args)
+      perform_caching? and state_cached?(state) and self.class.conditional_procs[state].evaluate(self, *args)
     end
 
   private
+
+    def perform_caching?
+      ActionController::Base.perform_caching
+    end
 
     def fetch_from_cache_for(key, options)
       cache_store.fetch(key, options) do
