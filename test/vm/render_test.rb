@@ -30,7 +30,8 @@ class SongCell < Cell::ViewModel
   end
 
   def with_view_name
-    render :show
+    @title = "Man Of Steel"
+    render :ivar
   end
 
 private
@@ -49,7 +50,11 @@ class RenderTest < MiniTest::Spec
   # render string.
   it { SongCell.new(nil).string.must_equal "Right" }
 
-  # call/render_state
+  # #call renders :show
+  it { SongCell.new(nil).call.must_equal "Papertiger\n" }
+
+  # call(:form) renders :form
+  it { SongCell.new(nil).call(:with_view_name).must_equal "Man Of Steel\n" }
 
   # throws an exception when not found.
   it do
@@ -60,8 +65,8 @@ class RenderTest < MiniTest::Spec
   # allows locals
   it { SongCell.new(nil).with_locals.must_equal "Shot Across The Bow\n280\n" }
 
-  # render :show is a shortcut.
-  it { SongCell.new(nil).with_view_name.must_equal "Papertiger\n" }
+  # render :form is a shortcut.
+  it { SongCell.new(nil).with_view_name.must_equal "Man Of Steel\n" }
 
   # :template_engine renders ERB.
   it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
