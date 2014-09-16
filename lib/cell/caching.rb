@@ -35,8 +35,8 @@ module Cell
         cache_store.delete(key, *args)
       end
 
-
     private
+
       def expand_cache_key(key)
         ::ActiveSupport::Cache.expand_cache_key(key, :cells)
       end
@@ -52,18 +52,16 @@ module Cell
       fetch_from_cache_for(key, options) { super(state, *args) }
     end
 
-    def cache_configured?
-      @cache_configured
+    def cache_store  # we want to use DI to set a cache store in cell/rails.
+      ActionController::Base.cache_store
     end
-    attr_writer :cache_configured
-
-    attr_accessor :cache_store  # we want to use DI to set a cache store in cell/rails.
 
     def cache?(state, *args)
-      cache_configured? and state_cached?(state) and self.class.conditional_procs[state].evaluate(self, *args)
+      cache_store and state_cached?(state) and self.class.conditional_procs[state].evaluate(self, *args)
     end
 
   private
+
     def fetch_from_cache_for(key, options)
       cache_store.fetch(key, options) do
         yield

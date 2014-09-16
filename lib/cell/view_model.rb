@@ -11,6 +11,7 @@ require 'cell/templates'
 require 'cell/layout'
 require 'cell/prefixes'
 require 'cell/self_contained'
+require 'cell/caching'
 
 module Cell
   class ViewModel < AbstractController::Base
@@ -132,7 +133,7 @@ module Cell
       # DISCUSS: IN CONCEPT: render( view: implicit_state)
       content = render_state(state)
       yield self if block_given?
-      content.to_s.html_safe
+      content
     end
 
   private
@@ -185,6 +186,7 @@ module Cell
     end
 
     include Layout
+    include Caching
 
     # def implicit_state
     #   controller_path.split("/").last

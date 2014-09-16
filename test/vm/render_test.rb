@@ -65,8 +65,6 @@ class RenderTest < MiniTest::Spec
 
   # :template_engine renders ERB.
   it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
-
-  # let first engine win over last engine.
 end
 
 # test inheritance

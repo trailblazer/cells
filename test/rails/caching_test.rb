@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 require 'test_helper'
 
-class DirectorCell < Cell::Rails
+class DirectorddddCell < Cell::Rails
   attr_reader :count
 
   def initialize(*)
