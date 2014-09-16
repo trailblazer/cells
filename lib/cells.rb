@@ -12,10 +12,18 @@ module Cells
   end
 end
 
-require 'cell'
+require 'tilt'
 require 'uber/inheritable_attr'
+require 'uber/delegates'
+
+require 'cell'
 require 'cell/caching'
 require 'cell/builder'
+require 'cell/prefixes'
+require 'cell/self_contained'
+require 'cell/layout'
+require 'cell/templates'
+require 'cell/caching'
 
 require 'cell/view_model'
 require 'cell/concept'
@@ -24,5 +32,3 @@ require 'cell/concept'
 # TODO: only if Rails?
 require 'cell/rails'
 require 'cells/railtie'
-
-

@@ -5,14 +5,6 @@
 # call "helpers" in class
 
 # TODO: warn when using ::property but not passing in model in constructor.
-require 'tilt'
-require 'uber/delegates'
-require 'cell/templates'
-require 'cell/layout'
-require 'cell/prefixes'
-require 'cell/self_contained'
-require 'cell/caching'
-
 module Cell
   class ViewModel < AbstractController::Base
     abstract!
