@@ -5,15 +5,6 @@ rvm:
 notifications:
   irc: "irc.freenode.org#cells"
 gemfile:
-  - gemfiles/Gemfile.rails3-0
-  - gemfiles/Gemfile.rails3-1
   - gemfiles/Gemfile.rails3-2
   - gemfiles/Gemfile.rails4-0
   - gemfiles/Gemfile.rails4-1
-
-matrix:
-  exclude:
-    - rvm: 2.0.0
-      gemfile: gemfiles/Gemfile.rails3-0
-    - rvm: 2.0.0
-      gemfile: gemfiles/Gemfile.rails3-1
