@@ -1,6 +1,6 @@
 ## 4.0.0
 
-* **Rails Support:** Rails 3.2 is fully supported, in older versions some form helpers do not work. Let us know if you need this.
+* **Rails Support:** Rails 3.2+ is fully supported, in older versions some form helpers do not work. Let us know if you need this.
 * **State args:** View models don't use state args. Options are passed into the constructor and saved there. That means that caching callbacks no longer receive arguments as everything is available via the instance itself.
 * Every cell is a view model - no more copying helpers and instance variables into the view. The cell instance _is_ the view context. Note that `Cell::Rails` and `Cell::Base` got removed.
 * `ViewModel.new(song: song)` won't automatically create a reader `#song`. You have to configure the cell to use a Struct twin {TODO: document}
