@@ -2,11 +2,15 @@
 
 * **Rails Support:** Rails 3.2+ is fully supported, in older versions some form helpers do not work. Let us know if you need this.
 * **State args:** View models don't use state args. Options are passed into the constructor and saved there. That means that caching callbacks no longer receive arguments as everything is available via the instance itself.
-* Every cell is a view model - no more copying helpers and instance variables into the view. The cell instance _is_ the view context. Note that `Cell::Rails` and `Cell::Base` got removed.
 * `ViewModel.new(song: song)` won't automatically create a reader `#song`. You have to configure the cell to use a Struct twin {TODO: document}
 * **HTML Escaping:** Output is only escaped once, when using a reader method _in the view_. This highly speeds up rendering and removes the need to use `html_safe` on every string in the stack.
-* *Template Engines:* There's now _one_ template engine (e.g. ERB or HAML) per cell class. It can be set using `ViewModel::template_engine=`. In 99.9% of all cases a single application uses one single template engine application-wide, there's no need to manage code and waste lookup time for two alternative engines within one cell.
-* **File Naming**. The default filename just uses the engine suffix, e.g. `show.haml`. If you have two different formats, use the `format:` option in render {TODO: implement that}.
+* **Template Engines:** There's now _one_ template engine (e.g. ERB or HAML) per cell class. It can be set using `ViewModel::template_engine=`. In 99.9% of all cases a single application uses one single template engine application-wide, there's no need to manage code and waste lookup time for two alternative engines within one cell.
+* **File Naming**. The default filename just uses the engine suffix, e.g. `show.haml`. If you have two different engine formats (e.g. `show.haml` and `show.erb`), use the `format:` option: `render format: :erb`.
+    If you need to render a specific mime type, provide the filename: `render view: "show.html"`.
+
+### Removed
+
+* `Cell::Rails` and `Cell::Base` got removed. Every cell is `ViewModel` or `Concept` now.
 
 ### Internals
 
