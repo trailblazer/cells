@@ -250,8 +250,28 @@ class CachingTest < MiniTest::Spec
     end
   end
 
-  # TODO: test expires_in.
-  # TODO: test :tags => lambda { |one, two, three| "#{one},#{two},#{three}" }
+  # options are passed through to cache store.
+  # :expires_in.
+  # :tags => lambda { |one, two, three| "#{one},#{two},#{three}" }
+  class CacheStore
+    attr_reader :fetch_args
+
+    def fetch(*args)
+       @fetch_args = args
+    end
+  end
+
+  it do
+    cell = self.cell
+
+    cell.instance_eval do
+      def cache_store; @cache_store ||= CacheStore.new; end
+    end
+
+    cell.class.cache :show, expires_in: 1.minutes, tags: lambda { self.class.to_s }
+    cell.call
+    cell.cache_store.fetch_args.must_equal ["cells/caching_test/director/show/", {expires_in: 60, tags: "CachingTest::DirectorCell"}]
+  end
 end
 
 
