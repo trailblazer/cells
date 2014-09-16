@@ -13,11 +13,6 @@ class DirectorCell < Cell::ViewModel
   def tock
     @count += 1
   end
-
-  cache :utf8
-  def utf8
-    "æøå" # or any other UTF-8 string
-  end
 end
 
 
@@ -128,6 +123,12 @@ class CachingTest < MiniTest::Spec
 
     def show # public method.
       @counter
+    end
+
+
+    cache :utf8
+    def utf8
+      "æøå" # or any other UTF-8 string
     end
   end
 
@@ -242,9 +243,9 @@ class CachingTest < MiniTest::Spec
         @key = cell.class.state_cache_key(:utf8)
       end
 
-      it "have the correct encoding when reading from cache" do
+      it "has the correct encoding when reading from cache" do
         assert_equal "UTF-8", cell.call(:utf8).encoding.to_s
-        assert_equal "UTF-8", cell.class.cache_store.read(@key).encoding.to_s
+        assert_equal "UTF-8", cell.cache_store.read(@key).encoding.to_s
       end
     end
   end
