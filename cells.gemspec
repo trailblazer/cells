@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Nick Sutterer"]
   spec.email       = ["apotonick@gmail.com"]
   spec.homepage    = "http://cells.rubyforge.org"
-  spec.summary     = %q{View Components for Rails.}
-  spec.description = %q{Cells are view components for Rails. They are lightweight controllers, can be rendered in views and thus provide an elegant and fast way for encapsulation and component-orientation.}
+  spec.summary     = %q{View Models for Rails.}
+  spec.description = %q{Cells replace partials and helpers with OOP view models, giving you proper encapsulation, inheritance, testability and a cleaner view architecture.}
   spec.license     = 'MIT'
 
   spec.files         = `git ls-files`.split("\n")
