@@ -32,6 +32,11 @@ class UrlHelperTest < MiniTest::Spec
       form_tag("/songs") + content_tag(:span) + "</form>"
     end
 
+    include ActionView::Helpers::AssetTagHelper
+    def with_link_to
+      render
+    end
+
     include ActionView::Helpers::FormHelper
     def with_form_for_block
       render
@@ -67,6 +72,11 @@ class UrlHelperTest < MiniTest::Spec
 
   # capture
   it { cell.with_capture.must_equal "Nice!\n<b>Great!</b>\n" }
+
+  if Cell.rails_version >= 4.0
+    # link_to with block and img_tag
+    it { cell.with_link_to.must_equal "<a href=\"/songs\"><img alt=\"All\" src=\"/images/all.png\" />\n</a>\n" }
+  end
 end
 
 # start with content_tag and block (or capture) and find out how sinatra handles that. goal is NOT to use those hacks in haml's action_view_extensions.

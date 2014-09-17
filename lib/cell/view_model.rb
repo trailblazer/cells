@@ -116,10 +116,10 @@ module Cell
     # Invokes the passed method (defaults to :show) by using +render_state+. This will respect caching.
     # Yields +self+ (the cell instance) to an optional block.
     def call(state=:show)
-      # DISCUSS: IN CONCEPT: render( view: implicit_state)
       content = render_state(state)
       yield self if block_given?
-      content
+
+      content.to_s.html_safe
     end
 
   private

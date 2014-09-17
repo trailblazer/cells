@@ -147,15 +147,15 @@ class CachingTest < MiniTest::Spec
     cell.class.cache :show
     ActionController::Base.perform_caching = false
 
-    cell(1).call.must_equal 1
-    cell(2).call.must_equal 2
+    cell(1).call.must_equal "1"
+    cell(2).call.must_equal "2"
   end
 
   # cache forever when no options.
   it do
     cell.class.cache :show
-    cell(1).call.must_equal 1
-    cell(2).call.must_equal 1
+    cell(1).call.must_equal "1"
+    cell(2).call.must_equal "1"
   end
 
 
@@ -167,8 +167,8 @@ class CachingTest < MiniTest::Spec
       end
     end
 
-    cell(1).call(:dictate).must_equal 1
-    cell(2).call(:dictate).must_equal 2
+    cell(1).call(:dictate).must_equal "1"
+    cell(2).call(:dictate).must_equal "2"
   end
 
   # compute key with cell properties from #initialize.
@@ -177,10 +177,10 @@ class CachingTest < MiniTest::Spec
       @counter < 3 ? {:count => "<"} : {:count => ">"}
     end
 
-    cell(1).call.must_equal 1
-    cell(2).call.must_equal 1
-    cell(3).call.must_equal 3
-    cell(4).call.must_equal 3
+    cell(1).call.must_equal "1"
+    cell(2).call.must_equal "1"
+    cell(3).call.must_equal "3"
+    cell(4).call.must_equal "3"
   end
 
   # compute key with instance method
@@ -192,10 +192,10 @@ class CachingTest < MiniTest::Spec
       end
     end
 
-    cell(1).call.must_equal 1
-    cell(2).call.must_equal 1
-    cell(3).call.must_equal 3
-    cell(4).call.must_equal 3
+    cell(1).call.must_equal "1"
+    cell(2).call.must_equal "1"
+    cell(3).call.must_equal "3"
+    cell(4).call.must_equal "3"
   end
 
   # allow returning strings for key
@@ -204,20 +204,20 @@ class CachingTest < MiniTest::Spec
       @counter < 3 ? "<" : ">"
     end
 
-    cell(1).call.must_equal 1
-    cell(2).call.must_equal 1
-    cell(3).call.must_equal 3
-    cell(4).call.must_equal 3
+    cell(1).call.must_equal "1"
+    cell(2).call.must_equal "1"
+    cell(3).call.must_equal "3"
+    cell(4).call.must_equal "3"
   end
 
   # allows conditional ifs.
   it do
     cell.class.cache :show, if: lambda { @counter < 3 }
 
-    cell(1).call.must_equal 1
-    cell(2).call.must_equal 1
-    cell(3).call.must_equal 3
-    cell(4).call.must_equal 4
+    cell(1).call.must_equal "1"
+    cell(2).call.must_equal "1"
+    cell(3).call.must_equal "3"
+    cell(4).call.must_equal "4"
   end
 
   # allows conditional ifs with instance method.
@@ -230,10 +230,10 @@ class CachingTest < MiniTest::Spec
       end
     end
 
-    cell(1).call.must_equal 1
-    cell(2).call.must_equal 1
-    cell(3).call.must_equal 3
-    cell(4).call.must_equal 4
+    cell(1).call.must_equal"1"
+    cell(2).call.must_equal"1"
+    cell(3).call.must_equal "3"
+    cell(4).call.must_equal "4"
   end
 
 

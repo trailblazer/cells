@@ -56,6 +56,9 @@ class RenderTest < MiniTest::Spec
   # call(:form) renders :form
   it { SongCell.new(nil).call(:with_view_name).must_equal "Man Of Steel\n" }
 
+  # #call returns html_safe.
+  it { SongCell.new(nil).call.must_be_instance_of ActiveSupport::SafeBuffer }
+
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
