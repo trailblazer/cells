@@ -1,4 +1,3 @@
-# TODO: deprecate parent_controller, ViewModel
 class Cell::Concept < Cell::ViewModel
   abstract!
   self.view_paths = ["app/concepts"]

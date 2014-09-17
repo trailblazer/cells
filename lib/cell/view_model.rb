@@ -51,7 +51,7 @@ module Cell
       def collection(name, controller, array, options)
         method = :show
 
-        array.collect { |model| cell_for(name, *[controller, model, options]).call(method) }.join("\n")
+        array.collect { |model| cell_for(name, *[controller, model, options]).call(method) }.join("\n").html_safe
       end
 
       # Returns cell instance.

@@ -22,6 +22,11 @@ class PublicTest < MiniTest::Spec
   # ViewModel.cell(collection: []) renders cells.
   it { Cell::ViewModel.cell("public_test/song", nil, collection: [Object, Module]).must_equal "[Object, {}]\n[Module, {}]" }
 
+  # ViewModel.cell(collection: []) renders html_safe.
+  it { Cell::ViewModel.cell("public_test/song", nil, collection: [Object]).class.must_equal ActiveSupport::SafeBuffer }
+
   # ViewModel.cell(collection: []) passes generic options to cell.
   it { Cell::ViewModel.cell("public_test/song", nil, collection: [Object, Module], genre: "Metal").must_equal "[Object, {:genre=>\"Metal\"}]\n[Module, {:genre=>\"Metal\"}]" }
 end
+
+# TODO: test with polymorpic collection and builder.
