@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   # spec.add_development_dependency "haml"
   spec.add_development_dependency "slim"
   spec.add_development_dependency "tzinfo" # FIXME: why the hell do we need this for 3.1?
-  spec.add_development_dependency "minitest",	">= 4.7.5"
+  spec.add_development_dependency "minitest",	"~> 5.4.1"
   spec.add_development_dependency "test_xml"
   spec.add_development_dependency "activemodel"
   # spec.add_development_dependency "activerecord"
