@@ -14,7 +14,7 @@ class SongCell < Cell::ViewModel
 end
 
 time = Benchmark.measure do
-  Cell::ViewModel.collection(:song, nil, 1000.times.collect { Song.new("Anarchy Camp") })
+  Cell::ViewModel.cell(:song, nil, collection: 1000.times.collect { Song.new("Anarchy Camp") })
 end
 
 puts time
@@ -27,3 +27,6 @@ puts time
 
   # caching of templates
   #  0.090000   0.000000   0.090000 (  0.085652)
+
+  # wed, 17.
+  #   0.120000   0.010000   0.130000 (  0.127731)
