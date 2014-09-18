@@ -1,6 +1,6 @@
 require "rails/railtie"
 
-module Cells
+module Cell
   class Railtie < ::Rails::Railtie
     config.cells = ActiveSupport::OrderedOptions.new
 

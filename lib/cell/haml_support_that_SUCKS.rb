@@ -1,4 +1,4 @@
-
+#That really ugly
 
 module WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
   def output_buffer_with_haml

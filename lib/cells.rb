@@ -39,8 +39,7 @@ require 'cell/caching'
 
 require 'cell/view_model'
 require 'cell/concept'
-# require 'cells/engines'
+require 'cell/railtie'
 
-# TODO: only if Rails?
+# Weird!
 require 'cell/rails'
-require 'cells/railtie'
