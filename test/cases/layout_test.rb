@@ -1,42 +1,5 @@
 require 'test_helper'
-
-class SongWithLayoutCell < Cell::ViewModel
-  self.view_paths = ['test/fixtures']
-
-  def show
-    render layout: :merry
-  end
-
-  def unknown
-    render layout: :no_idea_what_u_mean
-  end
-
-  def what
-    "Xmas"
-  end
-
-  def string
-    "Right"
-  end
-
-private
-  def title
-    "<b>Papertiger</b>"
-  end
-end
-
-class SongWithLayoutOnClassCell < SongWithLayoutCell
-  # inherit_views SongWithLayoutCell
-  layout :merry
-
-  def show
-    render
-  end
-
-  def show_with_layout
-    render layout: :happy
-  end
-end
+require 'cells/song_with_layout_on_class_cell'
 
 class LayoutTest < MiniTest::Spec
   # render show.haml calling method.
