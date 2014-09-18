@@ -1,11 +1,11 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'cells/version'
+require 'cell/version'
 
 Gem::Specification.new do |spec|
   spec.name        = "cells"
-  spec.version     = Cells::VERSION
+  spec.version     = Cell::VERSION::STRING
   spec.platform    = Gem::Platform::RUBY
   spec.authors     = ["Nick Sutterer"]
   spec.email       = ["apotonick@gmail.com"]
