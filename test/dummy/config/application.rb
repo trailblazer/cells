@@ -5,7 +5,7 @@ require "action_controller/railtie"
 require "action_view/railtie"
 
 require "cells"
-require "sprockets/railtie" if Cell.rails_version >= "3.1"
+require 'sprockets/railtie'
 
 module Dummy
   class Application < Rails::Application
@@ -18,11 +18,8 @@ module Dummy
     config.secret_token = "some secret phrase of at least 30 characters"
 
     # enable asset pipeline as in development.
-    if Cell.rails_version >= "3.1"
-      config.assets.enabled = true
-      config.assets.compile = true
-
-      config.cells.with_assets = ["album", "song"]
-    end
+    config.assets.enabled = true
+    config.assets.compile = true
+    config.cells.with_assets = ["album", "song"]
   end
 end
