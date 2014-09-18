@@ -1,7 +1,7 @@
 require 'test_helper'
 
 Cell::Concept.class_eval do
-  self.view_paths = ["test/vm/fixtures/concepts"]
+  self.view_paths = ['test/fixtures/concepts']
 end
 
 # Trailblazer style:

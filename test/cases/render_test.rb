@@ -1,44 +1,5 @@
 require 'test_helper'
-
-class SongCell < Cell::ViewModel
-  self.view_paths = ["test/vm/fixtures"]
-
-  def show
-    render
-  end
-
-  def ivar
-    @title = "Carnage"
-    render
-  end
-
-  def unknown
-    render
-  end
-
-  def string
-    "Right"
-  end
-
-  # TODO: just pass hash.
-  def with_locals
-    render locals: {length: 280, title: "Shot Across The Bow"}
-  end
-
-  def with_erb
-    render template_engine: :erb
-  end
-
-  def with_view_name
-    @title = "Man Of Steel"
-    render :ivar
-  end
-
-private
-  def title
-    "Papertiger"
-  end
-end
+require 'cells/song_cell'
 
 class RenderTest < MiniTest::Spec
   # render show.haml calling method.
@@ -62,7 +23,7 @@ class RenderTest < MiniTest::Spec
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
-    exception.message.must_equal "Template missing: view: `unknown.haml` prefixes: [\"song\"] view_paths:[\"test/vm/fixtures\"]"
+    exception.message.must_equal 'Template missing: view: `unknown.haml` prefixes: ["song"] view_paths:["test/fixtures"]'
   end
 
   # allows locals

@@ -8,7 +8,7 @@ class UrlHelperTest < MiniTest::Spec
   let (:cell) { SongCell.new(controller) }
 
   class SongCell < Cell::ViewModel
-    self.view_paths = ["test/vm/fixtures"]
+    self.view_paths = ['test/fixtures']
 
     include ActionView::Helpers::FormTagHelper
 

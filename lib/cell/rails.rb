@@ -9,7 +9,7 @@ module Cell
       end
 
       def concept(name, *args, &block)
-        return Cell::Concept.cell(name, self, *args, &block)
+        Cell::Concept.cell(name, self, *args, &block)
       end
 
       # # Renders the cell state and returns the content. You may pass options here, too. They will be
