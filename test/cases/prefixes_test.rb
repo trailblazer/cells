@@ -53,7 +53,7 @@ end
 
 class InheritViewsTest < MiniTest::Spec
   class SlapperCell < Cell::ViewModel
-    self.view_paths = ["test/vm/fixtures"] # todo: REMOVE!
+    self.view_paths = ['test/fixtures'] # todo: REMOVE!
 
     inherit_views ::BassistCell
 
