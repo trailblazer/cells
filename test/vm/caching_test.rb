@@ -31,7 +31,7 @@ class CachingUnitTest < MiniTest::Spec
     it { director.state_cache_key(:count).must_equal "cells/director/count/" }
 
     # accepts hash as key parts
-    if Cell.rails_version >= ("4.0")
+    if Cell.rails_version >= Gem::Version.new('4.0')
       it { director.state_cache_key(:count, b: 2, a: 1).must_equal "cells/director/count/b/2/a/1" }
     else
       it { director.state_cache_key(:count, b: 2, a: 1).must_equal "cells/director/count/a=1&b=2" }

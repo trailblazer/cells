@@ -184,7 +184,7 @@ module Cell
     # FIXME: this module is to fix a design flaw in Rails 4.0. the problem is that AV::UrlHelper mixes in the wrong #url_for.
     # if we could mix in everything else from the helper except for the #url_for, it would be fine.
     # FIXME: fix that in rails core.
-    if Cell.rails_version.~("4.0", "4.1")
+    if Cell.rails_version <= Gem::Version.new('4.0')
       include ActionView::Helpers::UrlHelper # gives us breaking #url_for.
 
       def url_for(options = nil) # from ActionDispatch:R:UrlFor.

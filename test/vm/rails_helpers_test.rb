@@ -74,7 +74,7 @@ class UrlHelperTest < MiniTest::Spec
   it { cell.with_capture.must_equal "Nice!\n<b>Great!</b>\n" }
 
   # there's again escaping happening where it shouldn't be in link_to and rails <= 3.2.
-  if Cell.rails_version >= 4.0
+  if Cell.rails_version >= Gem::Version.new('4.0')
     # link_to with block and img_tag
     it { cell.with_link_to.must_equal "<a href=\"/songs\"><img alt=\"All\" src=\"/images/all.png\" />\n</a>\n" }
   end
