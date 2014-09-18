@@ -15,6 +15,7 @@ end
 require 'tilt'
 require 'uber/inheritable_attr'
 require 'uber/delegates'
+require 'cell/version'
 
 module Cell
   def self.rails_version
