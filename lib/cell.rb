@@ -16,6 +16,7 @@ module Cell
 end
 
 require 'cell/caching'
+require 'cell/caching/notification'
 require 'cell/builder'
 require 'cell/prefixes'
 require 'cell/self_contained'
