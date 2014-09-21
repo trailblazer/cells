@@ -1,0 +1,32 @@
+require 'tilt'
+require 'uber/inheritable_attr'
+require 'uber/delegates'
+require 'cell/version'
+
+module Cell
+  def self.rails_version
+    Gem::Version.new(::ActionPack::VERSION::STRING)
+  end
+
+  class TemplateMissingError < RuntimeError
+    def initialize(base, prefixes, view, engine, formats)
+      super("Template missing: view: `#{view.to_s}.#{engine}` prefixes: #{prefixes.inspect} view_paths:#{base.inspect}")
+    end
+  end # Error
+end
+
+require 'cell/caching'
+require 'cell/builder'
+require 'cell/prefixes'
+require 'cell/self_contained'
+require 'cell/layout'
+require 'cell/templates'
+require 'cell/caching'
+
+require 'cell/view_model'
+require 'cell/concept'
+# require 'cells/engines'
+
+# TODO: only if Rails?
+require 'cell/rails'
+require 'cells/railtie'
