@@ -5,26 +5,25 @@
 
 ## Overview
 
-Cells allow you to encapsulate parts of your page into a separate MVC component. They look and feel like controllers, can run arbitrary code in an action and render views.
+Cells allow you to encapsulate parts of your page into separate MVC components. These components are called _view models_.
 
-While they improve your overall software architecture by abstracting logic into an encapsulated OOP instance, cells also maximise reuseability within or across projects.
+You can render view models anywhere in your code. Mostly, cells are used in views to replace a helper/partial/filter mess, as a mailer renderer substitute or they get hooked to routes to completely bypass `ActionController`.
 
-Basically, cells can be rendered anywhere in your code. Most people use them in views to replace a helper/partial/filter mess, as a mailer renderer substitute or hook them to routes and completely bypass `ActionController`.
+As you might have noticed we use _cell_ and _view model_ interchangeably here.
 
+## No ActionView
 
-## View Models
+Starting with Cells 4.0 we no longer use `ActionView` as a template engine. Removing this jurassic dependency cuts down Cells' rendering code to less than 50 lines and improves rendering speed by 300%!
 
-Since version 3.9 cells comes with two "dialects": You can still use a cell like a controller. However, the new [view model](https://github.com/apotonick/cells#view-models-explained) "dialect" supercedes the traditional cell. It allows you to treat a cell more object-oriented while providing an alternative approach to helpers.
-
-While the old dialect still works, we strongly recommend using a cell as a view model.
+**Note for Cells 3.x:** This README only documents Cells 4.0. Please [read the old README if you're using Cells 3.x](https://github.com/apotonick/cells/tree/31f6ed82b87b3f92613698442fae6fd61cc16de9#cells).
 
 
 ## Installation
 
-Cells run with all Rails >= 3.0. For 2.3 support [see below](#rails-23-note).
+Cells run with all Rails >= 3.2. Lower versions of Rails will still run with Cells, but you will get in trouble with the helpers.
 
 ```ruby
-gem 'cells'
+gem 'cells', "~> 4.0.0"
 ```
 
 ## File Layout
@@ -43,32 +42,99 @@ app
 
 ## Generate
 
-Creating a cell is nothing more than
+Use the bundled generator to set up a cell.
 
 ```shell
-rails generate cell cart show -e haml
+rails generate cell comment show
 ```
 
 ```
 create  app/cells/
-create  app/cells/cart
-create  app/cells/cart_cell.rb
-create  app/cells/cart/show.html.haml
-create  test/cells/cart_test.rb
+create  app/cells/comment
+create  app/cells/comment_cell.rb
+create  app/cells/comment/show.haml
 ```
 
-That looks very familiar.
 
-## Render the cell
+## Rendering View Models
 
-Now, render your cart. Why not put it in `layouts/application.html.erb` for now?
+Cells brings you one helper method `#cell` to be used in your controller views or layouts.
 
-```erb
-<div id="header">
-  <%= render_cell :cart, :show, :user => @current_user %>
+```haml
+= cell(:comment, Comment.find(1)).call
 ```
 
-Feels like rendering a controller action. For good encapsulation we pass the current `user` from outside into the cell - a dependency injection.
+Note that a view model _always_ requires a model in the constructor (or a composition). This doesn't have to be an `ActiveRecord` object but can be any type of Ruby object you want to present.
+
+The only public method of a view model is `#call`. When invoked, this will internally call the `#show` method per default.
+
+
+## View Model Classes
+
+A view model is always implemented as a class. This gives you encapsulation, proper inheritance and namespacing out-of-the-box.
+
+```ruby
+class CommentCell < Cell::ViewModel
+  def show
+    render
+  end
+end
+```
+
+Calling `#render` will render the cell's `show.haml` template, located in `app/cells/comment`. Invoking `render` is explicit: this means, it really returns the rendered view string, allowing you to modify the HTML afterwards.
+
+```ruby
+def show
+  "<div>" + render + "</div>"
+end
+```
+
+## Views In Theory
+
+In Cells, we don't distinguish between _view_ or _partial_. Every view you render is a partial, every partial a view. You can render views inside views, compose complex UI blocks with multiple templates and go crazy. This is what cells _views_ are made for.
+
+Cells supports all template engines that are supported by the excellent [tilt](https://github.com/rtomayko/tilt) gem - namely, this is ERB, HAML, Slim, and many more.
+
+In these examples, we're using HAML.
+
+BTW, Cells doesn't include the format into the view name. 99% of all cells render HTML anyway, so we prefer short names like `show.haml`.
+
+
+## Views In Practice
+
+Let's check out the `app/cells/comment/show.haml` view to see how they work.
+
+```haml
+%h1 Comment
+
+= model.body
+By
+= link_to model.author.name, model.author
+```
+
+Cells provides you the view _model_ via the `#model` method. Here, this returns the `Comment` instance passed into the constructor.
+
+## No Helpers
+
+The difference to conventional Rails views is that every method called in a view is directly called on the cell instance. The cell instance _is_ the rendering context. This allows a very object-oriented and clean way to implement views.
+
+Helpers as known from conventional Rails where methods and variables get copied between view and controller no longer exist in Cells.
+
+Note that you can still use helpers like `link_to` and all the other friends - you have to _include_ them into the cell class, though.
+
+
+## Logicless Views
+
+
+
+
+
+## Render
+
+multiple times allowed
+:view
+:format ".html"
+
 
 ## Code
 
