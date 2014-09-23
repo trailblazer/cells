@@ -9,7 +9,7 @@ Cells allow you to encapsulate parts of your page into separate MVC components. 
 
 You can render view models anywhere in your code. Mostly, cells are used in views to replace a helper/partial/filter mess, as a mailer renderer substitute or they get hooked to routes to completely bypass `ActionController`.
 
-As you might have noticed we use _cell_ and _view model_ interchangeably here.
+As you have already noticed we use _cell_ and _view model_ interchangeably here.
 
 ## No ActionView
 
@@ -114,6 +114,42 @@ By
 
 Cells provides you the view _model_ via the `#model` method. Here, this returns the `Comment` instance passed into the constructor.
 
+Of course, this view is a mess and needs be get cleaned up!
+
+## Logicless Views
+
+This is how a typical view looks in a view model.
+
+```haml
+%h1 Comment
+
+= body
+By
+= author_link
+```
+
+The methods we call in the view now need to be defined in the cell instance.
+
+```ruby
+class CommentCell < Cell::ViewModel
+  def show
+    render
+  end
+
+private
+
+  def body
+    model.body
+  end
+
+  def author_link
+    link_to model.author.name, model.author
+  end
+end
+```
+
+See how you can use helpers in a cell instance?
+
 ## No Helpers
 
 The difference to conventional Rails views is that every method called in a view is directly called on the cell instance. The cell instance _is_ the rendering context. This allows a very object-oriented and clean way to implement views.
@@ -122,11 +158,27 @@ Helpers as known from conventional Rails where methods and variables get copied 
 
 Note that you can still use helpers like `link_to` and all the other friends - you have to _include_ them into the cell class, though.
 
+## Automatic Properties
 
-## Logicless Views
+Often, as in the `#body` method, you simply need to delegate properties from the model. This can be done automatically using `::property`.
 
+```ruby
+class CommentCell < Cell::ViewModel
+  def show
+    render
+  end
 
+private
+  property :body
+  property :author
 
+  def author_link
+    link_to author.name, author
+  end
+end
+```
+
+Readers are automatically created when defined with `::property`.
 
 
 ## Render
@@ -136,60 +188,11 @@ multiple times allowed
 :format ".html"
 
 
-## Code
-
-Time to improve our cell code. Let's start with `app/cells/cart_cell.rb`:
-
-```ruby
-class CartCell < Cell::Rails
-  def show(args)
-    user    = args[:user]
-    @items  = user.items_in_cart
-
-    render  # renders show.html.haml
-  end
-end
-```
-
-Is that a controller? Hell, yeah. We even got a `#render` method as we know it from the good ol' `ActionController`.
+options
 
 
-## Views
 
-Since a plain call to `#render` will start rendering `app/cells/cart/show.html.haml` we should put some meaningful markup there.
-
-```haml
-#cart
-  You have #{@items.size} items in your shopping cart.
-```
-
-### ERB? Haml? Builder?
-
-Yes, Cells support all template types that are supported by Rails itself. Remember- it's a controller!
-
-### Helpers
-
-Yes, Cells have helpers just like controllers. If you need some specific helper, do
-
-```ruby
-class CartCell < Cell::Rails
-  helper MyExtraHelper
-```
-
-and it will be around in your cart views.
-
-### Partials?
-
-In Cells, everything template file is a _view_. You're still free to render views within views (aka "partial") but we just call it "_view_". There's no need to have two different types of views. Whenever you're tempted to render a partial, use the cells term `view`.
-
-```haml
-/ app/cells/comment/show.haml
-
-%h1 All comments
-
-%p
-  = render :view => 'items'
-```
+# TODO: merge stuff below!
 
 ## File Structure
 
@@ -489,100 +492,6 @@ To run your specs we got a rake task, too!
 rake spec:cells
 ```
 
-# View Models, Explained
-
-View models supersede the old controller-like cells. View models feel more natural as they wrap domain models and then add decorating methods for the view.
-
-They are also significantly faster since they don't need to copy helpers and instance variables to the view: The view model itself is the view context. That means, methods called in the view are invoked on your cell instance.
-
-
-```ruby
-# app/cells/song_cell.rb
-class SongCell < Cell::ViewModel
-end
-```
-
-### Creation
-
-Instantiating the view model should happen in controllers and views, but you can virtually use them anywhere.
-
-A default workflow for creating and rendering a view model looks as the following.
-
-```ruby
-song = Song.find(1)
-
-@cell = cell(:song, song).call
-```
-
-The `#cell` helper gives you an instance of the `SongCell` cell and wraps the `song` object.
-
-### Rendering
-
-The `call` invocation instructs the cell to render. Internally, that runs `render_state(:show)` per default.
-
-You can basically invoke any method you want on that cell. Nevertheless, a view model should only expose the `#show` method per convention, which is reflected by the `#call` alias.
-
-It is important to understand this convention: Internally, you may render multiple views, combine them, use instance methods to render and format values, and so on. Externally, exposing only one "public", rendering method defines a strong interface for your view model.
-
-```ruby
-class SongCell < Cell::ViewModel
-  def show
-    render
-  end
-end
-```
-
-The `render` call will render the cell's `show` view.
-
-### Views
-
-```haml
-- # app/cells/song/show.haml
-
-%h1 #{title}
-
-%p Written at #{composed_at}
-
-= author_box
-```
-
-We strongly recommend to only invoke _methods_ in views and _not_ to use instance variables and locals. In a view model template (or, view), methods are called on the view model instance itself, meaning you can easily expose "helpers" by defining instance methods.
-
-### Helpers
-
-```ruby
-class SongCell < Cell::ViewModel
-  include TimeagoHelper
-
-  def show
-    render
-  end
-
-  def composed_at
-    timeago(model.created_at)
-  end
-end
-```
-
-In other words, using `composed_at` in the view will call `SongCell#composed_at`. Note that you have to `include` additional helpers into the class.
-
-The `#model` methods lets you access the wrapped `Song` instance we passed into the cell when creating it.
-
-### Properties
-
-Often, it is helpful to automatically expose some reader methods to the model. You can do that with `::property`.
-
-```ruby
-class SongCell < Cell::ViewModel
-  include TimeagoHelper
-
-  property :title
-
-  # ...
-end
-```
-
-You can now safely use `#title` in the view (and, in the cell class), it is delegated to `model.title`.
 
 ### Call
 
@@ -743,48 +652,7 @@ ActionMailer doesn't have request object, so if you inherit from Cell::Rails you
 
 You can fix that with [actionmailer_with_request](https://github.com/weppos/actionmailer_with_request) which (suprise!) brings request object to the ActionMailer.
 
-## Using Rails Gems Like simple_form Outside Of Rails
 
-Cells can be used outside of Rails. A new module brought in 3.8.5 provides the Rails view "API" making it possible to use gems like  the popular [simple_form](https://github.com/plataformatec/simple_form) outside Rails!
-
-All you need to do is providing the cell with some helpers, usually it's the polymorphic routing paths required by the gems.
-
-```ruby
-module RoutingHelpers
-  def musician_path(model)
-    "/musicians/#{model.id}"
-  end
-end
-```
-
-Then, use the Cell::Rails::HelperAPI module and it should work fine (depending on the quality of the gem you're desiring to use).
-
-```ruby
-require 'cell/base'
-require "cell/rails/helper_api"
-require "simple_form"
-
-class BassistCell < Cell::Base
-  include Cell::Rails::HelperAPI
-
-  self._helpers = RoutingHelpers
-
-  def show
-    @musician = Musician.find(:first)
-  end
-end
-```
-
-Your views can now use the gem's helpers.
-
-```erb
-<%= simple_form_for @musician do |f| %>
-  <%= f.input :name %>
-  <%= f.button :submit %>
-<% end %>
-```
-
-Note that this currently "only" works with Rails 3.2-4.0.
 
 ## Cells is Rails::Engine aware!
 
@@ -817,30 +685,10 @@ config.generators do |g|
 end
 ```
 
-## Rails 2.3 note
-
-### Installation
-
-```shell
-gem install cells -v 3.3.9
-```
-
-In order to copy the cells rake tasks to your app, run
-
-```shell
-script/generate cells_install
-```
 
 ## Capture Support
 
 If you need a global `#content_for` use the [cells-capture](https://github.com/apotonick/cells-capture) gem.
-
-## More features
-
-Cells can do more.
-
-* __No Limits__. Have as many cells in your page as you need - no limitation to your `render_cell` calls.
-* __Cell Nesting__. Have complex cell hierarchies as you can call `render_cell` within cells, too.
 
 Go for it, you'll love it!
 
