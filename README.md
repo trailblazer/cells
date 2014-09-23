@@ -61,12 +61,12 @@ create  app/cells/comment/show.haml
 Cells brings you one helper method `#cell` to be used in your controller views or layouts.
 
 ```haml
-= cell(:comment, Comment.find(1)).call
+= cell(:comment, Comment.find(1))
 ```
 
 Note that a view model _always_ requires a model in the constructor (or a composition). This doesn't have to be an `ActiveRecord` object but can be any type of Ruby object you want to present.
 
-The only public method of a view model is `#call`. When invoked, this will internally call the `#show` method per default.
+This will instantiate an actual cell instance. Once the cell's `#to_s` method is called (which happens implicitely via the rendering outer template) this will invoke the cell's `#show` method. Please [refer to the docs](#invocation-styles) for different ways of invoking view models.
 
 
 ## View Model Classes
@@ -102,9 +102,11 @@ BTW, Cells doesn't include the format into the view name. 99% of all cells rende
 
 ## Views In Practice
 
-Let's check out the `app/cells/comment/show.haml` view to see how they work.
+Let's check out the `show.haml` view to see how they work.
 
 ```haml
+-# app/cells/comment/show.haml
+
 %h1 Comment
 
 = model.body
@@ -121,6 +123,8 @@ Of course, this view is a mess and needs be get cleaned up!
 This is how a typical view looks in a view model.
 
 ```haml
+-# app/cells/comment/show.haml
+
 %h1 Comment
 
 = body
@@ -186,10 +190,13 @@ Readers are automatically created when defined with `::property`.
 multiple times allowed
 :view
 :format ".html"
+template_engine
+view_paths
 
 
 options
 
+## Invocation styles
 
 
 # TODO: merge stuff below!

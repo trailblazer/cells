@@ -122,6 +122,10 @@ module Cell
       content.to_s.html_safe
     end
 
+    def to_s
+      call
+    end
+
   private
     module Rendering
       def render_state(state)

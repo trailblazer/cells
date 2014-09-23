@@ -44,8 +44,16 @@ end
 
 
 class MusicianController < ActionController::Base
-  def view_with_concept
+  def view_with_concept_with_show
     render :inline => %{<%= concept("view_extensions_test/cell", "Up For Breakfast", volume: 1).show %>} # TODO: concept doesn't need .call
+  end
+
+  def view_with_concept_without_call
+    render :inline => %{<%= concept("view_extensions_test/cell", "A Tale That Wasn't Right") %>} # this tests ViewModel#to_s.
+  end
+
+  def view_with_concept_with_call
+    render :inline => %{<%= concept("view_extensions_test/cell", "A Tale That Wasn't Right").call %>} # this tests ViewModel#to_s.
   end
 
 
