@@ -33,7 +33,7 @@ end
 
 
 class ConceptTest < MiniTest::Spec
-  include Cell::TestCase::TestMethods
+  include Cell::TestHelper
 
 
   describe "::controller_path" do
