@@ -37,7 +37,7 @@ module Cell
 
 
     def self.controller_path
-      @controller_path ||= name.sub(/Cell$/, '').underscore unless anonymous?
+      @controller_path ||= name.sub(/Cell$/, '').underscore
     end
 
     include ActionController::RequestForgeryProtection
