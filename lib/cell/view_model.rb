@@ -122,9 +122,7 @@ module Cell
       content.to_s.html_safe
     end
 
-    def to_s
-      call
-    end
+    alias_method :to_s, :call
 
   private
     module Rendering
