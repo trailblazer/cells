@@ -1,5 +1,3 @@
-require 'cell/test_helper'
-
 module Cell
   # Test your cells.
   #
@@ -40,12 +38,6 @@ module Cell
   # +assert_selector+:: Like #assert_select except that the last argument is the html markup you wanna test.
   # +cell+:: Gives you a cell instance for unit testing and stuff.
   class TestCase < ActiveSupport::TestCase
-
-
-    include TestHelper
-    include ActionDispatch::Assertions::SelectorAssertions  # imports "their" #assert_select.
-    alias_method :rails_assert_select, :assert_select # i hate that.
-
     extend ActionController::TestCase::Behavior::ClassMethods
     class_attribute :_controller_class
 

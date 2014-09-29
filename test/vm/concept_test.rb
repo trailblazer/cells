@@ -33,9 +33,6 @@ end
 
 
 class ConceptTest < MiniTest::Spec
-  include Cell::TestHelper
-
-
   describe "::controller_path" do
     it { Record::Cell.new(@controller).controller_path.must_equal "record" }
     it { Record::Cell::Song.new(@controller).controller_path.must_equal "record/song" }
