@@ -42,6 +42,10 @@ module Cell
       def cell(name, *args)
         ViewModel.cell_for(name, @controller, *args)
       end
+
+      def concept(name, *args)
+        Concept.cell_for(name, @controller, *args)
+      end
     end
 
     extend ActionController::TestCase::Behavior::ClassMethods
