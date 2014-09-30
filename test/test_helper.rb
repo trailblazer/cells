@@ -8,17 +8,10 @@ require "dummy/config/environment"
 require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'
-
-# Cell::Rails.append_view_path(File.join(test_app_dir, 'cells'))
-# Cell::ViewModel.append_view_path(File.join(test_app_dir, 'cells'))
-
-
 require "cell/test_case"
-# Extend TestCase.
+
 MiniTest::Spec.class_eval do
-  def cell(name, *args) # todo: FUCKING REMOVE THIS HORRIBLE SHIT CONTROLLER!
-    Cell::ViewModel.cell_for(name, nil, *args) # TODO: move to TestCase.
-  end
+  include Cell::TestCase::Helpers
 end
 
 class BassistCell < Cell::ViewModel

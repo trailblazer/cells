@@ -113,7 +113,11 @@ module Cell
     end
 
 
-    # Invokes the passed method (defaults to :show) by using +render_state+. This will respect caching.
+    # Invokes the passed method (defaults to :show). This will respect caching and marks the string as html_safe.
+    #
+    # Please use #call instead of calling methods directly. This allows adding caching later without changing
+    # your code.
+    #
     # Yields +self+ (the cell instance) to an optional block.
     def call(state=:show)
       content = render_state(state)
@@ -177,10 +181,6 @@ module Cell
     end
 
     include Layout
-
-    # def implicit_state
-    #   controller_path.split("/").last
-    # end
 
 
     # FIXME: this module is to fix a design flaw in Rails 4.0. the problem is that AV::UrlHelper mixes in the wrong #url_for.

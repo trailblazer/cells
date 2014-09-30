@@ -38,6 +38,12 @@ module Cell
   # +assert_selector+:: Like #assert_select except that the last argument is the html markup you wanna test.
   # +cell+:: Gives you a cell instance for unit testing and stuff.
   class TestCase < ActiveSupport::TestCase
+    module Helpers
+      def cell(name, *args)
+        ViewModel.cell_for(name, @controller, *args)
+      end
+    end
+
     extend ActionController::TestCase::Behavior::ClassMethods
     class_attribute :_controller_class
 
