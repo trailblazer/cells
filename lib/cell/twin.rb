@@ -1,9 +1,6 @@
 require 'disposable/twin'
-require 'disposable/twin/option'
 module Cell
   class Twin < Disposable::Twin
-    include Option
-
     def self.property_names
       representer_class.representable_attrs.collect(&:name)
     end
