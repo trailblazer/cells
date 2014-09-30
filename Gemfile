@@ -9,5 +9,5 @@ gem 'minitest', '4.7.5'
 
 # gem 'uber', :path => "../uber"
 
-gem 'disposable'
+# gem 'disposable', :path => "../disposable"
 gem "haml", git: "https://github.com/haml/haml" # newest haml that doesn't have form helpers.

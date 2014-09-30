@@ -1,35 +1,20 @@
 require 'disposable/twin'
+
 module Cell
-  class Twin < Disposable::Twin
-    def self.property_names
-      representer_class.representable_attrs.collect(&:name)
+  module Twin
+    def self.included(base)
+      base.send :include, Disposable::Twin::Builder
+      base.extend ClassMethods
     end
 
-    module Properties
-      def self.included(base)
-        base.extend Uber::InheritableAttr
-        base.inheritable_attr :twin_class
-        base.extend ClassMethods
+    module ClassMethods
+      def twin(twin_class)
+        super(twin_class) { |dfn| property dfn.name } # create readers to twin model.
       end
+    end
 
-      module ClassMethods
-        def properties(twin_class)
-          twin_class.property_names.each { |name| property name }
-          self.twin_class = twin_class
-        end
-
-        alias_method :twin, :properties
-      end
-
-      def initialize(controller, model, options={})
-        super(controller, build_twin(model, options))
-      end
-
-    private
-
-      def build_twin(*args)
-        self.class.twin_class.new(*args)
-      end
+    def initialize(controller, model, options={})
+      super(controller, build_twin(model, options))
     end
   end
 end

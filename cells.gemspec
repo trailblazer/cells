@@ -37,5 +37,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "capybara"
   spec.add_development_dependency "sprockets"
-  spec.add_development_dependency "disposable", "~> 0.0.6"
+  spec.add_development_dependency "disposable", "~> 0.0.8"
 end
