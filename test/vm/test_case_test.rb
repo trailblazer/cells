@@ -27,6 +27,7 @@ class TestCaseTest < MiniTest::Spec
   end
 
 
+  # capybara support
   class CapybaraCell < Cell::ViewModel
     def show
       "<b>Grunt</b>"

@@ -18,7 +18,6 @@ class BassistCell < Cell::ViewModel
 end
 
 
-
 ActiveSupport::TestCase.class_eval do # this is only needed in integration tests (AC::TestCase).
   def fix_relative_url_root
     return unless Cell.rails_version.~("3.0")
@@ -32,10 +31,6 @@ end
 end
 
 
-
-
-
-
 class MusicianController < ActionController::Base
   def view_with_concept_with_show
     render :inline => %{<%= concept("view_extensions_test/cell", "Up For Breakfast", volume: 1).show %>} # TODO: concept doesn't need .call
@@ -46,58 +41,18 @@ class MusicianController < ActionController::Base
   end
 
   def view_with_concept_with_call
-    render :inline => %{<%= concept("view_extensions_test/cell", "A Tale That Wasn't Right").call %>} # this tests ViewModel#to_s.
+    render :inline => %{<%= concept("view_extensions_test/cell", "A Tale That Wasn't Right").call %>}
   end
 
-
-
-  def index
-    render :text => render_cell(:bassist, :promote)
+  def view_with_cell_with_call
+    render :inline => %{<%= cell("view_extensions_test/song", "A Tale That Wasn't Right").call %>}
   end
 
-  def promote
-    render :text => render_cell(:trumpeter, :promote)
+  def action_with_concept_with_call
+    render text: concept("view_extensions_test/cell", "A Tale That Wasn't Right").call
   end
 
-  def promotion
-    render :text => render_cell(:bassist, :provoke)
-  end
-
-  def featured
-  end
-
-  def featured_with_block
-  end
-
-  def skills
-    render :text => render_cell(:bassist, :listen)
-  end
-
-  def hamlet
-  end
-
-  attr_reader :flag
-  def promotion_with_block
-    html = render_cell(:bassist, :play) do |cell|
-      @flag = cell.class
-    end
-
-    render :text => html
-  end
-
-  def song
-    render :inline => %{<%= concept("view_methods_test/cell", "Up For Breakfast").call %>} # TODO: concept doesn't need .call
-  end
-
-  def songs
-    render :inline => %{<%= concept("view_methods_test/cell", :collection => %w{Alltax Ronny}) %>} # TODO: concept doesn't need .call
-  end
-
-  def album
-    render :inline => %{<%= cell("view_methods_test/album", "Dreiklang").call %>} # DISCUSS: make .call in #cell?
-  end
-
-  def albums
-    render :inline => %{<%= cell("view_methods_test/album", :collection => %w{Dreiklang Coaster}) %>}
+  def action_with_cell_with_call
+    render text: cell("view_extensions_test/song", "A Tale That Wasn't Right").call
   end
 end

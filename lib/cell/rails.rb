@@ -4,8 +4,7 @@ module Cell
   module RailsExtensions
     module ActionController
       def cell(name, *args, &block)
-        return Cell::Rails::ViewModel.cell(name, self, *args, &block) if args.first.is_a?(Hash) and args.first[:collection] # FIXME: we only want this feature in view models for now.
-        ::Cell::Base.cell(name, self, *args, &block)
+        Cell::ViewModel.cell(name, self, *args, &block)
       end
 
       def concept(name, *args, &block)
