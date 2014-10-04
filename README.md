@@ -214,13 +214,13 @@ options
 The explicit, long form allows you rendering cells in views, in controllers, mailers, etc.
 
 ```ruby
-= cell(:comment, Comment.find(1)).call(:show)
+cell(:comment, Comment.find(1)).call(:show)
 ```
 
 As `:show` is the default action, you don't have to specify it.
 
 ```ruby
-= cell(:comment, Comment.find(1)).call
+cell(:comment, Comment.find(1)).call
 ```
 
 In views, the template engine will automatically call `cell.to_s`. It does that for every object passed in as a placeholder. `ViewModel#to_s` exists and is aliased to `#call`, which allows to omit that part in a view.
