@@ -1,4 +1,4 @@
-module Cells
+module Cell
   # Now <tt>Rails::Engine</tt>s can contribute to Cells view paths.
   # By default, any 'app/cells' found inside any Engine is automatically included into Cells view paths.
   #
