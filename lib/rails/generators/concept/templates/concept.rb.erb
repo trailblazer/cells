@@ -1,6 +1,6 @@
 class <%= class_name %>::Cell < Cell::Concept
-<% for action in actions -%>
-  def <%= action %>
+<% states.each do |state| -%>
+  def <%= state %>
     render
   end
 <% end -%>

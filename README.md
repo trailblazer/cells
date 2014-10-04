@@ -45,14 +45,14 @@ app
 Use the bundled generator to set up a cell.
 
 ```shell
-rails generate cell comment show
+rails generate cell comment
 ```
 
 ```
 create  app/cells/
 create  app/cells/comment
 create  app/cells/comment_cell.rb
-create  app/cells/comment/show.haml
+create  app/cells/comment/show.erb
 ```
 
 
@@ -202,8 +202,6 @@ options
 # TODO: merge stuff below!
 
 ## File Structure
-
-TODO: rails g concept Song => show.haml,
 
 In Cells 3.10 we introduce a new _optional_ file structure integrating with [Trailblazer](https://github.com/apotonick/trailblazer)'s "concept-oriented" layout.
 
