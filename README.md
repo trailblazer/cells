@@ -64,9 +64,22 @@ Cells brings you one helper method `#cell` to be used in your controller views o
 = cell(:comment, Comment.find(1))
 ```
 
+This is the short form of rendering a cell. Simple, isn't it?
+
 Note that a view model _always_ requires a model in the constructor (or a composition). This doesn't have to be an `ActiveRecord` object but can be any type of Ruby object you want to present.
 
-This will instantiate an actual cell instance. Once the cell's `#to_s` method is called (which happens implicitely via the rendering outer template) this will invoke the cell's `#show` method. Please [refer to the docs](#invocation-styles) for different ways of invoking view models.
+To understand invoking cells, here's the long form of it.
+
+```haml
+= cell(:comment, Comment.find(1)).call(:show)
+```
+
+1. `#cell(..)` simply returns the cell instance. You can do whatever you want with it.
+2. `.call(:show)` will invoke the `#show` method respecting any caching settings.
+
+When rendering cells in views, you can skip the `call` part as this is implicitely done by the template.
+
+Please [refer to the docs](#invocation-styles) for different ways of invoking view models.
 
 
 ## View Model Classes
@@ -668,7 +681,7 @@ Now `Rails::Engine`s can contribute to Cells view paths. By default, any 'app/ce
 
 ## Generator Options
 
-By default, generated cells inherit from `Cell::Rails`. If you want to change this, specify your new class name in `config/application.rb`:
+By default, generated cells inherit from `Cell::ViewModel`. If you want to change this, specify your new class name in `config/application.rb`:
 
 ### Base Class
 
