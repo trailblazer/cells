@@ -6,7 +6,7 @@ module Cells
     class Base < ::Rails::Generators::NamedBase
       class_option :template_engine
       class_option :test_framework
-      class_option :base_cell_class, :type => :string, :default => "Cell::Rails"
+      class_option :base_cell_class, :type => :string, :default => "Cell::ViewModel"
       class_option :base_cell_path
 
       argument :actions, :type => :array, :default => [], :banner => "action action"

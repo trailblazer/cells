@@ -1,5 +1,29 @@
 require 'test_helper'
 require 'generators/rails/cell_generator'
+require 'generators/rails/concept_generator'
+
+class ConceptGeneratorTest < Rails::Generators::TestCase
+  destination File.join(Rails.root, "tmp")
+  setup :prepare_destination
+  tests ::Rails::Generators::ConceptGenerator
+
+  test "[erb] standard assets, show view" do
+    run_generator %w(Song)
+
+    assert_file "app/concepts/song/cell.rb", /class Song::Cell < Cell::Concept/
+    assert_file "app/concepts/song/cell.rb", /def show/
+    assert_file "app/concepts/song/views/show.erb", %r(app/concepts/song/views/show\.erb)
+  end
+
+  test "[haml] standard assets, show view" do
+    run_generator %w(Song -e haml)
+
+    assert_file "app/concepts/song/cell.rb", /class Song::Cell < Cell::Concept/
+    assert_file "app/concepts/song/cell.rb", /def show/
+    assert_file "app/concepts/song/views/show.haml", %r(app/concepts/song/views/show\.haml)
+  end
+end
+
 
 class CellGeneratorTest < Rails::Generators::TestCase
   destination File.join(Rails.root, "tmp")
@@ -9,7 +33,7 @@ class CellGeneratorTest < Rails::Generators::TestCase
   test "create the standard assets" do
     run_generator %w(Blog post latest)
 
-    assert_file "app/cells/blog_cell.rb", /class BlogCell < Cell::Rails/
+    assert_file "app/cells/blog_cell.rb", /class BlogCell < Cell::ViewModel/
     assert_file "app/cells/blog_cell.rb", /def post/
     assert_file "app/cells/blog_cell.rb", /def latest/
     assert_file "app/cells/blog/post.html.erb", %r(app/cells/blog/post\.html\.erb)
@@ -30,33 +54,33 @@ class CellGeneratorTest < Rails::Generators::TestCase
     run_generator %w(Blog --base-cell-class=ApplicationCell)
     assert_file "app/cells/blog_cell.rb", /class BlogCell < ApplicationCell/
   end
-  
+
   test "work with namespaces" do
     run_generator %w(Blog::Post latest)
 
-    assert_file "app/cells/blog/post_cell.rb", /class Blog::PostCell < Cell::Rails/
+    assert_file "app/cells/blog/post_cell.rb", /class Blog::PostCell < Cell::ViewModel/
     assert_file "app/cells/blog/post_cell.rb", /def latest/
     assert_file "app/cells/blog/post/latest.html.erb", %r(app/cells/blog/post/latest\.html\.erb)
   end
-  
+
   test "work with namespaces and haml" do
     run_generator %w(Blog::Post latest -e haml)
 
-    assert_file "app/cells/blog/post_cell.rb", /class Blog::PostCell < Cell::Rails/
+    assert_file "app/cells/blog/post_cell.rb", /class Blog::PostCell < Cell::ViewModel/
     assert_file "app/cells/blog/post/latest.html.haml", %r(app/cells/blog/post/latest\.html\.haml)
   end
 
   test "work with namespaces and slim" do
     run_generator %w(Blog::Post latest -e slim)
 
-    assert_file "app/cells/blog/post_cell.rb", /class Blog::PostCell < Cell::Rails/
+    assert_file "app/cells/blog/post_cell.rb", /class Blog::PostCell < Cell::ViewModel/
     assert_file "app/cells/blog/post/latest.html.slim", %r(app/cells/blog/post/latest\.html\.slim)
   end
 
   test "create slim assets with -e slim" do
     run_generator %w(Blog post latest -e slim)
 
-    assert_file "app/cells/blog_cell.rb", /class BlogCell < Cell::Rails/
+    assert_file "app/cells/blog_cell.rb", /class BlogCell < Cell::ViewModel/
     assert_file "app/cells/blog_cell.rb", /def post/
     assert_file "app/cells/blog_cell.rb", /def latest/
     assert_file "app/cells/blog/post.html.slim", %r(app/cells/blog/post\.html\.slim)
@@ -76,7 +100,7 @@ class CellGeneratorTest < Rails::Generators::TestCase
   test "create haml assets with -e haml" do
     run_generator %w(Blog post latest -e haml)
 
-    assert_file "app/cells/blog_cell.rb", /class BlogCell < Cell::Rails/
+    assert_file "app/cells/blog_cell.rb", /class BlogCell < Cell::ViewModel/
     assert_file "app/cells/blog_cell.rb", /def post/
     assert_file "app/cells/blog_cell.rb", /def latest/
     assert_file "app/cells/blog/post.html.haml", %r(app/cells/blog/post\.html\.haml)
