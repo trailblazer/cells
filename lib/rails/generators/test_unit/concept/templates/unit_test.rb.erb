@@ -1,0 +1,11 @@
+require 'test_helper'
+
+class <%= class_name %>ConceptTest < Cell::TestCase
+<% states.each do |state| -%>
+  test "<%= state %>" do
+    invoke :<%= state %>
+    assert_select 'p'
+  end
+  
+<% end %>
+end

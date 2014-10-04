@@ -29,4 +29,4 @@ require 'cell/concept'
 
 # TODO: only if Rails?
 require 'cell/rails'
-require 'cells/railtie'
+require 'cell/railtie'

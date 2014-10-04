@@ -1,26 +1,21 @@
 require "rails/railtie"
 
-module Cells
-  class Railtie < ::Rails::Railtie
+module Cell
+  class Railtie < Rails::Railtie
     config.cells = ActiveSupport::OrderedOptions.new
 
-
-    initializer "cells.attach_router" do |app|
+    initializer('cells.attach_router') do |app|
       Cell::ViewModel.class_eval do
         include app.routes.url_helpers # TODO: i hate this, make it better in Rails.
       end
     end
 
-    # DISCUSS: how to detect template engines?
-    initializer "cells.haml" do |app|
+    initializer "cells.template_engine" do |app|
       if defined?(:Haml)
         Cell::ViewModel.template_engine= "haml"
       end
     end
 
-    # initializer "cells.setup_engines_view_paths" do |app|
-    #   Cells::Engines.append_engines_view_paths_for(app.config.action_controller)
-    # end
 
     # ruthlessly stolen from the zurb-foundation gem.
     add_paths_block = lambda do |app|
@@ -39,7 +34,7 @@ module Cells
 
 
     rake_tasks do
-      load "cells/cells.rake"
+      load 'tasks/cells.rake'
     end
   end
 end
