@@ -4,7 +4,7 @@ module TestUnit # :nodoc:
   module Generators # :nodoc:
     class CellGenerator < Base # :nodoc:
       source_root File.expand_path('../templates', __FILE__)
-      argument :actions, :type => :array, :default => []
+      argument :actions, type: :array, default: []
       check_class_collision suffix: 'CellTest'
 
       def create_test_file
