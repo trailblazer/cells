@@ -118,8 +118,8 @@ module Cell
     # your code.
     #
     # Yields +self+ (the cell instance) to an optional block.
-    def call(state=:show)
-      content = render_state(state)
+    def call(state=:show, *args)
+      content = render_state(state, *args)
       yield self if block_given?
 
       content.to_s.html_safe
@@ -137,8 +137,8 @@ module Cell
     end
 
     module Rendering
-      def render_state(state)
-        send(state)
+      def render_state(*args)
+        send(*args)
       end
     end
     include Rendering

@@ -34,6 +34,10 @@ class SongCell < Cell::ViewModel
     render :ivar
   end
 
+  def receiving_options(layout=:default)
+    "#{layout}"
+  end
+
 private
   def title
     "Papertiger"
@@ -75,6 +79,11 @@ class RenderTest < MiniTest::Spec
   it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
 
   # view: "show.html"
+
+  # allows passing in options DISCUSS: how to handle that in cache block/builder?
+  it { SongCell.new(nil).receiving_options.must_equal "default" }
+  it { SongCell.new(nil).receiving_options(:fancy).must_equal "fancy" }
+  it { SongCell.new(nil).call(:receiving_options, :fancy).must_equal "fancy" }
 end
 
 # test inheritance

@@ -233,9 +233,13 @@ If you want, you can also call methods directly on your cell. Note that this doe
 = cell(:comment, Comment.find(1)).avatar
 ```
 
-### Passing Options
+## Passing Options
 
-Cells can also receive any set of options you need.
+There's several ways to inject additional state into your cell.
+
+### Object Style
+
+Cells can receive any set of options you need. Usually, a hash containing additional options is passed as the last argument.
 
 ```ruby
 cell(:comment, @comment, layout: :fancy)
@@ -246,6 +250,22 @@ The third argument is accessable via `#options` in the instance.
 ```ruby
 def show
   render layout: options[:layout]
+end
+```
+
+### Functional Style
+
+You can also pass options to the action method itself, making your cell a bit more functional with less state.
+
+```ruby
+cell(:comment, @comment).call(:show, layout: :fancy)
+```
+
+Make sure the method is ready to process those arguments.
+
+```ruby
+def show(layout=:default)
+  render layout: layout
 end
 ```
 
