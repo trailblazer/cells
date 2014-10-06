@@ -25,8 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'tilt', '>= 1.3', '< 3'
 
   spec.add_development_dependency "rake"
-  # spec.add_development_dependency "haml"
-  spec.add_development_dependency "slim"
   spec.add_development_dependency "tzinfo" # FIXME: why the hell do we need this for 3.1?
   spec.add_development_dependency "minitest",	"~> 5.4.1"
   spec.add_development_dependency "test_xml"

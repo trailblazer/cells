@@ -1,6 +1,5 @@
 require 'minitest/autorun'
 require 'test_xml/mini_test'
-require "haml"
 
 ENV['RAILS_ENV'] = 'test'
 
