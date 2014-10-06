@@ -1,6 +1,6 @@
 begin
-  require "rails/railtie"
-rescue
+  require 'rails/railtie'
+rescue LoadError
 else
   module Cell
     class Railtie < Rails::Railtie
@@ -13,9 +13,9 @@ else
         end
       end
 
-      initializer "cells.template_engine" do |app|
+      initializer 'cells.template_engine' do |app|
         if defined?(:Haml)
-          ViewModel.template_engine= "haml"
+          ViewModel.template_engine= 'haml'
         end
       end
 
