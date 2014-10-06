@@ -91,8 +91,7 @@ module Cell
     def initialize(controller, model=nil, options={})
       @parent_controller = controller # TODO: this is removed in 4.0.
 
-      @model = model
-        #create_twin(model, options)
+      setup!(model, options)
     end
     attr_reader :parent_controller
     alias_method :controller, :parent_controller
@@ -129,6 +128,14 @@ module Cell
     alias_method :to_s, :call
 
   private
+    attr_reader :options
+
+    def setup!(model, options)
+      @model   = model
+      @options = options
+      # or: create_twin(model, options)
+    end
+
     module Rendering
       def render_state(state)
         send(state)

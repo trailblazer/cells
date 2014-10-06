@@ -1,8 +1,13 @@
 require 'test_helper'
 
-class CellTest < ActiveSupport::TestCase
-  def test_rails_version
-    version = Gem::Version.new(ActionPack::VERSION::STRING)
-    assert_equal version, Cell.rails_version
+class CellTest < MiniTest::Spec
+  class SongCell < Cell::ViewModel
+    def show
+    end
   end
+  # ::rails_version
+  it { Cell.rails_version.must_equal Gem::Version.new(ActionPack::VERSION::STRING) }
+
+  # #options
+  it { SongCell.new(nil, nil, genre: "Punkrock").send(:options)[:genre].must_equal "Punkrock" }
 end

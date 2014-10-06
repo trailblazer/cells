@@ -207,8 +207,6 @@ template_engine
 view_paths
 
 
-options
-
 ## Invocation styles
 
 The explicit, long form allows you rendering cells in views, in controllers, mailers, etc.
@@ -233,6 +231,22 @@ If you want, you can also call methods directly on your cell. Note that this doe
 
 ```haml
 = cell(:comment, Comment.find(1)).avatar
+```
+
+### Passing Options
+
+Cells can also receive any set of options you need.
+
+```ruby
+cell(:comment, @comment, layout: :fancy)
+```
+
+The third argument is accessable via `#options` in the instance.
+
+```ruby
+def show
+  render layout: options[:layout]
+end
 ```
 
 # TODO: merge stuff below!
