@@ -17,7 +17,7 @@ else
         ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
       end
 
-
+      # ruthlessly stolen from the zurb-foundation gem.
       initializer 'cells.update_asset_paths' do |app|
         Array(app.config.cells.with_assets).each do |name|
           # FIXME: this doesn't take engine cells into account.
