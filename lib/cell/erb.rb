@@ -1,5 +1,10 @@
 require 'erubis/engine/eruby'
 
+# The original ERB implementation in Ruby doesn't support blocks like
+#   <%= form_for do %>
+# which is fixed with this monkey-patch.
+#
+# TODO: don't monkey-patch, use this in cells/tilt, only!
 module Erubis
   module RubyGenerator
     def init_generator(properties={})
