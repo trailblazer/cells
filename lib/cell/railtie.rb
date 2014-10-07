@@ -14,27 +14,17 @@ else
       end
 
       initializer 'cells.template_engine' do |app|
-        if defined?(:Haml)
-          ViewModel.template_engine= 'haml'
-        end
+        ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
       end
 
 
-      # ruthlessly stolen from the zurb-foundation gem.
-      add_paths_block = lambda do |app|
-        (app.config.cells.with_assets or []).each do |name|
+      initializer 'cells.update_asset_paths' do |app|
+        Array(app.config.cells.with_assets).each do |name|
           # FIXME: this doesn't take engine cells into account.
-          app.config.assets.paths << "#{app.root}/app/cells/#{name}/assets"
-          app.config.assets.paths << "#{app.root}/app/concepts/#{name}/assets" # TODO: find out type.
+          app.config.assets.paths.append "#{app.root}/app/cells/#{name}/assets"
+          app.config.assets.paths.append "#{app.root}/app/concepts/#{name}/assets" # TODO: find out type.
         end
       end
-
-      # Standard initializer
-      initializer 'cells.update_asset_paths', &add_paths_block
-
-      # run at assets:precompile even when `config.assets.initialize_on_precompile = false`
-      initializer 'cells.update_asset_paths', :group => :assets, &add_paths_block
-
 
       rake_tasks do
         load 'tasks/cells.rake'

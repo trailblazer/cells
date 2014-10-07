@@ -8,7 +8,7 @@ class CellGeneratorTest < Rails::Generators::TestCase
   setup :prepare_destination
 
   test 'create the standard assets' do
-    run_generator %w(blog post latest)
+    run_generator %w(blog post latest  -e erb)
 
     assert_file 'app/cells/blog_cell.rb', /class BlogCell < Cell::ViewModel/
     assert_file 'app/cells/blog_cell.rb', /def post/
@@ -24,7 +24,7 @@ class CellGeneratorTest < Rails::Generators::TestCase
   end
 
   test 'work with namespaces' do
-    run_generator %w(blog/post latest)
+    run_generator %w(blog/post latest  -e erb)
     assert_file 'app/cells/blog/post_cell.rb', /class Blog::PostCell < Cell::ViewModel/
     assert_file 'app/cells/blog/post_cell.rb', /def show/
     assert_file 'app/cells/blog/post_cell.rb', /def latest/

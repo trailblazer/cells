@@ -21,5 +21,6 @@ module Dummy
     config.assets.enabled = true
     config.assets.compile = true
     config.cells.with_assets = ["album", "song"]
+    config.app_generators.template_engine :haml
   end
 end

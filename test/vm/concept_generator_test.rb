@@ -8,7 +8,7 @@ class ConceptGeneratorTest < Rails::Generators::TestCase
   tests Rails::Generators::ConceptGenerator
 
   test '[erb] standard assets, show view' do
-    run_generator %w(song)
+    run_generator %w(song -e erb)
 
     assert_file 'app/concepts/song/cell.rb', /class Song::Cell < Cell::Concept/
     assert_file 'app/concepts/song/cell.rb', /def show/
