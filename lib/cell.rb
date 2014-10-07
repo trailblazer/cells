@@ -23,6 +23,7 @@ require 'cell/self_contained'
 require 'cell/layout'
 require 'cell/templates'
 require 'cell/caching'
+require 'cell/erb'
 
 require 'cell/view_model'
 require 'cell/concept'
