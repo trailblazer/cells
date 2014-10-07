@@ -28,8 +28,5 @@ require 'cell/view_model'
 require 'cell/concept'
 # require 'cells/engines'
 
-<<<<<<< HEAD
 require 'cell/railtie'
-=======
 require 'cell/railtie'
->>>>>>> 6618c7f04d99e51f2b383b99384d251f90c021cd
