@@ -42,6 +42,10 @@ class UrlHelperTest < MiniTest::Spec
       render
     end
 
+    def erb_with_form_for_block
+      render template_engine: :erb
+    end
+
   private
     def cap
       "yay, #{with_output_buffer { yield } }"
@@ -66,6 +70,8 @@ class UrlHelperTest < MiniTest::Spec
 
   # form_for with block
   it { cell.with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
+  # form_for with block in ERB.
+  it { cell.erb_with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
 
   # when using yield, haml breaks it (but doesn't escape HTML)
   it { cell.with_block.must_equal "Nice!\nyay, <b>yeah</b>\n" }
