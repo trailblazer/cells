@@ -29,12 +29,6 @@ module Cell
     extend SelfContained
     extend Builder::ClassMethods
 
-    class Builder < Cell::Builder # TODO: merge with C:Builder.
-      def run_builder_block(block, controller, *args) # DISCUSS: do we _want_ that?
-        super(block, *args)
-      end
-    end
-
 
     def self.controller_path
       @controller_path ||= name.sub(/Cell$/, '').underscore
@@ -75,7 +69,8 @@ module Cell
 
 
       def cell_for(name, controller, *args)
-        Builder.new(class_from_cell_name(name), controller).call(controller, *args) # use Cell::Rails::Builder.
+        puts "#{controller}, class::::::: #{Builder.new(class_from_cell_name(name)).call(*args)}"
+        Builder.new(class_from_cell_name(name)).call(*args).new(controller, *args) # use Cell::Rails::Builder.
       end
 
       def class_from_cell_name(name)

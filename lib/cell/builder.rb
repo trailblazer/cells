@@ -6,17 +6,15 @@ module Cell
   # * only dependency: constant.builders (I wanted to hide this from Cell::Base)
   # * can easily be replaced or removed.
   class Builder
-    def initialize(constant, exec_context) # TODO: evaluate usage of builders and implement using Uber::Options::Value.
+    def initialize(constant) # TODO: evaluate usage of builders and implement using Uber::Options::Value.
       @constant     = constant
-      @exec_context = exec_context
       @builders     = @constant.builders # only dependency, must be a Cell::Base subclass.
     end
 
     # Creates a cell instance. Note that this method calls builders which were attached to the
     # class with Cell::Base.build - this might lead to a different cell being returned.
     def call(*args)
-      build_class_for(*args).
-      new(*args)
+      build_class_for(*args)
     end
 
   private
@@ -28,7 +26,7 @@ module Cell
     end
 
     def run_builder_block(block, *args)
-      @exec_context.instance_exec(*args, &block)
+      block.call(*args)
     end
 
 

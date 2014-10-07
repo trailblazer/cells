@@ -7,6 +7,7 @@
 * **Template Engines:** There's now _one_ template engine (e.g. ERB or HAML) per cell class. It can be set using `ViewModel::template_engine=`. In 99.9% of all cases a single application uses one single template engine application-wide, there's no need to manage code and waste lookup time for two alternative engines within one cell.
 * **File Naming**. The default filename just uses the engine suffix, e.g. `show.haml`. If you have two different engine formats (e.g. `show.haml` and `show.erb`), use the `format:` option: `render format: :erb`.
     If you need to render a specific mime type, provide the filename: `render view: "show.html"`.
+* Builder blocks are no longer executed in controller context but in the context they were defined. This is to remove any dependencies to the controller. If you need e.g. `params`, pass them into the `#cell(..)` call.
 
 ### Removed
 

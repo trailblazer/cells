@@ -5,7 +5,7 @@ class Cell::Concept < Cell::ViewModel
   # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
   class << self
     def cell_for(name, controller, *args)
-      Cell::Builder.new(name.classify.constantize, controller).call(controller, *args)
+      Cell::Builder.new(name.classify.constantize).call(*args).new(controller, *args)
     end
 
     def controller_path
