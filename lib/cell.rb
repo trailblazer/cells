@@ -29,4 +29,3 @@ require 'cell/concept'
 # require 'cells/engines'
 
 require 'cell/railtie'
-require 'cell/railtie'
