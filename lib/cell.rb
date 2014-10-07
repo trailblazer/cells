@@ -22,6 +22,7 @@ require 'cell/prefixes'
 require 'cell/self_contained'
 require 'cell/layout'
 require 'cell/templates'
+require 'cell/erb'
 
 require 'cell/view_model'
 require 'cell/concept'
