@@ -5,7 +5,7 @@ require 'cell/version'
 
 module Cell
   def self.rails_version
-    Gem::Specification.find_by_name('actionpack').version
+    Gem::Version.new(ActionPack::VERSION::STRING)
   end
 
   class TemplateMissingError < RuntimeError
