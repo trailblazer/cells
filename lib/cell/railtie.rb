@@ -2,11 +2,15 @@ begin
   require 'rails/railtie'
 rescue LoadError
 else
+
+  class ApplicationCell < Cell::ViewModel; end
+  class ApplicationConcept < Cell::Concept; end
+
   module Cell
     class Railtie < Rails::Railtie
       require 'cell/rails'
       config.cells = ActiveSupport::OrderedOptions.new
-
+      # FIXME: 1 initializer
       initializer('cells.attach_router') do |app|
         ViewModel.class_eval do
           include app.routes.url_helpers # TODO: i hate this, make it better in Rails.

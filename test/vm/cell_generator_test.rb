@@ -10,7 +10,7 @@ class CellGeneratorTest < Rails::Generators::TestCase
   test 'create the standard assets' do
     run_generator %w(blog post latest  -e erb)
 
-    assert_file 'app/cells/blog_cell.rb', /class BlogCell < Cell::ViewModel/
+    assert_file 'app/cells/blog_cell.rb', /class BlogCell < ApplicationCell/
     assert_file 'app/cells/blog_cell.rb', /def post/
     assert_file 'app/cells/blog_cell.rb', /def latest/
     assert_file 'app/cells/blog/post.erb', %r{app/cells/blog/post\.erb}
@@ -19,13 +19,13 @@ class CellGeneratorTest < Rails::Generators::TestCase
   end
 
   test 'create cell that inherits from custom cell class if specified' do
-    run_generator %w(Blog --parent=ApplicationCell)
-    assert_file 'app/cells/blog_cell.rb', /class BlogCell < ApplicationCell/
+    run_generator %w(Blog --parent=EngineCell)
+    assert_file 'app/cells/blog_cell.rb', /class BlogCell < EngineCell/
   end
 
   test 'work with namespaces' do
     run_generator %w(blog/post latest  -e erb)
-    assert_file 'app/cells/blog/post_cell.rb', /class Blog::PostCell < Cell::ViewModel/
+    assert_file 'app/cells/blog/post_cell.rb', /class Blog::PostCell < ApplicationCell/
     assert_file 'app/cells/blog/post_cell.rb', /def show/
     assert_file 'app/cells/blog/post_cell.rb', /def latest/
     assert_file 'app/cells/blog/post/latest.erb', %r{app/cells/blog/post/latest\.erb}
@@ -33,21 +33,21 @@ class CellGeneratorTest < Rails::Generators::TestCase
 
   test 'work with namespaces and haml' do
     run_generator %w(blog/post latest -e haml)
-    assert_file 'app/cells/blog/post_cell.rb', /class Blog::PostCell < Cell::ViewModel/
+    assert_file 'app/cells/blog/post_cell.rb', /class Blog::PostCell < ApplicationCell/
     assert_file 'app/cells/blog/post/latest.haml', %r{app/cells/blog/post/latest\.haml}
   end
 
   test 'work with namespaces and slim' do
     run_generator %w(blog/post latest -e slim)
 
-    assert_file 'app/cells/blog/post_cell.rb', /class Blog::PostCell < Cell::ViewModel/
+    assert_file 'app/cells/blog/post_cell.rb', /class Blog::PostCell < ApplicationCell/
     assert_file 'app/cells/blog/post/latest.slim', %r{app/cells/blog/post/latest\.slim}
   end
 
   test 'create slim assets with -e slim' do
     run_generator %w(blog post latest -e slim)
 
-    assert_file 'app/cells/blog_cell.rb', /class BlogCell < Cell::ViewModel/
+    assert_file 'app/cells/blog_cell.rb', /class BlogCell < ApplicationCell/
     assert_file 'app/cells/blog_cell.rb', /def post/
     assert_file 'app/cells/blog_cell.rb', /def latest/
     assert_file 'app/cells/blog/post.slim', %r{app/cells/blog/post\.slim}
@@ -58,7 +58,7 @@ class CellGeneratorTest < Rails::Generators::TestCase
   test 'create haml assets with -e haml' do
     run_generator %w(Blog post latest -e haml)
 
-    assert_file 'app/cells/blog_cell.rb', /class BlogCell < Cell::ViewModel/
+    assert_file 'app/cells/blog_cell.rb', /class BlogCell < ApplicationCell/
     assert_file 'app/cells/blog_cell.rb', /def post/
     assert_file 'app/cells/blog_cell.rb', /def latest/
     assert_file 'app/cells/blog/post.haml', %r{app/cells/blog/post\.haml}
