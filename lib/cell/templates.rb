@@ -15,10 +15,6 @@ module Cell
       @cache ||= {}
     end
 
-    def find_for_engines(base, prefix, view, engine)
-      find_template(base, prefix, view, engine)
-    end
-
     def find_template(base, prefix, view, engine)
       cache[engine] ||= {} # the engine will probably never change as everyone uses the same tpl throughout the app.
       vcache = cache[engine][view] ||= {}
@@ -33,5 +29,8 @@ module Cell
 
       vcache[prefix] = template
     end
+
+    alias_method :find_for_engines, :find_template
+
   end
 end
