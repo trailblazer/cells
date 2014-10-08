@@ -35,7 +35,7 @@ else
 
         ActiveSupport.on_load(:action_view) do
           self.class_eval do
-            self.include ::Cell::RailsExtensions::ActionView
+            include ::Cell::RailsExtensions::ActionView
           end
         end
       end
