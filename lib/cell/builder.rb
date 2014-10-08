@@ -37,6 +37,7 @@ module Cell
       # your view code.
       #
       # Passes the model and options from #cell into the block.
+      #
       # Multiple build blocks are ORed, if no builder matches the building cell is used.
       #
       # Example:
@@ -51,12 +52,12 @@ module Cell
       #
       # Now you don't want to have deciders all over your views - use a declarative builder.
       #
-      #   UserInfoBox.build do |opts|
-      #     AuthorizedUserBox if user_signed_in?
-      #     AdminUserBox if admin_signed_in?
+      #   UserInfoBox.build do |model, options|
+      #     AuthorizedUserBox if options[:is_signed_in]
+      #     AdminUserBox if model.admin?
       #   end
       #
-      # In your view #render_cell will instantiate the right cell for you now.
+      # In your view #cell will instantiate the right cell for you now.
       def build(&block)
         builders << block
       end

@@ -33,6 +33,7 @@ class BuilderTest < MiniTest::Spec
   class EvergreenCell < SongCell
   end
 
+  # the original class is used when no builder matches.
   it { Cell::ViewModel.cell("builder_test/song", nil, Song.new("Nation States"), {}).must_be_instance_of BuilderTest::SongCell }
 
   it do
