@@ -11,7 +11,6 @@ require "dummy/config/environment"
 require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'
-require "cell/test_case"
 
 MiniTest::Spec.class_eval do
   include Cell::TestCase::Helpers
