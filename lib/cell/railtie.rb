@@ -28,11 +28,15 @@ else
 
       initializer('cells.rails_extensions') do |app|
         ActiveSupport.on_load(:action_controller) do
-          self.include ::Cell::RailsExtensions::ActionController
+          self.class_eval do
+            include ::Cell::RailsExtensions::ActionController
+          end
         end
 
         ActiveSupport.on_load(:action_view) do
-          self.include ::Cell::RailsExtensions::ActionView
+          self.class_eval do
+            self.include ::Cell::RailsExtensions::ActionView
+          end
         end
       end
 

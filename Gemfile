@@ -6,6 +6,7 @@ gemspec
 
 gem "rails", "~> 3.2.12"
 gem 'minitest', '4.7.5'
+gem 'pry-byebug'  , platforms: [:mri_20, :mri_21]
 
 # gem 'uber', :path => "../uber"
 
