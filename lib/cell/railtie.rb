@@ -26,16 +26,18 @@ else
         end
       end
 
+      initializer('cells.rails_extensions') do |app|
+        ActiveSupport.on_load(:action_controller) do
+          self.include ::Cell::RailsExtensions::ActionController
+        end
+
+        ActiveSupport.on_load(:action_view) do
+          self.include ::Cell::RailsExtensions::ActionView
+        end
+      end
+
       rake_tasks do
         load 'tasks/cells.rake'
-      end
-
-      ActiveSupport.on_load(:action_controller) do
-        self.include ::Cell::RailsExtensions::ActionController
-      end
-
-      ActiveSupport.on_load(:action_view) do
-        self.include ::Cell::RailsExtensions::ActionView
       end
     end
   end
