@@ -78,7 +78,7 @@ module Cell
       end
 
       def build_cell(controller, *args)
-        class_builder.call(*args).new(controller, *args)
+        class_builder.call(*args).new(controller, *args) # Uber::Builder::class_builder.
       end
     end
 
