@@ -37,6 +37,11 @@ else
           self.class_eval do
             include ::Cell::RailsExtensions::ActionView
           end
+
+          #include assert helpers (image_path, font_path, ect)
+          ViewModel.class_eval do
+            include ActionView::Helpers::AssetTagHelper
+          end
         end
       end
 
