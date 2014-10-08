@@ -269,6 +269,43 @@ def show(layout=:default)
 end
 ```
 
+## Collections
+
+## Builder
+
+Often, it is good practice to replace decider code in views or classes into separate sub-cells. Or in case you want to render a polymorphic collection, builders come in handy. They allow instantiating different cell classes for input values.
+
+```ruby
+class SongCell < Cell::ViewModel
+  builder do |model, options|
+    HitCell if model.is_a?(Hit)
+    EverGreenCell if model.is_a?(Evergreen)
+  end
+
+  def show
+    # ..
+end
+```
+
+The `#cell` helpers takes care of instantiating the right cell class for you.
+
+```ruby
+cell(:song, Hit.find(1)) #=> creates an EvergreenCell.
+```
+
+This also works with collections.
+
+```ruby
+cell(:song, collection: [@hit, @song]) #=> renders HitCell, then SongCell.
+```
+
+Multiple calls to `::builder` will be ORed. If no block returns a class, the original class will be used (`SongCell`).
+
+
+## View Inheritance
+
+
+
 # TODO: merge stuff below!
 
 ## File Structure
@@ -395,25 +432,6 @@ class Comment::FormCell < Cell::Rails
 ```
 
 When rendering views in `FormCell`, the view directories to look for templates will be inherited.
-
-### Builders
-
-Let `render_cell` take care of creating the right cell. Just configure your super-cell properly.
-
-```ruby
-class LoginCell < Cell::Rails
-  build do
-    UnauthorizedUserCell unless logged_in?
-  end
-```
-
-A call to
-
-```ruby
-render_cell(:login, :box)
-```
-
-will render the configured `UnauthorizedUserCell` instead of the original `LoginCell` if the login test fails.
 
 
 ## Caching
