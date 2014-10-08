@@ -4,11 +4,11 @@ module Cell
   module RailsExtensions
     module ActionController
       def cell(name, *args, &block)
-        Cell::ViewModel.cell(name, self, *args, &block)
+        ViewModel.cell(name, self, *args, &block)
       end
 
       def concept(name, *args, &block)
-        return Cell::Concept.cell(name, self, *args, &block)
+        Concept.cell(name, self, *args, &block)
       end
 
       # # Renders the cell state and returns the content. You may pass options here, too. They will be
@@ -69,14 +69,4 @@ module Cell
       end
     end
   end
-end
-
-# Add extended ActionController behaviour.
-ActionController::Base.class_eval do
-  include ::Cell::RailsExtensions::ActionController
-end
-
-# Add extended ActionView behaviour.
-ActionView::Base.class_eval do
-  include ::Cell::RailsExtensions::ActionView
 end
