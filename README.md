@@ -271,9 +271,34 @@ end
 
 ## Collections
 
+You can render a collection of models where each item is rendered using a cell.
+
+```ruby
+= cell(:song, collection: Song.all)
+```
+
+Note that there is _no_ `.call` needed. This is identical to the following snippet.
+
+```ruby
+- Song.all.each do |song|
+  = cell(:song, song).call(:show)
+```
+
+Options are passed to every cell.
+
+```ruby
+= cell(:song, collection: Song.all, genre: "Heavy Metal", user: current_user)
+```
+
+The collection invocation per default calls `#show`. Use `:method` if you need another method to be called.
+
+```ruby
+= cell(:song, collection: Song.all, method: :detail)
+```
+
 ## Builder
 
-Often, it is good practice to replace decider code in views or classes into separate sub-cells. Or in case you want to render a polymorphic collection, builders come in handy. They allow instantiating different cell classes for input values.
+Often, it is good practice to replace decider code from views or classes into separate sub-cells. Or in case you want to render a polymorphic collection, builders come in handy. They allow instantiating different cell classes for input values.
 
 ```ruby
 class SongCell < Cell::ViewModel

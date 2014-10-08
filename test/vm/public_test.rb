@@ -11,6 +11,10 @@ class PublicTest < MiniTest::Spec
     def show
       initialize_args.inspect
     end
+
+    def detail
+      "* #{initialize_args}"
+    end
   end
 
   # ViewModel.cell returns the cell instance.
@@ -27,8 +31,9 @@ class PublicTest < MiniTest::Spec
 
   # ViewModel.cell(collection: []) passes generic options to cell.
   it { Cell::ViewModel.cell("public_test/song", nil, collection: [Object, Module], genre: "Metal").must_equal "[Object, {:genre=>\"Metal\"}]\n[Module, {:genre=>\"Metal\"}]" }
-end
 
-# TODO: test with polymorpic collection and builder.
+  # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
+  it { Cell::ViewModel.cell("public_test/song", nil, collection: [Object, Module], method: :detail).must_equal "* [Object, {}]\n* [Module, {}]" }
+end
 
 # TODO: test AV::concept.

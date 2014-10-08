@@ -43,7 +43,7 @@ module Cell
     module Helpers
       # Renders collection of cells.
       def collection(name, controller, array, options)
-        method = :show
+        method = options.delete(:method) || :show
 
         array.collect { |model| cell_for(name, *[controller, model, options]).call(method) }.join("\n").html_safe
       end
