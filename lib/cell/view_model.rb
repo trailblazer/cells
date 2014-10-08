@@ -69,11 +69,15 @@ module Cell
 
 
       def cell_for(name, controller, *args)
-        Builder.new(class_from_cell_name(name)).call(*args).new(controller, *args) # use Cell::Rails::Builder.
+        class_from_cell_name(name).build_cell(controller, *args)
       end
 
       def class_from_cell_name(name)
         "#{name}_cell".classify.constantize
+      end
+
+      def build_cell(controller, *args)
+        Builder.new(self).call(*args).new(controller, *args)
       end
     end
 
