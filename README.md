@@ -58,10 +58,16 @@ create  app/cells/comment/show.erb
 
 ## Rendering View Models
 
+Suppose we are to render a "partial" for `Comment` model
+
+```ruby
+@comment = Comment.find(1)
+```
+
 Cells brings you one helper method `#cell` to be used in your controller views or layouts.
 
 ```haml
-= cell(:comment, Comment.find(1))
+= cell(:comment, @comment)
 ```
 
 This is the short form of rendering a cell. Simple, isn't it?
@@ -71,11 +77,11 @@ Note that a view model _always_ requires a model in the constructor (or a compos
 To understand invoking cells, here's the long form of it.
 
 ```haml
-= cell(:comment, Comment.find(1)).call(:show)
+= cell(:comment, @comment).call(:show)
 ```
 
 1. `#cell(..)` simply returns the cell instance. You can do whatever you want with it.
-2. `.call(:show)` will invoke the `#show` method respecting any caching settings.
+2. `.call(:show)` will invoke the `#show` method respecting caching settings.
 
 When rendering cells in views, you can skip the `call` part as this is implicitely done by the template.
 
@@ -212,25 +218,25 @@ view_paths
 The explicit, long form allows you rendering cells in views, in controllers, mailers, etc.
 
 ```ruby
-cell(:comment, Comment.find(1)).call(:show)
+cell(:comment, @comment).call(:show)
 ```
 
 As `:show` is the default action, you don't have to specify it.
 
 ```ruby
-cell(:comment, Comment.find(1)).call
+cell(:comment, @comment).call
 ```
 
 In views, the template engine will automatically call `cell.to_s`. It does that for every object passed in as a placeholder. `ViewModel#to_s` exists and is aliased to `#call`, which allows to omit that part in a view.
 
 ```haml
-= cell(:comment, Comment.find(1))
+= cell(:comment, @comment)
 ```
 
-If you want, you can also call methods directly on your cell. Note that this does _not_ respect caching, though.
+If you want, you can also call public methods directly on your cell. Note that this does _not_ respect caching, though.
 
 ```haml
-= cell(:comment, Comment.find(1)).avatar
+= cell(:comment, @comment).avatar
 ```
 
 ## Passing Options
@@ -277,7 +283,7 @@ You can render a collection of models where each item is rendered using a cell.
 = cell(:song, collection: Song.all)
 ```
 
-Note that there is _no_ `.call` needed. This is identical to the following snippet.
+Note that there is no `.call` needed. This is identical to the following snippet.
 
 ```ruby
 - Song.all.each do |song|
@@ -298,12 +304,14 @@ The collection invocation per default calls `#show`. Use `:method` if you need a
 
 ## Builder
 
-Often, it is good practice to replace decider code from views or classes into separate sub-cells. Or in case you want to render a polymorphic collection, builders come in handy. They allow instantiating different cell classes for input values.
+Often, it is good practice to replace decider code from views or classes into separate sub-cells. Or in case you want to render a polymorphic collection, builders come in handy.
+
+Builders allow instantiating different cell classes for different models and options.
 
 ```ruby
 class SongCell < Cell::ViewModel
   builder do |model, options|
-    HitCell if model.is_a?(Hit)
+    HitCell       if model.is_a?(Hit)
     EverGreenCell if model.is_a?(Evergreen)
   end
 
@@ -315,7 +323,7 @@ end
 The `#cell` helpers takes care of instantiating the right cell class for you.
 
 ```ruby
-cell(:song, Hit.find(1)) #=> creates an EvergreenCell.
+cell(:song, Hit.find(1)) #=> creates a HitCell.
 ```
 
 This also works with collections.
