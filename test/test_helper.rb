@@ -1,4 +1,7 @@
-require 'byebug' rescue LoadError
+begin
+  require 'byebug'
+rescue LoadError
+end
 require 'minitest/autorun'
 require 'test_xml/mini_test'
 
