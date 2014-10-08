@@ -1,43 +1,57 @@
 require 'test_helper'
 
 class BuilderTest < MiniTest::Spec
-  Hit = Struct.new(:title)
+  Song = Struct.new(:title)
+  Hit  = Struct.new(:title)
 
   class SongCell < Cell::ViewModel
     build do |model, options|
-      if model == Hit
+      if model.is_a? Hit
         HitCell
-      elsif options[:title] == "San Francisco"
+      elsif options[:evergreen]
         EvergreenCell
       else
         SongCell
       end
     end
 
-    def title
-      options[:title]
+    def options
+      @options
     end
+
+    def show
+      "* #{title}"
+    end
+
+    property :title
   end
 
   class HitCell < SongCell
+    def show
+      "* **#{title}**"
+    end
   end
 
   class EvergreenCell < SongCell
   end
 
-  it { Cell::ViewModel.cell("builder_test/song", nil, Object, {}).must_be_instance_of BuilderTest::SongCell }
+  it { Cell::ViewModel.cell("builder_test/song", nil, Song.new("Nation States"), {}).must_be_instance_of BuilderTest::SongCell }
 
   it do
-    cell = Cell::ViewModel.cell("builder_test/song", nil, Hit, title: "New York")
+    cell = Cell::ViewModel.cell("builder_test/song", nil, Hit.new("New York"), {})
     cell.must_be_instance_of BuilderTest::HitCell
-    cell.title.must_equal "New York"
+    cell.options.must_equal({})
   end
 
   it do
-    cell = Cell::ViewModel.cell("builder_test/song", nil, Object, title: "San Francisco")
+    cell = Cell::ViewModel.cell("builder_test/song", nil, Song.new("San Francisco"), evergreen: true)
     cell.must_be_instance_of BuilderTest::EvergreenCell
-    cell.title.must_equal "San Francisco"
+    cell.options.must_equal({:evergreen=>true})
   end
 
   # with collection
+
+  it do
+    Cell::ViewModel.cell("builder_test/song", nil, collection: [Song.new("Nation States"), Hit.new("New York")]).must_equal "* Nation States\n* **New York**"
+  end
 end

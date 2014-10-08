@@ -69,7 +69,6 @@ module Cell
 
 
       def cell_for(name, controller, *args)
-        puts "#{controller}, class::::::: #{Builder.new(class_from_cell_name(name)).call(*args)}"
         Builder.new(class_from_cell_name(name)).call(*args).new(controller, *args) # use Cell::Rails::Builder.
       end
 
