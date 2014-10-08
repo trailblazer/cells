@@ -10,8 +10,6 @@ class BuilderTest < MiniTest::Spec
         HitCell
       elsif options[:evergreen]
         EvergreenCell
-      else
-        SongCell
       end
     end
 

@@ -31,12 +31,12 @@ module Cell
 
 
     module ClassMethods
-      # Adds a builder to the cell class. Builders are used in #render_cell to find out the concrete
+      # Adds a builder to the cell class. Builders are used in #cell to find out the concrete
       # class for rendering. This is helpful if you frequently want to render subclasses according
       # to different circumstances (e.g. login situations) and you don't want to place these deciders in
       # your view code.
       #
-      # Passes the opts hash from #render_cell into the block. The block is executed in controller context.
+      # Passes the model and options from #cell into the block.
       # Multiple build blocks are ORed, if no builder matches the building cell is used.
       #
       # Example:
