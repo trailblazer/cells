@@ -8,6 +8,7 @@
 * **File Naming**. The default filename just uses the engine suffix, e.g. `show.haml`. If you have two different engine formats (e.g. `show.haml` and `show.erb`), use the `format:` option: `render format: :erb`.
     If you need to render a specific mime type, provide the filename: `render view: "show.html"`.
 * Builder blocks are no longer executed in controller context but in the context they were defined. This is to remove any dependencies to the controller. If you need e.g. `params`, pass them into the `#cell(..)` call.
+* Builders are now defined using `::builds`, not `::build`.
 
 ### Removed
 

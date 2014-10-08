@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "actionpack",  ">= 3.0"
   spec.add_dependency "railties",    ">= 3.0"
-  spec.add_dependency "uber",        "~> 0.0.8"
+  spec.add_dependency "uber",        "~> 0.0.9"
   spec.add_dependency 'tilt', '>= 1.3', '< 3'
 
   spec.add_development_dependency "rake"

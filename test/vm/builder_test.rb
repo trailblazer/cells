@@ -5,7 +5,7 @@ class BuilderTest < MiniTest::Spec
   Hit  = Struct.new(:title)
 
   class SongCell < Cell::ViewModel
-    build do |model, options|
+    builds do |model, options|
       if model.is_a? Hit
         HitCell
       elsif options[:evergreen]
@@ -50,4 +50,9 @@ class BuilderTest < MiniTest::Spec
 
   # with collection.
   it { Cell::ViewModel.cell("builder_test/song", nil, collection: [Song.new("Nation States"), Hit.new("New York")]).must_equal "* Nation States\n* **New York**" }
+
+  # with Concept
+  class Track < Cell::Concept
+  end
+  it { Cell::Concept.cell("builder_test/track", nil).must_be_instance_of Track }
 end

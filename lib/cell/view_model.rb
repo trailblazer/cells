@@ -27,7 +27,8 @@ module Cell
 
     include Prefixes
     extend SelfContained
-    extend Builder::ClassMethods
+
+    include Uber::Builder
 
 
     def self.controller_path
@@ -77,7 +78,7 @@ module Cell
       end
 
       def build_cell(controller, *args)
-        Builder.new(self).call(*args).new(controller, *args)
+        class_builder.call(*args).new(controller, *args)
       end
     end
 

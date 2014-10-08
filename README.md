@@ -310,7 +310,7 @@ Builders allow instantiating different cell classes for different models and opt
 
 ```ruby
 class SongCell < Cell::ViewModel
-  builder do |model, options|
+  builds do |model, options|
     HitCell       if model.is_a?(Hit)
     EverGreenCell if model.is_a?(Evergreen)
   end
@@ -332,7 +332,7 @@ This also works with collections.
 cell(:song, collection: [@hit, @song]) #=> renders HitCell, then SongCell.
 ```
 
-Multiple calls to `::builder` will be ORed. If no block returns a class, the original class will be used (`SongCell`).
+Multiple calls to `::builds` will be ORed. If no block returns a class, the original class will be used (`SongCell`). Builders are inherited.
 
 
 ## View Inheritance
