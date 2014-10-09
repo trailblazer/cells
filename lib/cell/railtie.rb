@@ -42,7 +42,13 @@ else
           ViewModel.class_eval do
             include ActionView::Helpers::AssetTagHelper
             if defined?(Sprockets)
-              include Sprockets::Helpers::RailsHelper
+              if defined?(Sprockets::Helpers)
+                # Rails 3.x
+                include Sprockets::Helpers::RailsHelper
+              else
+                # Rails 4.x
+                include Sprockets::Rails::Helper
+              end
             end
           end
         end
