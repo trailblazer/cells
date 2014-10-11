@@ -41,15 +41,6 @@ else
           #include assert helpers (image_path, font_path, ect)
           ViewModel.class_eval do
             include ActionView::Helpers::AssetTagHelper
-            if defined?(Sprockets)
-              if defined?(Sprockets::Helpers)
-                # Rails 3.x
-                include Sprockets::Helpers::RailsHelper
-              else
-                # Rails 4.x
-                include Sprockets::Rails::Helper
-              end
-            end
           end
         end
       end
