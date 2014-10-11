@@ -1,3 +1,5 @@
+require 'action_controller'
+require 'action_view'
 # no helper_method calls
 # no instance variables
 # no locals
