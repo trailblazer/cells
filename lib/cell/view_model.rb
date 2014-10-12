@@ -1,4 +1,6 @@
+# FIXME: remove AC dependency by delegating forgery
 require 'action_controller'
+
 # no helper_method calls
 # no instance variables
 # no locals
