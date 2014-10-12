@@ -1,5 +1,4 @@
 require 'action_controller'
-require 'action_view'
 # no helper_method calls
 # no instance variables
 # no locals
@@ -191,33 +190,36 @@ module Cell
     include Layout
 
 
-    # FIXME: this module is to fix a design flaw in Rails 4.0. the problem is that AV::UrlHelper mixes in the wrong #url_for.
-    # if we could mix in everything else from the helper except for the #url_for, it would be fine.
-    # FIXME: fix that in rails core.
-    if Cell.rails_version <= Gem::Version.new('4.0')
-      include ActionView::Helpers::UrlHelper # gives us breaking #url_for.
+    if defined?(ActionView)
+      # FIXME: this module is to fix a design flaw in Rails 4.0. the problem is that AV::UrlHelper mixes in the wrong #url_for.
+      # if we could mix in everything else from the helper except for the #url_for, it would be fine.
+      # FIXME: fix that in rails core.
+      if Cell.rails_version <= Gem::Version.new('4.0')
+        include ActionView::Helpers::UrlHelper # gives us breaking #url_for.
 
-      def url_for(options = nil) # from ActionDispatch:R:UrlFor.
-        case options
-        when nil
-          _routes.url_for(url_options.symbolize_keys)
-        when Hash
-          _routes.url_for(options.symbolize_keys.reverse_merge!(url_options))
-        when String
-          options
-        when Array
-          polymorphic_url(options, options.extract_options!)
-        else
-          polymorphic_url(options)
+        def url_for(options = nil) # from ActionDispatch:R:UrlFor.
+          case options
+            when nil
+              _routes.url_for(url_options.symbolize_keys)
+            when Hash
+              _routes.url_for(options.symbolize_keys.reverse_merge!(url_options))
+            when String
+              options
+            when Array
+              polymorphic_url(options, options.extract_options!)
+            else
+              polymorphic_url(options)
+          end
         end
+
+        public :url_for
+      else
+        include ActionView::Helpers::UrlHelper
       end
-      public :url_for
-    else
-      include ActionView::Helpers::UrlHelper
+      include ActionView::Helpers::FormTagHelper
     end
 
     require 'cell/haml_support_that_SUCKS'
-    include ActionView::Helpers::FormTagHelper
     include WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
   end
 end
