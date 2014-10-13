@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'helper'
 require 'rails/generators/test_case'
 require 'rails/generators/cell/cell_generator'
 

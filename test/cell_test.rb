@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'helper'
 
 class CellTest < MiniTest::Spec
   class SongCell < Cell::ViewModel

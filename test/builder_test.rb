@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'helper'
 
 class BuilderTest < MiniTest::Spec
   Song = Struct.new(:title)

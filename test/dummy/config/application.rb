@@ -5,6 +5,7 @@ require "action_controller/railtie"
 require "action_view/railtie"
 
 require "cells"
+require 'tilt/haml'
 
 module Dummy
   class Application < Rails::Application

@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'helper'
 
 
 class TemplatesTest < MiniTest::Spec

@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'helper'
 
 class BassistCell::FenderCell < Cell::ViewModel
 end

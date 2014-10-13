@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'helper'
 require 'rails/generators/test_case'
 require 'rails/generators/concept/concept_generator'
 

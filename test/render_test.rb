@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'helper'
 
 class SongCell < Cell::ViewModel
   self.view_paths = ['test/fixtures']

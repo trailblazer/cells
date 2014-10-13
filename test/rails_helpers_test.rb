@@ -1,11 +1,11 @@
-require 'test_helper'
+require_relative 'helper'
 
 class MusiciansController < ApplicationController
 end
 
 class UrlHelperTest < MiniTest::Spec
   let (:controller) { MusiciansController.new.tap { |ctl| ctl.send("request=", ActionDispatch::Request.new({})) } }
-  let (:cell) { SongCell.new(controller) }
+  let (:cellule) { SongCell.new(controller) }
 
   class SongCell < Cell::ViewModel
     self.view_paths = ['test/fixtures']
@@ -54,35 +54,35 @@ class UrlHelperTest < MiniTest::Spec
 
 
   # URL helpers work in cell instance.
-  it { cell.songs_path.must_equal "/songs" }
-  # it { cell.url_for(Song.new).must_equal "/songs" }
+  it { cellule.songs_path.must_equal "/songs" }
+  # it { cellule.url_for(Song.new).must_equal "/songs" }
 
   include TestXml::Assertions # TODO: fix in test_xml.
 
   # content_tag with HAML.
-  it { cell.with_content_tag.must_equal "<span>Title:\n<div>Still Knee Deep\n</div>\n</span>\n" }
+  it { cellule.with_content_tag.must_equal "<span>Title:\n<div>Still Knee Deep\n</div>\n</span>\n" }
 
   # form_tag with block in block work.
-  it { cell.edit.must_equal_xml_structure "<form><div><input/></div><label/><input/><ul><li/></ul></form>" }
+  it { cellule.edit.must_equal_xml_structure "<form><div><input/></div><label/><input/><ul><li/></ul></form>" }
 
   # form_tag, no block
-  it { cell.with_form_tag.must_equal_xml_structure "<form><div><input/></div><span/></form>" }
+  it { cellule.with_form_tag.must_equal_xml_structure "<form><div><input/></div><span/></form>" }
 
   # form_for with block
-  it { cell.with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
+  it { cellule.with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
   # form_for with block in ERB.
-  it { cell.erb_with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
+  it { cellule.erb_with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
 
   # when using yield, haml breaks it (but doesn't escape HTML)
-  it { cell.with_block.must_equal "Nice!\nyay, <b>yeah</b>\n" }
+  it { cellule.with_block.must_equal "Nice!\nyay, <b>yeah</b>\n" }
 
   # capture
-  it { cell.with_capture.must_equal "Nice!\n<b>Great!</b>\n" }
+  it { cellule.with_capture.must_equal "Nice!\n<b>Great!</b>\n" }
 
   # there's again escaping happening where it shouldn't be in link_to and rails <= 3.2.
   if Cell.rails_version >= Gem::Version.new('4.0')
     # link_to with block and img_tag
-    it { cell.with_link_to.must_equal "<a href=\"/songs\"><img alt=\"All\" src=\"/images/all.png\" />\n</a>\n" }
+    it { cellule.with_link_to.must_equal "<a href=\"/songs\"><img alt=\"All\" src=\"/images/all.png\" />\n</a>\n" }
   end
 end
 

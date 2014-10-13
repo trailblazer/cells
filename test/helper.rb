@@ -10,7 +10,7 @@ Minitest::Reporters.use! [Minitest::Reporters::ProgressReporter.new]
 
 ENV['RAILS_ENV'] = 'test'
 
-require "dummy/config/environment"
+require_relative 'dummy/config/environment'
 require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'
