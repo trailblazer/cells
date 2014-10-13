@@ -2,14 +2,10 @@ source 'https://rubygems.org'
 
 gemspec
 
-#gem "rails" , :path => "../rayls"
-
-gem "rails", "~> 3.2.12"
-gem 'minitest', '4.7.5'
 gem 'minitest-reporters'
 gem 'pry-byebug'  , platforms: [:mri_20, :mri_21]
+gem 'appraisal'
+gem 'rake'
+gem 'test_xml'
 
-# gem 'uber', :path => "../uber"
 
-# gem 'disposable', :path => "../disposable"
-gem "haml", git: "https://github.com/haml/haml" # newest haml that doesn't have form helpers.

@@ -22,12 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'actionpack',  '>= 3.2'
   spec.add_dependency "uber",        "~> 0.0.9"
   spec.add_dependency 'tilt', '>= 1.4', '< 3'
+  spec.add_dependency 'disposable', '~> 0.0.8'
 
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "minitest",	"~> 5.4.1"
-  spec.add_development_dependency "test_xml"
-  spec.add_development_dependency "activemodel"
-
-  spec.add_development_dependency "capybara"
-  spec.add_development_dependency "disposable", "~> 0.0.8"
 end
