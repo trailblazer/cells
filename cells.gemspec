@@ -15,12 +15,11 @@ Gem::Specification.new do |spec|
   spec.license     = 'MIT'
 
   spec.files         = `git ls-files`.split("\n")
-  spec.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  spec.test_files    = `git ls-files -- {test}/*`.split("\n")
   spec.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'actionpack',  '>= 3.2'
-  spec.add_dependency 'railties',    '>= 3.2'
   spec.add_dependency "uber",        "~> 0.0.9"
   spec.add_dependency 'tilt', '>= 1.4', '< 3'
 
