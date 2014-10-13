@@ -1,2 +1,0 @@
-class BadGuitaristCell < BassistCell
-end

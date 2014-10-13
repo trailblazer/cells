@@ -16,12 +16,27 @@ module Dummy
     config.filter_parameters += [:password]
 
     config.cache_store = :memory_store
-    config.secret_token = "some secret phrase of at least 30 characters"
+    config.secret_token = SecureRandom.uuid
 
     # enable asset pipeline as in development.
     config.assets.enabled = true
     config.assets.compile = true
     config.cells.with_assets = ["album", "song"]
     config.app_generators.template_engine :haml
+    config.cache_classes = true
+
+    # Log error messages when you accidentally call methods on nil.
+    config.whiny_nils = true
+
+    # Show full error reports and disable caching
+    config.consider_all_requests_local       = true
+    config.action_controller.perform_caching = false
+
+    # Raise exceptions instead of rendering exception templates
+    config.action_dispatch.show_exceptions = false
+
+    # Disable request forgery protection in test environment
+    config.action_controller.allow_forgery_protection    = false
+    config.active_support.deprecation = :stderr
   end
 end

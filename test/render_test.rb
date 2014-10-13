@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SongCell < Cell::ViewModel
-  self.view_paths = ["test/vm/fixtures"]
+  self.view_paths = ['test/fixtures']
 
   def show
     render
@@ -66,7 +66,7 @@ class RenderTest < MiniTest::Spec
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
-    exception.message.must_equal "Template missing: view: `unknown.haml` prefixes: [\"song\"] view_paths:[\"test/vm/fixtures\"]"
+    exception.message.must_equal "Template missing: view: `unknown.haml` prefixes: [\"song\"] view_paths:[\"test/fixtures\"]"
   end
 
   # allows locals

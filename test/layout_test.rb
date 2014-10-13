@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SongWithLayoutCell < Cell::ViewModel
-  self.view_paths = ["test/vm/fixtures"]
+  self.view_paths = ['test/fixtures']
 
   def show
     render layout: :merry

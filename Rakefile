@@ -8,6 +8,6 @@ task :default => :test
 
 Rake::TestTask.new(:test) do |test|
   test.libs << 'test'
-  test.test_files = FileList['test/vm/*_test.rb']
+  test.pattern = 'test/*_test.rb'
   test.verbose = true
 end
