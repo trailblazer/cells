@@ -5,7 +5,6 @@ require "action_controller/railtie"
 require "action_view/railtie"
 
 require "cells"
-require 'sprockets/railtie'
 
 module Dummy
   class Application < Rails::Application
@@ -25,9 +24,6 @@ module Dummy
     config.app_generators.template_engine :haml
     config.cache_classes = true
 
-    # Log error messages when you accidentally call methods on nil.
-    config.whiny_nils = true
-
     # Show full error reports and disable caching
     config.consider_all_requests_local       = true
     config.action_controller.perform_caching = false
@@ -38,5 +34,8 @@ module Dummy
     # Disable request forgery protection in test environment
     config.action_controller.allow_forgery_protection    = false
     config.active_support.deprecation = :stderr
+
+    config.eager_load = false
+    config.active_support.test_order = :random
   end
 end
