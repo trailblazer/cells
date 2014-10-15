@@ -7,7 +7,7 @@ class UrlHelperTest < MiniTest::Spec
   let (:controller) { MusiciansController.new.tap { |ctl| ctl.send("request=", ActionDispatch::Request.new({})) } }
   let (:cell) { SongCell.new(controller) }
 
-  class SongCell < Cell::ViewModel
+  class SongCell < ApplicationCell
     self.view_paths = ["test/vm/fixtures"]
 
     include ActionView::Helpers::FormTagHelper

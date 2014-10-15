@@ -27,7 +27,7 @@ module Rails
       private
 
       def parent_class_name
-        options[:parent] || 'Cell::ViewModel'
+        options[:parent] || 'ApplicationCell'
       end
 
       # The show state is included by default
