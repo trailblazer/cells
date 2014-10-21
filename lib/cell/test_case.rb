@@ -19,7 +19,7 @@ module Cell
   # You can also do stuff yourself, like
   #
   #     it "should be rendered even nicer" do
-  #       html = render_cell(:shopping_cart, :order_button, , :items => @fixture_items)
+  #       html = render_cell(:shopping_cart, :order_button, :items => @fixture_items)
   #       assert_selector "button", "Order now!", html
   #     end
   #
