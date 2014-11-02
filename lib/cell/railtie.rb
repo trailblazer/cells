@@ -45,6 +45,13 @@ else
         end
       end
 
+      initializer('cells.development') do |app|
+        if Rails.env == "development"
+          require "cell/development"
+          ViewModel.send(:include, Development)
+        end
+      end
+
       rake_tasks do
         load 'tasks/cells.rake'
       end

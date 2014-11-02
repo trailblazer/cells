@@ -23,7 +23,7 @@ module Cell
 
     class << self
       def templates
-        @templates ||= Templates.new # note: this is shared in subclasses.
+        @templates ||= Templates.new # note: this is shared in subclasses. do we really want this?
       end
     end
 

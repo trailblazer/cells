@@ -18,12 +18,15 @@ module Cell
       view = "#{view}.#{engine}"
 
       cache.fetch(prefixes, view) do |prefix|
-        puts "checking #{base}/#{prefix}/#{view}"
         # this block is run once per cell class per process, for each prefix/view tuple.
-        next unless File.exists?("#{base}/#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
-
-        template = Tilt.new("#{base}/#{prefix}/#{view}", :escape_html => false, :escape_attrs => false)
+        create(base, prefix, view)
       end
+    end
+
+    def create(base, prefix, view)
+      puts "checking #{base}/#{prefix}/#{view}"
+      return unless File.exists?("#{base}/#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
+      Tilt.new("#{base}/#{prefix}/#{view}", :escape_html => false, :escape_attrs => false)
     end
 
     # {["comment/row/views", comment/views"][show.haml] => "Tpl:comment/view/show.haml"}
