@@ -73,5 +73,29 @@ class InheritViewsTest < MiniTest::Spec
   it { cell("inherit_views_test/funker").play.must_equal "Doo\n" }
 
 
-  #
+  # TapperCell
+  class TapperCell < Cell::ViewModel
+    self.view_paths = ["test/vm/fixtures"]
+
+    def play
+      render
+    end
+
+    def tap
+      render
+    end
+  end
+
+  class PopperCell < TapperCell
+  end
+
+  # Tapper renders its play
+  it { cell("inherit_views_test/tapper").call(:play).must_equal "Dooom!\n" }
+  # Tapper renders its tap
+  it { cell("inherit_views_test/tapper").call(:tap).must_equal "Tap tap tap!\n" }
+
+  # Popper renders Tapper's play
+  it { cell("inherit_views_test/popper").call(:play).must_equal "Dooom!\n" }
+  #  Popper renders its tap
+  it { cell("inherit_views_test/popper").call(:tap).must_equal "TTttttap I'm not good enough!\n" }
 end
