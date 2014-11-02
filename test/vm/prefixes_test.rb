@@ -71,4 +71,7 @@ class InheritViewsTest < MiniTest::Spec
   # test if normal cells inherit views.
   it { cell("inherit_views_test/slapper").play.must_equal "Doo\n" }
   it { cell("inherit_views_test/funker").play.must_equal "Doo\n" }
+
+
+  #
 end

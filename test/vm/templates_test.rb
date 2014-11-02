@@ -11,4 +11,10 @@ class TemplatesTest < MiniTest::Spec
 
   # not existing.
   it { Templates.new[base, ["bassist"], "not-here", "haml"].must_equal nil }
+
+
+  # different caches for different classes
+
+  # same cache for subclasses
+
 end

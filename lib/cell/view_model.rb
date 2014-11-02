@@ -23,7 +23,7 @@ module Cell
 
     class << self
       def templates
-        @templates ||= Templates.new
+        @templates ||= Templates.new # note: this is shared in subclasses.
       end
     end
 
@@ -153,7 +153,7 @@ module Cell
 
     def template_for(view, engine)
       base = self.class.view_paths
-
+      # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
       self.class.templates[base, _prefixes, view, engine] or raise TemplateMissingError.new(base, _prefixes, view, engine, nil)
     end
 
