@@ -11,6 +11,8 @@ You can render view models anywhere in your code. Mostly, cells are used in view
 
 As you have already noticed we use _cell_ and _view model_ interchangeably here.
 
+Cells is part of the [Trailblazer project](https://github.com/apotonick/trailblazer). Please [buy my book](https://leanpub.com/trailblazer) to support the development and to learn all the cool stuff about Cells. The book discusses everything from modeling your UI with Cells, testing, caching and advanced techniques like view inheritance and builders.
+
 ## No ActionView
 
 Starting with Cells 4.0 we no longer use `ActionView` as a template engine. Removing this jurassic dependency cuts down Cells' rendering code to less than 50 lines and improves rendering speed by 300%!
