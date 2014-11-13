@@ -1,37 +1,60 @@
 module Cell
   # Gets cached in production.
   class Templates
+    # prefixes could be instance variable as they will never change.
     def [](bases, prefixes, view, engine, formats=nil)
       base = bases.first # FIXME.
 
-      prefixes.find do |prefix|
-        template = find_for_engines(base, prefix, view, engine) and return template
-      end
+      find_template(base, prefixes, view, engine)
     end
 
   private
 
     def cache
-      @cache ||= {}
+      @cache ||= Cache.new
     end
 
-    def find_for_engines(base, prefix, view, engine)
-      find_template(base, prefix, view, engine)
+    def find_template(base, prefixes, view, engine)
+      view = "#{view}.#{engine}"
+
+      cache.fetch(prefixes, view) do |prefix|
+        # this block is run once per cell class per process, for each prefix/view tuple.
+        create(base, prefix, view)
+      end
     end
 
-    def find_template(base, prefix, view, engine)
-      cache[engine] ||= {} # the engine will probably never change as everyone uses the same tpl throughout the app.
-      vcache = cache[engine][view] ||= {}
+    def create(base, prefix, view)
+      puts "checking #{base}/#{prefix}/#{view}"
+      return unless File.exists?("#{base}/#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
+      Tilt.new("#{base}/#{prefix}/#{view}", :escape_html => false, :escape_attrs => false)
+    end
 
-      template = vcache[prefix] and return template
+    # {["comment/row/views", comment/views"][show.haml] => "Tpl:comment/view/show.haml"}
+    class Cache
+      def initialize
+        @store = {}
+      end
 
-      puts "checking #{base}/#{prefix}/#{view}.#{engine}"
+      # Iterates prefixes and yields block. Returns and caches when block returned template.
+      # Note that it caches per prefixes set as this will most probably never change.
+      def fetch(prefixes, view)
+        template = get(prefixes, view) and return template # cache hit.
 
-      return unless File.exists?("#{base}/#{prefix}/#{view}.#{engine}") # DISCUSS: can we use Tilt.new here?
+        prefixes.find do |prefix|
+          template = yield(prefix) and return store(prefixes, view, template)
+        end
+      end
 
-      template = Tilt.new("#{base}/#{prefix}/#{view}.#{engine}", :escape_html => false, :escape_attrs => false)
+    private
+      # ["comment/views"] => "show.haml"
+      def get(prefixes, view)
+        @store[prefixes] ||= {}
+        @store[prefixes][view]
+      end
 
-      vcache[prefix] = template
+      def store(prefix, view, template)
+        @store[prefix][view] = template # the nested hash is always present here.
+      end
     end
   end
 end

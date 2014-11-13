@@ -9,10 +9,7 @@ class Cell::Concept < Cell::ViewModel
     end
 
     def controller_path
-      # TODO: cache on class level
-      # DISCUSS: only works with trailblazer style directories. this is a bit risky but i like it.
-      # applies to Comment::Cell, Comment::Cell::Form, etc.
-      name.sub(/::Cell/, '').underscore unless anonymous?
+      @controller_path ||= name.sub(/::Cell/, '').underscore
     end
   end
 
