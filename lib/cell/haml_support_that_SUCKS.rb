@@ -2,12 +2,12 @@
 
 module WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
   def output_buffer_with_haml
-    return haml_buffer.buffer if is_haml?
+    return haml_buffer.buffer if defined?(is_haml?) && is_haml?
     output_buffer_without_haml
   end
 
   def set_output_buffer_with_haml(new_buffer)
-    if is_haml?
+    if defined?(is_haml?) && is_haml?
       if Haml::Util.rails_xss_safe? && new_buffer.is_a?(ActiveSupport::SafeBuffer)
         new_buffer = String.new(new_buffer)
       end
