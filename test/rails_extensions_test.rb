@@ -1,4 +1,4 @@
-require_relative 'helper'
+require 'test_helper'
 
 class ViewExtensionsTest < ActionController::TestCase
   tests MusicianController

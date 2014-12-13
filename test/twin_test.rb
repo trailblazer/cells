@@ -1,4 +1,4 @@
-require_relative 'helper'
+require 'test_helper'
 require 'cell/twin'
 
 class TwinTest < MiniTest::Spec

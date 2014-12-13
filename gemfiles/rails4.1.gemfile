@@ -10,6 +10,5 @@ gem "test_xml"
 gem "railties", :github => "rails/rails", :branch => "4-1-stable"
 gem "activemodel", :github => "rails/rails", :branch => "4-1-stable"
 gem "minitest", "~> 5.2"
-gem "haml-rails"
 
 gemspec :path => "../"

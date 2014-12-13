@@ -8,4 +8,3 @@ gem 'appraisal'
 gem 'rake'
 gem 'test_xml'
 
-

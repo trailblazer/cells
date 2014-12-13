@@ -1,4 +1,4 @@
-require_relative 'helper'
+require 'test_helper'
 
 class SongWithLayoutCell < Cell::ViewModel
   self.view_paths = ['test/fixtures']
@@ -53,5 +53,5 @@ class LayoutTest < MiniTest::Spec
   it { SongWithLayoutOnClassCell.new(nil).show.must_equal "Merry Xmas, <b>Papertiger</b>\n" }
 
   # with ::layout and :layout, :layout wins.
-  it { SongWithLayoutOnClassCell.new(nil).show_with_layout.must_equal "Happy Friday\n!\n" }
+  it { SongWithLayoutOnClassCell.new(nil).show_with_layout.must_equal "Happy Friday!" }
 end

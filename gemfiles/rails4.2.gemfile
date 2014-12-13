@@ -7,9 +7,8 @@ gem "pry-byebug", :platforms => [:mri_20, :mri_21]
 gem "appraisal"
 gem "rake"
 gem "test_xml"
-gem "railties", :github => "rails/rails", :branch => "master"
-gem "activemodel", :github => "rails/rails", :branch => "master"
+gem "railties", :github => "rails/rails", :branch => "4-2-stable"
+gem "activemodel", :github => "rails/rails", :branch => "4-2-stable"
 gem "minitest", "~> 5.2"
-gem "haml-rails"
 
 gemspec :path => "../"

@@ -1,4 +1,4 @@
-require_relative 'helper'
+require 'test_helper'
 
 class SongCell < Cell::ViewModel
   self.view_paths = ['test/fixtures']
@@ -66,7 +66,7 @@ class RenderTest < MiniTest::Spec
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
-    exception.message.must_equal "Template missing: view: `unknown.haml` prefixes: [\"song\"] view_paths:[\"test/fixtures\"]"
+    exception.message.must_equal "Template missing: view: `unknown.erb` prefixes: [\"song\"] view_paths:[\"test/fixtures\"]"
   end
 
   # allows locals
@@ -76,7 +76,7 @@ class RenderTest < MiniTest::Spec
   it { SongCell.new(nil).with_view_name.must_equal "Man Of Steel\n" }
 
   # :template_engine renders ERB.
-  it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
+  # it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
 
   # view: "show.html"
 

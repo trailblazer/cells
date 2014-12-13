@@ -7,7 +7,9 @@ require 'active_support/dependencies/autoload'
 module Cell
   extend ActiveSupport::Autoload
 
+  autoload :Concept
   autoload :TestCase
+  autoload :TestHelper
 
   def self.rails_version
     Gem::Version.new(ActionPack::VERSION::STRING)
@@ -27,10 +29,6 @@ require 'cell/prefixes'
 require 'cell/self_contained'
 require 'cell/layout'
 require 'cell/templates'
-require 'cell/erb'
-
 require 'cell/view_model'
-require 'cell/concept'
-# require 'cells/engines'
 
 require 'cell/railtie'

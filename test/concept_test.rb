@@ -1,4 +1,4 @@
-require_relative 'helper'
+require 'test_helper'
 
 Cell::Concept.class_eval do
   self.view_paths = ['test/fixtures/concepts']

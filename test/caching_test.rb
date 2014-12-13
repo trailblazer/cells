@@ -1,5 +1,5 @@
 # encoding: utf-8
-require_relative 'helper'
+require 'test_helper'
 
 class DirectorCell < Cell::ViewModel
   attr_reader :count

@@ -1,11 +1,10 @@
 require File.expand_path('../boot', __FILE__)
 
-require "active_model/railtie"
+# require "active_model/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
 
 require "cells"
-require 'tilt/haml'
 
 module Dummy
   class Application < Rails::Application
@@ -17,12 +16,12 @@ module Dummy
 
     config.cache_store = :memory_store
     config.secret_token = SecureRandom.uuid
+    config.secret_key_base = SecureRandom.uuid
 
     # enable asset pipeline as in development.
     config.assets.enabled = true
     config.assets.compile = true
     config.cells.with_assets = ["album", "song"]
-    config.app_generators.template_engine :haml
     config.cache_classes = true
 
     # Show full error reports and disable caching

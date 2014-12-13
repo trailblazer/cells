@@ -1,4 +1,4 @@
-require_relative 'helper'
+require 'test_helper'
 require 'benchmark'
 
 Song = Struct.new(:title)

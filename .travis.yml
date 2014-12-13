@@ -1,11 +1,21 @@
+language: ruby
 rvm:
-  - 1.9.3
+  - 2.2
+  - 2.1
   - 2.0.0
+  - 1.9.3
   - jruby-19mode
+
+sudo: false
+
+bundler_args: '--without local_development --jobs 3 --retry 3'
+
+script: bundle exec rake
+
 notifications:
   irc: "irc.freenode.org#cells"
 gemfile:
-  - gemfiles/rails3.2.gemfile
-  - gemfiles/rails4.0.gemfile
-  - gemfiles/rails4.1.gemfile
   - gemfiles/rails4.2.gemfile
+  - gemfiles/rails4.1.gemfile
+  - gemfiles/rails4.0.gemfile
+  - gemfiles/rails3.2.gemfile

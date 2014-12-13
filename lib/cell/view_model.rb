@@ -220,8 +220,5 @@ module Cell
       end
       include ActionView::Helpers::FormTagHelper
     end
-
-    require 'cell/haml_support_that_SUCKS'
-    include WhyDoWeHaveToOverrideRailsHelpersToMakeHamlWork
   end
 end
