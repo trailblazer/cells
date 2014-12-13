@@ -24,7 +24,6 @@ module Cell
     end
 
     def create(base, prefix, view)
-      puts "checking #{base}/#{prefix}/#{view}"
       return unless File.exists?("#{base}/#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
       Tilt.new("#{base}/#{prefix}/#{view}", :escape_html => false, :escape_attrs => false)
     end

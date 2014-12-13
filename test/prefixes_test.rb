@@ -1,4 +1,4 @@
-require_relative 'helper'
+require 'test_helper'
 
 class BassistCell::FenderCell < Cell::ViewModel
 end
@@ -69,13 +69,13 @@ class InheritViewsTest < MiniTest::Spec
   it { FunkerCell.new(nil)._prefixes.must_equal ["inherit_views_test/funker", "inherit_views_test/slapper", "bassist"] }
 
   # test if normal cells inherit views.
-  it { cell("inherit_views_test/slapper").play.must_equal "Doo\n" }
-  it { cell("inherit_views_test/funker").play.must_equal "Doo\n" }
+  it { cell('inherit_views_test/slapper').play.must_equal 'Doo' }
+  it { cell('inherit_views_test/funker').play.must_equal 'Doo' }
 
 
   # TapperCell
   class TapperCell < Cell::ViewModel
-    self.view_paths = ["test/vm/fixtures"]
+    self.view_paths = ['test/fixtures']
 
     def play
       render
@@ -90,12 +90,12 @@ class InheritViewsTest < MiniTest::Spec
   end
 
   # Tapper renders its play
-  it { cell("inherit_views_test/tapper").call(:play).must_equal "Dooom!\n" }
+  it { cell('inherit_views_test/tapper').call(:play).must_equal 'Dooom!' }
   # Tapper renders its tap
-  it { cell("inherit_views_test/tapper").call(:tap).must_equal "Tap tap tap!\n" }
+  it { cell('inherit_views_test/tapper').call(:tap).must_equal 'Tap tap tap!' }
 
   # Popper renders Tapper's play
-  it { cell("inherit_views_test/popper").call(:play).must_equal "Dooom!\n" }
+  it { cell('inherit_views_test/popper').call(:play).must_equal 'Dooom!' }
   #  Popper renders its tap
-  it { cell("inherit_views_test/popper").call(:tap).must_equal "TTttttap I'm not good enough!\n" }
+  it { cell('inherit_views_test/popper').call(:tap).must_equal "TTttttap I'm not good enough!" }
 end

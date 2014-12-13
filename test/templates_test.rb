@@ -1,4 +1,4 @@
-require_relative 'helper'
+require 'test_helper'
 
 
 class TemplatesTest < MiniTest::Spec
@@ -7,10 +7,10 @@ class TemplatesTest < MiniTest::Spec
   let (:base) { ['test/fixtures'] }
 
   # existing.
-  it { Templates.new[base, ['bassist'], 'play', 'haml'].file.must_equal 'test/fixtures/bassist/play.haml' }
+  it { Templates.new[base, ['bassist'], 'play', 'erb'].file.must_equal 'test/fixtures/bassist/play.erb' }
 
   # not existing.
-  it { Templates.new[base, ["bassist"], "not-here", "haml"].must_equal nil }
+  it { Templates.new[base, ['bassist'], 'not-here', 'erb'].must_equal nil }
 
 
   # different caches for different classes
@@ -22,7 +22,7 @@ end
 
 class TemplatesCachingTest < MiniTest::Spec
   class SongCell < Cell::ViewModel
-    self.view_paths = ["test/vm/fixtures"]
+    self.view_paths = ['test/fixtures']
 
     def show
       render
@@ -33,13 +33,13 @@ class TemplatesCachingTest < MiniTest::Spec
   it do
     cell = cell("templates_caching_test/song")
 
-    cell.call(:show).must_equal "The Great Mind Eraser\n"
+    cell.call(:show).must_equal 'The Great Mind Eraser'
 
     SongCell.templates.instance_eval do
       def create; raise; end
     end
 
     # cached, NO new tilt template.
-    cell.call(:show).must_equal "The Great Mind Eraser\n"
+    cell.call(:show).must_equal 'The Great Mind Eraser'
   end
 end

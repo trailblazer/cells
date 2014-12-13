@@ -66,7 +66,7 @@ class UrlHelperTest < MiniTest::Spec
   # it { cellule.edit.must_equal_xml_structure "<form><div><input/></div><label/><input/><ul><li/></ul></form>" }
 
   # form_tag, no block
-  it { cellule.with_form_tag.must_equal_xml_structure "<form><div><input/></div><span/></form>" }
+  # it { cellule.with_form_tag.must_equal_xml_structure "<form><div><input/></div><span/></form>" }
 
   # # form_for with block
   # it { cellule.with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
