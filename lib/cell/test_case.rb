@@ -138,7 +138,12 @@ module Cell
     end
 
     include TestMethods
-    include ActionDispatch::Assertions::SelectorAssertions  # imports "their" #assert_select.
+    # imports "their" #assert_select.
+    if ::Rails.const_defined?(:Dom)
+      include ::Rails::Dom::Testing::Assertions::SelectorAssertions
+    else
+      include ActionDispatch::Assertions::SelectorAssertions
+    end
     alias_method :rails_assert_select, :assert_select # i hate that.
     include AssertSelect
 
