@@ -1,3 +1,7 @@
+## 3.11.3
+
+* Make Cells work with Rails 4.2. Thanks to @pwim and @did!
+
 ## 3.11.2
 
 * `ViewModel#call` now accepts a block and yields `self` (the cell instance) to it. This is handy to use with `content_for`.
