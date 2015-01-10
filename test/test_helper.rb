@@ -2,15 +2,17 @@ begin
   require 'byebug'
 rescue LoadError
 end
+
+ENV['RAILS_ENV'] = 'test'
+
+require_relative 'dummy/config/environment'
+require 'tilt/erubis'   if Gem::Version.new(ActiveSupport::VERSION::STRING) >= Gem::Version.new('4.2.0')
+
 require 'minitest/autorun'
 require 'test_xml/mini_test'
 
 require 'minitest/reporters'
 Minitest::Reporters.use! [Minitest::Reporters::ProgressReporter.new]
-
-ENV['RAILS_ENV'] = 'test'
-
-require_relative 'dummy/config/environment'
 require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'

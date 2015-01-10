@@ -49,7 +49,7 @@ class BuilderTest < MiniTest::Spec
   end
 
   # with collection.
-  it { Cell::ViewModel.cell("builder_test/song", nil, collection: [Song.new("Nation States"), Hit.new("New York")]).must_equal "* Nation States\n* **New York**" }
+  it { Cell::ViewModel.cell("builder_test/song", nil, collection: [Song.new("Nation States"), Hit.new("New York")]).must_equal "* Nation States* **New York**" }
 
   # with Concept
   class Track < Cell::Concept

@@ -46,16 +46,16 @@ module Cell
 
     module Helpers
       # Renders collection of cells.
-      def collection(name, controller, array, options)
+      def cells_collection(name, controller, array, options)
         method = options.delete(:method) || :show
-
-        array.collect { |model| cell_for(name, *[controller, model, options]).call(method) }.join("\n").html_safe
+        join = options.delete(:collection_join)
+        array.collect { |model| cell_for(name, *[controller, model, options]).call(method) }.join(join).html_safe
       end
 
       # Returns cell instance.
       def cell(name, controller, model=nil, options={}, &block) # classic Rails fuzzy API.
         if model.is_a?(Hash) and array = model.delete(:collection)
-          return collection(name, controller, array, model)
+          return cells_collection(name, controller, array, model)
         end
 
         cell_for(name, controller, model, options, &block)
