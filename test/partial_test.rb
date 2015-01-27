@@ -13,7 +13,7 @@ class PartialTest < MiniTest::Spec
     end
 
     def show_with_format
-      render partial: "../fixtures/partials/show", format: :xml
+      render partial: "../fixtures/partials/show", formats: [:xml]
     end
   end
 
