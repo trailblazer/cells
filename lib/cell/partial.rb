@@ -16,8 +16,6 @@ module Cell::ViewModel::Partial
   def process_options!(options)
     super
 
-    puts "@@@@@@@@ #{options.inspect}"
-
     options.merge!(:view => options[:partial]) if options[:partial]
     options[:view] += ".#{options[:formats].first}" if options[:formats]
   end
