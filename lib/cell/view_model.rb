@@ -151,11 +151,14 @@ module Cell
     end
     attr_writer :output_buffer # TODO: test that, this breaks in MM.
 
-    def template_for(view, engine)
-      base = self.class.view_paths
-      # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
-      self.class.templates[base, _prefixes, view, engine] or raise TemplateMissingError.new(base, _prefixes, view, engine, nil)
+    module TemplateFor
+      def template_for(view, engine)
+        base = self.class.view_paths
+        # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
+        self.class.templates[base, _prefixes, view, engine] or raise TemplateMissingError.new(base, _prefixes, view, engine, nil)
+      end
     end
+    include TemplateFor
 
     def with_layout(layout, content)
       return content unless layout
@@ -164,7 +167,7 @@ module Cell
       template.render(self) { content }
     end
 
-    def normalize_options(options, caller)
+    def normalize_options(options, caller) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
         options.reverse_merge(:view => state_for_implicit_render(caller)) # TODO: test implicit render!
       else
