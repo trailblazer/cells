@@ -429,22 +429,6 @@ Adding the assets files to the asset pipeline currently involves two steps (I kn
 
 In future versions, we wanna improve this by automatically including cell assets and avoiding name clashes. If you have ideas, suggestions, I'd love to hear them.
 
-### Rendering Global Partials
-
-Sometimes you need to render a global partial from `app/views` within a cell. For instance, the `gmaps4rails` helper depends on a global partial. While this breaks encapsulation it's still possible in cells - just add the global view path.
-
-```ruby
-class MapCell < Cell::Rails
-  append_view_path "app/views"
-
-  def show
-    render partial: 'shared/map_form'
-  end
-```
-
-Note that you have to use `render partial:` which will then look in the global view directory and render the partial found at `app/views/shared/map_form.html.haml`.
-
-
 ## View Inheritance
 
 This is where OOP comes back to your view.
