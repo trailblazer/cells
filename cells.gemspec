@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.platform    = Gem::Platform::RUBY
   spec.authors     = ["Nick Sutterer"]
   spec.email       = ["apotonick@gmail.com"]
-  spec.homepage    = "http://cells.rubyforge.org"
+  spec.homepage    = "https://github.com/apotonick/cells"
   spec.summary     = %q{View Models for Rails.}
   spec.description = %q{Cells replace partials and helpers with OOP view models, giving you proper encapsulation, inheritance, testability and a cleaner view architecture.}
   spec.license     = 'MIT'
@@ -23,5 +23,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency "uber",        "~> 0.0.9"
   spec.add_dependency 'tilt', '>= 1.4', '< 3'
   spec.add_dependency 'disposable', '~> 0.0.8'
-
 end
