@@ -38,6 +38,10 @@ class SongCell < Cell::ViewModel
     "#{layout}"
   end
 
+  def with_html
+    render
+  end
+
 private
   def title
     "Papertiger"
@@ -84,6 +88,9 @@ class RenderTest < MiniTest::Spec
   it { SongCell.new(nil).receiving_options.must_equal "default" }
   it { SongCell.new(nil).receiving_options(:fancy).must_equal "fancy" }
   it { SongCell.new(nil).call(:receiving_options, :fancy).must_equal "fancy" }
+
+  # doesn't escape HTML.
+  it { SongCell.new(nil).call(:with_html).must_equal "<p>Yew!</p>" }
 end
 
 # test inheritance
