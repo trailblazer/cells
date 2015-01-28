@@ -49,3 +49,5 @@ class MusicianController < ActionController::Base
     render text: cell("view_extensions_test/song", "A Tale That Wasn't Right").call
   end
 end
+
+Rails.backtrace_cleaner.remove_silencers! # YES, stacktraces are awesome!
