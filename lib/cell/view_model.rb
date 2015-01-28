@@ -106,11 +106,11 @@ module Cell
     end
 
     def render_to_string(options)
-      template = template_for(options[:view], options[:template_engine]) # TODO: cache template with path/lookup keys.
+      template = template_for(options) # TODO: cache template with path/lookup keys.
       content  = template.render(self, options[:locals])
 
       # TODO: allow other (global) layout dirs.
-      with_layout(options[:layout], content)
+      with_layout(options, content)
     end
 
 
@@ -152,18 +152,22 @@ module Cell
     attr_writer :output_buffer # TODO: test that, this breaks in MM.
 
     module TemplateFor
-      def template_for(view, engine)
-        base = self.class.view_paths
+      def template_for(options)
+        view      = options[:view]
+        engine    = options[:template_engine]
+        base      = options[:base]
+        prefixes  = options[:prefixes]
+
         # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
-        self.class.templates[base, _prefixes, view, engine] or raise TemplateMissingError.new(base, _prefixes, view, engine, nil)
+        self.class.templates[base, prefixes, view, engine] or raise TemplateMissingError.new(base, prefixes, view, engine, nil)
       end
     end
     include TemplateFor
 
-    def with_layout(layout, content)
-      return content unless layout
+    def with_layout(options, content)
+      return content unless layout = options[:layout]
 
-      template = template_for(layout, self.class.template_engine) # we could also allow a different layout engine.
+      template = template_for(options.merge :view => layout) # we could also allow a different layout engine, etc.
       template.render(self) { content }
     end
 
@@ -175,6 +179,8 @@ module Cell
       end
 
       options[:template_engine] ||= self.class.template_engine # DISCUSS: in separate method?
+      options[:base]            ||= self.class.view_paths
+      options[:prefixes]        ||= _prefixes
 
       process_options!(options)
       options
