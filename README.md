@@ -20,9 +20,9 @@ Cells is part of the [Trailblazer project](https://github.com/apotonick/trailbla
 ![](https://raw.githubusercontent.com/apotonick/trailblazer/master/doc/trb.jpg)
 </a>
 
-* Basic view models, replacing helpers, and how to structure your view into cell components (chapter 2 and 3).
-* Advanced Cells API (chapter 3 and 6).
-* Testing Cells (chapter 3 and 6).
+* Basic view models, replacing helpers, and how to structure your view into cell components (chapter 2 and 4).
+* Advanced Cells API (chapter 4 and 6).
+* Testing Cells (chapter 4 and 6).
 * Cells Pagination with AJAX (chapter 6).
 * View Caching and Expiring (chapter 7).
 
