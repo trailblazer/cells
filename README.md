@@ -15,7 +15,15 @@ As you have already noticed we use _cell_ and _view model_ interchangeably here.
 ![](https://raw.githubusercontent.com/apotonick/trailblazer/master/doc/trb.jpg)
 </a>
 
-Cells is part of the [Trailblazer project](https://github.com/apotonick/trailblazer). Please [buy my book](https://leanpub.com/trailblazer) to support the development and to learn all the cool stuff about Cells. The book discusses everything from modeling your UI with Cells, testing, caching and advanced techniques like view inheritance and builders.
+Cells is part of the [Trailblazer project](https://github.com/apotonick/trailblazer). Please [buy my book](https://leanpub.com/trailblazer) to support the development and to learn all the cool stuff about Cells. The book discusses the following.
+
+* Basic view models, replacing helpers, and how to structure your view into cell components (chapter 3).
+* Advanced Cells API (chapter 3 and 6).
+* Testing Cells (chapter 3 and 6).
+* Cells Pagination with AJAX (chapter 6).
+* View Caching and Expiring (chapter 7).
+
+More chapters are coming. We strongly advise you to buy the book if you're using Cells. This is not to make money but because it talks about object- and view design and covers all aspects of the API. Also, it motivates us to move on.
 
 ## No ActionView
 
@@ -34,7 +42,7 @@ gem 'cells', "~> 4.0.0"
 
 ## Prerequisites
 
-Cells comes bundled with ERB support. To render HAML, you have to include the [cells-haml](https://github.com/trailblazer/cells-haml) gem. The same for [cells-slim](https://github.com/trailblazer/cells-slim). Currently, they are only available as github dependencies, they will be released soon.
+Cells comes bundled with ERB support. To render HAML, you have to include the [cells-haml](https://github.com/trailblazer/cells-haml) gem. The same for [cells-slim](https://github.com/trailblazer/cells-slim). Currently, they are only available as github dependencies, they will be released soon (early 2015).
 
 ```ruby
 gem "cells-haml", github: 'trailblazer/cells-haml'
