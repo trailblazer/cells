@@ -11,6 +11,9 @@ You can render view models anywhere in your code. Mostly, cells are used in view
 
 As you have already noticed we use _cell_ and _view model_ interchangeably here.
 
+
+## The Book
+
 <a href="https://leanpub.com/trailblazer">
 ![](https://raw.githubusercontent.com/apotonick/trailblazer/master/doc/trb.jpg)
 </a>
