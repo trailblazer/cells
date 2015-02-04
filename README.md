@@ -26,7 +26,9 @@ Cells is part of the [Trailblazer project](https://github.com/apotonick/trailbla
 * Cells Pagination with AJAX (chapter 6).
 * View Caching and Expiring (chapter 7).
 
-More chapters are coming. We strongly advise you to buy the book if you're using Cells. This is not to make money but because it talks about object- and view design and covers all aspects of the API. Also, it motivates us to move on.
+More chapters are coming.
+
+The book picks up where the README leaves off. Go grab a copy and support us - it talks about object- and view design and covers all aspects of the API.
 
 ## No ActionView
 
