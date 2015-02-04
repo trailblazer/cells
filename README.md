@@ -14,13 +14,13 @@ As you have already noticed we use _cell_ and _view model_ interchangeably here.
 
 ## The Book
 
+Cells is part of the [Trailblazer project](https://github.com/apotonick/trailblazer). Please [buy my book](https://leanpub.com/trailblazer) to support the development and to learn all the cool stuff about Cells. The book discusses the following.
+
 <a href="https://leanpub.com/trailblazer">
 ![](https://raw.githubusercontent.com/apotonick/trailblazer/master/doc/trb.jpg)
 </a>
 
-Cells is part of the [Trailblazer project](https://github.com/apotonick/trailblazer). Please [buy my book](https://leanpub.com/trailblazer) to support the development and to learn all the cool stuff about Cells. The book discusses the following.
-
-* Basic view models, replacing helpers, and how to structure your view into cell components (chapter 3).
+* Basic view models, replacing helpers, and how to structure your view into cell components (chapter 2 and 3).
 * Advanced Cells API (chapter 3 and 6).
 * Testing Cells (chapter 3 and 6).
 * Cells Pagination with AJAX (chapter 6).
