@@ -32,6 +32,17 @@ Cells run with all Rails >= 3.2. Lower versions of Rails will still run with Cel
 gem 'cells', "~> 4.0.0"
 ```
 
+## Prerequisites
+
+Cells comes bundled with ERB support. To render HAML, you have to include the [cells-haml](https://github.com/trailblazer/cells-haml) gem. The same for [cells-slim](https://github.com/trailblazer/cells-slim). Currently, they are only available as github dependencies, they will be released soon.
+
+```ruby
+gem "cells-haml", github: 'trailblazer/cells-haml'
+```
+
+The template engine extensions fix severe bugs in combination with Rails helpers and the respective engine. Time will tell if we can convince the template teams to merge these fixes.
+
+
 ## File Layout
 
 Cells are placed in `app/cells`.
