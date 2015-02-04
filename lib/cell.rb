@@ -9,7 +9,7 @@ module Cell
 
   autoload :Concept
   autoload :TestCase
-  autoload :TestHelper
+  autoload :Testing
 
   def self.rails_version
     Gem::Version.new(ActionPack::VERSION::STRING)

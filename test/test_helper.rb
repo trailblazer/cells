@@ -18,7 +18,7 @@ require "rails/test_help" # adds stuff like @routes, etc.
 require 'cells'
 
 MiniTest::Spec.class_eval do
-  include Cell::TestHelper
+  include Cell::Testing
 end
 
 class BassistCell < Cell::ViewModel

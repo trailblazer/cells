@@ -4,7 +4,9 @@ class MusiciansController < ApplicationController
 end
 
 class UrlHelperTest < MiniTest::Spec
-  let (:controller) { MusiciansController.new.tap { |ctl| ctl.send("request=", ActionDispatch::Request.new({})) } }
+  controller MusiciansController
+
+  # let (:controller) { MusiciansController.new.tap { |ctl| ctl.send("request=", ActionDispatch::Request.new({})) } }
   let (:cellule) { SongCell.new(controller) }
 
   class SongCell < Cell::ViewModel
