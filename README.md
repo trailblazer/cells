@@ -862,7 +862,7 @@ This was mainly added to provide compatibility with 3rd-party gems like [Kaminar
 
 ## LICENSE
 
-Copyright (c) 2007-2014, Nick Sutterer
+Copyright (c) 2007-2015, Nick Sutterer
 
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
