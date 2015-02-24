@@ -3,9 +3,12 @@ module Cell
   class Templates
     # prefixes could be instance variable as they will never change.
     def [](bases, prefixes, view, engine, formats=nil)
-      base = bases.first # FIXME.
+      bases.each do |base|
+        template = find_template(base, prefixes, view, engine)
+        return template if template
+      end
 
-      find_template(base, prefixes, view, engine)
+      nil
     end
 
   private
