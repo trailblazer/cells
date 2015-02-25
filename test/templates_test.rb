@@ -5,6 +5,7 @@ class TemplatesTest < MiniTest::Spec
   Templates = Cell::Templates
 
   let (:base) { ['test/fixtures'] }
+  let (:bases) { ['bogus/path', 'test/fixtures'] }
 
   # existing.
   it { Templates.new[base, ['bassist'], 'play', 'erb'].file.must_equal 'test/fixtures/bassist/play.erb' }
@@ -12,6 +13,8 @@ class TemplatesTest < MiniTest::Spec
   # not existing.
   it { Templates.new[base, ['bassist'], 'not-here', 'erb'].must_equal nil }
 
+  # search all bases
+  it { Templates.new[bases, ['bassist'], 'play', 'erb'].file.must_equal 'test/fixtures/bassist/play.erb' }
 
   # different caches for different classes
 

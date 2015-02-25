@@ -3,12 +3,12 @@ module Cell
   class Templates
     # prefixes could be instance variable as they will never change.
     def [](bases, prefixes, view, engine, formats=nil)
-      bases.each do |base|
-        template = find_template(base, prefixes, view, engine)
-        return template if template
-      end
+      view = "#{view}.#{engine}"
 
-      nil
+      cache.fetch(prefixes, view) do |prefix|
+        # this block is run once per cell class per process, for each prefix/view tuple.
+        find_template(bases, prefix, view)
+      end
     end
 
   private
@@ -17,13 +17,12 @@ module Cell
       @cache ||= Cache.new
     end
 
-    def find_template(base, prefixes, view, engine)
-      view = "#{view}.#{engine}"
-
-      cache.fetch(prefixes, view) do |prefix|
-        # this block is run once per cell class per process, for each prefix/view tuple.
-        create(base, prefix, view)
+    def find_template(bases, prefix, view)
+      bases.each do |base|
+        template = create(base, prefix, view) and return template
       end
+
+      nil
     end
 
     def create(base, prefix, view)
