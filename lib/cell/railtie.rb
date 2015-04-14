@@ -4,6 +4,7 @@ rescue LoadError
 else
   module Cell
     class Railtie < Rails::Railtie
+      require 'cell'
       require 'cell/rails'
       config.cells = ActiveSupport::OrderedOptions.new
 
