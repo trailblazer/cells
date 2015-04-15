@@ -1,7 +1,5 @@
 module Cell::I18n
 
-  private
-
   def t(*args)
     options   = args.last.is_a?(Hash) ? args.pop.dup : {}
     key       = args.shift
