@@ -30,5 +30,6 @@ require 'cell/self_contained'
 require 'cell/layout'
 require 'cell/templates'
 require 'cell/view_model'
+require 'cell/i18n'
 
 require 'cell/railtie'
