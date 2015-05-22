@@ -2,11 +2,24 @@
 module Cell
   module Testing
     def cell(name, *args)
-      ViewModel.cell_for(name, controller, *args)
+      cell_for(ViewModel, name, *args)
     end
 
     def concept(name, *args)
-      Concept.cell_for(name, controller, *args)
+      cell_for(Concept, name, *args)
+    end
+
+  private
+    def cell_for(baseclass, name, *args)
+      cell = baseclass.cell_for(name, controller, *args)
+      cell.extend(Capybara) if Object.const_defined?(:"Capybara") # i think 99.9% of people use Capybara.
+      cell
+    end
+
+    module Capybara
+      def call(*)
+        ::Capybara.string(super)
+      end
     end
 
 

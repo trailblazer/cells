@@ -11,6 +11,7 @@ class TestCaseTest < MiniTest::Spec
 
   let (:song) { Object.new }
 
+  # #cell returns the instance
   describe "#cell" do
     subject { cell("test_case_test/song", song) }
 
@@ -25,9 +26,12 @@ class TestCaseTest < MiniTest::Spec
     it { subject.must_be_instance_of Song::Cell }
     it { subject.model.must_equal song }
   end
+end
 
+# capybara support
+require "capybara"
 
-  # capybara support
+class CapybaraTest < MiniTest::Spec
   class CapybaraCell < Cell::ViewModel
     def show
       "<b>Grunt</b>"
@@ -35,8 +39,8 @@ class TestCaseTest < MiniTest::Spec
   end
 
   describe "capybara support" do
-    subject { cell("test_case_test/capybara", nil) }
+    subject { cell("capybara_test/capybara", nil) }
 
-    it { subject.call } # add capybara tests here, @seuros.
+    it { subject.(:show).has_selector?('b').must_equal true }
   end
 end
