@@ -1,5 +1,7 @@
 # Used in rspec-cells, etc.
 module Cell
+  # Builder methods and Capybara support.
+  # This gets included into Test::Unit, MiniTest::Spec, etc.
   module Testing
     def cell(name, *args)
       cell_for(ViewModel, name, *args)
@@ -12,13 +14,30 @@ module Cell
   private
     def cell_for(baseclass, name, *args)
       cell = baseclass.cell_for(name, controller, *args)
-      cell.extend(Capybara) if Object.const_defined?(:"Capybara") # i think 99.9% of people use Capybara.
+      cell.extend(Capybara) if Cell::Testing.capybara? # leaving this here as most people use Capybara.
       cell
     end
 
+
+    # Set this to true if you have Capybara loaded. Happens automatically in Cell::TestCase.
+    def self.capybara=(value)
+      @capybara = value
+    end
+
+    def self.capybara?
+      @capybara
+    end
+
+    # Extends ViewModel#call by injecting Capybara support.
     module Capybara
+      module ToS
+        def to_s
+          native.to_s
+        end
+      end
+
       def call(*)
-        ::Capybara.string(super)
+        ::Capybara.string(super).extend(ToS)
       end
     end
 
