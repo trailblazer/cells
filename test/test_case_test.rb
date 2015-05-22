@@ -42,5 +42,8 @@ class CapybaraTest < MiniTest::Spec
     subject { cell("capybara_test/capybara", nil) }
 
     it { subject.(:show).has_selector?('b').must_equal true }
+
+    # FIXME: this kinda sucks, what if you want the string in a Capybara environment?
+    it { subject.(:show).native.to_s.must_match "<b>Grunt</b>" }
   end
 end
