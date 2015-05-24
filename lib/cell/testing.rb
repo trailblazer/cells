@@ -1,4 +1,3 @@
-# Used in rspec-cells, etc.
 module Cell
   # Builder methods and Capybara support.
   # This gets included into Test::Unit, MiniTest::Spec, etc.
@@ -13,7 +12,7 @@ module Cell
 
   private
     def cell_for(baseclass, name, *args)
-      cell = baseclass.cell_for(name, controller, *args)
+      cell = baseclass.cell(name, controller, *args)
       cell.extend(Capybara) if Cell::Testing.capybara? # leaving this here as most people use Capybara.
       cell
     end
@@ -40,7 +39,6 @@ module Cell
         ::Capybara.string(super).extend(ToS)
       end
     end
-
 
 
     # Rails specific.

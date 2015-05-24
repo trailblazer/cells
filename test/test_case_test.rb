@@ -2,6 +2,9 @@ require 'test_helper'
 
 class TestCaseTest < MiniTest::Spec
   class SongCell < Cell::ViewModel
+    def show
+      "Give It All!"
+    end
   end
 
   class Song
@@ -17,6 +20,8 @@ class TestCaseTest < MiniTest::Spec
 
     it { subject.must_be_instance_of SongCell }
     it { subject.model.must_equal song }
+
+    it { cell("test_case_test/song", collection: [song, song]).must_equal "Give It All!Give It All!" }
   end
 
 
