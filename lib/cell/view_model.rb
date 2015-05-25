@@ -146,10 +146,28 @@ module Cell
     include Rendering
     include Caching
 
-    def output_buffer
-      @output_buffer ||= []
+
+    class OutputBuffer < Array
+      def encoding
+        "UTF-8"
+      end
+
+      def <<(string)
+        puts "OutputBuffer#<< #{string.inspect}"
+        super
+      end
+      alias_method :safe_append=, :<<
+      alias_method :append=, :<<
+
+      def to_s # output_buffer is returned at the end of the precompiled template.
+        join
+      end
+    end
+    def output_buffer # called from the precompiled template.
+      @output_buffer ||= OutputBuffer.new
     end
     attr_writer :output_buffer # TODO: test that, this breaks in MM.
+
 
     module TemplateFor
       def template_for(options)
