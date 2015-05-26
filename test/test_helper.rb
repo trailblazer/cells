@@ -4,9 +4,7 @@ rescue LoadError
 end
 
 ENV['RAILS_ENV'] = 'test'
-
 require_relative 'dummy/config/environment'
-require 'tilt/erubis'   if Gem::Version.new(ActiveSupport::VERSION::STRING) >= Gem::Version.new('4.2.0')
 
 require 'minitest/autorun'
 require 'test_xml/mini_test'
