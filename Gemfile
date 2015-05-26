@@ -1,10 +1,7 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
+
+gem "railties", "~> 4.2.0"
+gem "activemodel", "~> 4.2.0"
+gem "minitest", "~> 5.2"
 
 gemspec
-
-gem 'minitest-reporters'
-gem 'pry-byebug'  , platforms: [:mri_20, :mri_21]
-gem 'appraisal'
-gem 'rake'
-gem 'test_xml'
-

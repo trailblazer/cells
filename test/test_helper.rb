@@ -1,13 +1,7 @@
-begin
-  require 'byebug'
-rescue LoadError
-end
-
 ENV['RAILS_ENV'] = 'test'
 require_relative 'dummy/config/environment'
 
 require 'minitest/autorun'
-require 'test_xml/mini_test'
 
 require 'minitest/reporters'
 Minitest::Reporters.use! [Minitest::Reporters::ProgressReporter.new]
