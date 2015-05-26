@@ -153,7 +153,6 @@ module Cell
       end
 
       def <<(string)
-        puts "OutputBuffer#<< #{string.inspect}"
         super
       end
       alias_method :safe_append=, :<<
@@ -163,10 +162,10 @@ module Cell
         join
       end
     end
-    def output_buffer # called from the precompiled template.
+    def output_buffer # called from the precompiled template. FIXME: this is currently not used in Haml.
       @output_buffer ||= OutputBuffer.new
     end
-    attr_writer :output_buffer # TODO: test that, this breaks in MM.
+    attr_writer :output_buffer # FIXME: where is that used? definitely not in Erbse.
 
 
     module TemplateFor

@@ -24,5 +24,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'tilt', '>= 1.4', '< 3'
   spec.add_dependency 'disposable', '~> 0.0.8'
 
-  spec.add_dependency "capybara"
+
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "minitest-reporters"
+  spec.add_development_dependency "capybara"
+
+  spec.add_development_dependency "cells-erb", ">= 0.0.2"
 end
