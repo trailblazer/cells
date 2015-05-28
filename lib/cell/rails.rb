@@ -3,12 +3,12 @@
 module Cell
   module RailsExtensions
     module ActionController
-      def cell(name, *args, &block)
-        ViewModel.cell(name, self, *args, &block)
+      def cell(name, model=nil, options={}, &block)
+        ViewModel.cell(name, model, options.merge(controller: self), &block)
       end
 
-      def concept(name, *args, &block)
-        Concept.cell(name, self, *args, &block)
+      def concept(name, model=nil, options={}, &block)
+        Concept.cell(name, model, options.merge(controller: self), &block)
       end
 
       # # Renders the cell state and returns the content. You may pass options here, too. They will be

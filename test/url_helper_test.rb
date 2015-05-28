@@ -6,7 +6,7 @@ end
 class UrlHelperTest < MiniTest::Spec
   controller MusiciansController
 
-  let (:song_cell) { SongCell.new(controller) }
+  let (:song_cell) { SongCell.new(nil, controller: controller) }
 
   class SongCell < Cell::ViewModel
   end

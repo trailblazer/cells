@@ -9,5 +9,5 @@ class CellTest < MiniTest::Spec
   it { Cell.rails_version.must_equal Gem::Version.new(ActionPack::VERSION::STRING) }
 
   # #options
-  it { SongCell.new(nil, nil, genre: "Punkrock").send(:options)[:genre].must_equal "Punkrock" }
+  it { SongCell.new(nil, genre: "Punkrock").send(:options)[:genre].must_equal "Punkrock" }
 end

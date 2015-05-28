@@ -46,19 +46,19 @@ module Cell
 
     module Helpers
       # Renders collection of cells.
-      def cells_collection(name, controller, array, options)
+      def _collection(name, array, options) # private.
         method = options.delete(:method) || :show
         join = options.delete(:collection_join)
-        array.collect { |model| cell_for(name, *[controller, model, options]).call(method) }.join(join).html_safe
+        array.collect { |model| cell_for(name, *[model, options]).call(method) }.join(join).html_safe
       end
 
       # Returns cell instance.
-      def cell(name, controller, model=nil, options={}, &block) # classic Rails fuzzy API.
+      def cell(name, model=nil, options={}, &block) # classic Rails fuzzy API.
         if model.is_a?(Hash) and array = model.delete(:collection)
-          return cells_collection(name, controller, array, model)
+          return _collection(name, array, model)
         end
 
-        cell_for(name, controller, model, options, &block)
+        cell_for(name, model, options, &block)
       end
     end
     extend Helpers
@@ -72,16 +72,16 @@ module Cell
       include Helpers
 
 
-      def cell_for(name, controller, *args)
-        class_from_cell_name(name).build_cell(controller, *args)
+      def cell_for(name, *args)
+        class_from_cell_name(name).build_cell(*args)
       end
 
       def class_from_cell_name(name)
         "#{name}_cell".classify.constantize
       end
 
-      def build_cell(controller, *args)
-        class_builder.call(*args).new(controller, *args) # Uber::Builder::class_builder.
+      def build_cell(*args)
+        class_builder.call(*args).new(*args) # Uber::Builder::class_builder.
       end
     end
 
@@ -90,8 +90,8 @@ module Cell
     end
 
 
-    def initialize(controller, model=nil, options={}) # in Ruby 2: def m(model: nil, controller:nil, **options) that'll make the controller optional.
-      @parent_controller = controller # TODO: this is removed in 4.0.
+    def initialize(model=nil, options={}) # in Ruby 2: def m(model: nil, controller:nil, **options) that'll make the controller optional.
+      @parent_controller = options.delete(:controller) # TODO: this is removed in 4.0.
 
       setup!(model, options)
     end

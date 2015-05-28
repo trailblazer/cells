@@ -22,5 +22,5 @@ class TwinTest < MiniTest::Spec
 
   let (:model) { OpenStruct.new(:title => "Kenny") }
 
-  it { SongCell.new(nil, model, :online? => true).call.must_equal "kenny is true" }
+  it { SongCell.new( model, :online? => true).call.must_equal "kenny is true" }
 end

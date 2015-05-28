@@ -34,25 +34,25 @@ class BuilderTest < MiniTest::Spec
   end
 
   # the original class is used when no builder matches.
-  it { Cell::ViewModel.cell("builder_test/song", nil, Song.new("Nation States"), {}).must_be_instance_of BuilderTest::SongCell }
+  it { Cell::ViewModel.cell("builder_test/song", Song.new("Nation States"), {}).must_be_instance_of BuilderTest::SongCell }
 
   it do
-    cell = Cell::ViewModel.cell("builder_test/song", nil, Hit.new("New York"), {})
+    cell = Cell::ViewModel.cell("builder_test/song", Hit.new("New York"), {})
     cell.must_be_instance_of BuilderTest::HitCell
     cell.options.must_equal({})
   end
 
   it do
-    cell = Cell::ViewModel.cell("builder_test/song", nil, Song.new("San Francisco"), evergreen: true)
+    cell = Cell::ViewModel.cell("builder_test/song", Song.new("San Francisco"), evergreen: true)
     cell.must_be_instance_of BuilderTest::EvergreenCell
     cell.options.must_equal({:evergreen=>true})
   end
 
   # with collection.
-  it { Cell::ViewModel.cell("builder_test/song", nil, collection: [Song.new("Nation States"), Hit.new("New York")]).must_equal "* Nation States* **New York**" }
+  it { Cell::ViewModel.cell("builder_test/song", collection: [Song.new("Nation States"), Hit.new("New York")]).must_equal "* Nation States* **New York**" }
 
   # with Concept
   class Track < Cell::Concept
   end
-  it { Cell::Concept.cell("builder_test/track", nil).must_be_instance_of Track }
+  it { Cell::Concept.cell("builder_test/track").must_be_instance_of Track }
 end

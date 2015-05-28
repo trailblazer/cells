@@ -13,8 +13,8 @@ module Cell
       end
     end
 
-    def initialize(controller, model, options={})
-      super(controller, build_twin(model, options))
+    def initialize(model, options={})
+      super(build_twin(model, options), controller: options.delete(:controller))
     end
   end
 end

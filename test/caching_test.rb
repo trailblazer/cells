@@ -117,7 +117,7 @@ end
 
 class CachingTest < MiniTest::Spec
   class DirectorCell < Cell::ViewModel
-    def initialize(controller, counter=0)
+    def initialize(counter=0)
       super
       @counter = counter
     end
@@ -141,7 +141,7 @@ class CachingTest < MiniTest::Spec
 
   # let (:cell) { DirectorCell.new(nil) }
   def cellule(*args)
-    DirectorCell.new(nil, *args)
+    DirectorCell.new(*args)
   end
 
   # no caching when turned off.

@@ -11,8 +11,8 @@ module Cell
     end
 
   private
-    def cell_for(baseclass, name, *args)
-      cell = baseclass.cell(name, controller, *args)
+    def cell_for(baseclass, name, model=nil, options={})
+      cell = baseclass.cell(name, model, options.merge(controller: controller))
       cell.extend(Capybara) if Cell::Testing.capybara? # leaving this here as most people use Capybara.
       cell
     end
