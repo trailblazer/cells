@@ -8,6 +8,7 @@ Minitest::Reporters.use! [Minitest::Reporters::ProgressReporter.new]
 require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'
+require "cells-erb"
 
 MiniTest::Spec.class_eval do
   include Cell::Testing
