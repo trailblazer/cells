@@ -16,7 +16,7 @@ module Cell
     extend Uber::Delegates
 
     inheritable_attr :view_paths
-    self.view_paths = ["app/cells"] # DISCUSS: provide same API as rails?
+    self.view_paths = ["app/cells"]
 
     inheritable_attr :template_engine
     self.template_engine = "erb"
@@ -163,9 +163,10 @@ module Cell
       end
     end
     def output_buffer # called from the precompiled template. FIXME: this is currently not used in Haml.
-      @output_buffer ||= OutputBuffer.new
+      OutputBuffer.new # don't cache output_buffer, for every render call we get a fresh one.
     end
     attr_writer :output_buffer # FIXME: where is that used? definitely not in Erbse.
+    # TODO: remove output_buffer in favor or returning the string.
 
 
     module TemplateFor
