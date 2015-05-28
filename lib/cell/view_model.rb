@@ -90,7 +90,7 @@ module Cell
     end
 
 
-    def initialize(controller, model=nil, options={})
+    def initialize(controller, model=nil, options={}) # in Ruby 2: def m(model: nil, controller:nil, **options) that'll make the controller optional.
       @parent_controller = controller # TODO: this is removed in 4.0.
 
       setup!(model, options)
