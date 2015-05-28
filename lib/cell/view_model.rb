@@ -9,8 +9,17 @@ require 'action_controller'
 
 # TODO: warn when using ::property but not passing in model in constructor.
 module Cell
-  class ViewModel < AbstractController::Base
+  class ViewModel #< AbstractController::Base
+    def self.abstract!
+      @____fixme = true
+    end
+    def self.abstract?
+      @____fixme
+    end
     abstract!
+    def controller_path
+      self.class.controller_path
+    end
 
     extend Uber::InheritableAttr
     extend Uber::Delegates
@@ -38,7 +47,7 @@ module Cell
       @controller_path ||= name.sub(/Cell$/, '').underscore
     end
 
-    include ActionController::RequestForgeryProtection
+    # include ActionController::RequestForgeryProtection
     delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
 
     attr_reader :model
