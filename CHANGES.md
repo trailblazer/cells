@@ -18,6 +18,10 @@
 
 * When using HAML, we do not use any of HAML's helper hacks to "fix" ActionView and XSS. While you might not note this, it removes tons of code from our stack.
 
+## 4.0.0.beta4
+
+* Fixed a bug when rendering more than once with ERB, the output buffer was being reused.
+
 ## 4.0.0.beta3
 
 * Introduce `Cell::Testing` for Rspec and MiniTest.
