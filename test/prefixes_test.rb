@@ -6,6 +6,9 @@ end
 class BassistCell::IbanezCell < BassistCell
 end
 
+class WannabeCell < BassistCell::IbanezCell
+end
+
 # engine: shopify
 # shopify/cart/cell
 
@@ -57,11 +60,21 @@ class PrefixesTest < MiniTest::Spec
     # it { DrummerCell.new(@controller)._prefixes.must_equal ["drummer", "stringer", "prefixes_test/singer"] }
 
     # multiple view_paths.
-    it { EngineCell._prefixes.must_equal ["app/cells/engine", "/var/engine/app/cells/engine"] }
+    it { EngineCell.prefixes.must_equal ["app/cells/engine", "/var/engine/app/cells/engine"] }
     it do
-      InheritingFromEngineCell._prefixes.must_equal [
+      InheritingFromEngineCell.prefixes.must_equal [
         "app/cells/inheriting_from_engine", "/var/engine/app/cells/inheriting_from_engine",
         "app/cells/engine",                 "/var/engine/app/cells/engine"]
+    end
+
+    # ::_prefixes is cached.
+    it do
+      WannabeCell.prefixes.must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
+      WannabeCell.instance_eval { def _local_prefixes; ["more"] end }
+      # _prefixes is cached.
+      WannabeCell.prefixes.must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
+      # superclasses don't get disturbed.
+      ::BassistCell.prefixes.must_equal ["test/fixtures/bassist"]
     end
   end
 

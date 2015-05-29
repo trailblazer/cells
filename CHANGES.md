@@ -21,6 +21,8 @@
 ## 4.0.0.beta4
 
 * Fixed a bug when rendering more than once with ERB, the output buffer was being reused.
+*  API change: ViewModel::_prefixes now returns the "fully qualified" pathes including the view paths, prepended to the prefixes. This allows multiple view paths and basically fixes cells in engines.
+* The only public way to retrieve prefixes for a cell is `ViewModel::prefixes`. The result is cached.
 
 ## 4.0.0.beta3
 
