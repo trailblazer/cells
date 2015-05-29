@@ -40,9 +40,9 @@ class ConceptTest < MiniTest::Spec
 
 
   describe "#_prefixes" do
-    it { Record::Cell.new(@controller)._prefixes.must_equal       ["record/views"] }
-    it { Record::Cell::Song.new(@controller)._prefixes.must_equal ["record/song/views", "record/views"] }
-    it { Record::Cell::Hit.new(@controller)._prefixes.must_equal  ["record/hit/views", "record/views"]  } # with inherit_views.
+    it { Record::Cell.new(@controller)._prefixes.must_equal       ["test/fixtures/concepts/record/views"] }
+    it { Record::Cell::Song.new(@controller)._prefixes.must_equal ["test/fixtures/concepts/record/song/views", "test/fixtures/concepts/record/views"] }
+    it { Record::Cell::Hit.new(@controller)._prefixes.must_equal  ["test/fixtures/concepts/record/hit/views", "test/fixtures/concepts/record/views"]  } # with inherit_views.
   end
 
   it { Record::Cell.new(@controller, "Wayne").call(:show).must_equal "Party on, Wayne!" }

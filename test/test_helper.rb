@@ -15,6 +15,7 @@ MiniTest::Spec.class_eval do
 end
 
 class BassistCell < Cell::ViewModel
+  self.view_paths = ['test/fixtures']
 end
 
 class MusicianController < ActionController::Base

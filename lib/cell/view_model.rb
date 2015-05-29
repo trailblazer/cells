@@ -7,6 +7,8 @@ require 'action_controller'
 # options are automatically made instance methods via constructor.
 # call "helpers" in class
 
+# TODO: CACHE prefixes.
+
 # TODO: warn when using ::property but not passing in model in constructor.
 module Cell
   class ViewModel < AbstractController::Base
@@ -173,11 +175,10 @@ module Cell
       def template_for(options)
         view      = options[:view]
         engine    = options[:template_engine]
-        base      = options[:base]
         prefixes  = options[:prefixes]
 
         # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
-        self.class.templates[base, prefixes, view, engine] or raise TemplateMissingError.new(base, prefixes, view, engine, nil)
+        self.class.templates[prefixes, view, engine] or raise TemplateMissingError.new(prefixes, view, engine, nil)
       end
     end
     include TemplateFor
@@ -191,13 +192,12 @@ module Cell
 
     def normalize_options(options, caller) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
-        options.reverse_merge(:view => state_for_implicit_render(caller)) # TODO: test implicit render!
+        options.reverse_merge(:view => state_for_implicit_render(caller))
       else
         {:view => options.to_s}
       end
 
       options[:template_engine] ||= self.class.template_engine # DISCUSS: in separate method?
-      options[:base]            ||= self.class.view_paths
       options[:prefixes]        ||= _prefixes
 
       process_options!(options)
