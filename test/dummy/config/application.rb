@@ -21,7 +21,7 @@ module Dummy
     # enable asset pipeline as in development.
     config.assets.enabled = true
     config.assets.compile = true
-    config.cells.with_assets = ["album", "song"]
+    # config.cells.with_assets = ["song/cell"]
     config.cache_classes = true
 
     # Show full error reports and disable caching
