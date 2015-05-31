@@ -19,10 +19,9 @@ else
 
       # ruthlessly stolen from the zurb-foundation gem.
       initializer 'cells.update_asset_paths' do |app|
-        Array(app.config.cells.with_assets).each do |name|
-          # FIXME: this doesn't take engine cells into account.
-          app.config.assets.paths.append "#{app.root}/app/cells/#{name}/assets"
-          app.config.assets.paths.append "#{app.root}/app/concepts/#{name}/assets" # TODO: find out type.
+        Array(app.config.cells.with_assets).each do |cell_class|
+          # puts "@@@@@ #{cell_class.camelize.constantize.prefixes}"
+          app.config.assets.paths += cell_class.camelize.constantize.prefixes # Song::Cell.prefixes
         end
       end
 

@@ -42,15 +42,18 @@ module Cell
 
 
     # Rails specific.
-    def controller
+    def controller_for(controller_class)
       # TODO: test without controller.
-      return unless self.class.controller_class
+      return unless controller_class
 
-      # TODO: test with controller.
-      self.class.controller_class.new.tap do |ctl|
-        ctl.request = ActionController::TestRequest.new
-        ctl.instance_variable_set :@routes, Rails.application.routes.url_helpers
+      controller_class.new.tap do |ctl|
+        ctl.request = ::ActionController::TestRequest.new
+        ctl.instance_variable_set :@routes, ::Rails.application.routes.url_helpers
       end
+    end
+
+    def controller # FIXME: this won't allow us using let(:controller) in MiniTest.
+      controller_for(self.class.controller_class)
     end
 
     def self.included(base)
@@ -58,7 +61,7 @@ module Cell
         extend Uber::InheritableAttr
         inheritable_attr :controller_class
 
-        def self.controller(name)
+        def self.controller(name) # DSL method for the test.
           self.controller_class = name
         end
       end

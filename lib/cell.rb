@@ -16,8 +16,8 @@ module Cell
   end
 
   class TemplateMissingError < RuntimeError
-    def initialize(base, prefixes, view, engine, formats)
-      super("Template missing: view: `#{view.to_s}.#{engine}` prefixes: #{prefixes.inspect} view_paths:#{base.inspect}")
+    def initialize(prefixes, view, engine, formats)
+      super("Template missing: view: `#{view.to_s}.#{engine}` prefixes: #{prefixes.inspect}")
     end
   end # Error
 end

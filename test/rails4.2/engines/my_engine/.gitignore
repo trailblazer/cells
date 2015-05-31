@@ -1,0 +1,3 @@
+.bundle/
+log/*.log
+pkg/

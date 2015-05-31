@@ -25,7 +25,7 @@ module Cell
     extend Uber::Delegates
 
     inheritable_attr :view_paths
-    self.view_paths = ["app/cells"] # DISCUSS: provide same API as rails?
+    self.view_paths = ["app/cells"]
 
     inheritable_attr :template_engine
     self.template_engine = "erb"
@@ -172,20 +172,20 @@ module Cell
       end
     end
     def output_buffer # called from the precompiled template. FIXME: this is currently not used in Haml.
-      @output_buffer ||= OutputBuffer.new
+      OutputBuffer.new # don't cache output_buffer, for every render call we get a fresh one.
     end
     attr_writer :output_buffer # FIXME: where is that used? definitely not in Erbse.
+    # TODO: remove output_buffer in favor or returning the string.
 
 
     module TemplateFor
       def template_for(options)
         view      = options[:view]
         engine    = options[:template_engine]
-        base      = options[:base]
         prefixes  = options[:prefixes]
 
         # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
-        self.class.templates[base, prefixes, view, engine] or raise TemplateMissingError.new(base, prefixes, view, engine, nil)
+        self.class.templates[prefixes, view, engine] or raise TemplateMissingError.new(prefixes, view, engine, nil)
       end
     end
     include TemplateFor
@@ -199,13 +199,12 @@ module Cell
 
     def normalize_options(options, caller) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
-        options.reverse_merge(:view => state_for_implicit_render(caller)) # TODO: test implicit render!
+        options.reverse_merge(:view => state_for_implicit_render(caller))
       else
         {:view => options.to_s}
       end
 
       options[:template_engine] ||= self.class.template_engine # DISCUSS: in separate method?
-      options[:base]            ||= self.class.view_paths
       options[:prefixes]        ||= _prefixes
 
       process_options!(options)
@@ -228,31 +227,8 @@ module Cell
 
 
     if defined?(ActionView)
-      # FIXME: this module is to fix a design flaw in Rails 4.0. the problem is that AV::UrlHelper mixes in the wrong #url_for.
-      # if we could mix in everything else from the helper except for the #url_for, it would be fine.
-      # FIXME: fix that in rails core.
-      if Cell.rails_version <= Gem::Version.new('4.0')
-        include ActionView::Helpers::UrlHelper # gives us breaking #url_for.
-
-        def url_for(options = nil) # from ActionDispatch:R:UrlFor.
-          case options
-            when nil
-              _routes.url_for(url_options.symbolize_keys)
-            when Hash
-              _routes.url_for(options.symbolize_keys.reverse_merge!(url_options))
-            when String
-              options
-            when Array
-              polymorphic_url(options, options.extract_options!)
-            else
-              polymorphic_url(options)
-          end
-        end
-
-        public :url_for
-      else
-        include ActionView::Helpers::UrlHelper
-      end
+      # always include those helpers so we can override the shitty parts.
+      include ActionView::Helpers::UrlHelper
       include ActionView::Helpers::FormTagHelper
     end
   end

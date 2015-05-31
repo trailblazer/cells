@@ -6,6 +6,18 @@ end
 class BassistCell::IbanezCell < BassistCell
 end
 
+class WannabeCell < BassistCell::IbanezCell
+end
+
+# engine: shopify
+# shopify/cart/cell
+
+class EngineCell < Cell::ViewModel
+  self.view_paths << "/var/engine/app/cells"
+end
+class InheritingFromEngineCell < EngineCell
+end
+
 class PrefixesTest < MiniTest::Spec
   class SingerCell < Cell::ViewModel
   end
@@ -35,17 +47,35 @@ class PrefixesTest < MiniTest::Spec
   end
 
   describe "#_prefixes" do
-    it { ::BassistCell.new(@controller)._prefixes.must_equal  ["bassist"] }
-    it { ::BassistCell::FenderCell.new(@controller)._prefixes.must_equal ["bassist_cell/fender"] }
-    it { ::BassistCell::IbanezCell.new(@controller)._prefixes.must_equal ["bassist_cell/ibanez", "bassist"] }
+    it { ::BassistCell.new(@controller)._prefixes.must_equal  ["test/fixtures/bassist"] }
+    it { ::BassistCell::FenderCell.new(@controller)._prefixes.must_equal ["app/cells/bassist_cell/fender"] }
+    it { ::BassistCell::IbanezCell.new(@controller)._prefixes.must_equal ["test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"] }
 
-    it { SingerCell.new(@controller)._prefixes.must_equal   ["prefixes_test/singer"] }
-    it { BackgroundVocalsCell.new(@controller)._prefixes.must_equal ["prefixes_test/background_vocals", "prefixes_test/singer"] }
-    it { ChorusCell.new(@controller)._prefixes.must_equal   ["prefixes_test/chorus", "prefixes_test/background_vocals", "prefixes_test/singer"] }
+    it { SingerCell.new(@controller)._prefixes.must_equal   ["app/cells/prefixes_test/singer"] }
+    it { BackgroundVocalsCell.new(@controller)._prefixes.must_equal ["app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"] }
+    it { ChorusCell.new(@controller)._prefixes.must_equal   ["app/cells/prefixes_test/chorus", "app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"] }
 
-    it { GuitaristCell.new(@controller)._prefixes.must_equal ["stringer", "prefixes_test/singer"] }
-    it { BassistCell.new(@controller)._prefixes.must_equal ["prefixes_test/bassist", "basser", "prefixes_test/singer"] }
+    it { GuitaristCell.new(@controller)._prefixes.must_equal ["stringer", "app/cells/prefixes_test/singer"] }
+    it { BassistCell.new(@controller)._prefixes.must_equal ["app/cells/prefixes_test/bassist", "basser", "app/cells/prefixes_test/singer"] }
     # it { DrummerCell.new(@controller)._prefixes.must_equal ["drummer", "stringer", "prefixes_test/singer"] }
+
+    # multiple view_paths.
+    it { EngineCell.prefixes.must_equal ["app/cells/engine", "/var/engine/app/cells/engine"] }
+    it do
+      InheritingFromEngineCell.prefixes.must_equal [
+        "app/cells/inheriting_from_engine", "/var/engine/app/cells/inheriting_from_engine",
+        "app/cells/engine",                 "/var/engine/app/cells/engine"]
+    end
+
+    # ::_prefixes is cached.
+    it do
+      WannabeCell.prefixes.must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
+      WannabeCell.instance_eval { def _local_prefixes; ["more"] end }
+      # _prefixes is cached.
+      WannabeCell.prefixes.must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
+      # superclasses don't get disturbed.
+      ::BassistCell.prefixes.must_equal ["test/fixtures/bassist"]
+    end
   end
 
   # it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
@@ -65,8 +95,8 @@ class InheritViewsTest < MiniTest::Spec
   class FunkerCell < SlapperCell
   end
 
-  it { SlapperCell.new(nil)._prefixes.must_equal ["inherit_views_test/slapper", "bassist"] }
-  it { FunkerCell.new(nil)._prefixes.must_equal ["inherit_views_test/funker", "inherit_views_test/slapper", "bassist"] }
+  it { SlapperCell.new(nil)._prefixes.must_equal ["test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"] }
+  it { FunkerCell.new(nil)._prefixes.must_equal ["test/fixtures/inherit_views_test/funker", "test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"] }
 
   # test if normal cells inherit views.
   it { cell('inherit_views_test/slapper').play.must_equal 'Doo' }
