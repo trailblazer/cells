@@ -49,7 +49,7 @@ private
 end
 
 class RenderTest < MiniTest::Spec
-  # render show.haml calling method.
+  # render show.haml calling method, implicit render.
   it { SongCell.new(nil).show.must_equal "Papertiger\n" }
 
   # render ivar.haml using instance variable.
@@ -70,7 +70,7 @@ class RenderTest < MiniTest::Spec
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
-    exception.message.must_equal "Template missing: view: `unknown.erb` prefixes: [\"song\"] view_paths:[\"test/fixtures\"]"
+    exception.message.must_equal "Template missing: view: `unknown.erb` prefixes: [\"test/fixtures/song\"]"
   end
 
   # allows locals

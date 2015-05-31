@@ -1,26 +1,31 @@
-# TODO: merge into Rails core.
 # TODO: cache _prefixes on class layer.
 module Cell::Prefixes
   extend ActiveSupport::Concern
 
   def _prefixes
-    self.class._prefixes
+    self.class.prefixes
   end
 
+  # You're free to override those methods in case you want to alter our view inheritance.
   module ClassMethods
+    def prefixes
+      @prefixes ||= _prefixes
+    end
+
+  private
     def _prefixes
       return [] if abstract?
-      _local_prefixes + superclass._prefixes
+      _local_prefixes + superclass.prefixes
     end
 
     def _local_prefixes
-      [controller_path]
+      view_paths.collect { |path| "#{path}/#{controller_path}" }
     end
 
     # Instructs Cells to inherit views from a parent cell without having to inherit class code.
     def inherit_views(parent)
       define_method :_prefixes do
-        super() + parent._prefixes
+        super() + parent.prefixes
       end
     end
   end

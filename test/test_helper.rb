@@ -8,12 +8,14 @@ Minitest::Reporters.use! [Minitest::Reporters::ProgressReporter.new]
 require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'
+require "cells-erb"
 
 MiniTest::Spec.class_eval do
   include Cell::Testing
 end
 
 class BassistCell < Cell::ViewModel
+  self.view_paths = ['test/fixtures']
 end
 
 class MusicianController < ActionController::Base

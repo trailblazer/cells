@@ -18,6 +18,22 @@
 
 * When using HAML, we do not use any of HAML's helper hacks to "fix" ActionView and XSS. While you might not note this, it removes tons of code from our stack.
 
+## 4.0.0.beta5
+
+* Assets bundled in engine cells now work.
+* Directory change: Assets like `.css`, `.coffee` and `.js`, no longer have their own `assets/` directory but live inside the views directory of a cell. It turned out that two directories `views/` and `assets/` was too noisy for most users. If you think you have a valid point for re-introducing it, email me, it is not hard to implement.
+* When bundling your cell's assets into the asset pipeline, you have to specify the full name of your cell. The names will be constantized.
+
+    ```ruby
+    config.cells.with_assets = ["song/cell", "user_cell"] #=> Song::Cell, UserCell
+    ```
+
+## 4.0.0.beta4
+
+* Fixed a bug when rendering more than once with ERB, the output buffer was being reused.
+*  API change: ViewModel::_prefixes now returns the "fully qualified" pathes including the view paths, prepended to the prefixes. This allows multiple view paths and basically fixes cells in engines.
+* The only public way to retrieve prefixes for a cell is `ViewModel::prefixes`. The result is cached.
+
 ## 4.0.0.beta3
 
 * Introduce `Cell::Testing` for Rspec and MiniTest.

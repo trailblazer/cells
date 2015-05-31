@@ -2,10 +2,10 @@ module Cell
   # Gets cached in production.
   class Templates
     # prefixes could be instance variable as they will never change.
-    def [](bases, prefixes, view, engine, formats=nil)
-      base = bases.first # FIXME.
+    def [](prefixes, view, engine, formats=nil)
+      view = "#{view}.#{engine}"
 
-      find_template(base, prefixes, view, engine)
+      find_template(prefixes, view, engine)
     end
 
   private
@@ -14,19 +14,17 @@ module Cell
       @cache ||= Cache.new
     end
 
-    def find_template(base, prefixes, view, engine)
-      view = "#{view}.#{engine}"
-
+    def find_template(prefixes, view, engine)
       cache.fetch(prefixes, view) do |prefix|
         # this block is run once per cell class per process, for each prefix/view tuple.
-        create(base, prefix, view)
+        create(prefix, view)
       end
     end
 
-    def create(base, prefix, view)
-      # puts "...checking #{base}/#{prefix}/#{view}"
-      return unless File.exists?("#{base}/#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
-      Tilt.new("#{base}/#{prefix}/#{view}", :escape_html => false, :escape_attrs => false)
+    def create(prefix, view)
+      # puts "...checking #{prefix}/#{view}"
+      return unless File.exists?("#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
+      Tilt.new("#{prefix}/#{view}", escape_html: false, escape_attrs: false)
     end
 
     # {["comment/row/views", comment/views"][show.haml] => "Tpl:comment/view/show.haml"}
