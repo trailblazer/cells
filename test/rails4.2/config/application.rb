@@ -33,6 +33,6 @@ module EngineCells
     config.assets.enabled = true
     config.assets.compile = true
 
-    config.cells.with_assets = ["user/cell"]
+    config.cells.with_assets = ["user/cell", "song_cell"]
   end
 end

@@ -11,7 +11,8 @@ class AssetPipelineTest < ActionDispatch::IntegrationTest
 
   it "what" do
     visit "/assets/application.css"
-    page.text.must_include 'var Album = {};'
-    page.text.must_include 'var Songs = [];'
+
+    # both engine User::Cell and SongCell provide assets.
+    page.text.must_equal "user{background:green}.song{background:red}"
   end
 end
