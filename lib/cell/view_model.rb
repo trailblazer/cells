@@ -7,8 +7,6 @@ require 'action_controller'
 # options are automatically made instance methods via constructor.
 # call "helpers" in class
 
-# TODO: CACHE prefixes.
-
 # TODO: warn when using ::property but not passing in model in constructor.
 module Cell
   class ViewModel < AbstractController::Base
@@ -219,6 +217,7 @@ module Cell
     include Layout
 
 
+    # TODO: test if we can remove this in 3.2 and 4.0.
     if defined?(ActionView)
       # FIXME: this module is to fix a design flaw in Rails 4.0. the problem is that AV::UrlHelper mixes in the wrong #url_for.
       # if we could mix in everything else from the helper except for the #url_for, it would be fine.

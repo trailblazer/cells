@@ -7,9 +7,8 @@ require "capybara/dsl"
 
 class AssetPipelineTest < ActionDispatch::IntegrationTest
   include ::Capybara::DSL
-  # register_spec_type(/integration$/, self)
 
-  it "what" do
+  it do
     visit "/assets/application.css"
 
     # both engine User::Cell and SongCell provide assets.
