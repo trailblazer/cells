@@ -57,14 +57,14 @@ module Cell
       # Renders collection of cells.
       def _collection(name, array, options) # private.
         method = options.delete(:method) || :show
-        join = options.delete(:collection_join)
+        join   = options.delete(:collection_join)
         array.collect { |model| cell_for(name, *[model, options]).call(method) }.join(join).html_safe
       end
 
       # Returns cell instance.
       def cell(name, model=nil, options={}, &block) # classic Rails fuzzy API.
         if model.is_a?(Hash) and array = model.delete(:collection)
-          return _collection(name, array, model)
+          return _collection(name, array, model.merge(options))
         end
 
         cell_for(name, model, options, &block)
@@ -94,13 +94,15 @@ module Cell
       end
     end
 
-    def cell(name, *args)
-      self.class.cell(name, parent_controller, *args)
+    # Get nested cell in instance.
+    def cell(name, model=nil, options={})
+      self.class.cell(name, model, options.merge(controller: parent_controller))
     end
 
 
     def initialize(model=nil, options={}) # in Ruby 2: def m(model: nil, controller:nil, **options) that'll make the controller optional.
-      @parent_controller = options.delete(:controller) # TODO: this is removed in 4.0.
+      # options            = options.clone # DISCUSS: this could be time consuming when rendering many of em.
+      @parent_controller = options[:controller] # TODO: filter out controller in a performant way.
 
       setup!(model, options)
     end

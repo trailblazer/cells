@@ -24,6 +24,11 @@ module Record
     class Hit < ::Cell::Concept
       inherit_views Record::Cell
     end
+
+
+    def description
+      "A Tribute To Rancid, with #{@options[:tracks]} songs! [#{parent_controller}]"
+    end
   end
 end
 
@@ -48,7 +53,7 @@ class ConceptTest < MiniTest::Spec
   it { Record::Cell.new("Wayne").call(:show).must_equal "Party on, Wayne!" }
 
 
-  describe "#cell" do
+  describe "::cell" do
     it { Cell::Concept.cell("record/cell").must_be_instance_of(      Record::Cell) }
     it { Cell::Concept.cell("record/cell/song").must_be_instance_of  Record::Cell::Song }
     # cell("song", concept: "record/compilation") # record/compilation/cell/song
@@ -56,5 +61,14 @@ class ConceptTest < MiniTest::Spec
 
   describe "#render" do
     it { Cell::Concept.cell("record/cell/song").show.must_equal "Lalala" }
+  end
+
+  describe "#cell (in cell state)" do
+    # test with controller, but remove tests when we don't need it anymore.
+    it { Cell::Concept.cell("record/cell", nil, controller: Object).cell("record/cell", nil, tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [Object]" }
+    it { Cell::Concept.cell("record/cell", nil, controller: Object).concept("record/cell", nil, tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [Object]" }
+    # concept(.., collection: ..)
+    it("xx")  { Cell::Concept.cell("record/cell", nil, controller: Object).
+      concept("record/cell", collection: [1,2], tracks: 24, method: :description).must_equal "A Tribute To Rancid, with 24 songs! [Object]A Tribute To Rancid, with 24 songs! [Object]" }
   end
 end

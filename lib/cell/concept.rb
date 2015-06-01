@@ -13,9 +13,7 @@ class Cell::Concept < Cell::ViewModel
     end
   end
 
-  def concept(name, *args, &block)
-    self.class.cell(name, parent_controller, *args, &block)
-  end
+  alias_method :concept, :cell # the #cell helper to instantiate cells in cells.
 
   self_contained!
 end
