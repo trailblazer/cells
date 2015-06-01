@@ -18,7 +18,7 @@ module Cell
 
     module ClassMethods
       def cache(state, *args, &block)
-        options = args.extract_options!
+        options = args.last.is_a?(Hash) ? args.pop : {} # I have to admit, Array#extract_options is a brillant tool.
 
         self.conditional_procs[state] = Uber::Options::Value.new(options.delete(:if) || true)
         self.version_procs[state] = Uber::Options::Value.new(args.first || block)
@@ -52,9 +52,7 @@ module Cell
     end
 
     def cache_store  # we want to use DI to set a cache store in cell/rails.
-      # TODO: test me!
-      raise
-      ActionController::Base.cache_store
+      raise "No cache store has been set."
     end
 
     def cache?(state, *args)
