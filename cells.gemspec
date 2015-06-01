@@ -5,7 +5,7 @@ require 'cell/version'
 
 Gem::Specification.new do |spec|
   spec.name        = "cells"
-  spec.version     = Cell::VERSION::STRING
+  spec.version     = Cell::VERSION
   spec.platform    = Gem::Platform::RUBY
   spec.authors     = ["Nick Sutterer"]
   spec.email       = ["apotonick@gmail.com"]

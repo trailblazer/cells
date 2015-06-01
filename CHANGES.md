@@ -28,6 +28,13 @@
     ```ruby
     config.cells.with_assets = ["song/cell", "user_cell"] #=> Song::Cell, UserCell
     ```
+* `ViewModel` is now completely decoupled from Rails and doesn't inherit from AbstractController anymore.
+* API change: The controller dependency is now a second-class citizen being passed into the cell via options.
+
+    ```ruby
+    Cell.new(model, {controller: ..})
+    ```
+* Removing `actionpack` from gemspec.
 
 ## 4.0.0.beta4
 
