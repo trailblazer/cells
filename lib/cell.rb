@@ -26,6 +26,7 @@ require "cell/self_contained"
 require "cell/layout"
 require "cell/templates"
 require "cell/abstract"
+require "cell/util"
 require "cell/view_model"
 require "cell/concept"
 

@@ -33,24 +33,10 @@ module Cell
 
     include Prefixes
     extend SelfContained
+    extend Util
 
     def self.controller_path
       @controller_path ||= util.underscore(name.sub(/Cell$/, ''))
-    end
-
-    def self.util
-      Util
-    end
-
-    class Util
-      # copied from ActiveSupport.
-      def self.underscore(constant)
-        constant.gsub(/::/, '/').
-        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-        gsub(/([a-z\d])([A-Z])/,'\1_\2').
-        tr("-", "_").
-        downcase
-      end
     end
 
     # FIXME: this is all rails-only.
@@ -150,6 +136,7 @@ module Cell
     end
 
     include Rendering
+    # alias_method :to_s, :call # FIXME: why doesn't this work?
     def to_s
       call
     end
