@@ -9,14 +9,10 @@ require 'action_controller'
 
 # TODO: warn when using ::property but not passing in model in constructor.
 module Cell
-  class ViewModel #< AbstractController::Base
-    def self.abstract!
-      @____fixme = true
-    end
-    def self.abstract?
-      @____fixme
-    end
+  class ViewModel
+    include Abstract
     abstract!
+
     def controller_path
       self.class.controller_path
     end
@@ -47,6 +43,8 @@ module Cell
       @controller_path ||= name.sub(/Cell$/, '').underscore
     end
 
+    # FIXME: this is all rails-only.
+    # DISCUSS: who actually uses forgery protection with cells? it is not working since 4, anyway?
     # include ActionController::RequestForgeryProtection
     delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
 
