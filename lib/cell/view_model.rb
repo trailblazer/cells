@@ -10,7 +10,7 @@ require 'action_controller'
 # TODO: warn when using ::property but not passing in model in constructor.
 module Cell
   class ViewModel
-    include Abstract
+    extend Abstract
     abstract!
 
     def controller_path

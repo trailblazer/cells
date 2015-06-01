@@ -1,9 +1,9 @@
-module Cell::ViewModel::Abstract
-  def self.abstract!
+module Cell::Abstract
+  def abstract!
     @abstract = true
   end
 
-  def self.abstract?
+  def abstract?
     @abstract
   end
 end
