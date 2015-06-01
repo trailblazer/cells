@@ -2,14 +2,10 @@ require "tilt"
 require "uber/inheritable_attr"
 require "uber/delegates"
 require "cell/version"
-require "active_support/dependencies/autoload"
 
 module Cell
-  extend ActiveSupport::Autoload
-
-  autoload :Concept
-  autoload :TestCase
-  autoload :Testing
+  autoload :TestCase, "cell/test_case"
+  autoload :Testing,  "cell/testing"
 
   def self.rails_version
     Gem::Version.new(ActionPack::VERSION::STRING)
@@ -31,6 +27,7 @@ require "cell/layout"
 require "cell/templates"
 require "cell/abstract"
 require "cell/view_model"
+require "cell/concept"
 
 
 require "cell/railtie"
