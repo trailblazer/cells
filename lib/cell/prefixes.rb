@@ -1,6 +1,7 @@
-# TODO: cache _prefixes on class layer.
 module Cell::Prefixes
-  extend ActiveSupport::Concern
+  def self.included(includer)
+    includer.extend(ClassMethods)
+  end
 
   def _prefixes
     self.class.prefixes

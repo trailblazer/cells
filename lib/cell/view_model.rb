@@ -1,6 +1,3 @@
-# FIXME: remove AC dependency by delegating forgery
-require 'action_controller'
-
 # no helper_method calls
 # no instance variables
 # no locals
@@ -19,6 +16,7 @@ module Cell
 
     extend Uber::InheritableAttr
     extend Uber::Delegates
+    include Uber::Builder
 
     inheritable_attr :view_paths
     self.view_paths = ["app/cells"]
@@ -36,17 +34,29 @@ module Cell
     include Prefixes
     extend SelfContained
 
-    include Uber::Builder
-
-
     def self.controller_path
-      @controller_path ||= name.sub(/Cell$/, '').underscore
+      @controller_path ||= util.underscore(name.sub(/Cell$/, ''))
+    end
+
+    def self.util
+      Util
+    end
+
+    class Util
+      # copied from ActiveSupport.
+      def self.underscore(constant)
+        constant.gsub(/::/, '/').
+        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+        gsub(/([a-z\d])([A-Z])/,'\1_\2').
+        tr("-", "_").
+        downcase
+      end
     end
 
     # FIXME: this is all rails-only.
     # DISCUSS: who actually uses forgery protection with cells? it is not working since 4, anyway?
     # include ActionController::RequestForgeryProtection
-    delegate :session, :params, :request, :config, :env, :url_options, :to => :parent_controller
+    delegates :parent_controller, :session, :params, :request, :config, :env, :url_options
 
     attr_reader :model
 
@@ -107,36 +117,43 @@ module Cell
     attr_reader :parent_controller
     alias_method :controller, :parent_controller
 
+    module Rendering
+      # Invokes the passed method (defaults to :show) while respecting caching.
+      # In Rails, the return value gets marked html_safe.
+      #
+      # Yields +self+ to an optional block.
+      def call(state=:show, *args)
+        content = render_state(state, *args)
+        yield self if block_given?
 
-    # render :show
-    def render(options={})
-      options = normalize_options(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
-      render_to_string(options)
+        content.to_s
+      end
+
+    private
+      # render :show
+      def render(options={})
+        options = normalize_options(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
+        render_to_string(options)
+      end
+
+      def render_to_string(options)
+        template = template_for(options) # TODO: cache template with path/lookup keys.
+        content  = template.render(self, options[:locals])
+
+        # TODO: allow other (global) layout dirs.
+        with_layout(options, content)
+      end
+
+      def render_state(*args)
+        send(*args)
+      end
     end
 
-    def render_to_string(options)
-      template = template_for(options) # TODO: cache template with path/lookup keys.
-      content  = template.render(self, options[:locals])
-
-      # TODO: allow other (global) layout dirs.
-      with_layout(options, content)
+    include Rendering
+    def to_s
+      call
     end
-
-
-    # Invokes the passed method (defaults to :show). This will respect caching and marks the string as html_safe.
-    #
-    # Please use #call instead of calling methods directly. This allows adding caching later without changing
-    # your code.
-    #
-    # Yields +self+ (the cell instance) to an optional block.
-    def call(state=:show, *args)
-      content = render_state(state, *args)
-      yield self if block_given?
-
-      content.to_s.html_safe
-    end
-
-    alias_method :to_s, :call
+    include Caching
 
   private
     attr_reader :options
@@ -146,15 +163,6 @@ module Cell
       @options = options
       # or: create_twin(model, options)
     end
-
-    module Rendering
-      def render_state(*args)
-        send(*args)
-      end
-    end
-    include Rendering
-    include Caching
-
 
     class OutputBuffer < Array
       def encoding
@@ -199,7 +207,8 @@ module Cell
 
     def normalize_options(options, caller) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
-        options.reverse_merge(:view => state_for_implicit_render(caller))
+        # TODO: speedup by not doing state_for_implicit_render.
+        {:view => state_for_implicit_render(caller)}.merge(options)
       else
         {:view => options.to_s}
       end
@@ -224,12 +233,5 @@ module Cell
     end
 
     include Layout
-
-
-    if defined?(ActionView)
-      # always include those helpers so we can override the shitty parts.
-      include ActionView::Helpers::UrlHelper
-      include ActionView::Helpers::FormTagHelper
-    end
   end
 end

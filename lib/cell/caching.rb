@@ -1,20 +1,19 @@
-require 'active_support/concern'
-require 'active_support/cache'
 require 'uber/options'
 
 module Cell
   module Caching
-    extend ActiveSupport::Concern
+    def self.included(includer)
+      includer.class_eval do
+        extend ClassMethods
+        extend Uber::InheritableAttr
+        inheritable_attr :version_procs
+        inheritable_attr :conditional_procs
+        inheritable_attr :cache_options
 
-    included do
-      extend Uber::InheritableAttr
-      inheritable_attr :version_procs
-      inheritable_attr :conditional_procs
-      inheritable_attr :cache_options
-
-      self.version_procs = {}
-      self.conditional_procs = {}
-      self.cache_options = Uber::Options.new({})
+        self.version_procs = {}
+        self.conditional_procs = {}
+        self.cache_options = Uber::Options.new({})
+      end
     end
 
     module ClassMethods
@@ -38,7 +37,7 @@ module Cell
     private
 
       def expand_cache_key(key)
-        ::ActiveSupport::Cache.expand_cache_key(key, :cells)
+        key.join("/") # TODO: test me!
       end
     end
 
@@ -53,6 +52,8 @@ module Cell
     end
 
     def cache_store  # we want to use DI to set a cache store in cell/rails.
+      # TODO: test me!
+      raise
       ActionController::Base.cache_store
     end
 
@@ -63,7 +64,7 @@ module Cell
   private
 
     def perform_caching?
-      ActionController::Base.perform_caching
+      true
     end
 
     def fetch_from_cache_for(key, options)

@@ -30,4 +30,4 @@ require "cell/view_model"
 require "cell/concept"
 
 
-require "cell/railtie"
+require "cell/railtie" if defined?(Rails)

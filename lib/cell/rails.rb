@@ -3,11 +3,11 @@ module Cell
   module RailsExtensions
     module ActionController
       def cell(name, model=nil, options={}, &block)
-        ViewModel.cell(name, model, options.merge(controller: self), &block)
+        ::Cell::ViewModel.cell(name, model, options.merge(controller: self), &block)
       end
 
       def concept(name, model=nil, options={}, &block)
-        Concept.cell(name, model, options.merge(controller: self), &block)
+        ::Cell::Concept.cell(name, model, options.merge(controller: self), &block)
       end
     end
 
@@ -27,6 +27,29 @@ module Cell
 
       def concept(name, *args, &block)
         controller.concept(name, *args, &block)
+      end
+    end
+
+    # Gets included into Cell::ViewModel in a Rails environment.
+    module ViewModel
+      extend ActiveSupport::Concern
+
+      def call(*)
+        super.html_safe
+      end
+
+      def perform_caching?
+        ::ActionController::Base.perform_caching
+      end
+
+      def cache_store  # we want to use DI to set a cache store in cell/rails.
+        ::ActionController::Base.cache_store
+      end
+
+      module ClassMethods
+        def expand_cache_key(key)
+          ::ActiveSupport::Cache.expand_cache_key(key, :cells)
+        end
       end
     end
   end

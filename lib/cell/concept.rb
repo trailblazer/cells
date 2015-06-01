@@ -9,7 +9,7 @@ class Cell::Concept < Cell::ViewModel
     end
 
     def controller_path
-      @controller_path ||= name.sub(/::Cell/, '').underscore
+      @controller_path ||= util.underscore(name.sub(/::Cell/, ''))
     end
   end
 
