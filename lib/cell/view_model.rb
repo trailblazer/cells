@@ -74,6 +74,7 @@ module Cell
 
       include Helpers
 
+      # DISCUSS: introduce ::for which takes constant? rename ::build_cell to ::build?
 
       def cell_for(name, *args)
         class_from_cell_name(name).build_cell(*args)
