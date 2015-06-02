@@ -23,7 +23,7 @@ module Cell
       end
     end
 
-    initializer 'cells.rails_extensions', after: "cells.attach_router" do |app|
+    initializer "cells.rails_extensions" do |app|
       ActiveSupport.on_load(:action_controller) do
         self.class_eval do
           include ::Cell::RailsExtensions::ActionController
