@@ -115,13 +115,13 @@ module Cell
         content.to_s
       end
 
-    private
       # render :show
       def render(options={})
         options = normalize_options(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
         render_to_string(options)
       end
 
+    private
       def render_to_string(options)
         template = template_for(options) # TODO: cache template with path/lookup keys.
         content  = template.render(self, options[:locals])
