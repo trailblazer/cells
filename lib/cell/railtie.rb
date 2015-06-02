@@ -23,7 +23,7 @@ module Cell
       end
     end
 
-    initializer('cells.rails_extensions') do |app|
+    initializer 'cells.rails_extensions', after: "cells.attach_router" do |app|
       ActiveSupport.on_load(:action_controller) do
         self.class_eval do
           include ::Cell::RailsExtensions::ActionController
@@ -37,18 +37,16 @@ module Cell
 
         #include assert helpers (image_path, font_path, ect)
         ViewModel.class_eval do
+          include ActionView::Helpers::UrlHelper
+          include ::Cell::RailsExtensions::HelpersAreShit
+
           include ActionView::Helpers::AssetTagHelper
+          include ActionView::Helpers::FormTagHelper
         end
       end
 
       # set VM#cache_store, etc.
       ViewModel.send(:include, RailsExtensions::ViewModel)
-
-      if defined?(ActionView)
-        # always include those helpers so we can override the shitty parts.
-        ViewModel.send(:include, ActionView::Helpers::UrlHelper)
-        ViewModel.send(:include, ActionView::Helpers::FormTagHelper)
-      end
     end
 
     initializer('cells.development') do |app|

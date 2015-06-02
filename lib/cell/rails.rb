@@ -52,5 +52,38 @@ module Cell
         end
       end
     end
+
+    # In Rails, there are about 10 different implementations of #url_for. Rails doesn't like the idea of objects, so they
+    # have helpers in modules. Those module are now included sequentially into other modules and/or classes. While they
+    # get included, they might or might not include methods, depending on the including module/class
+    # (example here: https://github.com/rails/rails/blob/cad20f720c4c6e04584253cd0a23f22b3d43ab0f/actionpack/lib/action_dispatch/routing/url_for.rb#L87).
+    #
+    # The outcome is that several module override #url_for, and if you're lucky, this works. If you're not, then #url_for breaks
+    # due to a raise in one of its basic implementations, introduced in 3.x, fixed in 4.0 and then re-introduced in 4.2
+    #
+    # This is extremely frustrating as no one in Rails core seems to tackle this problem and introduces a url object instead
+    # of this module madness. I have to constantly test and fix it in Cells. With the module below, I'll stop doing this.
+    #
+    # Either Rails works with Cells and we fix this in form of a URL object that gets passed into the cell (I'm happy with
+    # a global object here, too! Wow!) or URL helpers will stop working in Cells and a lot of people will be unhappy.
+    #
+    # Anyway, this is the reason we need this patch module. If you have trouble with URLs in Cells, then please ask Rails to
+    # fix their implementation. Thank you.
+    module HelpersAreShit
+      def url_for(options = nil) # from ActionDispatch:R:UrlFor.
+        case options
+          when nil
+            _routes.url_for(url_options.symbolize_keys)
+          when Hash
+            _routes.url_for(options.symbolize_keys.reverse_merge!(url_options))
+          when String
+            options
+          when Array
+            polymorphic_url(options, options.extract_options!)
+          else
+            polymorphic_url(options)
+        end
+      end
+    end
   end
 end
