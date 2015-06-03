@@ -1,7 +1,7 @@
 class Song
   require "active_model"
   include ActiveModel::Conversion
-  include ActiveModel::Naming
+  extend ActiveModel::Naming
 
   def persisted?
     true

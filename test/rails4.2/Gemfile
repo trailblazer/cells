@@ -15,3 +15,4 @@ end
 gem "cells", path: "../../"
 gem "cells-erb", path: "../../../cells-erb"
 gem "simple_form"
+gem "formtastic"
