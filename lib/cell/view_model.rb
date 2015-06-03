@@ -124,7 +124,7 @@ module Cell
 
     private
       def render_to_string(options)
-        template = template_for(options) # TODO: cache template with path/lookup keys.
+        template = find_template(options) # TODO: cache template with path/lookup keys.
 
         content  = render_template(template, options)
 
@@ -139,7 +139,7 @@ module Cell
       def with_layout(options, content)
         return content unless layout = options[:layout]
 
-        template = template_for(options.merge :view => layout) # we could also allow a different layout engine, etc.
+        template = find_template(options.merge :view => layout) # we could also allow a different layout engine, etc.
 
         render_template(template, options) { content }
       end
@@ -185,15 +185,21 @@ module Cell
     end
 
     module TemplateFor
-      def template_for(options)
+      def find_template(options)
         view      = options[:view]
         engine    = options[:template_engine]
         prefixes  = options[:prefixes]
 
         view      = "#{view}.#{engine}"
 
+        template_for(prefixes, view, options) or raise TemplateMissingError.new(prefixes, view)
+      end
+
+      def template_for(prefixes, view, options)
+        options = {template_class: Tilt, escape_html: false, escape_attrs: false}
+
         # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
-        self.class.templates[prefixes, view, {}] or raise TemplateMissingError.new(prefixes, view)
+        self.class.templates[prefixes, view, options]
       end
     end
     include TemplateFor

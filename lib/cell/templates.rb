@@ -12,17 +12,19 @@ module Cell
       @cache ||= Cache.new
     end
 
-    def find_template(prefixes, view, options)
+    def find_template(prefixes, view, options) # options is not considered in cache key.
       cache.fetch(prefixes, view) do |prefix|
         # this block is run once per cell class per process, for each prefix/view tuple.
-        create(prefix, view)
+        create(prefix, view, options)
       end
     end
 
-    def create(prefix, view)
+    def create(prefix, view, options)
       # puts "...checking #{prefix}/#{view}"
       return unless File.exists?("#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
-      Tilt.new("#{prefix}/#{view}", escape_html: false, escape_attrs: false)
+
+      template_class = options.delete(:template_class)
+      template_class.new("#{prefix}/#{view}", options) # Tilt.new()
     end
 
     # {["comment/row/views", comment/views"][show.haml] => "Tpl:comment/view/show.haml"}
