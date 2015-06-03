@@ -190,8 +190,10 @@ module Cell
         engine    = options[:template_engine]
         prefixes  = options[:prefixes]
 
+        view      = "#{view}.#{engine}"
+
         # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
-        self.class.templates[prefixes, view, engine] or raise TemplateMissingError.new(prefixes, view, engine, nil)
+        self.class.templates[prefixes, view, {}] or raise TemplateMissingError.new(prefixes, view)
       end
     end
     include TemplateFor

@@ -5,10 +5,10 @@ class TemplatesTest < MiniTest::Spec
   Templates = Cell::Templates
 
   # existing.
-  it { Templates.new[['test/fixtures/bassist'], 'play', 'erb'].file.must_equal 'test/fixtures/bassist/play.erb' }
+  it { Templates.new[['test/fixtures/bassist'], 'play.erb', {}].file.must_equal 'test/fixtures/bassist/play.erb' }
 
   # not existing.
-  it { Templates.new[['test/fixtures/bassist'], 'not-here', 'erb'].must_equal nil }
+  it { Templates.new[['test/fixtures/bassist'], 'not-here.erb', {}].must_equal nil }
 
 
   # different caches for different classes

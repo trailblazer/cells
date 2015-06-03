@@ -2,10 +2,8 @@ module Cell
   # Gets cached in production.
   class Templates
     # prefixes could be instance variable as they will never change.
-    def [](prefixes, view, engine, formats=nil)
-      view = "#{view}.#{engine}"
-
-      find_template(prefixes, view, engine)
+    def [](prefixes, view, options)
+      find_template(prefixes, view, options)
     end
 
   private
@@ -14,7 +12,7 @@ module Cell
       @cache ||= Cache.new
     end
 
-    def find_template(prefixes, view, engine)
+    def find_template(prefixes, view, options)
       cache.fetch(prefixes, view) do |prefix|
         # this block is run once per cell class per process, for each prefix/view tuple.
         create(prefix, view)
