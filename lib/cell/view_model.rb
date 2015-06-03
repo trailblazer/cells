@@ -168,11 +168,8 @@ module Cell
       end
     end
     def output_buffer # called from the precompiled template. FIXME: this is currently not used in Haml.
-      OutputBuffer.new # don't cache output_buffer, for every render call we get a fresh one.
+      OutputBuffer.new # don't cache output_buffer, for every #render call we get a fresh one.
     end
-    attr_writer :output_buffer # FIXME: where is that used? definitely not in Erbse.
-    # TODO: remove output_buffer in favor or returning the string.
-
 
     module TemplateFor
       def template_for(options)
