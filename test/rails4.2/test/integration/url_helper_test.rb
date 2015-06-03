@@ -3,28 +3,6 @@ require 'test_helper'
 class MusiciansController < ApplicationController
 end
 
-class Song
-  require "active_model"
-  include ActiveModel::Conversion
-  include ActiveModel::Naming
-
-  def persisted?
-    true
-  end
-
-  def parents
-    []
-  end
-
-  def name
-    "song"
-  end
-
-  def id
-    1
-  end
-end
-
 class UrlHelperTest < MiniTest::Spec
   include Cell::Testing
   controller MusiciansController
