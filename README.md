@@ -36,6 +36,75 @@ Starting with Cells 4.0 we no longer use `ActionView` as a template engine. Remo
 
 **Note for Cells 3.x:** This README only documents Cells 4.0. Please [read the old README if you're using Cells 3.x](https://github.com/apotonick/cells/tree/31f6ed82b87b3f92613698442fae6fd61cc16de9#cells).
 
+## Concepts (new in version 3.11!)
+
+Introduced in [version 3.11](http://nicksda.apotomo.de/2014/05/cells-integrates-with-the-asset-pipeline/).  This includes:
+
+- Ability to tie into the asset pipeline (you can store cell related assets WITH the cell)
+- Introduction of "concepts" allowing a completely self-contained layout
+
+### Example Usage
+
+Your directory structure can now look like this:
+
+```
+app
+├── concepts
+│   ├── comment
+│   │   ├── cell.rb
+│   │   ├── views
+│   │   │   ├── show.haml
+│   │   │   ├── author.haml
+│   │   ├── assets
+│   │   │   ├── comment.js
+│   │   │   ├── comment.css
+```
+
+Cells now look slightly different:
+
+```ruby
+# app/concepts/comment/cell.rb
+ 
+class Comment::Cell < Cell::Concept
+  def show
+    render
+  end
+end
+```
+
+To hook into the asset pipeline you'll need to register your cells in `application.rb`:
+
+```ruby
+Gemgem::Application.configure do
+  # ...
+  config.cells.with_assets = %w(comment)
+end
+```
+
+You'll also need to update `application.js` and `application.css`:
+
+```
+# app/assets/stylesheets/application.css
+/*
+...
+*= require public_record
+...
+*/
+
+# app/assets/javascripts/application.js
+
+...
+//= require comment
+...
+```
+
+And to render the cell, use the following helper (`call` invokes `show` by default):
+
+```
+<%= concept("comment/cell", comment).call %>
+```
+
+Have fun!
 
 ## Installation
 
