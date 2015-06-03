@@ -13,4 +13,4 @@ group :development, :test do
 end
 
 gem "cells", path: "../../"
-gem "cells-erb"
+gem "cells-erb", path: "../../../cells-erb"
