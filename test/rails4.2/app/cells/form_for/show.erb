@@ -1,0 +1,7 @@
+<%= form_for Song.new do |f| %>
+  First
+  <%= f.text_field :id %>
+  <%= f.fields_for :artist do |a| %>
+    <%= a.text_field :id %>
+  <% end %>
+<% end %>
