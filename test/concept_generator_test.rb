@@ -15,6 +15,13 @@ class ConceptGeneratorTest < Rails::Generators::TestCase
     assert_file 'app/concepts/song/views/show.erb', %r{app/concepts/song/views/show\.erb}
   end
 
+  test "test unit test" do
+    run_generator %w(song -t test_unit)
+
+    # file contains #concept(..) call.
+    assert_file 'test/concepts/song/cell_test.rb', /concept\("song\/cell"\).\(:show\)/
+  end
+
   test '[haml] standard assets, show view' do
     run_generator %w(song -e haml)
 

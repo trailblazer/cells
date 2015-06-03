@@ -69,7 +69,10 @@ class CellGeneratorTest < Rails::Generators::TestCase
   test 'create test_unit assets with -t test_unit' do
     run_generator %w(Blog post latest -t test_unit)
 
+    # file is there.
     assert_file 'test/cells/blog_cell_test.rb'
+    # file contains #cell(..) call.
+    assert_file 'test/cells/blog_cell_test.rb', /cell\("blog"\).\(:post\)/
   end
 
   test 'work with namespace and test_unit' do

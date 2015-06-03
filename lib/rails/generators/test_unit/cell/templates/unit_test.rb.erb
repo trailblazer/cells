@@ -3,8 +3,8 @@ require 'test_helper'
 class <%= class_name %>CellTest < Cell::TestCase
 <% states.each do |state| -%>
   test "<%= state %>" do
-    invoke :<%= state %>
-    assert_select 'p'
+    html = cell("<%= file_name %>").(:<%= state %>)
+    assert html.match /<p>/
   end
 
 <% end %>
