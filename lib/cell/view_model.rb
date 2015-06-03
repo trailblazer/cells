@@ -125,7 +125,8 @@ module Cell
     private
       def render_to_string(options)
         template = template_for(options) # TODO: cache template with path/lookup keys.
-        content  = template.render(self, options[:locals])
+
+        content  = render_template(template, options)
 
         # TODO: allow other (global) layout dirs.
         with_layout(options, content)
@@ -133,6 +134,18 @@ module Cell
 
       def render_state(*args)
         send(*args)
+      end
+
+      def with_layout(options, content)
+        return content unless layout = options[:layout]
+
+        template = template_for(options.merge :view => layout) # we could also allow a different layout engine, etc.
+
+        render_template(template, options) { content }
+      end
+
+      def render_template(template, options, &block)
+        template.render(self, options[:locals], &block) # DISCUSS: hand locals to layout?
       end
     end
 
@@ -183,12 +196,6 @@ module Cell
     end
     include TemplateFor
 
-    def with_layout(options, content)
-      return content unless layout = options[:layout]
-
-      template = template_for(options.merge :view => layout) # we could also allow a different layout engine, etc.
-      template.render(self) { content }
-    end
 
     def normalize_options(options, caller) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
