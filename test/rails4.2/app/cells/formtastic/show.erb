@@ -4,4 +4,9 @@
   <%= f.semantic_fields_for :artist do |a| %>
     <%= a.input :id %>
   <% end %>
+
+  <%= f.actions do %>
+    <%= f.submit 'Go!', as: :button, class: 'btn btn-primary' %>
+  <% end %>
+
 <% end %>
