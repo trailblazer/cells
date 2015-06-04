@@ -184,6 +184,7 @@ module Cell
       OutputBuffer.new # don't cache output_buffer, for every #render call we get a fresh one.
     end
 
+
     module TemplateFor
       def find_template(options)
         view      = options[:view]
@@ -196,7 +197,7 @@ module Cell
       end
 
       def template_for(prefixes, view, options)
-        options = {template_class: Tilt, escape_html: false, escape_attrs: false}
+        # options = {template_class: Tilt, escape_html: false, escape_attrs: false}
 
         # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
         self.class.templates[prefixes, view, options]
