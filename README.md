@@ -23,6 +23,13 @@ This boils down to the following invocation, that can be used to render cells in
 CommentCell.build(@comment).()
 ```
 
+You can render cells anywhere you want, views, controllers, composites, mailers, etc. In Rails you have the same helper API for views and controllers.
+
+```ruby
+def dashboard
+  @comments = cell(:comment, Comment.recent).()
+```
+
 Usually, you'd pass in one or more objects you want the cell to present. That can be an ActiveRecord model, a ROM instance or any kind of PORO you fancy.
 
 ## Cell Class
@@ -124,8 +131,35 @@ It is completely up to you how you test, whether it's RSpec, MiniTest or whateve
 
 [In Rails, there's support](http://trailblazerb.org/gems/cells/testing.html) for TestUnit, MiniTest and RSpec available.
 
+## Installation
+
+Cells run with all Rails >= 4.0. Lower versions of Rails will still run with Cells, but you will get in trouble with the helpers.
+
+```ruby
+gem 'cells', "~> 4.0.0"
+```
+
+Various template engines are supported but need to be added to your Gemfile.
+
+* [cells-erb](https://github.com/trailblazer/cells-erb)
+* [cells-haml](https://github.com/trailblazer/cells-haml)
+* [cells-slim](https://github.com/trailblazer/cells-slim)
+
+```ruby
+gem "cells-erb"
+```
+
+In Rails, this is all you need to do. In other environments, you need to include the respective module into your cells.
+
+```ruby
+class CommentCell < Cell::ViewModel
+  include ::Cell::Erb # or Cell::Haml, or Cell::Slim
+end
+```
 
 ## Rails Helper API
+
+including helpers.
 
 
 ## View Paths
