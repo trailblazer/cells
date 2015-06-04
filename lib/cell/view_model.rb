@@ -21,9 +21,6 @@ module Cell
     inheritable_attr :view_paths
     self.view_paths = ["app/cells"]
 
-    inheritable_attr :template_engine
-    self.template_engine = "erb"
-
     class << self
       def templates
         @templates ||= Templates.new # note: this is shared in subclasses. do we really want this?
@@ -187,20 +184,19 @@ module Cell
 
     module TemplateFor
       def find_template(options)
+        template_options = template_options_for(options) # imported by Erb, Haml, etc.
+
         view      = options[:view]
-        engine    = options[:template_engine]
         prefixes  = options[:prefixes]
+        suffix    = template_options[:suffix]
+        view      = "#{view}.#{suffix}"
 
-        view      = "#{view}.#{engine}"
-
-        template_for(prefixes, view, options) or raise TemplateMissingError.new(prefixes, view)
+        template_for(prefixes, view, template_options) or raise TemplateMissingError.new(prefixes, view)
       end
 
       def template_for(prefixes, view, options)
-        options = {template_class: Tilt, escape_html: false, escape_attrs: false}.merge(options) # DISCUSS: save a hash merge here?
-
-
         # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
+        # Note: options here is the template-relevant options, only.
         self.class.templates[prefixes, view, options]
       end
     end
@@ -215,8 +211,7 @@ module Cell
         {:view => options.to_s}
       end
 
-      options[:template_engine] ||= self.class.template_engine # DISCUSS: in separate method?
-      options[:prefixes]        ||= _prefixes
+      options[:prefixes] ||= _prefixes
 
       process_options!(options)
       options

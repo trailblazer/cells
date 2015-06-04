@@ -7,7 +7,7 @@ end
 # Trailblazer style:
 module Record
   class Cell < Cell::Concept # cell("record")
-    self.template_engine = "erb"
+    include ::Cell::Erb
 
     def show
       render # Party On, #{model}

@@ -84,6 +84,7 @@ end
 class InheritViewsTest < MiniTest::Spec
   class SlapperCell < Cell::ViewModel
     self.view_paths = ['test/fixtures'] # todo: REMOVE!
+    include Cell::Erb
 
     inherit_views ::BassistCell
 
@@ -106,6 +107,7 @@ class InheritViewsTest < MiniTest::Spec
   # TapperCell
   class TapperCell < Cell::ViewModel
     self.view_paths = ['test/fixtures']
+    include Cell::Erb
 
     def play
       render

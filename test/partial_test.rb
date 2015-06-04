@@ -4,7 +4,7 @@ require "cell/partial"
 class PartialTest < MiniTest::Spec
   class WithPartial < Cell::ViewModel
     self.view_paths = ['test/fixtures'] # doesn't exist.
-    self.template_engine = :erb
+    include ::Cell::Erb
 
     include Partial
 

@@ -11,9 +11,9 @@ module Cell
       end
     end
 
-    initializer 'cells.template_engine' do |app|
-      ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
-    end
+    # initializer 'cells.template_engine' do |app|
+    #   ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
+    # end
 
     # ruthlessly stolen from the zurb-foundation gem.
     initializer 'cells.update_asset_paths' do |app|
