@@ -197,7 +197,8 @@ module Cell
       end
 
       def template_for(prefixes, view, options)
-        # options = {template_class: Tilt, escape_html: false, escape_attrs: false}
+        options = {template_class: Tilt, escape_html: false, escape_attrs: false}.merge(options) # DISCUSS: save a hash merge here?
+
 
         # we could also pass _prefixes when creating class.templates, because prefixes are never gonna change per instance. not too sure if i'm just assuming this or if people need that.
         self.class.templates[prefixes, view, options]
