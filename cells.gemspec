@@ -28,5 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest-reporters"
   spec.add_development_dependency "capybara"
 
-  spec.add_development_dependency "cells-erb", ">= 0.0.2"
+  spec.add_development_dependency "cells-erb", ">= 0.0.4"
 end
