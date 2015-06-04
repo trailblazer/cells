@@ -72,7 +72,7 @@ Methods called in the view are directly called _on the cell instance_. You're fr
 
 ## File Structure
 
-In Rails, cells are placed in `app/cells` or `app/concepts/. Every cell has their own directory where it keeps views, assets and code.
+In Rails, cells are placed in `app/cells` or `app/concepts/`. Every cell has their own directory where it keeps views, assets and code.
 
 ```
 app
@@ -120,7 +120,7 @@ Then, the `show` method signature changes to `def show(options)`.
 
 ## Testing
 
-A huge benefit from "all this encapsulation" is that you can easily write tests for your component. The API does not change and everything is exactly as it would be in production.
+A huge benefit from "all this encapsulation" is that you can easily write tests for your components. The API does not change and everything is exactly as it would be in production.
 
 ```ruby
 html = CommentCell.build(@comment).()
@@ -129,7 +129,7 @@ Capybara.string(html).must_have_css "h3"
 
 It is completely up to you how you test, whether it's RSpec, MiniTest or whatever. All the cell does is return HTML.
 
-[In Rails, there's support](http://trailblazerb.org/gems/cells/testing.html) for TestUnit, MiniTest and RSpec available.
+[In Rails, there's support](http://trailblazerb.org/gems/cells/testing.html) for TestUnit, MiniTest and RSpec available, along with Capybara integration.
 
 ## Installation
 
@@ -138,6 +138,8 @@ Cells run with all Rails >= 4.0. Lower versions of Rails will still run with Cel
 ```ruby
 gem 'cells', "~> 4.0.0"
 ```
+
+(Note: we use Cells in production with Rails 3.2 and Haml and it works great.)
 
 Various template engines are supported but need to be added to your Gemfile.
 
@@ -160,6 +162,7 @@ end
 ## Rails Helper API
 
 including helpers.
+link_to in cell
 
 
 ## View Paths
@@ -175,6 +178,52 @@ end
 ## Asset Packaging
 
 Cells can easily ship with their own JavaScript, CSS and more and be part of Rails' asset pipeline. Bundling assets into a cell allows you to implement super encapsulated widgets that are stand-alone. Asset pipeline is [documented here](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline).
+
+## Render API
+
+## Nested Cells
+
+Cells love to render. You can render as many views as you need in a cell state or view.
+
+```ruby
+<%= render :index %>
+```
+
+The `#render` method really just returns the rendered template string, allowing you all kind of modification.
+
+```ruby
+def show
+  render + render(:additional)
+end
+```
+
+You can even render other cells using the exact same API.
+
+```ruby
+def about
+  cell(:profile, model.author).()
+end
+```
+
+This works both in cell views and on the instance, in states.
+
+
+## Collections
+
+In order to render collections, Cells comes with a shortcut.
+
+```ruby
+comments = Comment.all #=> three comments.
+cell(:comment, collection: comments)
+```
+
+This will invoke `cell(:comment, song).()` three times and concatenate the rendered output automatically. In case you don't want `show` but another state rendered, use `:method).
+
+```ruby
+cell(:comment, collection: comments, method: :list)
+```
+
+Note that you _don't_ need to invoke call here, the `:collection` behavior internally handles that for you.
 
 
 
