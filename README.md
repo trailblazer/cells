@@ -1,9 +1,151 @@
 # Cells
 
-*View Components for Rails.*
+*View Components for Ruby and Rails.*
 
 
 ## Overview
+
+Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
+
+Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, nesting, view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing
+
+## Rendering Cells
+
+Rendering a cell in Rails ironically happens via a helper.
+
+```ruby
+<%= cell(:comment, @comment) %>
+```
+
+This boils down to the following invocation, that can be used to render cells in *any other Ruby* environment.
+
+```ruby
+CommentCell.build(@comment).()
+```
+
+Usually, you'd pass in one or more objects you want the cell to present. That can be an ActiveRecord model, a ROM instance or any kind of PORO you fancy.
+
+## Cell Class
+
+A cell is a light-weight class with one or multiple methods that render views.
+
+```ruby
+class Comment::Cell < Cell::ViewModel
+  property :body
+  property :author
+
+  def show
+    render
+  end
+
+private
+  def author_link
+    link_to "#{author.email}", author
+  end
+end
+```
+
+Here, `show` is the only public method. By calling `render` it will invoke rendering for the `show` view.
+
+
+## Logicless Views
+
+Views come packaged with the cell and can be ERB, Haml, or Slim.
+
+```erb
+<h3>New Comment</h3>
+  <%= body %>
+
+By <%= author_link %>
+```
+
+The concept of "helpers" that get strangely copied from modules to the view does not exist in Cells anymore.
+
+Methods called in the view are directly called _on the cell instance_. You're free to use loops and deciders in views, even instance variables are allowed, but Cells tries to push you gently towards method invocations to access data in the view.
+
+## File Structure
+
+In Rails, cells are placed in `app/cells` or `app/concepts/. Every cell has their own directory where it keeps views, assets and code.
+
+```
+app
+├── cells
+│   ├── comment_cell.rb
+│   ├── comment
+│   │   ├── show.haml
+│   │   ├── list.haml
+```
+
+The discussed `show` view would reside in `app/cells/comment/show.haml`. However, you can set [any set of view paths](#view-paths) you want.
+
+
+## Invocation Styles
+
+In order to make a cell render, you have to call the rendering methods. While you could call the method directly, the prefered way is the _call style_.
+
+```ruby
+cell(:comment, @song).()       # calls CommentCell#show.
+cell(:comment, @song).(:index) # calls CommentCell#index.
+```
+
+The call style respects caching.
+
+Keep in mind that `cell(..)` really gives you the cell object. In case you want to reuse the cell, need setup logic, etc. that's completely up to you.
+
+## Parameters
+
+You can pass in as many parameters as you need. Per convention, this is a hash.
+
+```ruby
+cell(:comment, @song, volume: 99, genre: "Jazz Fusion")
+```
+
+Options can be accessed via the `@options` instance variable.
+
+Naturally, you may also pass arbitrary options into the call itself. Those will be simple method arguments.
+
+```ruby
+cell(:comment, @song).(:show, volume: 99)
+```
+
+Then, the `show` method signature changes to `def show(options)`.
+
+
+## Testing
+
+A huge benefit from "all this encapsulation" is that you can easily write tests for your component. The API does not change and everything is exactly as it would be in production.
+
+```ruby
+html = CommentCell.build(@comment).()
+Capybara.string(html).must_have_css "h3"
+```
+
+It is completely up to you how you test, whether it's RSpec, MiniTest or whatever. All the cell does is return HTML.
+
+[In Rails, there's support](http://trailblazerb.org/gems/cells/testing.html) for TestUnit, MiniTest and RSpec available.
+
+
+## Rails Helper API
+
+
+## View Paths
+
+In Rails, the view path is automatically set to `app/cells/` or `app/concepts/`. You can append or set view paths by using `::view_paths`. Of course, this works in any Ruby environment.
+
+```ruby
+class CommentCell < Cell::ViewModel
+  self.view_paths = "lib/views"
+end
+```
+
+## Asset Packaging
+
+Cells can easily ship with their own JavaScript, CSS and more and be part of Rails' asset pipeline. Bundling assets into a cell allows you to implement super encapsulated widgets that are stand-alone. Asset pipeline is [documented here](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline).
+
+
+
+ This is available via the `model` method. Declarative `::property`s give you readers to the model.
+
 
 Cells allow you to encapsulate parts of your page into separate MVC components. These components are called _view models_.
 
@@ -56,19 +198,6 @@ gem "cells-haml", github: 'trailblazer/cells-haml'
 The template engine extensions fix severe bugs in combination with Rails helpers and the respective engine. Time will tell if we can convince the template teams to merge these fixes.
 
 
-## File Layout
-
-Cells are placed in `app/cells`.
-
-```
-app
-├── cells
-│   ├── comment_cell.rb
-│   ├── comment
-│   │   ├── show.haml
-│   │   ├── list.haml
-```
-
 
 ## Generate
 
@@ -86,82 +215,6 @@ create  app/cells/comment/show.erb
 ```
 
 
-## Rendering View Models
-
-Suppose we are to render a "partial" for `Comment` model
-
-```ruby
-@comment = Comment.find(1)
-```
-
-Cells brings you one helper method `#cell` to be used in your controller views or layouts.
-
-```haml
-= cell(:comment, @comment)
-```
-
-This is the short form of rendering a cell. Simple, isn't it?
-
-Note that a view model _always_ requires a model in the constructor (or a composition). This doesn't have to be an `ActiveRecord` object but can be any type of Ruby object you want to present.
-
-To understand invoking cells, here's the long form of it.
-
-```haml
-= cell(:comment, @comment).call(:show)
-```
-
-1. `#cell(..)` simply returns the cell instance. You can do whatever you want with it.
-2. `.call(:show)` will invoke the `#show` method respecting caching settings.
-
-When rendering cells in views, you can skip the `call` part as this is implicitely done by the template.
-
-Please [refer to the docs](#invocation-styles) for different ways of invoking view models.
-
-
-## View Model Classes
-
-A view model is always implemented as a class. This gives you encapsulation, proper inheritance and namespacing out-of-the-box.
-
-```ruby
-class CommentCell < Cell::ViewModel
-  def show
-    render
-  end
-end
-```
-
-Calling `#render` will render the cell's `show.haml` template, located in `app/cells/comment`. Invoking `render` is explicit: this means, it really returns the rendered view string, allowing you to modify the HTML afterwards.
-
-```ruby
-def show
-  "<div>" + render + "</div>"
-end
-```
-
-## Views In Theory
-
-In Cells, we don't distinguish between _view_ or _partial_. Every view you render is a partial, every partial a view. You can render views inside views, compose complex UI blocks with multiple templates and go crazy. This is what cells _views_ are made for.
-
-Cells supports all template engines that are supported by the excellent [tilt](https://github.com/rtomayko/tilt) gem - namely, this is ERB, HAML, Slim, and many more.
-
-In these examples, we're using HAML.
-
-BTW, Cells doesn't include the format into the view name. 99% of all cells render HTML anyway, so we prefer short names like `show.haml`.
-
-
-## Views In Practice
-
-Let's check out the `show.haml` view to see how they work.
-
-```haml
--# app/cells/comment/show.haml
-
-%h1 Comment
-
-= model.body
-By
-= link_to model.author.name, model.author
-```
 
 Cells provides you the view _model_ via the `#model` method. Here, this returns the `Comment` instance passed into the constructor.
 
@@ -243,67 +296,9 @@ template_engine
 view_paths
 
 
-## Invocation styles
 
-The explicit, long form allows you rendering cells in views, in controllers, mailers, etc.
 
-```ruby
-cell(:comment, @comment).call(:show)
-```
 
-As `:show` is the default action, you don't have to specify it.
-
-```ruby
-cell(:comment, @comment).call
-```
-
-In views, the template engine will automatically call `cell.to_s`. It does that for every object passed in as a placeholder. `ViewModel#to_s` exists and is aliased to `#call`, which allows to omit that part in a view.
-
-```haml
-= cell(:comment, @comment)
-```
-
-If you want, you can also call public methods directly on your cell. Note that this does _not_ respect caching, though.
-
-```haml
-= cell(:comment, @comment).avatar
-```
-
-## Passing Options
-
-There's several ways to inject additional state into your cell.
-
-### Object Style
-
-Cells can receive any set of options you need. Usually, a hash containing additional options is passed as the last argument.
-
-```ruby
-cell(:comment, @comment, layout: :fancy)
-```
-
-The third argument is accessable via `#options` in the instance.
-
-```ruby
-def show
-  render layout: options[:layout]
-end
-```
-
-### Functional Style
-
-You can also pass options to the action method itself, making your cell a bit more functional with less state.
-
-```ruby
-cell(:comment, @comment).call(:show, layout: :fancy)
-```
-
-Make sure the method is ready to process those arguments.
-
-```ruby
-def show(layout=:default)
-  render layout: layout
-end
-```
 
 ## Collections
 
@@ -367,42 +362,6 @@ Multiple calls to `::builds` will be ORed. If no block returns a class, the orig
 
 ## View Inheritance
 
-
-
-# TODO: merge stuff below!
-
-## File Structure
-
-In Cells 3.10 we introduce a new _optional_ file structure integrating with [Trailblazer](https://github.com/apotonick/trailblazer)'s "concept-oriented" layout.
-
-This new file layout makes a cell fully **self-contained** so it can be moved around just by grabbing one single directory.
-
-Activate it with
-
-```ruby
-class Comment::Cell
-  self_contained!
-
-  # ...
-end
-```
-
-Now, the cell directory ideally looks like the following.
-
-```
-app
-├── cells
-│   ├── comment
-│   │   ├── cell.rb
-│   │   ├── views
-│   │   │   ├── show.haml
-│   │   │   ├── list.haml
-```
-
-
-Here, cell class and associated views are in the same self-contained `comment` directory.
-
-You can use the new views directory along with leaving your cell _class_ at `app/cells/comment_cell.rb`, if you fancy that.
 
 
 ## Asset Pipeline
@@ -589,48 +548,6 @@ If you need to cache a part of your view, implement that as another cell state.
 If you want to test it in `development`, you need to put `config.action_controller.perform_caching = true` in `development.rb` to see the effect.
 
 
-## Testing
-
-Another big advantage compared to monolithic controller/helper/partial piles is the ability to test your cells isolated.
-
-### Test::Unit
-
-So what if you wanna test the cart cell? Use the generated `test/cells/cart_cell_test.rb` test.
-
-```ruby
-class CartCellTest < Cell::TestCase
-  test "show" do
-    invoke :show, :user => @user_fixture
-    assert_select "#cart", "You have 3 items in your shopping cart."
-  end
-```
-
-Don't forget to put `require 'cell/test_case'` in your project's `test/test_helper.rb` file.
-
-Then, run your tests with
-
-```shell
-rake test:cells
-```
-
-That's easy, clean and strongly improves your component-driven software quality. How'd you do that with partials?
-
-
-### RSpec
-
-If you prefer RSpec examples, use the [rspec-cells](http://github.com/apotonick/rspec-cells) gem for specing.
-
-```ruby
-it "should render the posts count" do
-  render_cell(:posts, :count).should have_selector("p", :content => "4 posts!")
-end
-```
-
-To run your specs we got a rake task, too!
-
-```shell
-rake spec:cells
-```
 
 
 ### Call
@@ -743,48 +660,7 @@ end
 
 This will simply render the `author.haml` template in the same context as the `show` view, meaning you might use helpers, again.
 
-### Encapsulation
 
-If in doubt, encapsulate nested parts of your view into a separate cell. You can use the `#cell` method in your cell to instantiate a nested cell.
-
-Designing view models to create kickass UIs for your domain layer is discussed in 50+ pages in [my upcoming book](http://nicksda.apotomo.de).
-
-### Alternative Instantiation
-
-You don't need to pass in a model, it can also be a hash for a composition.
-
-```ruby
-  cell(album, song: song, composer: album.composer)
-```
-
-This will create two readers in the cell for you automatically: `#song` and `#composer`.
-
-
-Note that we are still working on a declarative API for compositions. It will be similar to the one found in Reform, Disposable::Twin and Representable:
-
-```ruby
-  property :title, on: :song
-  property :last_name, on: :composer
-```
-
-
-## Mountable Cells
-
-Cells 3.8 got rid of the ActionController dependency. This essentially means you can mount Cells to routes or use them like a Rack middleware. All you need to do is derive from Cell::Base.
-
-```ruby
-class PostCell < Cell::Base
-  ...
-end
-```
-
-In your `routes.rb` file, mount the cell like a Rack app.
-
-```ruby
-match "/posts" => proc { |env|
-  [ 200, {}, [ Cell::Base.render_cell_for(:post, :show) ]]
-}
-```
 
 ### Cells in ActionMailer
 
@@ -814,21 +690,6 @@ module MyApp
   end
 end
 ```
-
-### Base Path
-
-You can configure the cells path in case your cells don't reside in `app/cells`.
-
-```ruby
-config.generators do |g|
-  g.base_cell_path "app/widgets"
-end
-```
-
-
-## Capture Support
-
-If you need a global `#content_for` use the [cells-capture](https://github.com/apotonick/cells-capture) gem.
 
 
 ## Undocumented Features
