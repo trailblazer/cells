@@ -40,6 +40,7 @@ module Cell
     initializer "cells.include_default_helpers" do
       #include assert helpers (image_path, font_path, ect)
       ViewModel.class_eval do
+        include ActionView::Helpers::UrlHelper
         include ::Cell::RailsExtensions::HelpersAreShit
 
         include ActionView::Helpers::AssetTagHelper
