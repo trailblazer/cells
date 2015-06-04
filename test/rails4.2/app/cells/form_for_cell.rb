@@ -1,5 +1,4 @@
 class FormForCell < Cell::ViewModel
-  include Cell::Erb
   include ActionView::RecordIdentifier
   include ActionView::Helpers::FormHelper
 

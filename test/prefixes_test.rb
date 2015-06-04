@@ -107,7 +107,7 @@ class InheritViewsTest < MiniTest::Spec
   # TapperCell
   class TapperCell < Cell::ViewModel
     self.view_paths = ['test/fixtures']
-    include Cell::Erb
+    # include Cell::Erb
 
     def play
       render

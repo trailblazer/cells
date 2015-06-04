@@ -1,5 +1,4 @@
 class FormtasticCell < Cell::ViewModel
-  include Cell::Erb
   include ActionView::RecordIdentifier
   include ActionView::Helpers::FormHelper
   include Formtastic::Helpers::FormHelper

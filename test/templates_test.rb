@@ -21,7 +21,7 @@ end
 class TemplatesCachingTest < MiniTest::Spec
   class SongCell < Cell::ViewModel
     self.view_paths = ['test/fixtures']
-    include Cell::Erb
+    # include Cell::Erb
 
     def show
       render
