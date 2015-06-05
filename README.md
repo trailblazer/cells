@@ -128,7 +128,7 @@ Then, the `show` method signature changes to `def show(options)`.
 A huge benefit from "all this encapsulation" is that you can easily write tests for your components. The API does not change and everything is exactly as it would be in production.
 
 ```ruby
-html = CommentCell.build(@comment).()
+html = CommentCell.(@comment).()
 Capybara.string(html).must_have_css "h3"
 ```
 
