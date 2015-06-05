@@ -33,4 +33,15 @@ class UrlTest < ActionDispatch::IntegrationTest
   #   visit "/songs/1/edit"
   #   page.text.must_equal "http://www.example.com/songs/1"
   # end
+
+
+end
+
+class AssetsHelperTest < ActionController::TestCase
+  tests SongsController
+
+  it do
+    get :with_image_tag
+    response.body.must_equal "<img src=\"/images/logo.png\" alt=\"Logo\" />"
+  end
 end

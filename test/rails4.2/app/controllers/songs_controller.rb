@@ -14,4 +14,8 @@ class SongsController < ApplicationController
   def edit
     render text: cell(:song).video_path(1)
   end
+
+  def with_image_tag
+    render text: cell(:song).image_tag("logo.png")
+  end
 end
