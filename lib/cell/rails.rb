@@ -41,6 +41,10 @@ module Cell
         delegates :parent_controller, :session, :params, :request, :config, :env, :url_options
       end
 
+      def protect_against_forgery? # TODO: implement forgery protection with ActionController.
+        false
+      end
+
       def call(*)
         super.html_safe
       end

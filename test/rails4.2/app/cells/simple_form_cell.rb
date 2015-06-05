@@ -6,10 +6,6 @@ class SimpleFormCell < Cell::ViewModel
   # include ActiveSupport::Configurable
   # include ActionController::RequestForgeryProtection # FIXME: this does NOT activate any protection.
 
-  def protect_against_forgery?
-    false
-  end
-
   def show
     render
   end
