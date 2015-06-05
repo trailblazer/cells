@@ -34,8 +34,8 @@ In Rails you have the same helper API for views and controllers.
 ```ruby
 class DasboardController < ApplicationController
   def dashboard
-    @comments = cell(:comment, Comment.recent).()
-    @traffic  = cell(:report, TrafficReport.find(1))
+    @comments = cell(:comment, collection: Comment.recent)
+    @traffic  = cell(:report, TrafficReport.find(1)).()
   end
 ```
 
