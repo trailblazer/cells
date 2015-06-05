@@ -43,6 +43,7 @@ module Cell
 
 
     def render_state(state, *args)
+      state = state.to_sym
       return super(state, *args) unless cache?(state, *args)
 
       key     = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))

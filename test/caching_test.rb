@@ -140,91 +140,98 @@ class CachingTest < MiniTest::Spec
   end
 
   # let (:cell) { DirectorCell.new(nil) }
-  def cellule(*args)
+  def director_cell(*args)
     DirectorCell.new(*args)
   end
 
   # no caching when turned off.
   it do
-    cellule.class.cache :show
+    director_cell.class.cache :show
     ActionController::Base.perform_caching = false
 
-    cellule(1).call.must_equal "1"
-    cellule(2).call.must_equal "2"
+    director_cell(1).call.must_equal "1"
+    director_cell(2).call.must_equal "2"
   end
 
   # cache forever when no options.
   it do
-    cellule.class.cache :show
-    cellule(1).call.must_equal "1"
-    cellule(2).call.must_equal "1"
+    director_cell.class.cache :show
+    director_cell(1).call.must_equal "1"
+    director_cell(2).call.must_equal "1"
+  end
+
+   # caches with string state name.
+  it do
+    director_cell.class.cache :show
+    director_cell(1).("show").must_equal "1"
+    director_cell(2).("show").must_equal "1"
   end
 
 
   # no caching when state not configured.
   it do
-    cellule.class.class_eval do
+    director_cell.class.class_eval do
       def dictate
         @counter
       end
     end
 
-    cellule(1).call(:dictate).must_equal "1"
-    cellule(2).call(:dictate).must_equal "2"
+    director_cell(1).call(:dictate).must_equal "1"
+    director_cell(2).call(:dictate).must_equal "2"
   end
 
   # compute key with cell properties from #initialize.
   it do
-    cellule.class.cache :show do
+    director_cell.class.cache :show do
       @counter < 3 ? {:count => "<"} : {:count => ">"}
     end
 
-    cellule(1).call.must_equal "1"
-    cellule(2).call.must_equal "1"
-    cellule(3).call.must_equal "3"
-    cellule(4).call.must_equal "3"
+    director_cell(1).call.must_equal "1"
+    director_cell(2).call.must_equal "1"
+    director_cell(3).call.must_equal "3"
+    director_cell(4).call.must_equal "3"
   end
 
   # compute key with instance method
   it do
-    cellule.class.cache :show, :version
-    cellule.class.class_eval do
+    director_cell.class.cache :show, :version
+    director_cell.class.class_eval do
       def version
         @counter < 3 ? {:count => "<"} : {:count => ">"}
       end
     end
 
-    cellule(1).call.must_equal "1"
-    cellule(2).call.must_equal "1"
-    cellule(3).call.must_equal "3"
-    cellule(4).call.must_equal "3"
+    director_cell(1).call.must_equal "1"
+    director_cell(2).call.must_equal "1"
+    director_cell(3).call.must_equal "3"
+    director_cell(4).call.must_equal "3"
   end
 
   # allow returning strings for key
   it do
-    cellule.class.cache :show do
+    director_cell.class.cache :show do
       @counter < 3 ? "<" : ">"
     end
 
-    cellule(1).call.must_equal "1"
-    cellule(2).call.must_equal "1"
-    cellule(3).call.must_equal "3"
-    cellule(4).call.must_equal "3"
+    director_cell(1).call.must_equal "1"
+    director_cell(2).call.must_equal "1"
+    director_cell(3).call.must_equal "3"
+    director_cell(4).call.must_equal "3"
   end
 
   # allows conditional ifs.
   it do
-    cellule.class.cache :show, if: lambda { @counter < 3 }
+    director_cell.class.cache :show, if: lambda { @counter < 3 }
 
-    cellule(1).call.must_equal "1"
-    cellule(2).call.must_equal "1"
-    cellule(3).call.must_equal "3"
-    cellule(4).call.must_equal "4"
+    director_cell(1).call.must_equal "1"
+    director_cell(2).call.must_equal "1"
+    director_cell(3).call.must_equal "3"
+    director_cell(4).call.must_equal "4"
   end
 
   # allows conditional ifs with instance method.
   it do
-    cellule.class.class_eval do
+    director_cell.class.class_eval do
       cache :show, if: :smaller?
 
       def smaller?
@@ -232,22 +239,22 @@ class CachingTest < MiniTest::Spec
       end
     end
 
-    cellule(1).call.must_equal "1"
-    cellule(2).call.must_equal "1"
-    cellule(3).call.must_equal "3"
-    cellule(4).call.must_equal "4"
+    director_cell(1).call.must_equal "1"
+    director_cell(2).call.must_equal "1"
+    director_cell(3).call.must_equal "3"
+    director_cell(4).call.must_equal "4"
   end
 
 
   unless ::ActionPack::VERSION::MAJOR == 3 and ::ActionPack::VERSION::MINOR >= 2 # bug in 3.2.
     describe "utf-8" do
       before do
-        @key = cellule.class.state_cache_key(:utf8)
+        @key = director_cell.class.state_cache_key(:utf8)
       end
 
       it "has the correct encoding when reading from cache" do
-        assert_equal "UTF-8", cellule.call(:utf8).encoding.to_s
-        assert_equal "UTF-8", cellule.cache_store.read(@key).encoding.to_s
+        assert_equal "UTF-8", director_cell.call(:utf8).encoding.to_s
+        assert_equal "UTF-8", director_cell.cache_store.read(@key).encoding.to_s
       end
     end
   end
@@ -264,7 +271,7 @@ class CachingTest < MiniTest::Spec
   end
 
   it do
-    cellule = self.cellule
+    cellule = self.director_cell
 
     cellule.instance_eval do
       def cache_store;
