@@ -26,7 +26,11 @@ class UrlTest < ActionDispatch::IntegrationTest
 
   it do
     visit "/songs/new" # cell.url_for(Song.new)
-
     page.text.must_equal "http://www.example.com/songs/1"
   end
+
+  # it do
+  #   visit "/songs/1/edit"
+  #   page.text.must_equal "http://www.example.com/songs/1"
+  # end
 end

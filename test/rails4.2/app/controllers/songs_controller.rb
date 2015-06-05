@@ -10,4 +10,8 @@ class SongsController < ApplicationController
   def new
     render text: cell(:song).url_for(Song.new)
   end
+
+  # def edit
+  #   render text: cell(:song).video_path(Song.new)
+  # end
 end
