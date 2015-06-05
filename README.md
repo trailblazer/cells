@@ -7,7 +7,7 @@
 
 Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
 
-Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, nesting, view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing
+Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, nesting, view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, and [integrate with Trailblazer](#concept-cells).
 
 ## Rendering Cells
 
@@ -164,9 +164,50 @@ class CommentCell < Cell::ViewModel
 end
 ```
 
+## Concept Cells
+
+Normally, a cell named `CommentCell` would keep the following directory structure.
+
+```
+app
+├── cells
+│   ├── comment_cell.rb
+│   ├── comment
+│   │   ├── show.haml
+```
+
+To have real self-contained cells you should use the new _concept cell_ which follows the [Trailblazer](http://trailblazerb.org) naming style. Concept cells need to be derived from `Cell::Concept`, have a namespace and are usually named `Cell`.
+
+```ruby
+class Comment::Cell < Cell::Concept
+  # ..
+end
+```
+
+Their directory structure looks as follows.
+
+```
+app
+├── concepts
+│   ├── comment
+│   │   ├── cell.rb
+│   │   ├── views
+│   │   │   ├── show.haml
+```
+
+This integrates with Trailblazer where classes for one _concept_ sit in the same directory. Please [read the book](http://leanpub.com/trailblazer) to learn how to use cells with Trailblazer.
+
+Concept cells are rendered using the `concept` helper.
+
+```erb
+<%= concept("comment/cell", @comment) %>
+```
+
+Other than that, normal cells and concept cells are identical.
+
 ## Namespaces
 
-Cells can be namespaced as well.
+Cells can be namespaced as well. This is used for [concept cells](#concept-cells), too.
 
 ```ruby
 module Admin
