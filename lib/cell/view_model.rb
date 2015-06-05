@@ -1,9 +1,3 @@
-# no helper_method calls
-# no instance variables
-# no locals
-# options are automatically made instance methods via constructor.
-# call "helpers" in class
-
 # TODO: warn when using ::property but not passing in model in constructor.
 module Cell
   class ViewModel
@@ -35,11 +29,6 @@ module Cell
     def self.controller_path
       @controller_path ||= util.underscore(name.sub(/Cell$/, ''))
     end
-
-    # FIXME: this is all rails-only.
-    # DISCUSS: who actually uses forgery protection with cells? it is not working since 4, anyway?
-    # include ActionController::RequestForgeryProtection
-    delegates :parent_controller, :session, :params, :request, :config, :env, :url_options
 
     attr_reader :model
 

@@ -34,6 +34,13 @@ module Cell
     module ViewModel
       extend ActiveSupport::Concern
 
+      # DISCUSS: who actually uses forgery protection with cells? it is not working since 4, anyway?
+      # include ActionController::RequestForgeryProtection
+      included do
+        extend Uber::Delegates
+        delegates :parent_controller, :session, :params, :request, :config, :env, :url_options
+      end
+
       def call(*)
         super.html_safe
       end

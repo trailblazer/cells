@@ -6,4 +6,8 @@ class SongsController < ApplicationController
   def index
     render text: cell(:song).()
   end
+
+  def new
+    render text: cell(:song).url_for(Song.new)
+  end
 end
