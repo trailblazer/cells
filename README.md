@@ -7,7 +7,7 @@
 
 Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
 
-Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, nesting, view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, caching, and [integrate with Trailblazer](#concept-cells).
+Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, nesting, view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](#concept-cells).
 
 ## Rendering Cells
 
@@ -215,8 +215,23 @@ Views will be searched in `app/cells/admin/comment` per default.
 
 ## Rails Helper API
 
-including helpers.
-link_to in cell
+Even in a non-Rails environment, Cells provides the Rails view API and allows using all Rails helpers.
+
+You have to include all helper modules into your cell class. You can then use `link_to`, `simple_form_for` or whatever you feel like.
+
+```ruby
+class CommentCell < Cell::ViewModel
+  include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::CaptureHelper
+
+  def author_link
+    content_tag :div, link_to(author.name, author)
+  end
+```
+
+As always, you can use helpers in cells and in views.
+
+You might run into problems with wrong escaping or missing URL helpers. This is not Cells' fault but Rails suboptimal way of implementing and interfacing their helpers. Please open the actionview gem helper code and try figuring out the problem yourself before bombarding us with issues because helper `xyz` doesn't work.
 
 
 ## View Paths
@@ -279,7 +294,42 @@ cell(:comment, collection: comments, method: :list)
 
 Note that you _don't_ need to invoke call here, the `:collection` behavior internally handles that for you.
 
+Additional options are passed to every cell constructor.
 
+```ruby
+cell(:comment, collection: comments, style: "awesome", volume: "loud")
+```
+
+## Caching
+
+For every cell class you can define caching per state. Without any configuration the cell will run and render the state once. In following invocations, the cached fragment is returned.
+
+```ruby
+class CommentCell < Cell::ViewModel
+  cache :show
+
+  # ..
+end
+```
+
+The `::cache` method will forward options to the caching engine.
+
+```ruby
+cache :show, expires_in: 10.minutes
+```
+
+You can also compute your own cache key, use dynamic keys, cache tags, and so on.
+
+```ruby
+cache :show { |model, options| "comment/#{model.id}/#{model.updated_at}" }
+cache :show, :if => lambda { |*| has_changed? }
+cache :show, :tags: lambda { |model, options| "comment-#{model.id}" }
+```
+
+Caching is documented [here](http://trailblazerb.org/gems/cells/caching.html) and in chapter 8 of the [Trailblazer book](http://leanpub.com/trailblazer).
+
+
+---------------------------------------
 
  This is available via the `model` method. Declarative `::property`s give you readers to the model.
 
@@ -576,113 +626,6 @@ class Comment::FormCell < Cell::Rails
 
 When rendering views in `FormCell`, the view directories to look for templates will be inherited.
 
-
-## Caching
-
-Cells allow you to cache per state. It's simple: the rendered result of a state method is cached and expired as you configure it.
-
-To cache forever, don't configure anything
-
-```ruby
-class CartCell < Cell::Rails
-  cache :show
-
-  def show
-    render
-  end
-```
-
-This will run `#show` only once, after that the rendered view comes from the cache.
-
-
-### Cache Options
-
-Note that you can pass arbitrary options through to your cache store. Symbols are evaluated as instance methods, callable objects (e.g. lambdas) are evaluated in the cell instance context allowing you to call instance methods and access instance variables. All arguments passed to your state (e.g. via `render_cell`) are propagated to the block.
-
-```ruby
-cache :show, :expires_in => 10.minutes
-```
-
-If you need dynamic options evaluated at render-time, use a lambda.
-
-```ruby
-cache :show, :tags => lambda { |*args| tags }
-```
-
-If you don't like blocks, use instance methods instead.
-
-```ruby
-class CartCell < Cell::Rails
-  cache :show, :tags => :cache_tags
-
-  def cache_tags(*args)
-    # do your magic..
-  end
-```
-
-### Conditional Caching
-
-The +:if+ option lets you define a condition. If it doesn't return a true value, caching for that state is skipped.
-
-```ruby
-cache :show, :if => lambda { |*| has_changed? }
-```
-
-### Cache Keys
-
-You can expand the state's cache key by appending a versioner block to the `::cache` call. This way you can expire state caches yourself.
-
-```ruby
-class CartCell < Cell::Rails
-  cache :show do |options|
-    order.id
-  end
-```
-
-The versioner block is executed in the cell instance context, allowing you to access all stakeholder objects you need to compute a cache key. The return value is appended to the state key: `"cells/cart/show/1"`.
-
-As everywhere in Rails, you can also return an array.
-
-```ruby
-class CartCell < Cell::Rails
-  cache :show do |options|
-    [id, options[:items].md5]
-  end
-```
-
-Resulting in: `"cells/cart/show/1/0ecb1360644ce665a4ef"`.
-
-
-### Debugging Cache
-
-When caching is turned on, you might wanna see notifications. Just like a controller, Cells gives you the following notifications.
-
-* `write_fragment.action_controller` for cache miss.
-* `read_fragment.action_controller` for cache hits.
-
-To activate notifications, include the `Notifications` module in your cell.
-
-```ruby
-class Comment::Cell < Cell::Rails
-  include Cell::Caching::Notifications
-```
-
-### Inheritance
-
-Cache configuration is inherited to derived cells.
-
-
-
-### A Note On Fragment Caching
-
-Fragment caching is [not implemented in Cells per design](http://nicksda.apotomo.de/2011/02/rails-misapprehensions-caching-views-is-not-the-views-job/) - Cells tries to move caching to the class layer enforcing an object-oriented design rather than cluttering your views with caching blocks.
-
-If you need to cache a part of your view, implement that as another cell state.
-
-
-### Testing Caching
-
-If you want to test it in `development`, you need to put `config.action_controller.perform_caching = true` in `development.rb` to see the effect.
 
 
 
