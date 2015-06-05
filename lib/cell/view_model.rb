@@ -45,20 +45,17 @@ module Cell
 
 
     module Helpers
-      # Renders collection of cells.
-      def _collection(name, array, options) # private.
-        method = options.delete(:method) || :show
-        join   = options.delete(:collection_join)
-        array.collect { |model| cell_for(name, *[model, options]).call(method) }.join(join).html_safe
+      # Constantizes name, call builders and returns instance.
+      def cell(name, *args, &block) # classic Rails fuzzy API.
+        class_from_cell_name(name).(*args, &block)
       end
 
-      # Returns cell instance.
-      def cell(name, model=nil, options={}, &block) # classic Rails fuzzy API.
-        if model.is_a?(Hash) and array = model.delete(:collection)
-          return _collection(name, array, model.merge(options))
-        end
-
-        cell_for(name, model, options, &block)
+    private
+      # Renders collection of cells.
+      def render_collection(array, options) # private.
+        method = options.delete(:method) || :show
+        join   = options.delete(:collection_join)
+        array.collect { |model| build(*[model, options]).call(method) }.join(join).html_safe
       end
     end
     extend Helpers
@@ -71,18 +68,25 @@ module Cell
 
       include Helpers
 
-      # DISCUSS: introduce ::for which takes constant? rename ::build_cell to ::build?
+      # Public entry point. Use this to instantiate cells with builders.
+      #
+      #   SongCell.(@song)
+      #   SongCell.(collection: Song.all)
+      def call(model=nil, options={}, &block)
+        if model.is_a?(Hash) and array = model.delete(:collection)
+          return render_collection(array, model.merge(options))
+        end
 
-      def cell_for(name, *args)
-        class_from_cell_name(name).build_cell(*args)
+        build(model, options)
       end
 
+      def build(*args) # semi-public.
+        class_builder.call(*args).new(*args) # Uber::Builder::class_builder.
+      end
+
+    private
       def class_from_cell_name(name)
         "#{name}_cell".classify.constantize
-      end
-
-      def build_cell(*args)
-        class_builder.call(*args).new(*args) # Uber::Builder::class_builder.
       end
     end
 
