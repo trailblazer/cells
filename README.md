@@ -22,7 +22,7 @@ Rendering a cell in Rails ironically happens via a helper.
 This boils down to the following invocation, that can be used to render cells in *any other Ruby* environment.
 
 ```ruby
-CommentCell.build(@comment).()
+CommentCell.(@comment).()
 ```
 
 In Rails you have the same helper API for views and controllers.
