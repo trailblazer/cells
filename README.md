@@ -2,12 +2,16 @@
 
 *View Components for Ruby and Rails.*
 
-
 ## Overview
 
 Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
 
 Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, nesting, view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](#concept-cells).
+
+## This is not Cells 3.x!
+
+Temporary note: This is the README and API for Cells 4. Many things have improved. If you want to upgrade, [follow this guide](https://github.com/apotonick/cells/wiki/From-Cells-3-to-Cells-4---Upgrading-Guide). When in trouble, join us on the IRC (Freenode) #trailblazer channel.
+
 
 ## Rendering Cells
 

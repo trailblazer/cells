@@ -11,10 +11,6 @@ module Cell
       end
     end
 
-    # initializer 'cells.template_engine' do |app|
-    #   ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
-    # end
-
     # ruthlessly stolen from the zurb-foundation gem.
     initializer 'cells.update_asset_paths' do |app|
       Array(app.config.cells.with_assets).each do |cell_class|
@@ -38,7 +34,7 @@ module Cell
     end
 
     initializer "cells.include_default_helpers" do
-      #include assert helpers (image_path, font_path, ect)
+      # include asset helpers (image_path, font_path, ect)
       ViewModel.class_eval do
         include ActionView::Helpers::UrlHelper
         include ::Cell::RailsExtensions::HelpersAreShit
@@ -58,6 +54,7 @@ module Cell
       ViewModel.send(:include, Cell::Haml) if Cell.const_defined?(:Haml)
       ViewModel.send(:include, Cell::Slim) if Cell.const_defined?(:Slim)
     end
+    #   ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
 
     initializer('cells.development') do |app|
       if Rails.env == "development"

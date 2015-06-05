@@ -18,6 +18,10 @@
 
 * When using HAML, we do not use any of HAML's helper hacks to "fix" ActionView and XSS. While you might not note this, it removes tons of code from our stack.
 
+## 4.0.0.rc1
+
+* Move delegations of `#url_options` etc. to the railtie, which makes it work.
+
 ## 4.0.0.beta6
 
 * Removed `ViewModel::template_engine`. This is now done explicitly by including `Cell::Erb`, etc. and happens automatically in a Rails environment.
