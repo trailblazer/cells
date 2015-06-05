@@ -7,7 +7,7 @@
 
 Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
 
-Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, nesting, view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, and [integrate with Trailblazer](#concept-cells).
+Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, nesting, view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, caching, and [integrate with Trailblazer](#concept-cells).
 
 ## Rendering Cells
 
@@ -166,17 +166,7 @@ end
 
 ## Concept Cells
 
-Normally, a cell named `CommentCell` would keep the following directory structure.
-
-```
-app
-├── cells
-│   ├── comment_cell.rb
-│   ├── comment
-│   │   ├── show.haml
-```
-
-To have real self-contained cells you should use the new _concept cell_ which follows the [Trailblazer](http://trailblazerb.org) naming style. Concept cells need to be derived from `Cell::Concept`, have a namespace and are usually named `Cell`.
+To have real self-contained cells you should use the new _concept cell_ which follows the [Trailblazer](http://trailblazerb.org) naming style. Concept cells need to be derived from `Cell::Concept`, sit in a namespace and are usually named `Cell`.
 
 ```ruby
 class Comment::Cell < Cell::Concept
