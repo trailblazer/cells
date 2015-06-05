@@ -11,6 +11,8 @@ Nevertheless, a cell gives you more than just a template renderer. They allow pr
 
 ## Rendering Cells
 
+You can render cells anywhere and as many as you want, in views, controllers, composites, mailers, etc.
+
 Rendering a cell in Rails ironically happens via a helper.
 
 ```ruby
@@ -23,11 +25,14 @@ This boils down to the following invocation, that can be used to render cells in
 CommentCell.build(@comment).()
 ```
 
-You can render cells anywhere you want, views, controllers, composites, mailers, etc. In Rails you have the same helper API for views and controllers.
+In Rails you have the same helper API for views and controllers.
 
 ```ruby
-def dashboard
-  @comments = cell(:comment, Comment.recent).()
+class DasboardController < ApplicationController
+  def dashboard
+    @comments = cell(:comment, Comment.recent).()
+    @traffic  = cell(:report, TrafficReport.find(1))
+  end
 ```
 
 Usually, you'd pass in one or more objects you want the cell to present. That can be an ActiveRecord model, a ROM instance or any kind of PORO you fancy.
@@ -159,6 +164,24 @@ class CommentCell < Cell::ViewModel
 end
 ```
 
+## Namespaces
+
+Cells can be namespaced as well.
+
+```ruby
+module Admin
+  class CommentCell < Cell::ViewModel
+```
+
+Invocation in Rails would happen as follows.
+
+```ruby
+cell("admin/comment", @comment).()
+```
+
+Views will be searched in `app/cells/admin/comment` per default.
+
+
 ## Rails Helper API
 
 including helpers.
@@ -197,7 +220,7 @@ def show
 end
 ```
 
-You can even render other cells using the exact same API.
+You can even render other cells _within_ a cell using the exact same API.
 
 ```ruby
 def about
@@ -217,7 +240,7 @@ comments = Comment.all #=> three comments.
 cell(:comment, collection: comments)
 ```
 
-This will invoke `cell(:comment, song).()` three times and concatenate the rendered output automatically. In case you don't want `show` but another state rendered, use `:method).
+This will invoke `cell(:comment, song).()` three times and concatenate the rendered output automatically. In case you don't want `show` but another state rendered, use `:method`.
 
 ```ruby
 cell(:comment, collection: comments, method: :list)
