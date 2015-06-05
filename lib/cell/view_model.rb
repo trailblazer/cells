@@ -185,10 +185,11 @@ module Cell
     module TemplateFor
       def find_template(options)
         template_options = template_options_for(options) # imported by Erb, Haml, etc.
+        # required options: :template_class, :suffix. everything else is passed to the template implementation.
 
         view      = options[:view]
         prefixes  = options[:prefixes]
-        suffix    = template_options[:suffix]
+        suffix    = template_options.delete(:suffix)
         view      = "#{view}.#{suffix}"
 
         template_for(prefixes, view, template_options) or raise TemplateMissingError.new(prefixes, view)
