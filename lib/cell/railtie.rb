@@ -2,6 +2,7 @@ require 'rails/railtie'
 
 module Cell
   class Railtie < Rails::Railtie
+    require 'cells'
     require 'cell/rails'
     config.cells = ActiveSupport::OrderedOptions.new
 
