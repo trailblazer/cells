@@ -154,6 +154,22 @@ class CommentCell < Cell::ViewModel
 end
 ```
 
+## HTML Escaping
+
+Cells per default does no HTML escaping, anywhere. Include `Escaped` to make property readers return escaped strings.
+
+```ruby
+class CommentCell < Cell::ViewModel
+  include Escaped
+
+  property :title
+end
+
+song.title                 #=> "<script>Dangerous</script>"
+Comment::Cell.(song).title #=> &lt;script&gt;Dangerous&lt;/script&gt;
+```
+
+Properties and escaping are [documented here](http://trailblazerb.org/gems/cells/api.html#html-escaping).
 
 ## Installation
 

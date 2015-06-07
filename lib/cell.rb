@@ -29,6 +29,7 @@ require "cell/abstract"
 require "cell/util"
 require "cell/view_model"
 require "cell/concept"
+require "cell/escaped"
 
 
 require "cell/railtie" if defined?(Rails)
