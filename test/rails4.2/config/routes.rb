@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   resources :songs
 
   get "songs/with_image_tag"
+  get "songs/with_escaped"
 end

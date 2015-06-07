@@ -18,4 +18,8 @@ class SongsController < ApplicationController
   def with_image_tag
     render text: cell(:song).image_tag("logo.png")
   end
+
+  def with_escaped
+    render layout: false
+  end
 end

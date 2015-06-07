@@ -1,4 +1,4 @@
-class Song
+class Song < OpenStruct
   require "active_model"
   include ActiveModel::Conversion
   extend ActiveModel::Naming

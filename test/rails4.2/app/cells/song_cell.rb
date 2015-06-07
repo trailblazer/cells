@@ -1,8 +1,14 @@
 class SongCell < Cell::ViewModel
+  include Escaped
+  property :title
+
   def show
     "happy"
   end
 
+  def with_escaped
+    render
+  end
   # include ActionView::Helpers::AssetUrlHelper
   # include Sprockets::Rails::Helper
 
