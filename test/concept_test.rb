@@ -63,12 +63,19 @@ class ConceptTest < MiniTest::Spec
     it { Cell::Concept.cell("record/cell/song").show.must_equal "Lalala" }
   end
 
-  describe "#cell (in cell state)" do
+
+  class RecordCell < Cell::ViewModel
+    def description
+      "Record! A Tribute To Rancid, with #{@options[:tracks]} songs! [#{parent_controller}]"
+    end
+  end
+
+  describe "#cell (in state)" do
     # test with controller, but remove tests when we don't need it anymore.
-    it { Cell::Concept.cell("record/cell", nil, controller: Object).cell("record/cell", nil, tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [Object]" }
+    it { Cell::Concept.cell("record/cell", nil, controller: Object).cell("concept_test/record", nil, tracks: 24).(:description).must_equal "Record! A Tribute To Rancid, with 24 songs! [Object]" }
     it { Cell::Concept.cell("record/cell", nil, controller: Object).concept("record/cell", nil, tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [Object]" }
     # concept(.., collection: ..)
-    it("xx")  { Cell::Concept.cell("record/cell", nil, controller: Object).
+    it { Cell::Concept.cell("record/cell", nil, controller: Object).
       concept("record/cell", collection: [1,2], tracks: 24, method: :description).must_equal "A Tribute To Rancid, with 24 songs! [Object]A Tribute To Rancid, with 24 songs! [Object]" }
   end
 end
