@@ -1,10 +1,10 @@
 ## 4.0.0
 
-* **Rails Support:** Rails 3.2+ is fully supported, in older versions some form helpers do not work. Let us know if you need this.
+* **Rails Support:** Rails 4.0+ is fully supported, in older versions some form helpers do not work. Let us know how you fixed this.
 * **State args:** View models don't use state args. Options are passed into the constructor and saved there. That means that caching callbacks no longer receive arguments as everything is available via the instance itself.
 * `ViewModel.new(song: song)` won't automatically create a reader `#song`. You have to configure the cell to use a Struct twin {TODO: document}
-* **HTML Escaping:** Output is only escaped once, when using a reader method _in the view_. This highly speeds up rendering and removes the need to use `html_safe` on every string in the stack.
-* **Template Engines:** There's now _one_ template engine (e.g. ERB or HAML) per cell class. It can be set using `ViewModel::template_engine=`. In 99.9% of all cases a single application uses one single template engine application-wide, there's no need to manage code and waste lookup time for two alternative engines within one cell.
+* **HTML Escaping:** Escaping only happens for defined `property`s when `Escaped` is included.
+* **Template Engines:** There's now _one_ template engine (e.g. ERB or HAML) per cell class. It can be set by including the respective module (e.g. `Cell::Erb`) into the cell class. This happens automatically in Rails.
 * **File Naming**. The default filename just uses the engine suffix, e.g. `show.haml`. If you have two different engine formats (e.g. `show.haml` and `show.erb`), use the `format:` option: `render format: :erb`.
     If you need to render a specific mime type, provide the filename: `render view: "show.html"`.
 * Builder blocks are no longer executed in controller context but in the context they were defined. This is to remove any dependencies to the controller. If you need e.g. `params`, pass them into the `#cell(..)` call.
@@ -13,10 +13,8 @@
 ### Removed
 
 * `Cell::Rails` and `Cell::Base` got removed. Every cell is `ViewModel` or `Concept` now.
+* All methods from `AbstractController` are gone. This might give you trouble in case you were using `helper_method`. You don't need this anymore - every method included in the cell class is a "helper" in the view (it's one and the same method call).
 
-### Internals
-
-* When using HAML, we do not use any of HAML's helper hacks to "fix" ActionView and XSS. While you might not note this, it removes tons of code from our stack.
 
 ## 4.0.0.rc2
 
