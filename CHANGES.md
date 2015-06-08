@@ -19,6 +19,7 @@
 ## 4.0.0.rc2
 
 * Include `#protect_from_forgery?` into Rails cells. It returns false currently.
+* Fix `Concept#cell` which now instantiates a cell, not a concept cell.
 
 ## 4.0.0.rc1
 
