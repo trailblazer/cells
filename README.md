@@ -184,7 +184,7 @@ gem 'cells', "~> 4.0.0"
 Various template engines are supported but need to be added to your Gemfile.
 
 * [cells-erb](https://github.com/trailblazer/cells-erb)
-* [cells-haml](https://github.com/trailblazer/cells-haml) Make sure to bundle Haml 4.1: `gem "haml", github: "haml/haml"`.
+* [cells-haml](https://github.com/trailblazer/cells-haml) Make sure to bundle Haml 4.1: `gem "haml", github: "haml/haml", ref: "7c7c169"`.
 * [cells-slim](https://github.com/trailblazer/cells-slim)
 
 ```ruby
