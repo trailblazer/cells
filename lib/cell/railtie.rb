@@ -57,7 +57,7 @@ module Cell
     #   ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
 
     initializer('cells.development') do |app|
-      if Rails.env == "development"
+      if ::Rails.env == "development"
         require "cell/development"
         ViewModel.send(:include, Development)
       end
