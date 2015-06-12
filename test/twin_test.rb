@@ -20,7 +20,7 @@
 #     end
 #   end
 
-#   let (:model) { OpenStruct.new(:title => "Kenny") }
+#   let (:model) { OpenStruct.new(title: "Kenny") }
 
 #   it { SongCell.new( model, :online? => true).call.must_equal "kenny is true" }
 # end

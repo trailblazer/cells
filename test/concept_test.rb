@@ -16,7 +16,7 @@ module Record
     # cell(:song, concept: :record)
     class Song < self # cell("record/cell/song")
       def show
-        render :view => :song#, :layout => "layout"
+        render view: :song#, layout: "layout"
         # TODO: test layout: .. in ViewModel
       end
     end

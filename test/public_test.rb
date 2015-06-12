@@ -20,7 +20,7 @@ class PublicTest < MiniTest::Spec
   it { Cell::ViewModel.cell("public_test/song").must_be_instance_of SongCell }
 
   # ViewModel.cell passes options to cell.
-  it { Cell::ViewModel.cell("public_test/song", Object, genre: "Metal").initialize_args.must_equal [Object, {:genre=>"Metal"}] }
+  it { Cell::ViewModel.cell("public_test/song", Object, genre: "Metal").initialize_args.must_equal [Object, {genre:"Metal"}] }
 
   # ViewModel.cell(collection: []) renders cells.
   it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module]).must_equal '[Object, {}][Module, {}]' }
@@ -32,7 +32,7 @@ class PublicTest < MiniTest::Spec
   it { Cell::ViewModel.cell("public_test/song", collection: [Object]).class.must_equal ActiveSupport::SafeBuffer }
 
   # ViewModel.cell(collection: []) passes generic options to cell.
-  it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module], genre: 'Metal').must_equal "[Object, {:genre=>\"Metal\"}][Module, {:genre=>\"Metal\"}]" }
+  it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module], genre: 'Metal').must_equal "[Object, {genre:\"Metal\"}][Module, {genre:\"Metal\"}]" }
 
   # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
   it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module], method: :detail).must_equal '* [Object, {}]* [Module, {}]' }

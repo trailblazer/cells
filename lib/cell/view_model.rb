@@ -129,7 +129,7 @@ module Cell
       def with_layout(options, content)
         return content unless layout = options[:layout]
 
-        template = find_template(options.merge :view => layout) # we could also allow a different layout engine, etc.
+        template = find_template(options.merge view: layout) # we could also allow a different layout engine, etc.
 
         render_template(template, options) { content }
       end
@@ -200,9 +200,9 @@ module Cell
     def normalize_options(options, caller) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
         # TODO: speedup by not doing state_for_implicit_render.
-        {:view => state_for_implicit_render(caller)}.merge(options)
+        {view: state_for_implicit_render(caller)}.merge(options)
       else
-        {:view => options.to_s}
+        {view: options.to_s}
       end
 
       options[:prefixes] ||= _prefixes

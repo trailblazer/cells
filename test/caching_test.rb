@@ -104,10 +104,10 @@ class CachingUnitTest < MiniTest::Spec
   #   end
 
   #   it "accept cache options" do
-  #     key = @class.state_cache_key(:tock, :volume => 9)
+  #     key = @class.state_cache_key(:tock, volume: 9)
   #     assert Cell::Rails.cache_store.write(key, 'ONE!')
 
-  #     MusicianController.new.expire_cell_state(DirectorCell, :tock, :volume => 9)
+  #     MusicianController.new.expire_cell_state(DirectorCell, :tock, volume: 9)
   #     assert_equal "1", @class.cache_store.read(@key)
   #     assert_not ::Cell::Rails.cache_store.read(key)
   #   end
@@ -183,7 +183,7 @@ class CachingTest < MiniTest::Spec
   # compute key with cell properties from #initialize.
   it do
     director_cell.class.cache :show do
-      @counter < 3 ? {:count => "<"} : {:count => ">"}
+      @counter < 3 ? {count: "<"} : {count: ">"}
     end
 
     director_cell(1).call.must_equal "1"
@@ -197,7 +197,7 @@ class CachingTest < MiniTest::Spec
     director_cell.class.cache :show, :version
     director_cell.class.class_eval do
       def version
-        @counter < 3 ? {:count => "<"} : {:count => ">"}
+        @counter < 3 ? {count: "<"} : {count: ">"}
       end
     end
 
@@ -261,7 +261,7 @@ class CachingTest < MiniTest::Spec
 
   # options are passed through to cache store.
   # :expires_in.
-  # :tags => lambda { |one, two, three| "#{one},#{two},#{three}" }
+  # tags: lambda { |one, two, three| "#{one},#{two},#{three}" }
   class CacheStore
     attr_reader :fetch_args
 
@@ -288,7 +288,7 @@ end
 
 class CachingInheritanceTest < CachingTest
   class DirectorCell < ::DirectorCell
-    cache :show, :expires_in => 10.minutes do
+    cache :show, expires_in: 10.minutes do
       "v1"
     end
   end
@@ -297,7 +297,7 @@ class CachingInheritanceTest < CachingTest
   end
 
   class DirectorsDaughterCell < ::DirectorCell
-    cache :show, :expires_in => 9.minutes do
+    cache :show, expires_in: 9.minutes do
       "v2"
     end
   end

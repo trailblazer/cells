@@ -45,7 +45,7 @@ class BuilderTest < MiniTest::Spec
   it do
     cell = SongCell.(Song.new("San Francisco"), evergreen: true)
     cell.must_be_instance_of EvergreenCell
-    cell.options.must_equal({:evergreen=>true})
+    cell.options.must_equal({evergreen:true})
   end
 
   # without arguments.
