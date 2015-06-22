@@ -46,7 +46,7 @@ Usually, you'd pass in one or more objects you want the cell to present. That ca
 A cell is a light-weight class with one or multiple methods that render views.
 
 ```ruby
-class Comment::Cell < Cell::ViewModel
+class CommentCell < Cell::ViewModel
   property :body
   property :author
 
