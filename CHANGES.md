@@ -1,3 +1,7 @@
+## 4.0.1
+
+* Support forgery protection in `form_tag`.
+
 ## 4.0.0
 
 * **Rails Support:** Rails 4.0+ is fully supported, in older versions some form helpers do not work. Let us know how you fixed this.
