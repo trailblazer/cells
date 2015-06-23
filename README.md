@@ -12,6 +12,47 @@ Nevertheless, a cell gives you more than just a template renderer. They allow pr
 
 Temporary note: This is the README and API for Cells 4. Many things have improved. If you want to upgrade, [follow this guide](https://github.com/apotonick/cells/wiki/From-Cells-3-to-Cells-4---Upgrading-Guide). When in trouble, join us on the IRC (Freenode) #trailblazer channel.
 
+## Installation
+
+Cells run with all Rails >= 4.0. Lower versions of Rails will still run with Cells, but you will get in trouble with the helpers.
+
+```ruby
+gem 'cells', "~> 4.0.0"
+```
+
+(Note: we use Cells in production with Rails 3.2 and Haml and it works great.)
+
+Various template engines are supported but need to be added to your Gemfile.
+
+* [cells-erb](https://github.com/trailblazer/cells-erb)
+* [cells-haml](https://github.com/trailblazer/cells-haml) Make sure to bundle Haml 4.1: `gem "haml", github: "haml/haml", ref: "7c7c169"`.
+* [cells-slim](https://github.com/trailblazer/cells-slim)
+
+```ruby
+gem "cells-erb"
+```
+
+In Rails, this is all you need to do. In other environments, you need to include the respective module into your cells.
+
+```ruby
+class CommentCell < Cell::ViewModel
+  include ::Cell::Erb # or Cell::Haml, or Cell::Slim
+end
+```
+
+## Generators
+
+In Rails, you can generate cells and concept cells.
+
+```shell
+rails generate cell comment
+```
+
+Or.
+
+```shell
+rails generate concept comment
+```
 
 ## Rendering Cells
 
@@ -170,49 +211,6 @@ Comment::Cell.(song).title #=> &lt;script&gt;Dangerous&lt;/script&gt;
 ```
 
 Properties and escaping are [documented here](http://trailblazerb.org/gems/cells/api.html#html-escaping).
-
-## Installation
-
-Cells run with all Rails >= 4.0. Lower versions of Rails will still run with Cells, but you will get in trouble with the helpers.
-
-```ruby
-gem 'cells', "~> 4.0.0"
-```
-
-(Note: we use Cells in production with Rails 3.2 and Haml and it works great.)
-
-Various template engines are supported but need to be added to your Gemfile.
-
-* [cells-erb](https://github.com/trailblazer/cells-erb)
-* [cells-haml](https://github.com/trailblazer/cells-haml) Make sure to bundle Haml 4.1: `gem "haml", github: "haml/haml", ref: "7c7c169"`.
-* [cells-slim](https://github.com/trailblazer/cells-slim)
-
-```ruby
-gem "cells-erb"
-```
-
-In Rails, this is all you need to do. In other environments, you need to include the respective module into your cells.
-
-```ruby
-class CommentCell < Cell::ViewModel
-  include ::Cell::Erb # or Cell::Haml, or Cell::Slim
-end
-```
-
-## Generators
-
-In Rails, you can generate cells and concept cells.
-
-```shell
-rails generate cell comment
-```
-
-Or.
-
-```shell
-rails generate concept comment
-```
-
 
 ## Concept Cells
 
