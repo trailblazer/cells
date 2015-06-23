@@ -39,10 +39,8 @@ module Cell
       included do
         extend Uber::Delegates
         delegates :parent_controller, :session, :params, :request, :config, :env, :url_options
-      end
-
-      def protect_against_forgery? # TODO: implement forgery protection with ActionController.
-        false
+        # forgery protection.
+        delegates :parent_controller, :protect_against_forgery?, :form_authenticity_token, :request_forgery_protection_token
       end
 
       def call(*)
