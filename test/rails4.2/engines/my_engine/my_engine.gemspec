@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = MyEngine::VERSION
   s.authors     = ["Alexander Huber"]
   s.email       = ["alih83@gmx.de"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of MyEngine."
-  s.description = "TODO: Description of MyEngine."
+  s.homepage    = "https://github.com/apotonick/cells"
+  s.summary     = "Summary of MyEngine."
+  s.description = "Description of MyEngine."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]

@@ -1,6 +1,5 @@
 class SimpleFormCell < Cell::ViewModel
   include ActionView::RecordIdentifier
-  include ActionView::Helpers::FormHelper
   include SimpleForm::ActionViewExtensions::FormHelper
 
   # include ActiveSupport::Configurable

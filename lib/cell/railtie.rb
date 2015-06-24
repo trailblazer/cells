@@ -36,11 +36,15 @@ module Cell
     initializer "cells.include_default_helpers" do
       # include asset helpers (image_path, font_path, ect)
       ViewModel.class_eval do
-        include ActionView::Helpers::UrlHelper
+        # The following two included by ActionView::Helpers::FormHelper:
+        #
+        #   ActionView::Helpers::UrlHelper
+        #   ActionView::Helpers::FormTagHelper
+        #
+        include ActionView::Helpers::FormHelper
         include ::Cell::RailsExtensions::HelpersAreShit
 
         include ActionView::Helpers::AssetTagHelper
-        include ActionView::Helpers::FormTagHelper
       end
 
       # set VM#cache_store, etc.
