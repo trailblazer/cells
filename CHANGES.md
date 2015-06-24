@@ -1,6 +1,6 @@
 ## 4.0.2
 
-In Rails, include `ActionView::Helpers::FormHelper` into `ViewModel` so we already have (and pollute our cell with) `UrlHelper` and `FormTagHelper`. Helpers, so much fun.
+* In Rails, include `ActionView::Helpers::FormHelper` into `ViewModel` so we already have (and pollute our cell with) `UrlHelper` and `FormTagHelper`. Helpers, so much fun.
 
 ## 4.0.1
 
