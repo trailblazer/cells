@@ -10,7 +10,7 @@ module Cell
       end
 
       def controller_path
-        @controller_path ||= util.underscore(name.sub(/::Cell/, ''))
+        @controller_path ||= util.underscore(name.sub(/(::Cell$|Cell::)/, ''))
       end
     end
 

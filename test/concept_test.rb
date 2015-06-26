@@ -6,7 +6,7 @@ end
 
 # Trailblazer style:
 module Record
-  class Cell < Cell::Concept # cell("record")
+  class Cell < ::Cell::Concept # cell("record")
     include ::Cell::Erb
 
     def show
@@ -32,6 +32,15 @@ module Record
   end
 end
 
+module Record
+  module Cells
+    class Cell < Record::Cell
+      Song = Class.new(Record::Cell::Song)
+      Hit = Class.new(Record::Cell::Hit)
+    end
+  end
+end
+
 # app/cells/comment/views
 # app/cells/comment/form/views
 # app/cells/comment/views/form inherit_views Comment::Cell, render form/show
@@ -41,6 +50,8 @@ class ConceptTest < MiniTest::Spec
   describe "::controller_path" do
     it { Record::Cell.new.controller_path.must_equal "record" }
     it { Record::Cell::Song.new.controller_path.must_equal "record/song" }
+    it { Record::Cells::Cell.new.controller_path.must_equal "record/cells" }
+    it { Record::Cells::Cell::Song.new.controller_path.must_equal "record/cells/song" }
   end
 
 
