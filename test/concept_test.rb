@@ -34,9 +34,9 @@ end
 
 module Record
   module Cells
-    class Cell < Record::Cell
-      Song = Class.new(Record::Cell::Song)
-      Hit = Class.new(Record::Cell::Hit)
+    class Cell < ::Cell::Concept
+      class Song < ::Cell::Concept
+      end
     end
   end
 end
