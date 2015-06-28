@@ -1,6 +1,7 @@
 ## 4.0.2
 
 * In Rails, include `ActionView::Helpers::FormHelper` into `ViewModel` so we already have (and pollute our cell with) `UrlHelper` and `FormTagHelper`. Helpers, so much fun.
+* Concept cells will now infer their name properly even if the string `Cell` appears twice.
 
 ## 4.0.1
 
