@@ -32,7 +32,7 @@ CommentCell.(@comment).()
 In Rails you have the same helper API for views and controllers.
 
 ```ruby
-class DasboardController < ApplicationController
+class DashboardController < ApplicationController
   def dashboard
     @comments = cell(:comment, collection: Comment.recent)
     @traffic  = cell(:report, TrafficReport.find(1)).()
@@ -97,7 +97,7 @@ The discussed `show` view would reside in `app/cells/comment/show.haml`. However
 
 ## Invocation Styles
 
-In order to make a cell render, you have to call the rendering methods. While you could call the method directly, the prefered way is the _call style_.
+In order to make a cell render, you have to call the rendering methods. While you could call the method directly, the preferred way is the _call style_.
 
 ```ruby
 cell(:comment, @song).()       # calls CommentCell#show.
