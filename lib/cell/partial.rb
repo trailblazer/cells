@@ -10,7 +10,7 @@ module Cell::ViewModel::Partial
     view      = parts.pop
     view      = "_#{view}"
     view     += ".#{options[:formats].first}" if options[:formats]
-    prefixes  = self.class.view_paths.collect { |path| parts.unshift(path).join("/") }
+    prefixes  = self.class.view_paths.collect { |path| ([path] + parts).join("/") }
 
     options.merge!(view: view, prefixes: prefixes)
   end
