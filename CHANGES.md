@@ -1,3 +1,7 @@
+## 4.0.3
+
+* `Cell::Partial` now does _append_ the global partial path to its `view_paths` instead of using `unshift` and thereby removing possible custom paths.
+
 ## 4.0.2
 
 * In Rails, include `ActionView::Helpers::FormHelper` into `ViewModel` so we already have (and pollute our cell with) `UrlHelper` and `FormTagHelper`. Helpers, so much fun.
