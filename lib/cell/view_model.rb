@@ -114,7 +114,7 @@ module Cell
 
     private
       def render_to_string(options)
-        template = find_template(options) # TODO: cache template with path/lookup keys.
+        template = find_template(options)
 
         content  = render_template(template, options)
 
