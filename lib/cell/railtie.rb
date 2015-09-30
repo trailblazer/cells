@@ -62,6 +62,10 @@ module Cell
       end
     end
 
+    initializer('cells.logging') do |app|
+      require "cell/logging"
+    end
+
     rake_tasks do
       load 'tasks/cells.rake'
     end
