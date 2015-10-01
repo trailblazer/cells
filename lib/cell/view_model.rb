@@ -108,7 +108,7 @@ module Cell
 
       # render :show
       def render(options={})
-        options = normalize_options(options, caller) # TODO: call render methods with call(:show), call(:comments) instead of directly #comments?
+        options = normalize_options(options, caller)
         render_to_string(options)
       end
 
