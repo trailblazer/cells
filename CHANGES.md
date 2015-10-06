@@ -2,6 +2,7 @@
 
 * `Cell::Partial` now does _append_ the global partial path to its `view_paths` instead of using `unshift` and thereby removing possible custom paths.
 * Adding `Cell::Translation` which allows using the `#t` helper. Thanks to @johnlane.
+* Performance improvement: when inflecting the view name (90% likely to be done) the `caller` is now limited to the data we need, saving memory. Thanks @timoschilling for implementing this.
 
 ## 4.0.2
 
