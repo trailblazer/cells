@@ -108,7 +108,7 @@ module Cell
 
       # render :show
       def render(options={})
-        options = normalize_options(options, caller)
+        options = normalize_options(options)
         render_to_string(options)
       end
 
@@ -196,11 +196,10 @@ module Cell
     end
     include TemplateFor
 
-
-    def normalize_options(options, caller) # TODO: rename to #setup_options! to be inline with Trb.
+    def normalize_options(options) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
-        # TODO: speedup by not doing state_for_implicit_render.
-        {view: state_for_implicit_render(caller)}.merge(options)
+        _caller = RUBY_VERSION < "2.0" ? caller(2) : caller(2, 1)
+        {view: state_for_implicit_render(_caller)}.merge(options)
       else
         {view: options.to_s}
       end
