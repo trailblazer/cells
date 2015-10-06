@@ -8,6 +8,8 @@ rvm:
 
 sudo: false
 
+cache: bundler
+
 bundler_args: '--without local_development --jobs 3 --retry 3'
 
 script: bundle exec rake
