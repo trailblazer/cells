@@ -198,7 +198,8 @@ module Cell
 
     def normalize_options(options) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
-        {view: state_for_implicit_render(caller(2, 1))}.merge(options)
+        _caller = RUBY_VERSION < "2.0" ? caller(2) : caller(2, 1)
+        {view: state_for_implicit_render(_caller)}.merge(options)
       else
         {view: options.to_s}
       end
