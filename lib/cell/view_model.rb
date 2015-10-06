@@ -199,7 +199,7 @@ module Cell
     def normalize_options(options) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
         # TODO: speedup by not doing state_for_implicit_render.
-        {view: state_for_implicit_render(caller)}.merge(options)
+        {view: state_for_implicit_render(caller(2, 1))}.merge(options)
       else
         {view: options.to_s}
       end
@@ -219,7 +219,7 @@ module Cell
 
 
     def state_for_implicit_render(caller)
-      caller[1].match(/`(\w+)/)[1]
+      caller[0].match(/`(\w+)/)[1]
     end
 
     include Layout
