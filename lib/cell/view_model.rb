@@ -196,10 +196,10 @@ module Cell
     end
     include TemplateFor
 
-    def normalize_options(options) # TODO: rename to #setup_options! to be inline with Trb.
+    def normalize_options(options)
       options = if options.is_a?(Hash)
-        _caller = RUBY_VERSION < "2.0" ? caller(2) : caller(2, 1)
-        {view: state_for_implicit_render(_caller)}.merge(options)
+        options[:view] ||= state_for_implicit_render(options)
+        options
       else
         {view: options.to_s}
       end
@@ -218,8 +218,10 @@ module Cell
     include ProcessOptions
 
 
-    def state_for_implicit_render(caller)
-      caller[0].match(/`(\w+)/)[1]
+    # Computes the view name from the call stack in which `render` was invoked.
+    def state_for_implicit_render(options)
+      _caller = RUBY_VERSION < "2.0" ? caller(3) : caller(3, 1) # TODO: remove case in 5.0 when dropping 1.9.
+      _caller[0].match(/`(\w+)/)[1]
     end
 
     include Layout
