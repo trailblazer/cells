@@ -198,7 +198,6 @@ module Cell
 
     def normalize_options(options) # TODO: rename to #setup_options! to be inline with Trb.
       options = if options.is_a?(Hash)
-        # TODO: speedup by not doing state_for_implicit_render.
         {view: state_for_implicit_render(caller(2, 1))}.merge(options)
       else
         {view: options.to_s}
