@@ -42,12 +42,13 @@ module Cell
 
 
     # Rails specific.
-    def controller_for(controller_class)
+    def controller_for(controller_class, action = nil, params = {})
       # TODO: test without controller.
       return unless controller_class
 
       controller_class.new.tap do |ctl|
         ctl.request = ::ActionController::TestRequest.new
+        ctl.request.assign_parameters(@routes, ctl.class.controller_path, action, params) if action
         ctl.instance_variable_set :@routes, ::Rails.application.routes.url_helpers
       end
     end
