@@ -1,6 +1,7 @@
 language: ruby
 rvm:
-#  - 2.2
+  - ruby-head
+  - 2.2
   - 2.1
   - 2.0.0
   - 1.9.3
@@ -16,8 +17,20 @@ script: bundle exec rake
 
 notifications:
   irc: "irc.freenode.org#cells"
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/   <--- ADD WEBHOOK ID HERE
+
 gemfile:
   - gemfiles/rails4.2.gemfile
   - gemfiles/rails4.1.gemfile
   - gemfiles/rails4.0.gemfile
   - gemfiles/rails3.2.gemfile
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - rvm: ruby-head
+
+before_install:
+  - gem update bundler
