@@ -55,8 +55,8 @@ module Cell
     end
     #   ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
 
-    initializer('cells.development') do |app|
-      if Rails.env == "development"
+    initializer('cells.reloading') do |app|
+      unless app.config.cache_classes
         require "cell/development"
         ViewModel.send(:include, Development)
       end
