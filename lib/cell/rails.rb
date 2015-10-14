@@ -15,7 +15,7 @@ module Cell
       # Returns the cell instance for +name+. You may pass arbitrary options to your
       # cell.
       #
-      #   = cell(:song, title: "Creeping Out Sara").render(:show)
+      #   = cell(:song, title: "Creeping Out Sara").(:show)
       def cell(name, *args, &block)
         controller.cell(name, *args, &block)
       end
