@@ -16,8 +16,14 @@ class PublicTest < MiniTest::Spec
     end
   end
 
+    class Songs < Cell::Concept
+    end
+
   # ViewModel.cell returns the cell instance.
   it { Cell::ViewModel.cell("public_test/song").must_be_instance_of SongCell }
+
+  # Concept.cell simply camelizes the string before constantizing.
+  it { Cell::Concept.cell("public_test/songs").must_be_instance_of Songs }
 
   # ViewModel.cell passes options to cell.
   it { Cell::ViewModel.cell("public_test/song", Object, genre: "Metal").initialize_args.must_equal [Object, {genre:"Metal"}] }
