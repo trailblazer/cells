@@ -6,7 +6,7 @@ module Cell
     # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
     class << self
       def class_from_cell_name(name)
-        name.classify.constantize
+        name.camelize.constantize
       end
 
       def controller_path

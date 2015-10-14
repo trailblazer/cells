@@ -21,7 +21,6 @@ module Cell
       end
     end
 
-
     include Prefixes
     extend SelfContained
     extend Util
@@ -31,7 +30,6 @@ module Cell
     end
 
     attr_reader :model
-
 
     module Helpers
       # Constantizes name, call builders and returns instance.
@@ -48,7 +46,6 @@ module Cell
       end
     end
     extend Helpers
-
 
     class << self
       def property(*names)
@@ -75,7 +72,7 @@ module Cell
 
     private
       def class_from_cell_name(name)
-        "#{name}_cell".classify.constantize
+        "#{name}_cell".camelize.constantize
       end
     end
 
@@ -83,7 +80,6 @@ module Cell
     def cell(name, model=nil, options={})
       self.class.cell(name, model, options.merge(controller: parent_controller))
     end
-
 
     def initialize(model=nil, options={}) # in Ruby 2: def m(model: nil, controller:nil, **options) that'll make the controller optional.
       # options            = options.clone # DISCUSS: this could be time consuming when rendering many of em.
@@ -174,7 +170,6 @@ module Cell
       OutputBuffer.new # don't cache output_buffer, for every #render call we get a fresh one.
     end
 
-
     module TemplateFor
       def find_template(options)
         template_options = template_options_for(options) # imported by Erb, Haml, etc.
@@ -216,7 +211,6 @@ module Cell
       end
     end
     include ProcessOptions
-
 
     # Computes the view name from the call stack in which `render` was invoked.
     def state_for_implicit_render(options)
