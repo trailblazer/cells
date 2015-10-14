@@ -32,9 +32,9 @@ module Cell
     attr_reader :model
 
     module Helpers
-      # Constantizes name, call builders and returns instance.
-      def cell(name, *args, &block) # classic Rails fuzzy API.
-        class_from_cell_name(name).(*args, &block)
+      # Constantizes name if needed, call builders and returns instance.
+      def cell(name_or_class, *args, &block) # classic Rails fuzzy API.
+        cell_class(name_or_class).(*args, &block)
       end
 
     private
@@ -71,8 +71,12 @@ module Cell
       end
 
     private
-      def class_from_cell_name(name)
-        "#{name}_cell".camelize.constantize
+      def cell_class(arg)
+        arg.respond_to?(:camelize) ? full_cell_name(arg).camelize.constantize : arg
+      end
+
+      def full_cell_name(name)
+        "#{name}_cell"
       end
     end
 
