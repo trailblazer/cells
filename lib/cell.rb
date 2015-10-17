@@ -20,7 +20,6 @@ end
 
 require "cell/caching"
 require "cell/caching/notification"
-require "uber/builder"
 require "cell/prefixes"
 require "cell/self_contained"
 require "cell/layout"
@@ -30,6 +29,7 @@ require "cell/util"
 require "cell/view_model"
 require "cell/concept"
 require "cell/escaped"
+require "cell/builder"
 
 
 require "cell/railtie" if defined?(Rails)
