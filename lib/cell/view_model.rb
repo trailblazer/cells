@@ -65,9 +65,7 @@ module Cell
         build(model, options)
       end
 
-      def build(*args)
-        new(*args)
-      end
+      alias build new # semi-public for Cell::Builder
 
     private
       def class_from_cell_name(name)
