@@ -42,7 +42,7 @@ module Cell
       def render_collection(array, options) # private.
         method = options.delete(:method) || :show
         join   = options.delete(:collection_join)
-        array.collect { |model| build(*[model, options]).call(method) }.join(join).html_safe
+        array.collect { |model| build(model, options).call(method) }.join(join).html_safe
       end
     end
     extend Helpers
