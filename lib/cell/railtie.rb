@@ -51,6 +51,7 @@ module Cell
       # yepp, this is happening. saves me a lot of coding in each extension.
       ViewModel.send(:include, Cell::Erb) if Cell.const_defined?(:Erb, false)
       ViewModel.send(:include, Cell::Haml) if Cell.const_defined?(:Haml, false)
+      ViewModel.send(:include, Cell::Hamlit) if Cell.const_defined?(:Hamlit, false)
       ViewModel.send(:include, Cell::Slim) if Cell.const_defined?(:Slim, false)
     end
     #   ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
