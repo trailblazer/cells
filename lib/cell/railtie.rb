@@ -37,13 +37,9 @@ module Cell
       # include asset helpers (image_path, font_path, ect)
       ViewModel.class_eval do
         include ActionView::Helpers::FormHelper # includes ActionView::Helpers::UrlHelper, ActionView::Helpers::FormTagHelper
-        include ::Cell::RailsExtensions::HelpersAreShit
-
         include ActionView::Helpers::AssetTagHelper
+        include RailsExtensions::ViewModel
       end
-
-      # set VM#cache_store, etc.
-      ViewModel.send(:include, RailsExtensions::ViewModel)
     end
 
     # TODO: allow to turn off this.
