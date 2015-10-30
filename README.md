@@ -6,7 +6,7 @@
 
 Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
 
-Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, [nesting](#nested-cells), view inheritance, using Rails helpers, [asset packaging](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](#concept-cells).
+Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, [nesting](#nested-cells), view inheritance, using Rails helpers, [asset packaging](http://trailblazer.to/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](#concept-cells).
 
 ## This is not Cells 3.x!
 
@@ -138,7 +138,7 @@ Capybara.string(html).must_have_css "h3"
 
 It is completely up to you how you test, whether it's RSpec, MiniTest or whatever. All the cell does is return HTML.
 
-[In Rails, there's support](http://trailblazerb.org/gems/cells/testing.html) for TestUnit, MiniTest and RSpec available, along with Capybara integration.
+[In Rails, there's support](http://trailblazer.to/gems/cells/testing.html) for TestUnit, MiniTest and RSpec available, along with Capybara integration.
 
 ## Properties
 
@@ -169,7 +169,7 @@ song.title                 #=> "<script>Dangerous</script>"
 Comment::Cell.(song).title #=> &lt;script&gt;Dangerous&lt;/script&gt;
 ```
 
-Properties and escaping are [documented here](http://trailblazerb.org/gems/cells/api.html#html-escaping).
+Properties and escaping are [documented here](http://trailblazer.to/gems/cells/api.html#html-escaping).
 
 ## Installation
 
@@ -296,7 +296,7 @@ end
 
 ## Asset Packaging
 
-Cells can easily ship with their own JavaScript, CSS and more and be part of Rails' asset pipeline. Bundling assets into a cell allows you to implement super encapsulated widgets that are stand-alone. Asset pipeline is [documented here](http://trailblazerb.org/gems/cells/rails.html#asset-pipeline).
+Cells can easily ship with their own JavaScript, CSS and more and be part of Rails' asset pipeline. Bundling assets into a cell allows you to implement super encapsulated widgets that are stand-alone. Asset pipeline is [documented here](http://trailblazer.to/gems/cells/rails.html#asset-pipeline).
 
 ## Render API
 
@@ -476,7 +476,7 @@ cache :show, :if => lambda { |*| has_changed? }
 cache :show, :tags: lambda { |model, options| "comment-#{model.id}" }
 ```
 
-Caching is documented [here](http://trailblazerb.org/gems/cells/caching.html) and in chapter 8 of the [Trailblazer book](http://leanpub.com/trailblazer).
+Caching is documented [here](http://trailblazer.to/gems/cells/caching.html) and in chapter 8 of the [Trailblazer book](http://leanpub.com/trailblazer).
 
 
 ## The Book
