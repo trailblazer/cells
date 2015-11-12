@@ -119,7 +119,7 @@ module Cell
       end
 
       def render_state(*args)
-        send(*args)
+        __send__(*args)
       end
 
       def with_layout(options, content)

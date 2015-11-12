@@ -43,6 +43,10 @@ class SongCell < Cell::ViewModel
     render
   end
 
+  def send
+    "send"
+  end
+
 private
   def title
     "Papertiger"
@@ -64,6 +68,9 @@ class RenderTest < MiniTest::Spec
 
   # call(:form) renders :form
   it { SongCell.new(nil).call(:with_view_name).must_equal "Man Of Steel\n" }
+
+  # works with state called `send`
+  it { SongCell.new(nil).call(:send).must_equal "send" }
 
   # #call returns html_safe.
   it { SongCell.new(nil).call.must_be_instance_of ActiveSupport::SafeBuffer }
