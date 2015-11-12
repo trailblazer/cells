@@ -93,13 +93,8 @@ module Cell
     module Rendering
       # Invokes the passed method (defaults to :show) while respecting caching.
       # In Rails, the return value gets marked html_safe.
-      #
-      # Yields +self+ to an optional block.
       def call(state=:show, *args)
-        content = render_state(state, *args)
-        yield self if block_given?
-
-        content.to_s
+        render_state(state, *args).to_s
       end
 
       # render :show
