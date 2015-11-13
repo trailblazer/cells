@@ -93,28 +93,28 @@ module Cell
     module Rendering
       # Invokes the passed method (defaults to :show) while respecting caching.
       # In Rails, the return value gets marked html_safe.
-      def call(state=:show, *args)
-        render_state(state, *args).to_s
+      def call(state=:show, *args, &block)
+        render_state(state, *args, &block).to_s
       end
 
       # render :show
-      def render(options={})
+      def render(options={}, &block)
         options = normalize_options(options)
-        render_to_string(options)
+        render_to_string(options, &block)
       end
 
     private
-      def render_to_string(options)
+      def render_to_string(options, &block)
         template = find_template(options)
 
-        content  = render_template(template, options)
+        content  = render_template(template, options) { instance_eval &block }
 
         # TODO: allow other (global) layout dirs.
         with_layout(options, content)
       end
 
-      def render_state(*args)
-        __send__(*args)
+      def render_state(*args, &block)
+        __send__(*args, &block)
       end
 
       def with_layout(options, content)

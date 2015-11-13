@@ -47,6 +47,14 @@ class SongCell < Cell::ViewModel
     "send"
   end
 
+  def with_block(&block)
+    instance_eval &block
+  end
+
+  def with_render_block(&block)
+    render &block
+  end
+
 private
   def title
     "Papertiger"
@@ -71,6 +79,12 @@ class RenderTest < MiniTest::Spec
 
   # works with state called `send`
   it { SongCell.new(nil).call(:send).must_equal "send" }
+
+  # yields the given block and returns the result
+  it { SongCell.new(nil).call(:with_block, &proc{ "Hello #{title}!" }).must_equal "Hello Papertiger!" }
+
+  # passes the given block to render wich yields and returns the result
+  it { SongCell.new(nil).call(:with_render_block, &proc{ "#{title}!" }).must_equal "Hello Papertiger!\n" }
 
   # #call returns html_safe.
   it { SongCell.new(nil).call.must_be_instance_of ActiveSupport::SafeBuffer }
