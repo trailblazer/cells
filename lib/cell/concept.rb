@@ -17,8 +17,8 @@ module Cell
     alias_method :concept, :cell # Concept#concept does exactly what #cell does: delegate to class builder.
 
     # Get nested cell in instance.
-    def cell(name, model=nil, options={})
-      ViewModel.cell(name, model, options.merge(controller: parent_controller)) # #cell calls need to be delegated to ViewModel.
+    def cell(name, model=nil, options={}, &block)
+      ViewModel.cell(name, model, options.merge(controller: parent_controller), &block) # #cell calls need to be delegated to ViewModel.
     end
 
     self_contained!

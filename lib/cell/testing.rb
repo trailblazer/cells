@@ -2,17 +2,17 @@ module Cell
   # Builder methods and Capybara support.
   # This gets included into Test::Unit, MiniTest::Spec, etc.
   module Testing
-    def cell(name, *args)
-      cell_for(ViewModel, name, *args)
+    def cell(name, *args, &block)
+      cell_for(ViewModel, name, *args, &block)
     end
 
-    def concept(name, *args)
-      cell_for(Concept, name, *args)
+    def concept(name, *args, &block)
+      cell_for(Concept, name, *args, &block)
     end
 
   private
-    def cell_for(baseclass, name, model=nil, options={})
-      cell = baseclass.cell(name, model, options.merge(controller: controller))
+    def cell_for(baseclass, name, model=nil, options={}, &block)
+      cell = baseclass.cell(name, model, options.merge(controller: controller), &block)
       cell.extend(Capybara) if Cell::Testing.capybara? # leaving this here as most people use Capybara.
       cell
     end

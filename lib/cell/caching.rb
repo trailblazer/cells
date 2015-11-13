@@ -42,14 +42,14 @@ module Cell
     end
 
 
-    def render_state(state, *args)
+    def render_state(state, *args, &block)
       state = state.to_sym
-      return super(state, *args) unless cache?(state, *args)
+      return super(state, *args, &block) unless cache?(state, *args)
 
       key     = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))
       options = self.class.cache_options.eval(state, self, *args)
 
-      fetch_from_cache_for(key, options) { super(state, *args) }
+      fetch_from_cache_for(key, options) { super(state, *args, &block) }
     end
 
     def cache_store  # we want to use DI to set a cache store in cell/rails.
