@@ -26,7 +26,7 @@ module Cell
 
       def log(message, event)
         self.class.runtime += event.duration
-        ::Rails.logger.info color("  #{message} (#{"%.1f" % event.duration}ms)", BLUE)
+        ::Rails.logger.info color("  #{message} (#{"%.2f" % event.duration}ms)", BLUE)
       end
       LogSubscriber.attach_to :cell
     end
@@ -54,7 +54,7 @@ module Cell
       module ClassMethods
         def log_process_action(payload)
           messages, cell_runtime = super, payload[:cell_runtime]
-          messages << ("Cells: %.1fms" % cell_runtime.to_f) if cell_runtime
+          messages << ("Cells: %.2fms" % cell_runtime.to_f) if cell_runtime
           messages
         end
       end
