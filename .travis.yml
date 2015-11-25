@@ -15,12 +15,6 @@ bundler_args: '--without local_development --jobs 3 --retry 3'
 
 script: bundle exec rake
 
-notifications:
-  irc: "irc.freenode.org#cells"
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/   <--- ADD WEBHOOK ID HERE
-
 gemfile:
   - gemfiles/rails4.2.gemfile
   - gemfiles/rails4.1.gemfile
