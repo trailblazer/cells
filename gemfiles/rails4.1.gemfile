@@ -9,3 +9,4 @@ gem "minitest", "~> 5.2"
 gemspec :path => "../"
 
 gem "mime-types", "< 3.0",   platform: :ruby_19
+gem "mime-types", "< 3.0",   platform: :jruby
