@@ -27,7 +27,7 @@ module Cell
       template_class.new("#{prefix}/#{view}", options) # Tilt.new()
     end
 
-    # {["comment/row/views", comment/views"][show.haml] => "Tpl:comment/view/show.haml"}
+    # {["comment/row/views", comment/views"]["show.haml"] => "Tpl:comment/view/show.haml"}
     class Cache
       def initialize
         @store = {}
