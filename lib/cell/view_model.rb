@@ -81,8 +81,7 @@ module Cell
       self.class.cell(name, model, options.merge(controller: parent_controller))
     end
 
-    def initialize(model=nil, options={}) # in Ruby 2: def m(model: nil, controller:nil, **options) that'll make the controller optional.
-      # options            = options.clone # DISCUSS: this could be time consuming when rendering many of em.
+    def initialize(model=nil, options={})
       @parent_controller = options[:controller] # TODO: filter out controller in a performant way.
 
       setup!(model, options)
