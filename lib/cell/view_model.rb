@@ -136,7 +136,7 @@ module Cell
     end
 
     include Rendering
-    # alias_method :to_s, :call # FIXME: why doesn't this work?
+
     def to_s
       call
     end
