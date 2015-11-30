@@ -1,4 +1,3 @@
-# TODO: warn when using ::property but not passing in model in constructor.
 module Cell
   class ViewModel
     extend Abstract
