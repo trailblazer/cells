@@ -38,10 +38,10 @@ module Cell
 
     private
       # Renders collection of cells.
-      def render_collection(array, options) # private.
+      def render_collection(array, options, &block) # private.
         method = options.delete(:method) || :show
         join   = options.delete(:collection_join)
-        array.collect { |model| build(model, options).call(method) }.join(join).html_safe
+        array.collect { |model| build(model, options).call(method, &block) }.join(join).html_safe
       end
     end
     extend Helpers
@@ -59,7 +59,7 @@ module Cell
       #   SongCell.(collection: Song.all)
       def call(model=nil, options={}, &block)
         if model.is_a?(Hash) and array = model.delete(:collection)
-          return render_collection(array, model.merge(options))
+          return render_collection(array, model.merge(options), &block)
         end
 
         build(model, options)
@@ -76,8 +76,8 @@ module Cell
     end
 
     # Get nested cell in instance.
-    def cell(name, model=nil, options={})
-      self.class.cell(name, model, options.merge(controller: parent_controller))
+    def cell(name, model=nil, options={}, &block)
+      self.class.cell(name, model, options.merge(controller: parent_controller), &block)
     end
 
     def initialize(model=nil, options={}) # in Ruby 2: def m(model: nil, controller:nil, **options) that'll make the controller optional.
@@ -92,33 +92,32 @@ module Cell
     module Rendering
       # Invokes the passed method (defaults to :show) while respecting caching.
       # In Rails, the return value gets marked html_safe.
-      #
-      # Yields +self+ to an optional block.
-      def call(state=:show, *args)
-        content = render_state(state, *args)
-        yield self if block_given?
-
-        content.to_s
+      def call(state=:show, *args, &block)
+        render_state(state, *args, &block).to_s
       end
 
       # render :show
-      def render(options={})
+      def render(options={}, &block)
         options = normalize_options(options)
-        render_to_string(options)
+        render_to_string(options, &block)
       end
 
     private
-      def render_to_string(options)
+      def render_to_string(options, &block)
         template = find_template(options)
 
-        content  = render_template(template, options)
+        content = if block
+          render_template(template, options) { instance_eval &block }
+        else
+          render_template(template, options)
+        end
 
         # TODO: allow other (global) layout dirs.
         with_layout(options, content)
       end
 
-      def render_state(*args)
-        __send__(*args)
+      def render_state(*args, &block)
+        __send__(*args, &block)
       end
 
       def with_layout(options, content)
