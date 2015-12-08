@@ -53,7 +53,7 @@ module Cell
     end
 
     def controller # FIXME: this won't allow us using let(:controller) in MiniTest.
-      controller_for(self.class.controller_class)
+      @controller ||= controller_for(self.class.controller_class)
     end
 
     def self.included(base)
