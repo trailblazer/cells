@@ -56,3 +56,34 @@ class LayoutTest < MiniTest::Spec
   # with ::layout and :layout, :layout wins.
   it { SongWithLayoutOnClassCell.new(nil).show_with_layout.must_equal "Happy Friday!" }
 end
+
+module Comment
+  class ShowCell < Cell::ViewModel
+    self.view_paths = ['test/fixtures']
+
+    def show
+      render
+    end
+
+    # def call(*args, &block)
+
+    # end
+  end
+
+  class LayoutCell < Cell::ViewModel
+    self.view_paths = ['test/fixtures']
+
+    def show
+      render
+    end
+
+    def content
+      options[:content]
+    end
+  end
+end
+
+class ExternalLayoutTest < Minitest::Spec
+  it { Comment::ShowCell.new(nil).().must_equal "$show.erb\n" }
+  it { Comment::LayoutCell.new(nil, content: Comment::ShowCell.new(nil).()).().must_equal "$layout.erb{$show.erb\n}\n" }
+end
