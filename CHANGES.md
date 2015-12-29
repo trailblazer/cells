@@ -1,3 +1,11 @@
+## 4.1.0
+
+* You can no longer pass a block to `ViewModel#call`. Use `tap` if you want the same behavior.
+    ```ruby
+    Comment::Cell.new(comment).().tap { |cell| }
+    ```
+
+
 ## 4.0.3
 
 * `Cell::Partial` now does _append_ the global partial path to its `view_paths` instead of using `unshift` and thereby removing possible custom paths.

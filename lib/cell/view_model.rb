@@ -92,12 +92,8 @@ module Cell
     module Rendering
       # Invokes the passed method (defaults to :show) while respecting caching.
       # In Rails, the return value gets marked html_safe.
-      #
-      # Yields +self+ to an optional block.
       def call(state=:show, *args)
         content = render_state(state, *args)
-        yield self if block_given?
-
         content.to_s
       end
 
@@ -110,7 +106,6 @@ module Cell
     private
       def render_to_string(options)
         template = find_template(options)
-
         content  = render_template(template, options)
 
         # TODO: allow other (global) layout dirs.
