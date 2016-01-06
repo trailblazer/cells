@@ -5,9 +5,9 @@ module Cell::ViewModel::Escaped
 
   module Property
     def property(*names)
+      names.flatten!
       super.tap do
         include Module.new {
-          names.flatten!
           names.each do |name|
             module_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{name}(escape: true)
