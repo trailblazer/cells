@@ -4,16 +4,17 @@ module Cell::ViewModel::Escaped
   end
 
   module Property
-    def property *names
+    def property(*names)
       super.tap do
-        prepend Module.new {
+        include Module.new {
           names.flatten!
           names.each do |name|
             module_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{name}(escape: true)
                 value = super()
-                return value unless value.is_a?(String) || escape
-                escape! value
+                return value unless value.is_a?(String)
+                return value unless escape
+                escape!(value)
               end
             RUBY
           end
