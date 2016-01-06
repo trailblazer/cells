@@ -26,7 +26,7 @@ module Cell
         end
       end
 
-      ActiveSupport.on_load(:action_view) do |app|
+      ActiveSupport.on_load(:action_view) do
         self.class_eval do
           include ::Cell::RailsExtensions::ActionView
         end
