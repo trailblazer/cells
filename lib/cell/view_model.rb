@@ -51,8 +51,6 @@ module Cell
         delegates :model, *names # Uber::Delegates.
       end
 
-      include Helpers
-
       # Public entry point. Use this to instantiate cells with builders.
       #
       #   SongCell.(@song)
