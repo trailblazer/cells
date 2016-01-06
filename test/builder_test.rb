@@ -5,6 +5,8 @@ class BuilderTest < MiniTest::Spec
   Hit  = Struct.new(:title)
 
   class SongCell < Cell::ViewModel
+    include Cell::Builder
+
     builds do |model, options|
       if model.is_a? Hit
         HitCell

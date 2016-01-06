@@ -9,7 +9,6 @@ module Cell
 
     extend Uber::InheritableAttr
     extend Uber::Delegates
-    include Uber::Builder
 
     inheritable_attr :view_paths
     self.view_paths = ["app/cells"]
@@ -63,9 +62,7 @@ module Cell
         build(model, options)
       end
 
-      def build(*args) # semi-public.
-        class_builder.call(*args).new(*args) # Uber::Builder::class_builder.
-      end
+      alias build new # semi-public for Cell::Builder
 
     private
       def class_from_cell_name(name)
