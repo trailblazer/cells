@@ -4,20 +4,24 @@ module Cell::ViewModel::Escaped
   end
 
   module Property
-    def property(name, *args)
-      super.tap do # super defines #title
-        mod = Module.new do
-          define_method(name) do |options={}|
-            value = super() # call the original #title.
-            return value unless value.is_a?(String)
-            return value if options[:escape] == false
-            escape!(value)
+    def property(*names)
+      names.flatten!
+      super.tap do
+        include Module.new {
+          names.each do |name|
+            module_eval <<-RUBY, __FILE__, __LINE__ + 1
+              def #{name}(escape: true)
+                value = super()
+                return value unless value.is_a?(String)
+                return value unless escape
+                escape!(value)
+              end
+            RUBY
           end
-        end
-        include mod
+        }
       end
     end
-  end # Property
+  end
 
   # Can be used as a helper in the cell, too.
   # Feel free to override and use a different escaping implementation.
