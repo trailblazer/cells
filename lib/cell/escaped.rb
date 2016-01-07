@@ -4,14 +4,16 @@ module Cell::ViewModel::Escaped
   end
 
   module Property
-    def property(name, *args)
+    def property(*names)
       super.tap do # super defines #title
         mod = Module.new do
-          define_method(name) do |options={}|
-            value = super() # call the original #title.
-            return value unless value.is_a?(String)
-            return value if options[:escape] == false
-            escape!(value)
+          names.each do |name|
+            define_method(name) do |options={}|
+              value = super() # call the original #title.
+              return value unless value.is_a?(String)
+              return value if options[:escape] == false
+              escape!(value)
+            end
           end
         end
         include mod
