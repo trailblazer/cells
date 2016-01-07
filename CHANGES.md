@@ -5,6 +5,9 @@
     Comment::Cell.new(comment).().tap { |cell| }
     ```
 
+## 4.0.4
+
+* `Escaped::property` now properly escapes all passed properties. Thanks @xzo and @jlogsdon!
 
 ## 4.0.3
 
