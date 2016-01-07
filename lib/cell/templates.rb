@@ -30,7 +30,7 @@ module Cell
     # {["comment/row/views", comment/views"]["show.haml"] => "Tpl:comment/view/show.haml"}
     class Cache
       def initialize
-        @store = {}
+        @store = Hash.new { {} }
       end
 
       # Iterates prefixes and yields block. Returns and caches when block returned template.
@@ -46,7 +46,6 @@ module Cell
     private
       # ["comment/views"] => "show.haml"
       def get(prefixes, view)
-        @store[prefixes] ||= {}
         @store[prefixes][view]
       end
 
