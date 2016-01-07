@@ -1,3 +1,7 @@
+## 4.0.4
+
+* `Escaped::property` now properly escapes all passed properties. Thanks @xzo and @jlogsdon!
+
 ## 4.0.3
 
 * `Cell::Partial` now does _append_ the global partial path to its `view_paths` instead of using `unshift` and thereby removing possible custom paths.
