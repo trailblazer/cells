@@ -2,16 +2,22 @@
 
 *View Components for Ruby and Rails.*
 
+[![Gitter Chat](https://badges.gitter.im/trailblazer/chat.svg)](https://gitter.im/trailblazer/chat)
+[![Build
+Status](https://travis-ci.org/apotonick/cells.svg)](https://travis-ci.org/apotonick/cells)
+[![Gem Version](https://badge.fury.io/rb/cells.svg)](http://badge.fury.io/rb/cells)
+
 ## Overview
 
 Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
 
 Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, [nesting](#nested-cells), view inheritance, using Rails helpers, [asset packaging](http://trailblazer.to/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](#concept-cells).
 
-## This is not Cells 3.x!
+## Full Documentation
 
-Temporary note: This is the README and API for Cells 4. Many things have improved. If you want to upgrade, [follow this guide](https://github.com/apotonick/cells/wiki/From-Cells-3-to-Cells-4---Upgrading-Guide). When in trouble, join us on the IRC (Freenode) #trailblazer channel.
+Cells is part of the Trailblazer framework. [Full documentation](http://trailblazer.to/gems/cells) is available on the project site.
 
+Cells is completely decoupled from Rails. However, Rails-specific functionality is to be found [here](http://trailblazer.to/gems/cells/rails.html).
 
 ## Rendering Cells
 
@@ -199,21 +205,6 @@ class CommentCell < Cell::ViewModel
 end
 ```
 
-## Generators
-
-In Rails, you can generate cells and concept cells.
-
-```shell
-rails generate cell comment
-```
-
-Or.
-
-```shell
-rails generate concept comment
-```
-
-
 ## Concept Cells
 
 To have real self-contained cells you should use the new _concept cell_ which follows the [Trailblazer](http://trailblazerb.org) naming style. Concept cells need to be derived from `Cell::Concept`, sit in a namespace and are usually named `Cell`.
@@ -370,33 +361,7 @@ This works both in cell views and on the instance, in states.
 
 ## View Inheritance
 
-Cells can inherit code from each other with Ruby's inheritance.
-
-```ruby
-class CommentCell < Cell::ViewModel
-end
-
-class PostCell < CommentCell
-end
-```
-
-Even cooler, `PostCell` will now inherit views from `CommentCell`.
-
-```ruby
-PostCell.prefixes #=> ["app/cells/post", "app/cells/comment"]
-```
-
-When views can be found in the local `post` directory, they will be looked up in `comment`. This starts to become helpful when using [composed cells](#nested-cells).
-
-If you only want to inherit views, not the entire class, use `::inherit_views`.
-
-```ruby
-class PostCell < Cell::ViewModel
-  inherit_views Comment::Cell
-end
-
-PostCell.prefixes #=> ["app/cells/post", "app/cells/comment"]
-```
+You can not only inherit code across cell classes, but also views. This is extremely helpful if you want to override parts of your UI, only. It's [documented here](http://trailblazer.to/gems/cells/api.html#view-inheritance).
 
 ## Collections
 
@@ -457,7 +422,6 @@ For every cell class you can define caching per state. Without any configuration
 ```ruby
 class CommentCell < Cell::ViewModel
   cache :show
-
   # ..
 end
 ```
@@ -468,20 +432,12 @@ The `::cache` method will forward options to the caching engine.
 cache :show, expires_in: 10.minutes
 ```
 
-You can also compute your own cache key, use dynamic keys, cache tags, and so on.
-
-```ruby
-cache :show { |model, options| "comment/#{model.id}/#{model.updated_at}" }
-cache :show, :if => lambda { |*| has_changed? }
-cache :show, :tags: lambda { |model, options| "comment-#{model.id}" }
-```
-
-Caching is documented [here](http://trailblazer.to/gems/cells/caching.html) and in chapter 8 of the [Trailblazer book](http://leanpub.com/trailblazer).
+You can also compute your own cache key, use dynamic keys, cache tags, and conditionals using `:if`. Caching is documented [here](http://trailblazer.to/gems/cells/api.html#caching) and in chapter 8 of the [Trailblazer book](http://leanpub.com/trailblazer).
 
 
 ## The Book
 
-Cells is part of the [Trailblazer project](https://github.com/apotonick/trailblazer). Please [buy my book](https://leanpub.com/trailblazer) to support the development and to learn all the cool stuff about Cells. The book discusses the following.
+Cells is part of the [Trailblazer project](https://github.com/apotonick/trailblazer). Please [buy my book](https://leanpub.com/trailblazer) to support the development and to learn all the cool stuff about Cells. The book discusses many use cases of Cells.
 
 <a href="https://leanpub.com/trailblazer">
 ![](https://raw.githubusercontent.com/apotonick/trailblazer/master/doc/trb.jpg)
@@ -493,39 +449,11 @@ Cells is part of the [Trailblazer project](https://github.com/apotonick/trailbla
 * Cells Pagination with AJAX (chapter 6).
 * View Caching and Expiring (chapter 8).
 
-More chapters are coming.
-
 The book picks up where the README leaves off. Go grab a copy and support us - it talks about object- and view design and covers all aspects of the API.
 
+## This is not Cells 3.x!
 
-## Undocumented Features
-
-*(Please don't read this section!)*
-
-### Rendering Global Partials
-
-Although not recommended, you can also render global partials from a cell. Be warned, though, that they will be rendered using our stack, and you might have to include helpers into your view model.
-
-This works by including `Partial` and the corresponding `:partial` option.
-
-```ruby
-class Cell < Cell::ViewModel
-  include Partial
-
-  def show
-    render partial: "../views/shared/map.html" # app/views/shared/map.html.haml
-  end
-```
-
-The provided path is relative to your cell's `::view_paths` directory. The format has to be added to the file name, the template engine suffix will be used from the cell.
-
-You can provide the format in the `render` call, too.
-
-```ruby
-render partial: "../views/shared/map", formats: [:html]
-```
-
-This was mainly added to provide compatibility with 3rd-party gems like [Kaminari and Cells](https://github.com/apotonick/kaminari-cells) that rely on rendering partials within a cell.
+Temporary note: This is the README and API for Cells 4. Many things have improved. If you want to upgrade, [follow this guide](https://github.com/apotonick/cells/wiki/From-Cells-3-to-Cells-4---Upgrading-Guide). When in trouble, join us on the IRC (Freenode) #trailblazer channel.
 
 ## LICENSE
 
