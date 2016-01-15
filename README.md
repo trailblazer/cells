@@ -372,7 +372,7 @@ comments = Comment.all #=> three comments.
 cell(:comment, collection: comments)
 ```
 
-This will invoke `cell(:comment, song).()` three times and concatenate the rendered output automatically. In case you don't want `show` but another state rendered, use `:method`.
+This will invoke `cell(:comment, comment).()` three times and concatenate the rendered output automatically. In case you don't want `show` but another state rendered, use `:method`.
 
 ```ruby
 cell(:comment, collection: comments, method: :list)
