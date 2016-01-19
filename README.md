@@ -3,6 +3,7 @@
 *View Components for Ruby and Rails.*
 
 [![Gitter Chat](https://badges.gitter.im/trailblazer/chat.svg)](https://gitter.im/trailblazer/chat)
+[![TRB Newsletter](https://img.shields.io/badge/TRB-newsletter-lightgrey.svg)](http://trailblazer.to/newsletter/)
 [![Build
 Status](https://travis-ci.org/apotonick/cells.svg)](https://travis-ci.org/apotonick/cells)
 [![Gem Version](https://badge.fury.io/rb/cells.svg)](http://badge.fury.io/rb/cells)
