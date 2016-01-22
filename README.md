@@ -191,7 +191,8 @@ gem 'cells', "~> 4.0.0"
 Various template engines are supported but need to be added to your Gemfile.
 
 * [cells-erb](https://github.com/trailblazer/cells-erb)
-* [cells-haml](https://github.com/trailblazer/cells-haml) Make sure to bundle Haml 4.1: `gem "haml", github: "haml/haml", ref: "7c7c169"`.
+* [cells-hamlit](https://github.com/trailblazer/cells-hamlit) We strongly recommend using [Hamlit](https://github.com/k0kubun/hamlit) as a Haml replacement.
+* [cells-haml](https://github.com/trailblazer/cells-haml) Make sure to bundle Haml 4.1: `gem "haml", github: "haml/haml", ref: "7c7c169"`. Use `cells-hamlit` instead.
 * [cells-slim](https://github.com/trailblazer/cells-slim)
 
 ```ruby
@@ -202,7 +203,7 @@ In Rails, this is all you need to do. In other environments, you need to include
 
 ```ruby
 class CommentCell < Cell::ViewModel
-  include ::Cell::Erb # or Cell::Haml, or Cell::Slim
+  include ::Cell::Erb # or Cell::Hamlit, or Cell::Haml, or Cell::Slim
 end
 ```
 
