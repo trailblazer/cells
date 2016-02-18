@@ -32,7 +32,10 @@ module Cell
     module Helpers
       # Constantizes name, call builders and returns instance.
       def cell(name, *args) # classic Rails fuzzy API.
-        class_from_cell_name(name, options[:controller]).(*args)
+        options = args.extract_options!
+        controller = options[:controller]
+        args << options
+        class_from_cell_name(name, controller).(*args)
       end
     end
     extend Helpers
