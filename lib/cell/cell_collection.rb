@@ -11,7 +11,7 @@ module Cell
     end
 
     def call(state=:show, *args)
-      content = call_sells(state, *args)
+      content = call_cells(state, *args)
       content.join @collection_join
     end
 
@@ -21,7 +21,7 @@ module Cell
 
   private
     # Calls collection of cells.
-    def call_sells(state, *args) # private.
+    def call_cells(state, *args) # private.
       cells.collect { |cell| cell.call(state, *args) }
     end
   end
