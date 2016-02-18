@@ -5,12 +5,6 @@ module Cell
     require 'cell/rails'
     config.cells = ActiveSupport::OrderedOptions.new
 
-    initializer('cells.attach_router') do |app|
-      ViewModel.class_eval do
-        include app.routes.url_helpers # TODO: i hate this, make it better in Rails.
-      end
-    end
-
     # ruthlessly stolen from the zurb-foundation gem.
     initializer 'cells.update_asset_paths' do |app|
       Array(app.config.cells.with_assets).each do |cell_class|
@@ -31,17 +25,11 @@ module Cell
           include ::Cell::RailsExtensions::ActionView
         end
       end
+
+      CellCollection.send(:include, RailsExtensions::CellCollection)
     end
 
     initializer "cells.include_default_helpers" do
-      # include asset helpers (image_path, font_path, ect)
-      ViewModel.class_eval do
-        include ActionView::Helpers::FormHelper # includes ActionView::Helpers::UrlHelper, ActionView::Helpers::FormTagHelper
-        include ::Cell::RailsExtensions::HelpersAreShit
-
-        include ActionView::Helpers::AssetTagHelper
-      end
-
       # set VM#cache_store, etc.
       ViewModel.send(:include, RailsExtensions::ViewModel)
     end

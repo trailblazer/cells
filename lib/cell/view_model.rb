@@ -31,16 +31,8 @@ module Cell
 
     module Helpers
       # Constantizes name, call builders and returns instance.
-      def cell(name, *args, &block) # classic Rails fuzzy API.
-        class_from_cell_name(name).(*args, &block)
-      end
-
-    private
-      # Renders collection of cells.
-      def render_collection(array, options) # private.
-        method = options.delete(:method) || :show
-        join   = options.delete(:collection_join)
-        array.collect { |model| build(model, options).call(method) }.join(join).html_safe
+      def cell(name, *args) # classic Rails fuzzy API.
+        class_from_cell_name(name, options[:controller]).(*args)
       end
     end
     extend Helpers
@@ -54,9 +46,9 @@ module Cell
       #
       #   SongCell.(@song)
       #   SongCell.(collection: Song.all)
-      def call(model=nil, options={}, &block)
+      def call(model=nil, options={})
         if model.is_a?(Hash) and array = model.delete(:collection)
-          return render_collection(array, model.merge(options))
+          return CellCollection.new(array, model.merge(options), self)
         end
 
         build(model, options)
@@ -65,8 +57,23 @@ module Cell
       alias build new # semi-public for Cell::Builder
 
     private
-      def class_from_cell_name(name)
-        "#{name}_cell".camelize.constantize
+      def class_from_cell_name(name, controller)
+        @cell_class ||= begin
+          supports_path = controller.supports_path?
+          routes  = controller.respond_to?(:_routes)  && controller._routes
+          helpers = controller.respond_to?(:_helpers) && controller._helpers
+
+          Class.new("#{name}_cell".camelize.constantize) do
+            if routes
+              include routes.url_helpers(supports_path)
+              include routes.mounted_helpers
+            end
+
+            if helpers
+              include helpers
+            end
+          end
+        end
       end
     end
 
