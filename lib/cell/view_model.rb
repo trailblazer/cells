@@ -8,6 +8,7 @@ module Cell
     end
 
     extend Uber::InheritableAttr
+    extend Uber::Delegates
 
     inheritable_attr :view_paths
     self.view_paths = ["app/cells"]
