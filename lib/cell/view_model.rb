@@ -72,15 +72,18 @@ module Cell
 
     # Get nested cell in instance.
     def cell(name, model=nil, options={})
-      self.class.cell(name, model, options.merge(controller: parent_controller))
+      self.class.cell(name, model, options.merge(context: @options[:context]))
     end
 
     def initialize(model=nil, options={})
-      @parent_controller = options[:controller] # TODO: filter out controller in a performant way.
-
       setup!(model, options)
     end
-    attr_reader :parent_controller
+
+    attr_reader :context
+
+    def parent_controller # TODO: extract to ParentController
+      options[:context][:controller]
+    end
     alias_method :controller, :parent_controller
 
     module Rendering

@@ -18,7 +18,7 @@ module Cell
 
     # Get nested cell in instance.
     def cell(name, model=nil, options={})
-      ViewModel.cell(name, model, options.merge(controller: parent_controller)) # #cell calls need to be delegated to ViewModel.
+      ViewModel.cell(name, model, options.merge(context: @options[:context])) # #cell calls need to be delegated to ViewModel.
     end
 
     self_contained!
