@@ -113,13 +113,16 @@ module Cell
       def with_layout(options, content)
         return content unless layout = options[:layout]
 
-        template = find_template(options.merge view: layout) # we could also allow a different layout engine, etc.
-
-        render_template(template, options) { content }
+        render_layout(layout, options, content)
       end
 
       def render_template(template, options, &block)
         template.render(self, options[:locals], &block) # DISCUSS: hand locals to layout?
+      end
+
+      def render_layout(name, options, content)
+        template = find_template(options.merge view: name) # we could also allow a different layout engine, etc.
+        render_template(template, options) { content }
       end
     end
 
