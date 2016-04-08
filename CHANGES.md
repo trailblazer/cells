@@ -1,9 +1,18 @@
 ## 4.1.0
 
+### API Fix/Changes
+
 * You can no longer pass a block to `ViewModel#call`. Use `tap` if you want the same behavior.
     ```ruby
     Comment::Cell.new(comment).().tap { |cell| }
     ```
+* `Concept#cell` now will resolve a concept cell, and not the old-style suffix cell. The same applies to `Concept#concept`.
+
+    ```ruby
+    concept("song/cell", song).cell("song/cell/composer") #=> resolves to Song::Cell::Composer
+    ```
+    This decision has been made in regards of the upcoming, ass-kicking Cells 5. It simplifies code dramatically, and we consider it unnatural to mix concept and suffix cells in applications.
+
 
 ## 4.0.4
 

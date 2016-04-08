@@ -70,7 +70,7 @@ module Cell
       end
     end
 
-    # Get nested cell in instance.
+    # Build nested cell in instance.
     def cell(name, model=nil, options={})
       self.class.cell(name, model, options.merge(context: @options[:context]))
     end
