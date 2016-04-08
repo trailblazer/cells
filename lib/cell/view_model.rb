@@ -81,11 +81,6 @@ module Cell
 
     attr_reader :context
 
-    def parent_controller # TODO: extract to ParentController
-      options[:context][:controller]
-    end
-    alias_method :controller, :parent_controller
-
     module Rendering
       # Invokes the passed method (defaults to :show) while respecting caching.
       # In Rails, the return value gets marked html_safe.

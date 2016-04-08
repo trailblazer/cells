@@ -47,6 +47,11 @@ module Cell
         super.html_safe
       end
 
+      def parent_controller
+        options[:context][:controller]
+      end
+      alias_method :controller, :parent_controller
+
       def perform_caching?
         ::ActionController::Base.perform_caching
       end
