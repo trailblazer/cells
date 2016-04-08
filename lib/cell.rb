@@ -7,10 +7,6 @@ module Cell
   autoload :TestCase, "cell/test_case"
   autoload :Testing,  "cell/testing"
 
-  def self.rails_version
-    Gem::Version.new(ActionPack::VERSION::STRING)
-  end
-
   class TemplateMissingError < RuntimeError
     def initialize(prefixes, view)
       super("Template missing: view: `#{view.to_s}` prefixes: #{prefixes.inspect}")
