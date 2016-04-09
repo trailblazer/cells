@@ -12,7 +12,10 @@ module Cell
 
   private
     def cell_for(baseclass, name, model=nil, options={})
-      cell = baseclass.cell(name, model, options.merge(controller: controller))
+      options[:context] ||= {}
+      options[:context][:controller] = controller
+
+      cell = baseclass.cell(name, model, options)
       cell.extend(Capybara) if Cell::Testing.capybara? # leaving this here as most people use Capybara.
       cell
     end

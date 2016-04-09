@@ -6,12 +6,16 @@
     ```ruby
     Comment::Cell.new(comment).().tap { |cell| }
     ```
-* `Concept#cell` now will resolve a concept cell, and not the old-style suffix cell. The same applies to `Concept#concept`.
+* `Concept#cell` now will resolve a concept cell (`Song::Cell`), and not the old-style suffix cell (`SongCell`). The same applies to `Concept#concept`.
 
     ```ruby
     concept("song/cell", song).cell("song/cell/composer") #=> resolves to Song::Cell::Composer
     ```
     This decision has been made in regards of the upcoming, ass-kicking Cells 5. It simplifies code dramatically, and we consider it unnatural to mix concept and suffix cells in applications.
+* In case you were using `@parent_controller`, this doesn't exist anymore (and was never documented, either). Use `options[:context][:controller]`.
+
+### Awesomeness
+
 
 
 ## 4.0.4

@@ -13,7 +13,7 @@ class UrlHelperTest < MiniTest::Spec
     end
   end
 
-  let (:song_cell) { Cell.new(Song.new, controller: controller) }
+  let (:song_cell) { Cell.new(Song.new, context: { controller: controller }) }
 
   # path helpers work in cell instance.
   it { song_cell.songs_path.must_equal "/songs" }

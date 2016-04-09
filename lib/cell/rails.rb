@@ -6,12 +6,15 @@ module Cell
 
   module RailsExtensions
     module ActionController
-      def cell(name, model=nil, options={}, &block)
-        ::Cell::ViewModel.cell(name, model, options.merge(controller: self), &block)
+      def cell(name, model=nil, options={}, constant=::Cell::ViewModel, &block)
+        options[:context] ||= {}
+        options[:context][:controller] = self
+
+        constant.cell(name, model, options, &block)
       end
 
       def concept(name, model=nil, options={}, &block)
-        ::Cell::Concept.cell(name, model, options.merge(controller: self), &block)
+        cell(name, model, options, ::Cell::Concept, &block)
       end
     end
 
