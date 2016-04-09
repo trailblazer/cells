@@ -60,14 +60,11 @@ end
 module Comment
   class ShowCell < Cell::ViewModel
     self.view_paths = ['test/fixtures']
+    include Layout::External
 
     def show
       render
     end
-
-    # def call(*args, &block)
-
-    # end
   end
 
   class LayoutCell < Cell::ViewModel
@@ -84,6 +81,8 @@ module Comment
 end
 
 class ExternalLayoutTest < Minitest::Spec
-  it { Comment::ShowCell.new(nil).().must_equal "$show.erb\n" }
-  it { Comment::LayoutCell.new(nil, content: Comment::ShowCell.new(nil).()).().must_equal "$layout.erb{$show.erb\n}\n" }
+  it do
+    Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).
+      ().must_equal "$layout.erb{$show.erb\n, {:beer=>true}}\n"
+  end
 end
