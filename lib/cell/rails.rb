@@ -55,7 +55,7 @@ module Cell
       end
 
       def parent_controller
-        options[:context][:controller]
+        context[:controller]
       end
       alias_method :controller, :parent_controller
 

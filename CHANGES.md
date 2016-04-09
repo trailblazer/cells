@@ -16,6 +16,21 @@
 
 ### Awesomeness
 
+* Introduced the concept of a context object that is being passed to all nested cells. This object is supposed to contain dependencies such as `current_user`, in Rails it contains the "parent_controller" under the `context[:controller]` key.
+
+    Simple provide it as an option when rendering the cell.
+
+    ```ruby
+    cell(:song, song, context: { current_user: current_user })
+    ```
+
+    The `#context` method allows to access this very hash.
+
+    ```ruby
+    def role
+      context[:current_user].admin? "Admin" : "A nobody"
+    end
+    ```
 
 
 ## 4.0.4

@@ -3,7 +3,7 @@ require "test_helper"
 class ContextTest < MiniTest::Spec
   class ParentCell < Cell::ViewModel
     def user
-      options[:context][:user]
+      context[:user]
     end
   end
 

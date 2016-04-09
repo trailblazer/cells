@@ -72,14 +72,16 @@ module Cell
 
     # Build nested cell in instance.
     def cell(name, model=nil, options={})
-      self.class.cell(name, model, options.merge(context: @options[:context]))
+      self.class.cell(name, model, options.merge(context: context))
     end
 
     def initialize(model=nil, options={})
       setup!(model, options)
     end
 
-    attr_reader :context
+    def context # TODO: explicit test.
+      @options[:context]
+    end
 
     module Rendering
       # Invokes the passed method (defaults to :show) while respecting caching.
