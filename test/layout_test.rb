@@ -83,6 +83,6 @@ end
 class ExternalLayoutTest < Minitest::Spec
   it do
     Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).
-      ().must_equal "$layout.erb{$show.erb\n, {:beer=>true}}\n"
+      ().must_equal "$layout.erb{$show.erb, {:beer=>true}\n, {:beer=>true}}\n"
   end
 end
