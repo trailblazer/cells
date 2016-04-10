@@ -26,6 +26,6 @@ require "cell/view_model"
 require "cell/concept"
 require "cell/escaped"
 require "cell/builder"
-
+require 'cell/i18n'
 
 require "cell/railtie" if defined?(Rails)
