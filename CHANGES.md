@@ -1,5 +1,7 @@
 ## 4.1.0
 
+TODO: extract internal :layout, extract builder
+
 ### API Fix/Changes
 
 * You can no longer pass a block to `ViewModel#call`. Use `tap` if you want the same behavior.

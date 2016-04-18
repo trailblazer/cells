@@ -21,14 +21,12 @@ module Cell
       # Allows using a separate layout cell which will wrap the actual content.
       # Use like cell(..., layout: Cell::Layout)
       module External
-        def render_to_string(options)
-          # to simplify the whole layout stuff, let's override #render_to_string and get rid of
-          # #with_layout in Cells 5?
+        def call(*)
           content = super
           return content unless layout = @options[:layout] # TODO: test when invoking cell without :layout.
 
           # DISCUSS: should we allow instances, too? we could cache the layout cell.
-          layout.new(model, context: context, content: content)
+          layout.new(model, context: context, content: content).()
         end
       end
     end

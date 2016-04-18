@@ -63,7 +63,7 @@ module Comment
     include Layout::External
 
     def show
-      render
+      render + render
     end
   end
 
@@ -82,7 +82,7 @@ end
 
 class ExternalLayoutTest < Minitest::Spec
   it do
-    Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).
-      ().must_equal "$layout.erb{$show.erb, {:beer=>true}\n, {:beer=>true}}\n"
+    r=Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).
+      ().must_equal "$layout.erb{$show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n"
   end
 end
