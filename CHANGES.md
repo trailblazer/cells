@@ -44,6 +44,11 @@ TODO: extract internal :layout, extract builder
       context[:current_user].admin? "Admin" : "A nobody"
     end
     ```
+* The `cell` helper now allows to pass in a constant, too.
+
+    ```ruby
+    cell(Song::Cell, song)
+    ```
 
 
 ## 4.0.4
