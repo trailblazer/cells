@@ -3,8 +3,6 @@ require_relative 'dummy/config/environment'
 
 require 'minitest/autorun'
 
-require 'minitest/reporters'
-Minitest::Reporters.use! [Minitest::Reporters::ProgressReporter.new]
 require "rails/test_help" # adds stuff like @routes, etc.
 
 require 'cells'
