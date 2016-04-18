@@ -15,6 +15,17 @@ TODO: extract internal :layout, extract builder
     ```
     This decision has been made in regards of the upcoming, ass-kicking Cells 5. It simplifies code dramatically, and we consider it unnatural to mix concept and suffix cells in applications.
 * In case you were using `@parent_controller`, this doesn't exist anymore (and was never documented, either). Use `options[:context][:controller]`.
+* `::self_contained!` is no longer included into `ViewModel`. Please try using `Trailblazer::Cell` instead. If you still need it, here's how.
+
+    ```ruby
+    class SongCell < Cell::ViewModel
+      extend SelfContained
+      self_contained!
+    ```
+
+* `Cell::Concept` is deprecated and you should be using the excellent `Trailblazer::Cell` class instead, because that's what a concept cell tries to be in an awkward way. The latter is usable without Trailblazer.
+
+    We are hereby dropping support for `Cell::Concept` (it still works).
 
 ### Awesomeness
 

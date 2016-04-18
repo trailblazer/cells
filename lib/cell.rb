@@ -17,7 +17,6 @@ end
 require "cell/caching"
 require "cell/caching/notification"
 require "cell/prefixes"
-require "cell/self_contained"
 require "cell/layout"
 require "cell/templates"
 require "cell/abstract"

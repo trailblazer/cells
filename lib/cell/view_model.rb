@@ -20,7 +20,6 @@ module Cell
     end
 
     include Prefixes
-    extend SelfContained
     extend Util
 
     def self.controller_path
