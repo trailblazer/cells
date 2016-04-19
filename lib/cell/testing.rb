@@ -13,7 +13,12 @@ module Cell
   private
     def cell_for(baseclass, name, model=nil, options={})
       cell = baseclass.cell(name, model, options.merge(controller: controller))
-      cell.extend(Capybara) if Cell::Testing.capybara? # leaving this here as most people use Capybara.
+
+      if Cell::Testing.capybara? # leaving this here as most people use Capybara.
+        return ::Capybara::string(cell) unless cell.is_a?(Cell::ViewModel) # HORRIBLE hack, will be fixed with new collection API in 4.1 :)
+        cell.extend(Capybara)
+      end
+
       cell
     end
 

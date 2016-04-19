@@ -1,3 +1,59 @@
+## 4.1.0
+
+TODO: extract internal :layout, extract builder
+
+### API Fix/Changes
+
+* You can no longer pass a block to `ViewModel#call`. Use `tap` if you want the same behavior.
+    ```ruby
+    Comment::Cell.new(comment).().tap { |cell| }
+    ```
+* `Concept#cell` now will resolve a concept cell (`Song::Cell`), and not the old-style suffix cell (`SongCell`). The same applies to `Concept#concept`.
+
+    ```ruby
+    concept("song/cell", song).cell("song/cell/composer") #=> resolves to Song::Cell::Composer
+    ```
+    This decision has been made in regards of the upcoming, ass-kicking Cells 5. It simplifies code dramatically, and we consider it unnatural to mix concept and suffix cells in applications.
+* In case you were using `@parent_controller`, this doesn't exist anymore (and was never documented, either). Use `options[:context][:controller]`.
+* `::self_contained!` is no longer included into `ViewModel`. Please try using `Trailblazer::Cell` instead. If you still need it, here's how.
+
+    ```ruby
+    class SongCell < Cell::ViewModel
+      extend SelfContained
+      self_contained!
+    ```
+
+* `Cell::Concept` is deprecated and you should be using the excellent `Trailblazer::Cell` class instead, because that's what a concept cell tries to be in an awkward way. The latter is usable without Trailblazer.
+
+    We are hereby dropping support for `Cell::Concept` (it still works).
+
+### Awesomeness
+
+* Introduced the concept of a context object that is being passed to all nested cells. This object is supposed to contain dependencies such as `current_user`, in Rails it contains the "parent_controller" under the `context[:controller]` key.
+
+    Simple provide it as an option when rendering the cell.
+
+    ```ruby
+    cell(:song, song, context: { current_user: current_user })
+    ```
+
+    The `#context` method allows to access this very hash.
+
+    ```ruby
+    def role
+      context[:current_user].admin? "Admin" : "A nobody"
+    end
+    ```
+* The `cell` helper now allows to pass in a constant, too.
+
+    ```ruby
+    cell(Song::Cell, song)
+    ```
+
+## 4.0.5
+
+* Fix `Testing` so you can use Capybara matchers on `cell(:song, collection: [..])`.
+
 ## 4.0.4
 
 * `Escaped::property` now properly escapes all passed properties. Thanks @xzo and @jlogsdon!
