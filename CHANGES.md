@@ -50,6 +50,9 @@ TODO: extract internal :layout, extract builder
     cell(Song::Cell, song)
     ```
 
+## 4.0.5
+
+* Fix `Testing` so you can use Capybara matchers on `cell(:song, collection: [..])`.
 
 ## 4.0.4
 
