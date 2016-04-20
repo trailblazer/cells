@@ -1,6 +1,7 @@
 ## 4.1.0
 
-TODO: extract internal :layout, extract builder
+TODO: extract internal :layout
+remove SelfContained
 
 ### API Fix/Changes
 

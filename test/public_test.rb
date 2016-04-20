@@ -49,6 +49,16 @@ class PublicTest < MiniTest::Spec
 
   # ViewModel.cell(collection: []).() invokes #show.
   it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module]).().must_equal '[Object, {}][Module, {}]' }
-  # ViewModel.cell(collection: []).() invokes #show instead of #show.
+
+  # ViewModel.cell(collection: []).(:detail) invokes #detail instead of #show.
   it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module]).(:detail).must_equal '* [Object, {}]* [Module, {}]' }
+
+  it do
+    content = ""
+    Cell::ViewModel.cell('public_test/song', collection: [Object, Module]).each_with_index do |cell, i|
+      content += (i == 1 ? cell.(:detail) : cell.())
+    end
+
+    content.must_equal '[Object, {}]* [Module, {}]'
+  end
 end
