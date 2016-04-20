@@ -25,6 +25,7 @@ require "cell/view_model"
 require "cell/concept"
 require "cell/escaped"
 require "cell/builder"
+require "cell/collection"
 
 
 require "cell/railtie" if defined?(Rails)

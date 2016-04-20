@@ -57,22 +57,6 @@ module Cell
       alias build new # semi-public for Cell::Builder
 
       # DISCUSS: allow iterating this as an array of cells?
-      class Collection < Array
-        def initialize(ary, options, cell_class)
-          cells = ary.collect { |model| cell_class.build(model, options) }
-
-          super(cells)
-          @options = options
-        end
-
-        def call(state=:show)
-          method = @options.delete(:method) || state # TODO: deprecate :method.
-          join   = @options.delete(:collection_join)
-          collect { |cell| cell.(method) }.join(join).html_safe
-        end
-
-        alias to_s call
-      end
 
     private
       def class_from_cell_name(name)

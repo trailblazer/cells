@@ -32,33 +32,47 @@ class PublicTest < MiniTest::Spec
   it { Cell::ViewModel.cell("public_test/song", Object, genre: "Metal").initialize_args.must_equal [Object, {genre:"Metal"}] }
 
   # ViewModel.cell(collection: []) renders cells.
-  it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module]).to_s.must_equal '[Object, {}][Module, {}]' }
+  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).to_s.must_equal '[Object, {}][Module, {}]' }
 
   # ViewModel.cell(collection: []) renders cells with custom join.
-  it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module], collection_join: '<br/>').to_s.must_equal '[Object, {}]<br/>[Module, {}]' }
+  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], collection_join: '<br/>').to_s.must_equal '[Object, {}]<br/>[Module, {}]' }
 
   # ViewModel.cell(collection: []) renders html_safe.
   it { Cell::ViewModel.cell("public_test/song", collection: [Object]).to_s.class.must_equal ActiveSupport::SafeBuffer }
 
   # ViewModel.cell(collection: []) passes generic options to cell.
-  it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module], genre: 'Metal').to_s.must_equal "[Object, {:genre=>\"Metal\"}][Module, {:genre=>\"Metal\"}]" }
+  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal').to_s.must_equal "[Object, {:genre=>\"Metal\"}][Module, {:genre=>\"Metal\"}]" }
 
   # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
   # TODO: remove in 5.0.
-  it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module], method: :detail).to_s.must_equal '* [Object, {}]* [Module, {}]' }
+  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], method: :detail).to_s.must_equal '* [Object, {}]* [Module, {}]' }
 
   # ViewModel.cell(collection: []).() invokes #show.
-  it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module]).().must_equal '[Object, {}][Module, {}]' }
+  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).().must_equal '[Object, {}][Module, {}]' }
 
   # ViewModel.cell(collection: []).(:detail) invokes #detail instead of #show.
-  it { Cell::ViewModel.cell('public_test/song', collection: [Object, Module]).(:detail).must_equal '* [Object, {}]* [Module, {}]' }
+  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).(:detail).must_equal '* [Object, {}]* [Module, {}]' }
 
   it do
     content = ""
-    Cell::ViewModel.cell('public_test/song', collection: [Object, Module]).each_with_index do |cell, i|
+    Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).each_with_index do |cell, i|
       content += (i == 1 ? cell.(:detail) : cell.())
     end
 
     content.must_equal '[Object, {}]* [Module, {}]'
+  end
+
+  # cell(collection: []).join captures return value and joins it for you.
+  it do
+    Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).join do |cell, i|
+      i == 1 ? cell.(:detail) : cell.()
+    end.must_equal '[Object, {}]* [Module, {}]'
+  end
+
+  # cell(collection: []).join("<") captures return value and joins it for you with join.
+  it do
+    Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).join(">") do |cell, i|
+      i == 1 ? cell.(:detail) : cell.()
+    end.must_equal '[Object, {}]>* [Module, {}]'
   end
 end
