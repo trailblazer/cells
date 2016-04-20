@@ -17,11 +17,9 @@ module Cell
 
       cell = baseclass.cell(name, model, options)
 
-      if Cell::Testing.capybara? # leaving this here as most people use Capybara.
-        cell.extend(Capybara) # apparently it's ok to only override ViewModel#call and capybararize the result.
-        # when joining in a Collection, the joint will still be capybararized.
-      end
-
+      cell.extend(Capybara) if Cell::Testing.capybara? # leaving this here as most people use Capybara.
+      # apparently it's ok to only override ViewModel#call and capybararize the result.
+      # when joining in a Collection, the joint will still be capybararized.
       cell
     end
 
