@@ -80,6 +80,6 @@ class ConceptTest < MiniTest::Spec
     it { Cell::Concept.cell("record/cell", nil, context: { controller: Object }).concept("record/cell", nil, tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [Object]" }
     # concept(.., collection: ..)
     it { Cell::Concept.cell("record/cell", nil, context: { controller: Object }).
-      concept("record/cell", collection: [1,2], tracks: 24, method: :description).must_equal "A Tribute To Rancid, with 24 songs! [Object]A Tribute To Rancid, with 24 songs! [Object]" }
+      concept("record/cell", collection: [1,2], tracks: 24, method: :description).().must_equal "A Tribute To Rancid, with 24 songs! [Object]A Tribute To Rancid, with 24 songs! [Object]" }
   end
 end

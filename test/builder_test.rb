@@ -54,7 +54,7 @@ class BuilderTest < MiniTest::Spec
   it { SongCell.(Hit.new("Frenzy")).must_be_instance_of HitCell }
 
   # with collection.
-  it { SongCell.(collection: [Song.new("Nation States"), Hit.new("New York")]).must_equal "* Nation States* **New York**" }
+  it { SongCell.(collection: [Song.new("Nation States"), Hit.new("New York")]).().must_equal "* Nation States* **New York**" }
 
   # with Concept
   class Track < Cell::Concept

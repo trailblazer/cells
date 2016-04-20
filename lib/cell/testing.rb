@@ -18,8 +18,8 @@ module Cell
       cell = baseclass.cell(name, model, options)
 
       if Cell::Testing.capybara? # leaving this here as most people use Capybara.
-        return ::Capybara::string(cell) unless cell.is_a?(Cell::ViewModel) # HORRIBLE hack, will be fixed with new collection API in 4.1 :)
-        cell.extend(Capybara)
+        cell.extend(Capybara) # apparently it's ok to only override ViewModel#call and capybararize the result.
+        # when joining in a Collection, the joint will still be capybararized.
       end
 
       cell

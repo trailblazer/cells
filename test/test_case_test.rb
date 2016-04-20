@@ -21,7 +21,7 @@ class TestCaseTest < MiniTest::Spec
     it { subject.must_be_instance_of SongCell }
     it { subject.model.must_equal song }
 
-    it { cell("test_case_test/song", collection: [song, song]).must_equal "Give It All!Give It All!" }
+    it { cell("test_case_test/song", collection: [song, song]).().must_equal "Give It All!Give It All!" }
   end
 
 
@@ -51,7 +51,7 @@ class CapybaraTest < MiniTest::Spec
 
     it { subject.(:show).has_selector?('b').must_equal true }
 
-    it { cell("capybara_test/capybara", collection: [1, 2]).has_selector?('b').must_equal true }
+    it { cell("capybara_test/capybara", collection: [1, 2]).().has_selector?('b').must_equal true }
 
     # FIXME: this kinda sucks, what if you want the string in a Capybara environment?
     it { subject.(:show).to_s.must_match "<b>Grunt</b>" }

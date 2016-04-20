@@ -34,14 +34,6 @@ module Cell
         constant = name.is_a?(Class) ? name : class_from_cell_name(name)
         constant.(*args, &block)
       end
-
-    private
-      # Renders collection of cells.
-      def render_collection(array, options) # private.
-        method = options.delete(:method) || :show
-        join   = options.delete(:collection_join)
-        array.collect { |model| build(model, options).call(method) }.join(join).html_safe
-      end
     end
     extend Helpers
 
@@ -55,14 +47,31 @@ module Cell
       #   SongCell.(@song)
       #   SongCell.(collection: Song.all)
       def call(model=nil, options={}, &block)
-        if model.is_a?(Hash) and array = model.delete(:collection)
-          return render_collection(array, model.merge(options))
+        if model.is_a?(Hash) and array = model.delete(:collection) # FIXME.
+          return Collection.new(array, model.merge(options), self)
         end
 
         build(model, options)
       end
 
       alias build new # semi-public for Cell::Builder
+
+      # DISCUSS: allow iterating this as an array of cells?
+      class Collection
+        def initialize(ary, options, cell_class)
+          @ary = ary
+          @options = options
+          @cell_class = cell_class
+        end
+
+        def call(state=:show)
+          method = @options.delete(:method) || state # TODO: deprecate :method.
+          join   = @options.delete(:collection_join)
+          @ary.collect { |model| @cell_class.build(model, @options).call(method) }.join(join).html_safe
+        end
+
+        alias to_s call
+      end
 
     private
       def class_from_cell_name(name)
