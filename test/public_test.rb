@@ -53,6 +53,8 @@ class PublicTest < MiniTest::Spec
   # ViewModel.cell(collection: []).(:detail) invokes #detail instead of #show.
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).(:detail).must_equal '* [Object, {}]* [Module, {}]' }
 
+  # collection: [], context is passed on
+
   it do
     skip # don't expose #each_with_index interface.
     content = ""

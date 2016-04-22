@@ -9,10 +9,13 @@ module Cell
       @cell_class = cell_class
     end
 
-    def call(state=:show)
-      join(@join) { |cell, i| cell.(@method || state) }.
-        html_safe
+    module Call
+      def call(state=:show)
+        join(@join) { |cell, i| cell.(@method || state) }.
+          html_safe # FIXME: this is not desired outside of rails.
+      end
     end
+    include Call
 
     alias to_s call
 
@@ -25,5 +28,20 @@ module Cell
       end.
         join(separator)
     end
+
+    module Layout
+      def call(*) # WARNING: THIS IS NOT FINAL API.
+        blaaaa_layout = @options.delete(:layout) # FIXME: THAT SUCKS.
+
+        content = super # DISCUSS: that could come in via the pipeline argument.
+        ViewModel::Layout::External::Render.(content, @ary, blaaaa_layout, @options)
+      end
+    end
+    include Layout
+
   end
 end
+
+# Collection#call
+# |> Header#call
+# |> Layout#call

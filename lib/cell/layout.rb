@@ -23,12 +23,16 @@ module Cell
       module External
         def call(*)
           content = super
-          return content unless layout = @options[:layout] # TODO: test when invoking cell without :layout.
+          Render.(content, model, @options[:layout], @options)
+        end
+
+        Render = ->(content, model, layout, options) do # WARNING: THIS IS NOT FINAL API.
+          return content unless layout = layout # TODO: test when invoking cell without :layout.
 
           # DISCUSS: should we allow instances, too? we could cache the layout cell.
-          layout.new(model, context: context, content: content).()
+          layout.new(model, context: options[:context], content: content).()
         end
-      end
+      end # External
     end
   end
 end
