@@ -16,6 +16,9 @@ module Cell
 
     alias to_s call
 
+    # Iterate collection and build a cell for each item.
+    # The passed block receives that cell and the index.
+    # Its return value is captured and joined.
     def join(separator="", &block)
       @ary.each_with_index.collect do |model, i|
         yield @cell_class.build(model, @options), i
