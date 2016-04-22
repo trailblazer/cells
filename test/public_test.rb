@@ -54,6 +54,7 @@ class PublicTest < MiniTest::Spec
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).(:detail).must_equal '* [Object, {}]* [Module, {}]' }
 
   it do
+    skip # don't expose #each_with_index interface.
     content = ""
     Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).each_with_index do |cell, i|
       content += (i == 1 ? cell.(:detail) : cell.())
