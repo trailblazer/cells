@@ -459,7 +459,7 @@ Temporary note: This is the README and API for Cells 4. Many things have improve
 
 ## LICENSE
 
-Copyright (c) 2007-2015, Nick Sutterer
+Copyright (c) 2007-2016, Nick Sutterer
 
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
