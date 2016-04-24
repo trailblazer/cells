@@ -56,10 +56,32 @@ module Cell
     end
     #   ViewModel.template_engine = app.config.app_generators.rails.fetch(:template_engine, 'erb').to_s
 
-    initializer('cells.development') do |app|
-      if Rails.env == "development"
+    initializer('cells.reloading') do |app|
+      unless app.config.cache_classes
         require "cell/development"
-        ViewModel.send(:include, Development)
+        ViewModel.send(:include, Development::Clearable)
+
+        callback = lambda do
+          Cell::ViewModel.clear_templates!
+        end
+
+        if app.config.reload_classes_only_on_change
+          dirs = {}
+          extentions = ["haml", "erb", "slim"]
+          view_paths = Cell::ViewModel.view_paths + Cell::Concept.view_paths
+          view_paths.each do |path|
+            dirs[path] = extentions
+          end
+
+          reloader = app.config.file_watcher.new([], dirs, &callback)
+          app.reloaders << reloader
+
+          ActionDispatch::Reloader.to_prepare(prepend: true) do
+            reloader.execute_if_updated
+          end
+        else
+          ActionDispatch::Reloader.to_cleanup(&callback)
+        end
       end
     end
 
