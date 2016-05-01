@@ -1,7 +1,0 @@
-<%= simple_form_for Song.new do |f| %>
-  First
-  <%= f.input :id %>
-  <%= f.fields_for :artist do |a| %>
-    <%= a.input :id %>
-  <% end %>
-<% end %>

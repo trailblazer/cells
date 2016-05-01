@@ -5,6 +5,10 @@ class ContextTest < MiniTest::Spec
     def user
       context[:user]
     end
+
+    def controller
+      context[:controller]
+    end
   end
 
   let (:model) { Object.new }

@@ -72,9 +72,6 @@ class RenderTest < MiniTest::Spec
   # works with state called `send`
   it { SongCell.new(nil).call(:send).must_equal "send" }
 
-  # #call returns html_safe.
-  it { SongCell.new(nil).call.must_be_instance_of ActiveSupport::SafeBuffer }
-
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }

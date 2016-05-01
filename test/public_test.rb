@@ -37,9 +37,6 @@ class PublicTest < MiniTest::Spec
   # ViewModel.cell(collection: []) renders cells with custom join.
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], collection_join: '<br/>').to_s.must_equal '[Object, {}]<br/>[Module, {}]' }
 
-  # ViewModel.cell(collection: []) renders html_safe.
-  it { Cell::ViewModel.cell("public_test/song", collection: [Object]).to_s.class.must_equal ActiveSupport::SafeBuffer }
-
   # ViewModel.cell(collection: []) passes generic options to cell.
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal').to_s.must_equal "[Object, {:genre=>\"Metal\"}][Module, {:genre=>\"Metal\"}]" }
 

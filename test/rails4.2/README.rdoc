@@ -1,3 +1,0 @@
-== README
-
-Demo app for Cells 4 and Rails engines

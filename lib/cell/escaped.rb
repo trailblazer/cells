@@ -23,6 +23,7 @@ module Cell::ViewModel::Escaped
 
   # Can be used as a helper in the cell, too.
   # Feel free to override and use a different escaping implementation.
+  require "erb"
   def escape!(string)
     ::ERB::Util.html_escape(string)
   end

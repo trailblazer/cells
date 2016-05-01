@@ -11,8 +11,8 @@ module Cell
 
     module Call
       def call(state=:show)
-        join(@join) { |cell, i| cell.(@method || state) }.
-          html_safe # FIXME: this is not desired outside of rails.
+        join(@join) { |cell, i| cell.(@method || state) }#.
+          #html_safe # FIXME: this is not desired outside of rails.
       end
     end
     include Call
