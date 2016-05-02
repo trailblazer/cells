@@ -8,9 +8,7 @@ class CellTest < MiniTest::Spec
     end
 
     def show_with_block(&block)
-      render do
-        block
-      end
+      render(&block)
     end
   end
 
@@ -18,5 +16,5 @@ class CellTest < MiniTest::Spec
   it { SongCell.new(nil, genre: "Punkrock").send(:options)[:genre].must_equal "Punkrock" }
 
   # #block
-  it { SongCell.new(nil, genre: "Punkrock").(:show_with_block) { "hello" }.must_equal "<b>hello</b>" }
+  it { SongCell.new(nil, genre: "Punkrock").(:show_with_block) { "hello" }.must_equal "<b>hello</b>\n" }
 end

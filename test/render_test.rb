@@ -47,6 +47,10 @@ class SongCell < Cell::ViewModel
     "send"
   end
 
+  def with_block
+    render { "Clean Sheets" + render(:with_html) }
+  end
+
 private
   def title
     "Papertiger"
@@ -96,6 +100,9 @@ class RenderTest < MiniTest::Spec
 
   # doesn't escape HTML.
   it { SongCell.new(nil).call(:with_html).must_equal "<p>Yew!</p>" }
+
+  # render {} with block
+  it { SongCell.new(nil).with_block.must_equal "Yo! Clean Sheets<p>Yew!</p>\n" }
 end
 
 # test inheritance
