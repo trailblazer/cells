@@ -60,18 +60,7 @@ module Cell
 
     private
       def class_from_cell_name(name)
-        constant_for("#{name}_cell")
-      end
-
-      # WARNING: this API might change.
-      def constant_for(name) # TODO: MOVE TO CELLS-RAILS.
-        constant = Object
-        name.split("/").each do |part|
-          constant = constant.const_get(part.split('_').collect(&:capitalize).join)
-        end
-        return constant
-
-        name.camelize.constantize
+        util.constant_for("#{name}_cell")
       end
     end
 
