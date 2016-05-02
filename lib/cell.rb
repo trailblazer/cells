@@ -4,7 +4,6 @@ require "uber/delegates"
 require "cell/version"
 
 module Cell
-  autoload :TestCase, "cell/test_case"
   autoload :Testing,  "cell/testing"
 
   class TemplateMissingError < RuntimeError
@@ -15,7 +14,6 @@ module Cell
 end
 
 require "cell/caching"
-require "cell/caching/notification"
 require "cell/prefixes"
 require "cell/layout"
 require "cell/templates"
@@ -26,6 +24,3 @@ require "cell/concept"
 require "cell/escaped"
 require "cell/builder"
 require "cell/collection"
-
-
-require "cell/railtie" if defined?(Rails)
