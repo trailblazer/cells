@@ -1,11 +1,10 @@
 language: ruby
 rvm:
   - ruby-head
+  - 2.3
   - 2.2
   - 2.1
-  - 2.0.0
-  - 1.9.3
-  - jruby-19mode
+  - 2.0
 
 sudo: false
 cache: bundler
