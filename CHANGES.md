@@ -55,6 +55,9 @@ YOU CAN PASS BLOCK BUT IT WILL BE PASSED TO Template#render.
     cell(Song::Cell, song)
     ```
 
+    :layout
+    :layout with :collection
+
 ## 4.0.5
 
 * Fix `Testing` so you can use Capybara matchers on `cell(:song, collection: [..])`.
