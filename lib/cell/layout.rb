@@ -30,7 +30,7 @@ module Cell
           return content unless layout = layout # TODO: test when invoking cell without :layout.
 
           # DISCUSS: should we allow instances, too? we could cache the layout cell.
-          layout.new(model, context: options[:context], content: content).()
+          layout.new(model, context: options[:context]).(&lambda { content })
         end
       end # External
     end

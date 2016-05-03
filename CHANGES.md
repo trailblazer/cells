@@ -5,6 +5,9 @@ remove SelfContained
 
 ### API Fix/Changes
 
+* `#show` is now provided automatically.
+
+YOU CAN PASS BLOCK BUT IT WILL BE PASSED TO Template#render.
 * You can no longer pass a block to `ViewModel#call`. Use `tap` if you want the same behavior.
     ```ruby
     Comment::Cell.new(comment).().tap { |cell| }

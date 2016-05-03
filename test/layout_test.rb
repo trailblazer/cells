@@ -69,14 +69,6 @@ module Comment
 
   class LayoutCell < Cell::ViewModel
     self.view_paths = ['test/fixtures']
-
-    def show
-      render
-    end
-
-    def content
-      options[:content]
-    end
   end
 end
 
