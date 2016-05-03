@@ -42,8 +42,8 @@ class PrefixesTest < MiniTest::Spec
 
 
   describe "::controller_path" do
-    it { ::BassistCell.new(@controller).controller_path.must_equal "bassist" }
-    it { SingerCell.new(@controller).controller_path.must_equal "prefixes_test/singer" }
+    it { ::BassistCell.new(@controller).class.controller_path.must_equal "bassist" }
+    it { SingerCell.new(@controller).class.controller_path.must_equal "prefixes_test/singer" }
   end
 
   describe "#_prefixes" do

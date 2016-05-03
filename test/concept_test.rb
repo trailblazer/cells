@@ -48,10 +48,10 @@ end
 
 class ConceptTest < MiniTest::Spec
   describe "::controller_path" do
-    it { Record::Cell.new.controller_path.must_equal "record" }
-    it { Record::Cell::Song.new.controller_path.must_equal "record/song" }
-    it { Record::Cells::Cell.new.controller_path.must_equal "record/cells" }
-    it { Record::Cells::Cell::Song.new.controller_path.must_equal "record/cells/song" }
+    it { Record::Cell.new.class.controller_path.must_equal "record" }
+    it { Record::Cell::Song.new.class.controller_path.must_equal "record/song" }
+    it { Record::Cells::Cell.new.class.controller_path.must_equal "record/cells" }
+    it { Record::Cells::Cell::Song.new.class.controller_path.must_equal "record/cells/song" }
   end
 
 

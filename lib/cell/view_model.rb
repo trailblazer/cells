@@ -3,10 +3,6 @@ module Cell
     extend Abstract
     abstract!
 
-    def controller_path
-      self.class.controller_path
-    end
-
     extend Uber::InheritableAttr
     extend Uber::Delegates
 
@@ -55,8 +51,6 @@ module Cell
       end
 
       alias build new # semi-public for Cell::Builder
-
-      # DISCUSS: allow iterating this as an array of cells?
 
     private
       def class_from_cell_name(name)
