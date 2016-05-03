@@ -85,6 +85,11 @@ module Cell
         content.to_s
       end
 
+      # Since 4.1, you get the #show method for free.
+      def show(&block)
+        render(&block)
+      end
+
       # render :show
       def render(options={}, &block)
         options = normalize_options(options)
