@@ -32,6 +32,8 @@ YOU CAN PASS BLOCK BUT IT WILL BE PASSED TO Template#render.
 
     We are hereby dropping support for `Cell::Concept` (it still works).
 
+* Deprecating `:collection_join` and `:method` for collections.
+
 ### Awesomeness
 
 * Introduced the concept of a context object that is being passed to all nested cells. This object is supposed to contain dependencies such as `current_user`, in Rails it contains the "parent_controller" under the `context[:controller]` key.

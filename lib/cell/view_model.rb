@@ -43,7 +43,7 @@ module Cell
       #   SongCell.(@song)
       #   SongCell.(collection: Song.all)
       def call(model=nil, options={}, &block)
-        if model.is_a?(Hash) and array = model.delete(:collection) # FIXME.
+        if model.is_a?(Hash) and array = model[:collection]
           return Collection.new(array, model.merge(options), self)
         end
 

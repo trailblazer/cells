@@ -38,7 +38,7 @@ class PublicTest < MiniTest::Spec
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], collection_join: '<br/>').to_s.must_equal '[Object, {}]<br/>[Module, {}]' }
 
   # ViewModel.cell(collection: []) passes generic options to cell.
-  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal').to_s.must_equal "[Object, {:genre=>\"Metal\"}][Module, {:genre=>\"Metal\"}]" }
+  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal', context: { ready: true }).to_s.must_equal "[Object, {:genre=>\"Metal\", :context=>{:ready=>true}}][Module, {:genre=>\"Metal\", :context=>{:ready=>true}}]" }
 
   # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
   # TODO: remove in 5.0.
@@ -50,17 +50,20 @@ class PublicTest < MiniTest::Spec
   # ViewModel.cell(collection: []).(:detail) invokes #detail instead of #show.
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).(:detail).must_equal '* [Object, {}]* [Module, {}]' }
 
-  # collection: [], context is passed on
-
+  # #cell(collection: [], genre: "Fusion").() doesn't change options hash.
   it do
-    skip # don't expose #each_with_index interface.
-    content = ""
-    Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).each_with_index do |cell, i|
-      content += (i == 1 ? cell.(:detail) : cell.())
-    end
-
-    content.must_equal '[Object, {}]* [Module, {}]'
+    Cell::ViewModel.cell("public_test/song", options = { genre: "Fusion", collection: [Object] }).()
+    options.to_s.must_equal "{:genre=>\"Fusion\", :collection=>[Object]}"
   end
+
+  # it do
+  #   content = ""
+  #   Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).each_with_index do |cell, i|
+  #     content += (i == 1 ? cell.(:detail) : cell.())
+  #   end
+
+  #   content.must_equal '[Object, {}]* [Module, {}]'
+  # end
 
   # cell(collection: []).join captures return value and joins it for you.
   it do

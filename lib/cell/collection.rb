@@ -1,12 +1,20 @@
 module Cell
   class Collection
     def initialize(ary, options, cell_class)
-      @method = options.delete(:method) # TODO: deprecate :method.
-      @join   = options.delete(:collection_join)
+      options.delete(:collection)
+      @method     = options.delete(:method)           # TODO: remove in 5.0.
+      @join       = options.delete(:collection_join)  # TODO: remove in 5.0.
 
-      @ary = ary
-      @options = options
+      @ary        = ary
+      @options    = options
       @cell_class = cell_class
+
+      deprecate_options!
+    end
+
+    def deprecate_options! # TODO: remove in 5.0.
+      warn "[Cells] The :method option is deprecated. Please use `call(method)` as documented here: http://trailblazer.to/gems/cells/api.html#collection" if @method
+      warn "[Cells] The :collection_join option is deprecated. Please use `join(\"<br>\")` as documented here: http://trailblazer.to/gems/cells/api.html#collection" if @collection_join
     end
 
     module Call
@@ -30,10 +38,10 @@ module Cell
 
     module Layout
       def call(*) # WARNING: THIS IS NOT FINAL API.
-        blaaaa_layout = @options.delete(:layout) # FIXME: THAT SUCKS.
+        layout = @options.delete(:layout) # we could also override #initialize and that there?
 
         content = super # DISCUSS: that could come in via the pipeline argument.
-        ViewModel::Layout::External::Render.(content, @ary, blaaaa_layout, @options)
+        ViewModel::Layout::External::Render.(content, @ary, layout, @options)
       end
     end
     include Layout
