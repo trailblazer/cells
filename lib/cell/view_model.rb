@@ -99,29 +99,15 @@ module Cell
     private
       def render_to_string(options, &block)
         template = find_template(options)
-        content  = render_template(template, options, &block)
-
-        # TODO: allow other (global) layout dirs.
-        with_layout(options, content)
+        render_template(template, options, &block)
       end
 
       def render_state(*args, &block)
         __send__(*args, &block)
       end
 
-      def with_layout(options, content)
-        return content unless layout = options[:layout]
-
-        render_layout(layout, options, content)
-      end
-
       def render_template(template, options, &block)
         template.render(self, options[:locals], &block) # DISCUSS: hand locals to layout?
-      end
-
-      def render_layout(name, options, content)
-        template = find_template(options.merge view: name) # we could also allow a different layout engine, etc.
-        render_template(template, options) { content }
       end
     end
 

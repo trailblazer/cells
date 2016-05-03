@@ -13,13 +13,31 @@ module Cell
         end
       end
 
+    private
       def process_options!(options)
         options[:layout] ||= self.class.layout_name
         super
       end
 
+      def render_to_string(options, &block)
+        with_layout(options, super)
+      end
+
+      def with_layout(options, content)
+        return content unless layout = options[:layout]
+
+        render_layout(layout, options, content)
+      end
+
+      def render_layout(name, options, content)
+        template = find_template(options.merge view: name) # we could also allow a different layout engine, etc.
+        render_template(template, options) { content }
+      end
+
       # Allows using a separate layout cell which will wrap the actual content.
       # Use like cell(..., layout: Cell::Layout)
+      #
+      # Note that still allows the `render layout: :application` option.
       module External
         def call(*)
           content = super

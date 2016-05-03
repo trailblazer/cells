@@ -5,7 +5,8 @@ remove SelfContained
 
 ### API Fix/Changes
 
-* `#show` is now provided automatically.
+* A basic, rendering `#show` method is now provided automatically.
+* `ViewModel#render` now accepts a block that can be `yield`ed in the view.
 
 YOU CAN PASS BLOCK BUT IT WILL BE PASSED TO Template#render.
 * You can no longer pass a block to `ViewModel#call`. Use `tap` if you want the same behavior.
