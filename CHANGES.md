@@ -1,18 +1,25 @@
 ## 4.1.0
 
-TODO: extract internal :layout
-remove SelfContained
-
 ### API Fix/Changes
 
+* All Rails code removed. Make sure to use [Cells-rails](https://github.com/trailblazer/cells-rails) if you want the old Rails behavior.
 * A basic, rendering `#show` method is now provided automatically.
 * `ViewModel#render` now accepts a block that can be `yield`ed in the view.
 
-YOU CAN PASS BLOCK BUT IT WILL BE PASSED TO Template#render.
-* You can no longer pass a block to `ViewModel#call`. Use `tap` if you want the same behavior.
+* Passing a block to `ViewModel#call` changed. Use `tap` if you want the "old" behavior (which was never official or documented).
     ```ruby
     Comment::Cell.new(comment).().tap { |cell| }
     ```
+    The new behavior is to pass that block to your state method. You can pass it on to `render`, and then `yield` it in the template.
+
+    ```ruby
+    def show(&block)
+      render &block # yield in show.haml
+    end
+    ```
+
+    Note that this happens automatically in the default `ViewModel#show` method.
+
 * `Concept#cell` now will resolve a concept cell (`Song::Cell`), and not the old-style suffix cell (`SongCell`). The same applies to `Concept#concept`.
 
     ```ruby
@@ -56,9 +63,23 @@ YOU CAN PASS BLOCK BUT IT WILL BE PASSED TO Template#render.
     ```ruby
     cell(Song::Cell, song)
     ```
+* New API for `:collection`. If used in views, this happens automatically, but here's how it works now.
 
-    :layout
-    :layout with :collection
+    ```ruby
+    cell(:comment, collection: Comment.all).() # will invoke show.
+    cell(:comment, collection: Comment.all).(:item) # will invoke item.
+    cell(:comment, collection: Comment.all).join { |cell, i| cell.show(index: i) }
+    ```
+    Basically, a `Collection` instance is returned that optionally allows to invoke each cell manually.
+
+* Layout cells can now be injected to wrap the original content.
+    ```ruby
+    cell(:comment, Comment.find(1), layout: LayoutCell)
+    ```
+
+    The LayoutCell will be instantiated and the `show` state invoked. The content cell's content is passed as a block, allowing the layout's view to `yield`.
+
+    This works with `:collection`, too.
 
 ## 4.0.5
 
