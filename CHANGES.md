@@ -5,7 +5,6 @@
 * All Rails code removed. Make sure to use [Cells-rails](https://github.com/trailblazer/cells-rails) if you want the old Rails behavior.
 * A basic, rendering `#show` method is now provided automatically.
 * `ViewModel#render` now accepts a block that can be `yield`ed in the view.
-
 * Passing a block to `ViewModel#call` changed. Use `tap` if you want the "old" behavior (which was never official or documented).
     ```ruby
     Comment::Cell.new(comment).().tap { |cell| }
@@ -19,14 +18,13 @@
     ```
 
     Note that this happens automatically in the default `ViewModel#show` method.
-
 * `Concept#cell` now will resolve a concept cell (`Song::Cell`), and not the old-style suffix cell (`SongCell`). The same applies to `Concept#concept`.
 
     ```ruby
     concept("song/cell", song).cell("song/cell/composer") #=> resolves to Song::Cell::Composer
     ```
-    This decision has been made in regards of the upcoming, ass-kicking Cells 5. It simplifies code dramatically, and we consider it unnatural to mix concept and suffix cells in applications.
-* In case you were using `@parent_controller`, this doesn't exist anymore (and was never documented, either). Use `options[:context][:controller]`.
+    This decision has been made in regards of the upcoming Cells 5. It simplifies code dramatically, and we consider it unnatural to mix concept and suffix cells in applications.
+* In case you were using `@parent_controller`, this doesn't exist anymore (and was never documented, either). Use `context[:controller]`.
 * `::self_contained!` is no longer included into `ViewModel`. Please try using `Trailblazer::Cell` instead. If you still need it, here's how.
 
     ```ruby
@@ -34,8 +32,7 @@
       extend SelfContained
       self_contained!
     ```
-
-* `Cell::Concept` is deprecated and you should be using the excellent `Trailblazer::Cell` class instead, because that's what a concept cell tries to be in an awkward way. The latter is usable without Trailblazer.
+* `Cell::Concept` is deprecated and you should be using the excellent [`Trailblazer::Cell`](https://github.com/trailblazer/trailblazer-cells) class instead, because that's what a concept cell tries to be in an awkward way. The latter is usable without Trailblazer.
 
     We are hereby dropping support for `Cell::Concept` (it still works).
 
@@ -71,7 +68,6 @@
     cell(:comment, collection: Comment.all).join { |cell, i| cell.show(index: i) }
     ```
     Basically, a `Collection` instance is returned that optionally allows to invoke each cell manually.
-
 * Layout cells can now be injected to wrap the original content.
     ```ruby
     cell(:comment, Comment.find(1), layout: LayoutCell)
