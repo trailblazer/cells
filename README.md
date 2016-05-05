@@ -180,7 +180,7 @@ Properties and escaping are [documented here](http://trailblazer.to/gems/cells/a
 
 ## Installation
 
-Cells run with all frameworks.
+Cells runs with any framework.
 
 ```ruby
 gem "cells"
@@ -215,7 +215,7 @@ end
 
 ## Namespaces
 
-Cells can be namespaced as well. This is used for [concept cells](#concept-cells), too.
+Cells can be namespaced as well.
 
 ```ruby
 module Admin
