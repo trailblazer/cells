@@ -12,7 +12,7 @@ Status](https://travis-ci.org/apotonick/cells.svg)](https://travis-ci.org/apoton
 
 Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
 
-Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, [nesting](#nested-cells), view inheritance, using Rails helpers, [asset packaging](http://trailblazer.to/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](#concept-cells).
+Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, [nesting](#nested-cells), view inheritance, using Rails helpers, [asset packaging](http://trailblazer.to/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](https://github.com/trailblazer/trailblazer-cells).
 
 ## Full Documentation
 
@@ -180,13 +180,19 @@ Properties and escaping are [documented here](http://trailblazer.to/gems/cells/a
 
 ## Installation
 
-Cells run with all Rails >= 4.0. Lower versions of Rails will still run with Cells, but you will get in trouble with the helpers.
+Cells run with all frameworks.
 
 ```ruby
-gem 'cells', "~> 4.0.0"
+gem "cells"
 ```
 
-(Note: we use Cells in production with Rails 3.2 and Haml and it works great.)
+For Rails, please use the [cells-rails](https://github.com/trailblazer/cells-rails) gem. It supports Rails >= 4.0.
+
+```ruby
+gem "cells-rails"
+```
+
+Lower versions of Rails will still run with Cells, but you will get in trouble with the helpers. (Note: we use Cells in production with Rails 3.2 and Haml and it works great.)
 
 Various template engines are supported but need to be added to your Gemfile.
 
@@ -206,37 +212,6 @@ class CommentCell < Cell::ViewModel
   include ::Cell::Erb # or Cell::Hamlit, or Cell::Haml, or Cell::Slim
 end
 ```
-
-## Concept Cells
-
-To have real self-contained cells you should use the new _concept cell_ which follows the [Trailblazer](http://trailblazerb.org) naming style. Concept cells need to be derived from `Cell::Concept`, sit in a namespace and are usually named `Cell`.
-
-```ruby
-class Comment::Cell < Cell::Concept
-  # ..
-end
-```
-
-Their directory structure looks as follows.
-
-```
-app
-├── concepts
-│   ├── comment
-│   │   ├── cell.rb
-│   │   ├── views
-│   │   │   ├── show.haml
-```
-
-This integrates with Trailblazer where classes for one _concept_ sit in the same directory. Please [read the book](http://leanpub.com/trailblazer) to learn how to use cells with Trailblazer.
-
-Concept cells are rendered using the `concept` helper.
-
-```erb
-<%= concept("comment/cell", @comment) %>
-```
-
-Other than that, normal cells and concept cells are identical.
 
 ## Namespaces
 
@@ -371,21 +346,18 @@ In order to render collections, Cells comes with a shortcut.
 
 ```ruby
 comments = Comment.all #=> three comments.
-cell(:comment, collection: comments)
+cell(:comment, collection: comments).()
 ```
 
-This will invoke `cell(:comment, comment).()` three times and concatenate the rendered output automatically. In case you don't want `show` but another state rendered, use `:method`.
+This will invoke `cell(:comment, comment).()` three times and concatenate the rendered output automatically. In case you don't want `show` but another state rendered, pass the `:method` name to `call`.
 
 ```ruby
-cell(:comment, collection: comments, method: :list)
+cell(:comment, collection: comments).(:list)
 ```
-
-Note that you _don't_ need to invoke call here, the `:collection` behavior internally handles that for you.
-
 Additional options are passed to every cell constructor.
 
 ```ruby
-cell(:comment, collection: comments, style: "awesome", volume: "loud")
+cell(:comment, collection: comments, style: "awesome", volume: "loud").()
 ```
 
 ## Builder
@@ -455,7 +427,7 @@ The book picks up where the README leaves off. Go grab a copy and support us - i
 
 ## This is not Cells 3.x!
 
-Temporary note: This is the README and API for Cells 4. Many things have improved. If you want to upgrade, [follow this guide](https://github.com/apotonick/cells/wiki/From-Cells-3-to-Cells-4---Upgrading-Guide). When in trouble, join us on the IRC (Freenode) #trailblazer channel.
+Temporary note: This is the README and API for Cells 4. Many things have improved. If you want to upgrade, [follow this guide](https://github.com/apotonick/cells/wiki/From-Cells-3-to-Cells-4---Upgrading-Guide). When in trouble, join the [Gitter channel](https://gitter.im/trailblazer/chat).
 
 ## LICENSE
 
