@@ -24,7 +24,9 @@ module Cell
     end
     include Call
 
-    alias to_s call
+    def to_s
+      call
+    end
 
     # Iterate collection and build a cell for each item.
     # The passed block receives that cell and the index.
