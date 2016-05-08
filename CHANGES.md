@@ -3,6 +3,14 @@
 ### API Fix/Changes
 
 * All Rails code removed. Make sure to use [Cells-rails](https://github.com/trailblazer/cells-rails) if you want the old Rails behavior.
+* The `builds` feature is now optional, you have to include `Builder` in your cell.
+    ```ruby
+    class CommentCell < Cell::ViewModel
+      include Cell::Builder
+
+      builds do |..|
+    ```
+
 * A basic, rendering `#show` method is now provided automatically.
 * `ViewModel#render` now accepts a block that can be `yield`ed in the view.
 * Passing a block to `ViewModel#call` changed. Use `tap` if you want the "old" behavior (which was never official or documented).
