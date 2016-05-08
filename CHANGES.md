@@ -1,3 +1,7 @@
+## 4.1.1
+
+* Fix rendering of `Collection` where in some environments (Rails), the overridden `#call` method wouldn't work and strings would be escaped.
+
 ## 4.1.0
 
 ### API Fix/Changes
