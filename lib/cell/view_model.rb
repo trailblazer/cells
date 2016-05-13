@@ -112,6 +112,21 @@ module Cell
     end
     include Caching
 
+    def inspect
+      parent_controller_s = if @parent_controller
+                              "#<#{@parent_controller.class.name}:#{@parent_controller.object_id}>"
+                            else
+                              nil.inspect
+                            end
+
+      options_s = options.dup
+      options_s[:controller] = parent_controller_s
+
+      "#<#{self.class.name}:#{self.object_id}" \
+      " @parent_controller=#{parent_controller_s}," \
+      " @model=#{@model.inspect}, @options=#{options_s}>"
+    end
+
   private
     attr_reader :options
 
