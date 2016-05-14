@@ -56,27 +56,6 @@ class PublicTest < MiniTest::Spec
     options.to_s.must_equal "{:genre=>\"Fusion\", :collection=>[Object]}"
   end
 
-  # #inspect
-  it do
-    cell = Cell::ViewModel.(model_obj = Object.new, controller: Object.new)
-    cell.instance_variable_set('@parent_controller', parent_controller_obj = Object.new)
-
-    inspection_s = cell.inspect
-
-    inspection_s.must_match '#<Cell::ViewModel:'
-    inspection_s.must_match "@parent_controller=#<Object:#{parent_controller_obj.object_id}>"
-    inspection_s.must_match "@model=#<Object:"
-    inspection_s.must_match "@options={:controller=>\"#<Object:#{parent_controller_obj.object_id}>\"}"
-  end
-  it do
-    inspection_s = Cell::ViewModel.().inspect
-
-    inspection_s.must_match '#<Cell::ViewModel:'
-    inspection_s.must_match "@parent_controller=nil"
-    inspection_s.must_match "@model=nil"
-    inspection_s.must_match "@options={:controller=>\"nil\""
-  end
-
   # it do
   #   content = ""
   #   Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).each_with_index do |cell, i|
