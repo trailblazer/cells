@@ -2,13 +2,13 @@ require 'test_helper'
 
 class InspectTest < Minitest::Spec
   class FakeModel
-    def initialize(title:)
+    def initialize(title)
       @title = title
     end
   end
 
   def build_model
-    InspectTest::FakeModel.new(title: 'Title')
+    InspectTest::FakeModel.new('Title')
   end
   # #inspect
   it do
