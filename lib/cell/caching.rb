@@ -9,10 +9,12 @@ module Cell
         inheritable_attr :version_procs
         inheritable_attr :conditional_procs
         inheritable_attr :cache_options
+        inheritable_attr :used_templates
 
         self.version_procs = {}
         self.conditional_procs = {}
         self.cache_options = Uber::Options.new({})
+        self.used_templates = {}
       end
     end
 
@@ -20,6 +22,9 @@ module Cell
       def cache(state, *args, &block)
         options = args.last.is_a?(Hash) ? args.pop : {} # I have to admit, Array#extract_options is a brillant tool.
 
+        if options.has_key? :used_templates
+          self.used_templates[state] = Array(options.delete(:used_templates))
+        end
         self.conditional_procs[state] = Uber::Options::Value.new(options.delete(:if) || true)
         self.version_procs[state] = Uber::Options::Value.new(args.first || block)
         self.cache_options[state] = Uber::Options.new(options)
@@ -46,7 +51,8 @@ module Cell
       state = state.to_sym
       return super(state, *args) unless cache?(state, *args)
 
-      key     = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))
+      class_state_cache_key = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))
+      key = [class_state_cache_key, digest_for(state)].join('/')
       options = self.class.cache_options.eval(state, self, *args)
 
       fetch_from_cache_for(key, options) { super(state, *args) }
@@ -74,6 +80,55 @@ module Cell
 
     def state_cached?(state)
       self.class.version_procs.has_key?(state)
+    end
+
+    def digest_for(state)
+      Digest::MD5.hexdigest(dependency_digests_for(state).join('-'))
+    end
+
+    def dependency_digests_for(state)
+      dependencies_for(state).map do |dep|
+        file_digests[dep] ||= Digest::MD5.file(dep)
+      end
+    end
+
+    # All files that this particular state depends on
+    def dependencies_for(state)
+      (method_files + template_files_for(state)).compact.uniq
+    end
+
+    def method_files
+      relevant_methods.map do |m|
+        location = method(m).source_location or next # C-bindings
+        location[0]
+      end
+    end
+
+    # All methods, that this Cell uses.
+    # When using Rails this will also contain all helpers, that were included,
+    # e.g. UrlHelpers, FormHelpers etc.
+    def relevant_methods
+      methods + private_methods - Cell::ViewModel.instance_methods - Cell::ViewModel.private_instance_methods
+    end
+
+    # templates, specified in `cache :show, used_templates: :template` take precedence
+    # over template, implicitly derived from state
+    def template_files_for(state)
+      (self.class.used_templates[state] || [state]).map do |st|
+        template_file_for(st)
+      end
+    end
+
+    def template_file_for(state)
+      options = normalize_options({view: state})
+      find_template(options).file
+    rescue Cell::TemplateMissingError => e
+      Rails.logger.warn "Couldn't find template for digesting: #{e}"
+      nil
+    end
+
+    def file_digests
+      @@file_digests ||= {}
     end
   end
 end
