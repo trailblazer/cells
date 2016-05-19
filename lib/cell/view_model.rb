@@ -28,7 +28,7 @@ module Cell
       # Constantizes name if needed, call builders and returns instance.
       def cell(name, *args, &block) # classic Rails fuzzy API.
         constant = name.is_a?(Class) ? name : class_from_cell_name(name)
-        unless constant.ancestors.include? Cell::ViewModel
+        unless constant <= Cell::ViewModel
           raise ArgumentError, "#{constant} is not a cell, are you sure everything is spelled correctly?"
         end
         constant.(*args, &block)
