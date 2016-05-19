@@ -64,7 +64,6 @@ class ConceptTest < MiniTest::Spec
 
   it { Record::Cell.new("Wayne").call(:show).must_equal "Party on, Wayne!" }
 
-
   describe "::cell" do
     it { Cell::Concept.cell("record/cell").must_be_instance_of(      Record::Cell) }
     it { Cell::Concept.cell("record/cell/song").must_be_instance_of  Record::Cell::Song }
