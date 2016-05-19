@@ -32,6 +32,7 @@ module Record
   end
 end
 
+
 module Record
   module Cells
     class Cell < ::Cell::Concept
@@ -81,5 +82,11 @@ class ConceptTest < MiniTest::Spec
     # concept(.., collection: ..)
     it { Cell::Concept.cell("record/cell", nil, context: { controller: Object }).
       concept("record/cell", collection: [1,2], tracks: 24, method: :description).().must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]" }
+  end
+
+  describe '#cell ( with non-cell argument )' do
+    it 'raises error if not given a class that inherits from Cell::ViewModel' do
+      assert_raises(ArgumentError){ Cell::Concept.cell('record', nil, {}) }
+    end
   end
 end
