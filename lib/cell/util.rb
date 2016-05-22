@@ -17,7 +17,9 @@ module Cell::Util
     def self.constant_for(name)
       constant = Object
       name.split("/").each do |part|
-        constant = constant.const_get(part.split('_').collect(&:capitalize).join)
+        capitalized_part = part.split('_').collect(&:capitalize).join
+        # inherit = false so only descendants are searched
+        constant = constant.const_get(capitalized_part, inherit = false)
       end
       constant
     end
