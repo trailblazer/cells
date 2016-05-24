@@ -349,16 +349,10 @@ comments = Comment.all #=> three comments.
 cell(:comment, collection: comments).()
 ```
 
-This will invoke `cell(:comment, comment).()` three times and concatenate the rendered output automatically. In case you don't want `show` but another state rendered, pass the `:method` name to `call`.
+This will invoke `cell(:comment, comment).()` three times and concatenate the rendered output automatically.
 
-```ruby
-cell(:comment, collection: comments).(:list)
-```
-Additional options are passed to every cell constructor.
+Learn more [about collections here](http://trailblazer.to/gems/cells/api.html#collection).
 
-```ruby
-cell(:comment, collection: comments, style: "awesome", volume: "loud").()
-```
 
 ## Builder
 
