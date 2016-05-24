@@ -362,9 +362,7 @@ cell(:comment, collection: comments, style: "awesome", volume: "loud").()
 
 ## Builder
 
-Often, it is good practice to replace decider code from views or classes into separate sub-cells. Or in case you want to render a polymorphic collection, builders come in handy.
-
-Builders allow instantiating different cell classes for different models and options.
+Builders allow instantiating different cell classes for different models and options. They introduce polymorphism into cells.
 
 ```ruby
 class CommentCell < Cell::ViewModel
@@ -380,14 +378,7 @@ The `#cell` helper takes care of instantiating the right cell class for you.
 cell(:comment, Post.find(1)) #=> creates a PostCell.
 ```
 
-This also works with collections.
-
-```ruby
-cell(:comment, collection: [@post, @comment]) #=> renders PostCell, then CommentCell.
-```
-
-Multiple calls to `::builds` will be ORed. If no block returns a class, the original class will be used (`CommentCell`). Builders are inherited.
-
+Learn more [about builders here](http://trailblazer.to/gems/cells/api.html#builder).
 
 ## Caching
 
