@@ -15,11 +15,11 @@ module Cell::Util
 
     # WARNING: this API might change.
     def self.constant_for(name)
-      constant = Object
-      name.split("/").each do |part|
-        constant = constant.const_get(part.split('_').collect(&:capitalize).join)
-      end
-      constant
+      class_name = name.split("/").collect do |part|
+        part.split('_').collect(&:capitalize).join
+      end.join('::')
+      
+      Object.const_get(class_name)
     end
   end
 end
