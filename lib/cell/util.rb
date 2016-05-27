@@ -19,7 +19,7 @@ module Cell::Util
         part.split('_').collect(&:capitalize).join
       end.join('::')
       
-      Object.const_get(class_name)
+      Object.const_get(class_name, inherit = false)
     end
   end
 end
