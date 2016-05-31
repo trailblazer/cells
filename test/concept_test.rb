@@ -79,7 +79,9 @@ class ConceptTest < MiniTest::Spec
     it { Cell::Concept.cell("record/cell", nil, context: { controller: Object }).cell("record/cell", nil).must_be_instance_of Record::Cell }
     it { Cell::Concept.cell("record/cell", nil, context: { controller: Object }).concept("record/cell", nil, tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]" }
     # concept(.., collection: ..)
-    it { Cell::Concept.cell("record/cell", nil, context: { controller: Object }).
-      concept("record/cell", collection: [1,2], tracks: 24, method: :description).().must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]" }
+    it do
+      Cell::Concept.cell("record/cell", nil, context: { controller: Object }).
+        concept("record/cell", collection: [1,2], tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]" 
+    end
   end
 end
