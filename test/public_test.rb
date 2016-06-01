@@ -37,11 +37,11 @@ class PublicTest < MiniTest::Spec
   # DISCUSS: should cell.() be the default?
   # ViewModel.cell(collection: []) renders cells with custom join.
   it do
-	Gem::Deprecate::skip_during do
-		Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).join('<br/>') do |cell|
+    Gem::Deprecate::skip_during do
+      Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).join('<br/>') do |cell|
           cell.()
-        end.must_equal '[Object, {}]<br/>[Module, {}]'
-	end
+      end.must_equal '[Object, {}]<br/>[Module, {}]'
+    end
   end
 
   # ViewModel.cell(collection: []) passes generic options to cell.
@@ -50,7 +50,7 @@ class PublicTest < MiniTest::Spec
   # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
   # TODO: remove in 5.0.
   it do
-	Gem::Deprecate::skip_during do
+    Gem::Deprecate::skip_during do
       Cell::ViewModel.cell("public_test/song", collection: [Object, Module], method: :detail).to_s.must_equal '* [Object, {}]* [Module, {}]'
     end
   end
