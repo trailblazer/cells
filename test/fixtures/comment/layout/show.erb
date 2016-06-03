@@ -1,1 +1,3 @@
-$layout.erb{<%= yield %>, <%= context.inspect %>}
+$layout.erb{
+title=<%= content_block(:beer) { beer }%>
+<%= yield %>, <%= beer %>}

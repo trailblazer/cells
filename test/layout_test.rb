@@ -65,27 +65,42 @@ module Comment
     def show
       render + render
     end
+
+    def title
+      "Show comments"
+    end
+
+    def beer
+      !context.nil? && context[:beer] ? "beer" : "no beer"
+    end
   end
 
   class LayoutCell < Cell::ViewModel
+    include Layout::External::Content
     self.view_paths = ['test/fixtures']
+
+    def beer
+      !context.nil? && context[:beer] ? "layout_beer" : "no layout_beer"
+    end
   end
 end
 
 class ExternalLayoutTest < Minitest::Spec
   it do
     Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).
-      ().must_equal "$layout.erb{$show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n"
+      ().must_equal "$layout.erb{\ntitle=beer\n$show.erb, beer\n$show.erb, beer\n, layout_beer}\n"
   end
 
   # collection :layout
   it do
     Cell::ViewModel.cell("comment/show", collection: [Object, Module], layout: Comment::LayoutCell).().
-      must_equal "$layout.erb{$show.erb, nil
-$show.erb, nil
-$show.erb, nil
-$show.erb, nil
-, nil}
+      must_equal "$layout.erb{
+title=no layout_beer
+$show.erb, no beer
+$show.erb, no beer
+$show.erb, no beer
+$show.erb, no beer
+, no layout_beer}
 "
   end
 end

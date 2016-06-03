@@ -50,6 +50,13 @@ module Cell
           # DISCUSS: should we allow instances, too? we could cache the layout cell.
           layout.new(model, context: options[:context], content_cell: content_cell).(&lambda { content })
         end
+
+        module Content
+          def content_block(part)
+            return @options[:content_cell].send(part) if @options[:content_cell].respond_to?(part)
+            yield if block_given?
+          end
+        end # Content
       end # External
     end
   end
