@@ -41,14 +41,14 @@ module Cell
       module External
         def call(*)
           content = super
-          Render.(content, model, @options[:layout], @options)
+          Render.(content, model, @options[:layout], self, @options)
         end
 
-        Render = ->(content, model, layout, options) do # WARNING: THIS IS NOT FINAL API.
-          return content unless layout = layout # TODO: test when invoking cell without :layout.
+        Render = ->(content, model, layout, content_cell, options) do # WARNING: THIS IS NOT FINAL API.
+          return content unless layout # TODO: test when invoking cell without :layout.
 
           # DISCUSS: should we allow instances, too? we could cache the layout cell.
-          layout.new(model, context: options[:context]).(&lambda { content })
+          layout.new(model, context: options[:context], content_cell: content_cell).(&lambda { content })
         end
       end # External
     end
