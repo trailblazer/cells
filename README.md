@@ -149,7 +149,7 @@ It is completely up to you how you test, whether it's RSpec, MiniTest or whateve
 
 ## Properties
 
-The cell's model is available via the `model` reader. You can have automatic readers to the model's fields by uing `::property`.
+The cell's model is available via the `model` reader. You can have automatic readers to the model's fields by using `::property`.
 
 ```ruby
 class CommentCell < Cell::ViewModel
