@@ -2,12 +2,16 @@ module Cell
   class Collection
     def initialize(ary, options, cell_class)
       options.delete(:collection)
-      self.method = options.delete(:method)                   if options.include?(:method)          # TODO: remove in 5.0.
-      self.collection_join = options.delete(:collection_join) if options.include?(:collection_join) # TODO: remove in 5.0.
+      set_deprecated_options(options) # TODO: remove in 5.0.
 
       @ary        = ary
       @options    = options
       @cell_class = cell_class
+    end
+
+    def set_deprecated_options(options) # TODO: remove in 5.0.
+      self.method = options.delete(:method)                   if options.include?(:method)
+      self.collection_join = options.delete(:collection_join) if options.include?(:collection_join)
     end
 
     module Call
