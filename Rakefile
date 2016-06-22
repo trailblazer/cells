@@ -4,7 +4,7 @@ Bundler::GemHelper.install_tasks
 require 'rake/testtask'
 
 desc 'Default: run unit tests.'
-task :default => :test
+task :default => [:test, :rails]
 
 Rake::TestTask.new(:test) do |test|
   test.libs << 'test'
@@ -12,13 +12,13 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-# Rake::TestTask.new(:rails) do |test|
-#   test.libs << 'test/rails'
-#   test.test_files = FileList['test/rails4.2/*_test.rb']
-#   test.verbose = true
-# end
-
-# rails_task = Rake::Task["rails"]
-# test_task = Rake::Task["test"]
-# default_task.enhance { test_task.invoke }
-# default_task.enhance { rails_task.invoke }
+task :rails do
+  Bundler.with_clean_env do
+    Dir.chdir("test/rails4.2") do
+      sh "bundle exec rake", verbose: false do
+        # Do nothing if suite fails, allowing us to see the results for all of
+        # them, even if some of the suites have failing tests
+      end
+    end
+  end
+end
