@@ -21,7 +21,7 @@ module Cell
 
     def create(prefix, view, options)
       # puts "...checking #{prefix}/#{view}"
-      return unless File.exists?("#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
+      return unless File.exist?("#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
 
       template_class = options.delete(:template_class)
       template_class.new("#{prefix}/#{view}", options) # Tilt.new()

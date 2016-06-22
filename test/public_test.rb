@@ -34,15 +34,26 @@ class PublicTest < MiniTest::Spec
   # ViewModel.cell(collection: []) renders cells.
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).to_s.must_equal '[Object, {}][Module, {}]' }
 
+  # DISCUSS: should cell.() be the default?
   # ViewModel.cell(collection: []) renders cells with custom join.
-  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], collection_join: '<br/>').to_s.must_equal '[Object, {}]<br/>[Module, {}]' }
+  it do
+    Gem::Deprecate::skip_during do
+      Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).join('<br/>') do |cell|
+          cell.()
+      end.must_equal '[Object, {}]<br/>[Module, {}]'
+    end
+  end
 
   # ViewModel.cell(collection: []) passes generic options to cell.
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal', context: { ready: true }).to_s.must_equal "[Object, {:genre=>\"Metal\", :context=>{:ready=>true}}][Module, {:genre=>\"Metal\", :context=>{:ready=>true}}]" }
 
   # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
   # TODO: remove in 5.0.
-  it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module], method: :detail).to_s.must_equal '* [Object, {}]* [Module, {}]' }
+  it do
+    Gem::Deprecate::skip_during do
+      Cell::ViewModel.cell("public_test/song", collection: [Object, Module], method: :detail).to_s.must_equal '* [Object, {}]* [Module, {}]'
+    end
+  end
 
   # ViewModel.cell(collection: []).() invokes #show.
   it { Cell::ViewModel.cell("public_test/song", collection: [Object, Module]).().must_equal '[Object, {}][Module, {}]' }

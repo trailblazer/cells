@@ -2,25 +2,23 @@ module Cell
   class Collection
     def initialize(ary, options, cell_class)
       options.delete(:collection)
-      @method     = options.delete(:method)           # TODO: remove in 5.0.
-      @join       = options.delete(:collection_join)  # TODO: remove in 5.0.
+      set_deprecated_options(options) # TODO: remove in 5.0.
 
       @ary        = ary
       @options    = options
       @cell_class = cell_class
-
-      deprecate_options!
     end
 
-    def deprecate_options! # TODO: remove in 5.0.
-      warn "[Cells] The :method option is deprecated. Please use `call(method)` as documented here: http://trailblazer.to/gems/cells/api.html#collection" if @method
-      warn "[Cells] The :collection_join option is deprecated. Please use `join(\"<br>\")` as documented here: http://trailblazer.to/gems/cells/api.html#collection" if @collection_join
+    def set_deprecated_options(options) # TODO: remove in 5.0.
+      self.method = options.delete(:method)                   if options.include?(:method)
+      self.collection_join = options.delete(:collection_join) if options.include?(:collection_join)
     end
 
     module Call
       def call(state=:show)
-        join(@join) { |cell, i| cell.(@method || state) }
+        join(collection_join) { |cell, i| cell.(method || state) }
       end
+
     end
     include Call
 
@@ -48,6 +46,13 @@ module Cell
     end
     include Layout
 
+    # TODO: remove in 5.0.
+    private
+    attr_accessor :collection_join, :method
+
+    extend Gem::Deprecate
+    deprecate :method=, "`call(method)` as documented here: http://trailblazer.to/gems/cells/api.html#collection", 2016, 7
+    deprecate :collection_join=, "`join(\"<br>\")` as documented here: http://trailblazer.to/gems/cells/api.html#collection", 2016, 7
   end
 end
 
