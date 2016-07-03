@@ -46,30 +46,13 @@ module Cell
       end
     end
 
-
-    # Rails specific.
-    def controller_for(controller_class)
-      # TODO: test without controller.
-      return unless controller_class
-
-      controller_class.new.tap do |ctl|
-        ctl.request = action_controller_test_request
-        ctl.instance_variable_set :@routes, ::Rails.application.routes.url_helpers
+    module ControllerFor
+      # This method is provided by the cells-rails gem.
+      def controller_for(controller_class)
+        # raise "[Cells] Please install (or update?) the cells-rails gem."
       end
     end
-
-    # Rails specific.
-    def action_controller_test_request
-      ## Rails 5 no longer supports creating a TestRequest without
-      ## providing args to the initializer however we can imitate the
-      ## original behaviour using .create whilst allowing fallbacks
-      ## to the original for older versions of Rails.
-      if ::Rails.version.start_with?('5')
-        ::ActionController::TestRequest.create
-      else
-        ::ActionController::TestRequest.new
-      end
-    end
+    include ControllerFor
 
     def controller # FIXME: this won't allow us using let(:controller) in MiniTest.
       controller_for(self.class.controller_class)
@@ -85,6 +68,5 @@ module Cell
         end
       end
     end
-
-  end
+  end # Testing
 end
