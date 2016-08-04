@@ -1,3 +1,5 @@
+require "uber/inheritable_attr"
+
 module Cell
   # Builder methods and Capybara support.
   # This gets included into Test::Unit, MiniTest::Spec, etc.
