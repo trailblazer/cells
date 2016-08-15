@@ -1,3 +1,7 @@
+## 4.1.3
+
+* Load `Uber::InheritableAttr` in `Testing` to fix a bug in `cells-rspec`.
+
 ## 4.1.2
 
 * Testing with Rails 5 now works, by removing code the last piece of Rails-code (I know, it sounds bizarre).
