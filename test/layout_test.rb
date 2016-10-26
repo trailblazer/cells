@@ -68,24 +68,39 @@ module Comment
   end
 
   class LayoutCell < Cell::ViewModel
+    include Cell::Builder
+
+    builds { |_, context:, **| SpecialLayoutCell if context.to_h.fetch(:special_layout, false) }
+
     self.view_paths = ['test/fixtures']
+  end
+
+  class SpecialLayoutCell < LayoutCell
   end
 end
 
 class ExternalLayoutTest < Minitest::Spec
   it do
     Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).
-      ().must_equal "$layout.erb{$show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n"
+      ().must_equal "$layout.erb{Comment::LayoutCell, $show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n"
   end
 
   # collection :layout
   it do
     Cell::ViewModel.cell("comment/show", collection: [Object, Module], layout: Comment::LayoutCell).().
-      must_equal "$layout.erb{$show.erb, nil
+      must_equal "$layout.erb{Comment::LayoutCell, $show.erb, nil
 $show.erb, nil
 $show.erb, nil
 $show.erb, nil
 , nil}
+"
+  end
+
+  it 'renders special layout if requested' do
+    Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { special_layout: true }).
+      ().must_equal "$layout.erb{Comment::SpecialLayoutCell, $show.erb, {:special_layout=>true}
+$show.erb, {:special_layout=>true}
+, {:special_layout=>true}}
 "
   end
 end
