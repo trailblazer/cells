@@ -43,7 +43,7 @@ module Cell
         layout = @options.delete(:layout) # we could also override #initialize and that there?
 
         content = super # DISCUSS: that could come in via the pipeline argument.
-        ViewModel::Layout::External::Render.(content, @ary, layout, self, @options)
+        ViewModel::Layout::External::Render.(content, @ary, layout, @cell_class.build(nil, @options), @options)
       end
     end
     include Layout
