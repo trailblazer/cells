@@ -15,8 +15,8 @@ module Cell
     end
 
     module Call
-      def call(state=:show)
-        join(collection_join) { |cell, i| cell.(method || state) }
+      def call(state=:show, *args, &block))
+        join(collection_join) { |cell, i| cell.(method || state, *args, &block) }
       end
 
     end
