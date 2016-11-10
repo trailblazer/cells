@@ -9,7 +9,7 @@ module Cell
 
     module ClassMethods
       def build(*args)
-        class_builder.call(*args).new(*args) # Uber::Builder::class_builder.
+        build!(self, *args).new(*args) # Uber::Builder#build!.
       end
     end
   end

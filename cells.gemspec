@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "uber", ">= 0.0.9"
+  spec.add_dependency "uber", ">= 0.1.0", "< 0.2.0"
   spec.add_dependency "tilt", ">= 1.4", "< 3"
 
   spec.add_development_dependency "rake"
