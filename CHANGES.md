@@ -1,3 +1,7 @@
+## 4.1.4
+
+* Upgrading to Uber 0.1 which handles builders a bit differently.
+
 ## 4.1.3
 
 * Load `Uber::InheritableAttr` in `Testing` to fix a bug in `cells-rspec`.
