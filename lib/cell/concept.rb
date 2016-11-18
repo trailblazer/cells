@@ -7,6 +7,11 @@ module Cell
     self.view_paths = ["app/concepts"]
     extend SelfContained
 
+    def initialize(*args)
+      puts 'WARNING: Cell::Concept is no longer under active development. Please switch to Cell::ViewModel or Trailblazer::Cell.'
+      super
+    end
+
     # TODO: this should be in Helper or something. this should be the only entry point from controller/view.
     class << self
       def class_from_cell_name(name)
