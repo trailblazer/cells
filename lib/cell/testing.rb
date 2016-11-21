@@ -12,6 +12,10 @@ module Cell
       cell_for(Concept, name, *args)
     end
 
+    def controller # FIXME: this won't allow us using let(:controller) in MiniTest.
+      controller_for(self.class.controller_class)
+    end
+
   private
     def cell_for(baseclass, name, model=nil, options={})
       options[:context] ||= {}
@@ -55,10 +59,6 @@ module Cell
       end
     end
     include ControllerFor
-
-    def controller # FIXME: this won't allow us using let(:controller) in MiniTest.
-      controller_for(self.class.controller_class)
-    end
 
     def self.included(base)
       base.class_eval do
