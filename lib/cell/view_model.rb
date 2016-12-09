@@ -79,7 +79,7 @@ module Cell
       # Otherwise we can simply pass on the old context.
       def self.[](options, context)
         return context unless options
-        context.dup.merge(options)
+        context.dup.merge(options) # DISCUSS: should we create a real Context object here, to make it overridable?
       end
     end
 
