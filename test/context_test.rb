@@ -15,19 +15,30 @@ class ContextTest < MiniTest::Spec
   let (:user) { Object.new }
   let (:controller) { Object.new }
 
-  it do
-    cell = ParentCell.(model, admin: true, context: { user: user, controller: controller })
-    # cell.extend(ParentController)
+  let (:parent) { ParentCell.(model, admin: true, context: { user: user, controller: controller }) }
 
-    cell.model.must_equal model
-    cell.controller.must_equal controller
-    cell.user.must_equal user
+  it do
+    parent.model.must_equal model
+    parent.controller.must_equal controller
+    parent.user.must_equal user
 
     # nested cell
-    child = cell.cell("context_test/parent", "")
+    child = parent.cell("context_test/parent", "")
 
     child.model.must_equal ""
     child.controller.must_equal controller
     child.user.must_equal user
+  end
+
+  # child can add to context
+  it do
+    child = parent.cell(ParentCell, nil, context: { "is_child?" => true })
+
+    parent.context["is_child?"].must_equal nil
+
+    child.model.must_equal nil
+    child.controller.must_equal controller
+    child.user.must_equal user
+    child.context["is_child?"].must_equal true
   end
 end

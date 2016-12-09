@@ -5,7 +5,7 @@ module Cell
       set_deprecated_options(options) # TODO: remove in 5.0.
 
       @ary        = ary
-      @options    = options
+      @options    = options    # these options are "final" and will be identical for all collection cells.
       @cell_class = cell_class
     end
 

@@ -60,6 +60,8 @@ module Cell
 
     # Build nested cell in instance.
     def cell(name, model=nil, options={})
+      context = Context[options[:context], self.context]
+
       self.class.cell(name, model, options.merge(context: context))
     end
 
@@ -67,8 +69,18 @@ module Cell
       setup!(model, options)
     end
 
-    def context # TODO: explicit test.
+    def context
       @options[:context]
+    end
+
+    # DISCUSS: we could use the same mechanism as TRB::Skills here for speed at runtime?
+    class Context# < Hash
+      # Only dup&merge when :context was passed in parent.cell(context: ..)
+      # Otherwise we can simply pass on the old context.
+      def self.[](options, context)
+        return context unless options
+        context.dup.merge(options)
+      end
     end
 
     module Rendering
