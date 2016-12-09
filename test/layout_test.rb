@@ -42,7 +42,7 @@ end
 class LayoutTest < MiniTest::Spec
   # render show.haml calling method.
   # same context as content view as layout call method.
-  it { SongWithLayoutCell.new(nil).show.must_equal "Merry Xmas, <b>Papertiger</b>\n" }
+  it { SongWithLayoutCell.new(nil).show.must_equal "Merry Xmas, <b>Papertiger</b>" }
 
   # raises exception when layout not found!
 
@@ -51,7 +51,7 @@ class LayoutTest < MiniTest::Spec
   it {  }
 
   # with ::layout.
-  it { SongWithLayoutOnClassCell.new(nil).show.must_equal "Merry Xmas, <b>Papertiger</b>\n" }
+  it { SongWithLayoutOnClassCell.new(nil).show.must_equal "Merry Xmas, <b>Papertiger</b>" }
 
   # with ::layout and :layout, :layout wins.
   it { SongWithLayoutOnClassCell.new(nil).show_with_layout.must_equal "Happy Friday!" }
@@ -75,17 +75,14 @@ end
 class ExternalLayoutTest < Minitest::Spec
   it do
     Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).
-      ().must_equal "$layout.erb{$show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n"
+      ().must_equal "$layout.erb{$show.erb, {:beer=>true}$show.erb, {:beer=>true}, {:beer=>true}}
+"
   end
 
   # collection :layout
   it do
     Cell::ViewModel.cell("comment/show", collection: [Object, Module], layout: Comment::LayoutCell).().
-      must_equal "$layout.erb{$show.erb, nil
-$show.erb, nil
-$show.erb, nil
-$show.erb, nil
-, nil}
+      must_equal "$layout.erb{$show.erb, nil$show.erb, nil$show.erb, nil$show.erb, nil, nil}
 "
   end
 end
