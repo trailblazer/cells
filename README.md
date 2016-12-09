@@ -361,8 +361,11 @@ Builders allow instantiating different cell classes for different models and opt
 ```ruby
 class CommentCell < Cell::ViewModel
   builds do |model, options|
-    PostCell       if model.is_a?(Post)
-    CommentCell    if model.is_a?(Comment)
+    if model.is_a?(Post)
+      PostCell
+    elsif model.is_a?(Comment)
+      CommentCell
+    end
   end
 ```
 
