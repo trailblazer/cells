@@ -360,9 +360,13 @@ Builders allow instantiating different cell classes for different models and opt
 
 ```ruby
 class CommentCell < Cell::ViewModel
+  include ::Cell::Builder
+
   builds do |model, options|
-    PostCell       if model.is_a?(Post)
-    CommentCell    if model.is_a?(Comment)
+    case model
+    when Post; PostCell
+    when Comment; CommentCell
+    end
   end
 ```
 
