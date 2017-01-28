@@ -1,3 +1,5 @@
+require "uber/delegates"
+
 module Cell
   class ViewModel
     extend Abstract

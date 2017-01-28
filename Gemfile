@@ -6,3 +6,5 @@ gem "benchmark-ips"
 gem "minitest-line"
 
 gemspec
+
+gem "uber", path: "../uber"

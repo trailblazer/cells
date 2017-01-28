@@ -1,4 +1,4 @@
-require 'uber/options'
+require "declarative/options"
 
 module Cell
   module Caching
@@ -10,19 +10,19 @@ module Cell
         inheritable_attr :conditional_procs
         inheritable_attr :cache_options
 
-        self.version_procs = {}
+        self.version_procs     = {}
         self.conditional_procs = {}
-        self.cache_options = Uber::Options.new({})
+        self.cache_options     = {}
       end
     end
 
     module ClassMethods
       def cache(state, *args, &block)
-        options = args.last.is_a?(Hash) ? args.pop : {} # I have to admit, Array#extract_options is a brillant tool.
+        options = args.last.is_a?(Hash) ? args.pop : {} # I have to admit, Array#extract_options is a brilliant tool.
 
-        self.conditional_procs[state] = Uber::Options::Value.new(options.delete(:if) || true)
-        self.version_procs[state] = Uber::Options::Value.new(args.first || block)
-        self.cache_options[state] = Uber::Options.new(options)
+        conditional_procs[state] = Declarative::Option(options.delete(:if) || true, instance_exec: true)
+        version_procs[state]     = Declarative::Option(args.first || block, instance_exec: true)
+        cache_options[state]     = Declarative::Options(options, instance_exec: true)
       end
 
       # Computes the complete, namespaced cache key for +state+.
@@ -37,17 +37,16 @@ module Cell
     private
 
       def expand_cache_key(key)
-        key.join("/") # TODO: test me!
+        key.join("/")
       end
     end
-
 
     def render_state(state, *args)
       state = state.to_sym
       return super(state, *args) unless cache?(state, *args)
 
-      key     = self.class.state_cache_key(state, self.class.version_procs[state].evaluate(self, *args))
-      options = self.class.cache_options.eval(state, self, *args)
+      key     = self.class.state_cache_key(state, self.class.version_procs[state].(self, *args))
+      options = self.class.cache_options[state].(self, *args)
 
       fetch_from_cache_for(key, options) { super(state, *args) }
     end
@@ -57,7 +56,7 @@ module Cell
     end
 
     def cache?(state, *args)
-      perform_caching? and state_cached?(state) and self.class.conditional_procs[state].evaluate(self, *args)
+      perform_caching? and state_cached?(state) and self.class.conditional_procs[state].(self, *args)
     end
 
   private
@@ -66,10 +65,8 @@ module Cell
       true
     end
 
-    def fetch_from_cache_for(key, options)
-      cache_store.fetch(key, options) do
-        yield
-      end
+    def fetch_from_cache_for(key, options, &block)
+      cache_store.fetch(key, options, &block)
     end
 
     def state_cached?(state)
