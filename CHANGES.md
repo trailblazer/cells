@@ -1,3 +1,7 @@
+## 4.1.6
+
+* Use `Declarative::Option` and `Declarative::Builder` instead of `uber`'s. This allows removing the `uber` version restriction.
+
 ## 4.1.5
 
 * Fix a bug where nested calls of `cell(name, context: {...})` would ignore the new context elements, resulting in the old context being passed on. By adding `Context::[]` the new elements are now properly merged into a **new context hash**. This means that adding elements to the child context won't leak up into the parent context anymore.
