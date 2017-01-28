@@ -7,4 +7,4 @@ gem "minitest-line"
 
 gemspec
 
-gem "uber", path: "../uber"
+# gem "uber", path: "../uber"
