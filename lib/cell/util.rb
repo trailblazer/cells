@@ -5,6 +5,11 @@ module Cell::Util
 
   class Inflector
     # copied from ActiveSupport.
+    def self.camelize(input)
+      input.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
+    end
+
+    # copied from ActiveSupport.
     def self.underscore(constant)
       constant.gsub(/::/, '/').
       gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
