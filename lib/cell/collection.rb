@@ -31,9 +31,9 @@ module Cell
     # Its return value is captured and joined.
     def join(separator="", &block)
       @ary.each_with_index.collect do |model, i|
-        yield @cell_class.build(model, @options), i
-      end.
-        join(separator)
+        cell = @cell_class.build(model, @options)
+        block_given? ? yield(cell, i) : cell
+      end.join(separator)
     end
 
     module Layout

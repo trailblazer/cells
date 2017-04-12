@@ -89,4 +89,11 @@ class PublicTest < MiniTest::Spec
       i == 1 ? cell.(:detail) : cell.()
     end.must_equal '[Object, {}]>* [Module, {}]'
   end
+
+  # 'join' can be used without a block:
+  it do
+    Cell::ViewModel.cell(
+      "public_test/song", collection: [Object, Module]
+    ).join('---').must_equal('[Object, {}]---[Module, {}]')
+  end
 end

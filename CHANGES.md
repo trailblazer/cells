@@ -1,3 +1,5 @@
+* `Collection#join` can now be called without a block.
+
 ## 4.1.6
 
 * Use `Declarative::Option` and `Declarative::Builder` instead of `uber`'s. This allows removing the `uber` version restriction.
