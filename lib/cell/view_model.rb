@@ -11,6 +11,9 @@ module Cell
     inheritable_attr :view_paths
     self.view_paths = ["app/cells"]
 
+    inheritable_attr :required_options
+    self.required_options = []
+
     class << self
       def templates
         @templates ||= Templates.new # note: this is shared in subclasses. do we really want this?
@@ -38,6 +41,14 @@ module Cell
     class << self
       def property(*names)
         delegates :model, *names # Uber::Delegates.
+      end
+
+      def option(name, opts = {})
+        required_options << name if opts[:required]
+
+        define_method(name) do
+          options.fetch(name, opts[:default])
+        end
       end
 
       # Public entry point. Use this to instantiate cells with builders.
@@ -68,6 +79,7 @@ module Cell
     end
 
     def initialize(model=nil, options={})
+      validate_required_options!(options)
       setup!(model, options)
     end
 
@@ -133,6 +145,11 @@ module Cell
       @model   = model
       @options = options
       # or: create_twin(model, options)
+    end
+
+    def validate_required_options!(options)
+      missing_options = self.class.required_options - options.keys
+      raise MissingOptionError, missing_options if missing_options.any?
     end
 
     class OutputBuffer < Array
@@ -203,5 +220,12 @@ module Cell
     end
 
     include Layout
+  end
+
+  class MissingOptionError < StandardError
+    # @param opts [Array] a list of the names of the missing options
+    def initialize(opts)
+      super "missing option(s): #{opts.join(', ')}"
+    end
   end
 end
