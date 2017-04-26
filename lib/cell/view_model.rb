@@ -171,7 +171,7 @@ module Cell
 
     def normalize_options(options)
       options = if options.is_a?(Hash)
-        options[:view] ||= state_for_implicit_render(options)
+        options[:view] ||= caller_locations(2, 1)[0].label
         options
       else
         {view: options.to_s}
@@ -189,11 +189,6 @@ module Cell
       end
     end
     include ProcessOptions
-
-    # Computes the view name from the call stack in which `render` was invoked.
-    def state_for_implicit_render(options)
-      caller(3, 1) [0].match(/`(\w+)/)[1]
-    end
 
     include Layout
   end
