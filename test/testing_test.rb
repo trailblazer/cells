@@ -7,11 +7,6 @@ class TestCaseTest < MiniTest::Spec
     end
   end
 
-  class Song
-    class Cell < Cell::Concept
-    end
-  end
-
   let (:song) { Object.new }
 
   # #cell returns the instance
@@ -22,14 +17,6 @@ class TestCaseTest < MiniTest::Spec
     it { subject.model.must_equal song }
 
     it { cell("test_case_test/song", collection: [song, song]).().must_equal "Give It All!Give It All!" }
-  end
-
-
-  describe "#concept" do
-    subject { concept("test_case_test/song/cell", song) }
-
-    it { subject.must_be_instance_of Song::Cell }
-    it { subject.model.must_equal song }
   end
 end
 

@@ -8,10 +8,6 @@ module Cell
       cell_for(ViewModel, name, *args)
     end
 
-    def concept(name, *args)
-      cell_for(Concept, name, *args)
-    end
-
   private
     def cell_for(baseclass, name, model=nil, options={})
       options[:context] ||= {}
