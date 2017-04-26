@@ -27,10 +27,9 @@ module Cell
     attr_reader :model
 
     module Helpers
-      # Constantizes name if needed, call builders and returns instance.
-      def cell(name, *args, &block) # classic Rails fuzzy API.
-        constant = name.is_a?(Class) ? name : class_from_cell_name(name)
-        constant.(*args, &block)
+      # Call builders and returns instance.
+      def cell(cell_class, *args, &block) # classic Rails fuzzy API.
+        cell_class.(*args, &block)
       end
     end
     extend Helpers
@@ -53,11 +52,6 @@ module Cell
       end
 
       alias build new # semi-public for Cell::Builder
-
-    private
-      def class_from_cell_name(name)
-        util.constant_for("#{name}_cell")
-      end
     end
 
     # Build nested cell in instance.
