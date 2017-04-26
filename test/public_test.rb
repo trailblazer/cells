@@ -38,14 +38,6 @@ class PublicTest < MiniTest::Spec
   # ViewModel.cell(collection: []) passes generic options to cell.
   it { Cell::ViewModel.cell(PublicTest::SongCell, collection: [Object, Module], genre: 'Metal', context: { ready: true }).to_s.must_equal "[Object, {:genre=>\"Metal\", :context=>{:ready=>true}}][Module, {:genre=>\"Metal\", :context=>{:ready=>true}}]" }
 
-  # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
-  # TODO: remove in 5.0.
-  it do
-    Gem::Deprecate::skip_during do
-      Cell::ViewModel.cell(PublicTest::SongCell, collection: [Object, Module], method: :detail).to_s.must_equal '* [Object, {}]* [Module, {}]'
-    end
-  end
-
   # ViewModel.cell(collection: []).() invokes #show.
   it { Cell::ViewModel.cell(PublicTest::SongCell, collection: [Object, Module]).().must_equal '[Object, {}][Module, {}]' }
 

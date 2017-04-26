@@ -2,23 +2,16 @@ module Cell
   class Collection
     def initialize(ary, options, cell_class)
       options.delete(:collection)
-      set_deprecated_options(options) # TODO: remove in 5.0.
 
       @ary        = ary
       @options    = options    # these options are "final" and will be identical for all collection cells.
       @cell_class = cell_class
     end
 
-    def set_deprecated_options(options) # TODO: remove in 5.0.
-      self.method = options.delete(:method)                   if options.include?(:method)
-      self.collection_join = options.delete(:collection_join) if options.include?(:collection_join)
-    end
-
     module Call
-      def call(state=:show)
-        join(collection_join) { |cell, i| cell.(method || state) }
+      def call(method=:show)
+        join('') { |cell, i| cell.(method) }
       end
-
     end
     include Call
 
@@ -45,14 +38,6 @@ module Cell
       end
     end
     include Layout
-
-    # TODO: remove in 5.0.
-    private
-    attr_accessor :collection_join, :method
-
-    extend Gem::Deprecate
-    deprecate :method=, "`call(method)` as documented here: http://trailblazer.to/gems/cells/api.html#collection", 2016, 7
-    deprecate :collection_join=, "`join(\"<br>\")` as documented here: http://trailblazer.to/gems/cells/api.html#collection", 2016, 7
   end
 end
 
