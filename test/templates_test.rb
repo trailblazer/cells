@@ -30,7 +30,7 @@ class TemplatesCachingTest < MiniTest::Spec
 
   # templates are cached once and forever.
   it do
-    cell = cell("templates_caching_test/song")
+    cell = cell(TemplatesCachingTest::SongCell)
 
     cell.call(:show).must_equal 'The Great Mind Eraser'
 

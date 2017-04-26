@@ -2,7 +2,7 @@ require 'test_helper'
 
 class SongWithLayoutCell < Cell::ViewModel
   self.view_paths = ['test/fixtures']
-  # include Cell::Erb
+  # include Cell::Erb TODO
 
   def show
     render layout: :merry
@@ -27,7 +27,7 @@ private
 end
 
 class SongWithLayoutOnClassCell < SongWithLayoutCell
-  # inherit_views SongWithLayoutCell
+  # inherit_views SongWithLayoutCell TODO
   layout :merry
 
   def show
@@ -48,7 +48,7 @@ class LayoutTest < MiniTest::Spec
 
   it { assert_raises(Cell::TemplateMissingError) { SongWithLayoutCell.new(nil).unknown } }
   # assert message of exception.
-  it {  }
+  it {  } # TODO
 
   # with ::layout.
   it { SongWithLayoutOnClassCell.new(nil).show.must_equal "Merry Xmas, <b>Papertiger</b>\n" }
@@ -81,7 +81,7 @@ class ExternalLayoutTest < Minitest::Spec
 
   # collection :layout
   it do
-    Cell::ViewModel.cell("comment/show", collection: [Object, Module], layout: Comment::LayoutCell).().
+    Cell::ViewModel.cell(Comment::ShowCell, collection: [Object, Module], layout: Comment::LayoutCell).().
       must_equal "$layout.erb{$show.erb, nil\n$show.erb, nil\n$show.erb, nil\n$show.erb, nil\n, nil}
 "
   end

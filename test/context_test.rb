@@ -23,7 +23,7 @@ class ContextTest < MiniTest::Spec
     parent.user.must_equal user
 
     # nested cell
-    child = parent.cell("context_test/parent", "")
+    child = parent.cell(ContextTest::ParentCell, "")
 
     child.model.must_equal ""
     child.controller.must_equal controller

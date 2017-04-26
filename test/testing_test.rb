@@ -11,12 +11,12 @@ class TestCaseTest < MiniTest::Spec
 
   # #cell returns the instance
   describe "#cell" do
-    subject { cell("test_case_test/song", song) }
+    subject { cell(TestCaseTest::SongCell, song) }
 
     it { subject.must_be_instance_of SongCell }
     it { subject.model.must_equal song }
 
-    it { cell("test_case_test/song", collection: [song, song]).().must_equal "Give It All!Give It All!" }
+    it { cell(TestCaseTest::SongCell, collection: [song, song]).().must_equal "Give It All!Give It All!" }
   end
 end
 
@@ -31,14 +31,14 @@ class CapybaraTest < MiniTest::Spec
   end
 
   describe "capybara support" do
-    subject { cell("capybara_test/capybara", nil) }
+    subject { cell(CapybaraTest::CapybaraCell, nil) }
 
     before { Cell::Testing.capybara = true  } # yes, a global switch!
     after  { Cell::Testing.capybara = false }
 
     it { subject.(:show).has_selector?('b').must_equal true }
 
-    it { cell("capybara_test/capybara", collection: [1, 2]).().has_selector?('b').must_equal true }
+    it { cell(CapybaraTest::CapybaraCell, collection: [1, 2]).().has_selector?('b').must_equal true }
 
     # FIXME: this kinda sucks, what if you want the string in a Capybara environment?
     it { subject.(:show).to_s.must_match "<b>Grunt</b>" }
