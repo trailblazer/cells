@@ -34,9 +34,9 @@ class ContextTest < MiniTest::Spec
   it do
     child = parent.cell(ParentCell, nil, context: { "is_child?" => true })
 
-    parent.context["is_child?"].must_equal nil
+    assert_nil(parent.context["is_child?"])
 
-    child.model.must_equal nil
+    assert_nil(child.model)
     child.controller.must_equal controller
     child.user.must_equal user
     child.context["is_child?"].must_equal true
