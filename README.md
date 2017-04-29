@@ -36,6 +36,12 @@ This boils down to the following invocation, that can be used to render cells in
 CommentCell.(@comment).()
 ```
 
+You can also pass the cell class in explicitly:
+
+```ruby
+<%= cell(CommentCell, @comment) %>
+```
+
 In Rails you have the same helper API for views and controllers.
 
 ```ruby
