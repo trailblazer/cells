@@ -1,3 +1,5 @@
+## 4.1.7
+
 * `Collection#join` can now be called without a block.
 
 ## 4.1.6
