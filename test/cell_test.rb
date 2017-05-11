@@ -10,6 +10,10 @@ class CellTest < MiniTest::Spec
     def show_with_block(&block)
       render(&block)
     end
+
+    def show_inception
+      render
+    end
   end
 
   # #options
@@ -17,4 +21,7 @@ class CellTest < MiniTest::Spec
 
   # #block
   it { SongCell.new(nil, genre: "Punkrock").(:show_with_block) { "hello" }.must_equal "<b>hello</b>\n" }
+
+  # #block inside a block (inception!)
+  it { SongCell.new(nil, genre: "Punkrock").(:show_inception).must_equal "<b>inside the b tag</b>\n" }
 end
