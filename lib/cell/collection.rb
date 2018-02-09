@@ -30,10 +30,32 @@ module Cell
     # The passed block receives that cell and the index.
     # Its return value is captured and joined.
     def join(separator="", &block)
+      state = @cell_class.version_procs.keys.first
+      cached_keys = get_cached_keys(state) if state
+
+      if cached_keys.any?
+        cached_cells = Rails.cache.read_multi(*cached_keys.values)
+      end
+      
       @ary.each_with_index.collect do |model, i|
-        cell = @cell_class.build(model, @options)
-        block_given? ? yield(cell, i) : cell
+        if cached_cell = cached_cells[cached_keys[model]]
+          cached_cell
+        else
+          cell = @cell_class.build(model, @options)
+          block_given? ? yield(cell, i) : cell
+        end
       end.join(separator)
+    end
+
+    def get_cached_keys(state)
+      items_to_key = {}
+
+      @ary.each do |model|
+        cell = @cell_class.build(model, @options)
+        items_to_key[model] = @cell_class.state_cache_key(state, cell.class.version_procs[state].(cell, @options))
+      end
+      
+      items_to_key
     end
 
     module Layout
