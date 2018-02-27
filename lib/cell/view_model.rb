@@ -161,7 +161,7 @@ module Cell
 
         view      = options[:view]
         prefixes  = options[:prefixes]
-        suffix    = template_options.delete(:suffix)
+        suffix    = options[:suffix] || template_options.delete(:suffix)
         view      = "#{view}.#{suffix}"
 
         template_for(prefixes, view, template_options) or raise TemplateMissingError.new(prefixes, view)
