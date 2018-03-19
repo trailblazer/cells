@@ -45,8 +45,8 @@ module Cell
       #   SongCell.(@song)
       #   SongCell.(collection: Song.all)
       def call(model=nil, options={}, &block)
-        if model.is_a?(Hash) and array = model[:collection]
-          return Collection.new(array, model.merge(options), self)
+        if model.is_a?(Hash) and model.key?(:collection)
+          return Collection.new(model[:collection], model.merge(options), self)
         end
 
         build(model, options)
