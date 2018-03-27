@@ -120,6 +120,7 @@ module Cell
     end
 
     include Rendering
+    include Inspect
 
     def to_s
       call
