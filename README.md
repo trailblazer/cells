@@ -534,7 +534,7 @@ Note how the block is run in the global view's context, allowing you to use glob
 
 You need to include the `disposable` gem in order to use this.
 
-````ruby
+```ruby
 gem "disposable"
 ```
 
