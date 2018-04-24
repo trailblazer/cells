@@ -4,6 +4,6 @@ module Cell::Abstract
   end
 
   def abstract?
-    @abstract
+    @abstract if defined?(@abstract)
   end
 end

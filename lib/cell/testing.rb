@@ -32,7 +32,7 @@ module Cell
     end
 
     def self.capybara?
-      @capybara
+      @capybara if defined?(@capybara)
     end
 
     # Extends ViewModel#call by injecting Capybara support.

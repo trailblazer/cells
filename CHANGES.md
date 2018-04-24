@@ -1,3 +1,7 @@
+## 4.1.8
+
+* Fix ruby warning with undefined instance variable in codebase
+
 ## 4.1.7
 
 * `Collection#join` can now be called without a block.
