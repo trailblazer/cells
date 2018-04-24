@@ -1,9 +1,9 @@
 language: ruby
 rvm:
   #- ruby-head
-  - 2.5
-  - 2.4.3
-  - 2.3.6
+  - 2.5.1
+  - 2.4.4
+  - 2.3.7
 
 sudo: false
 cache: bundler
@@ -14,4 +14,5 @@ matrix:
     - rvm: ruby-head
 
 before_install:
-  - gem update bundler
+  - gem update --system
+  - gem install bundler

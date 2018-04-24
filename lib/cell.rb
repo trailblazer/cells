@@ -1,6 +1,5 @@
 require "tilt"
 require "uber/inheritable_attr"
-require "cell/version"
 
 module Cell
   autoload :Testing,  "cell/testing"
