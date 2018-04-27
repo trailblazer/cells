@@ -13,20 +13,11 @@ module Cell
 
     def find_template(prefixes, view, options) # options is not considered in cache key.
       cache.fetch(prefixes, view) do
-        template = nil
-        prefixes.find do |prefix|
-          template = create(prefix, view, options)
-        end
-        template
+        template_prefix = prefixes.find { |prefix| File.exist?("#{prefix}/#{view}") }
+        return if template_prefix.nil? # We can safely return early. Tilt::Cache does not cache nils.
+        template_class = options.delete(:template_class)
+        template_class.new("#{template_prefix}/#{view}", options) # Tilt.new()
       end
-    end
-
-    def create(prefix, view, options)
-      # puts "...checking #{prefix}/#{view}"
-      return unless File.exist?("#{prefix}/#{view}") # DISCUSS: can we use Tilt.new here?
-
-      template_class = options.delete(:template_class)
-      template_class.new("#{prefix}/#{view}", options) # Tilt.new()
     end
   end
 end
