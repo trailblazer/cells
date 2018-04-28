@@ -1,3 +1,7 @@
+## Upcoming
+
+* Call `cache_key` on objects used in cache keys instead of `to_s` when possible.
+
 ## 4.1.8
 
 * Fix ruby warning with undefined instance variable in codebase

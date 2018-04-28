@@ -36,8 +36,11 @@ module Cell
 
     private
 
-      def expand_cache_key(key)
-        key.join("/")
+      def expand_cache_key(full_key)
+        computed_keys = full_key.flatten.map do |key|
+          key.respond_to?(:cache_key) ? key.cache_key : key.to_s
+        end
+        computed_keys.join('/')
       end
     end
 
