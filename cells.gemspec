@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = "https://github.com/apotonick/cells"
   spec.summary     = %q{View Models for Ruby and Rails.}
   spec.description = %q{View Models for Ruby and Rails, replacing helpers and partials while giving you a clean view architecture with proper encapsulation.}
-  spec.license     = "MIT"
+  spec.license     = "LGPL-3.0"
 
   spec.files         = `git ls-files`.split("\n")
   spec.test_files    = `git ls-files -- {test}/*`.split("\n")
