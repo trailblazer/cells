@@ -45,8 +45,7 @@ module Cell
       state = state.to_sym
       return super(state, *args) unless cache?(state, *args)
 
-      key     = self.class.state_cache_key(state, self.class.version_procs[state].(self, *args))
-      options = self.class.cache_options[state].(self, *args)
+      key, options = cache_key_options(state, *args)
 
       fetch_from_cache_for(key, options) { super(state, *args) }
     end
@@ -59,6 +58,19 @@ module Cell
       perform_caching? and state_cached?(state) and self.class.conditional_procs[state].(self, *args)
     end
 
+    # Method for getting whether the cell is cached
+    # If caching is disabled for the cell or the whole app
+    # It returns `false` without hitting cache store
+    #
+    # Same arguments as `#call`
+    def cached?(state=:show, *args)
+      return false unless cache?(state, *args)
+
+      key, options = cache_key_options(state, *args)
+
+      !cache_store.fetch(key, options).nil?
+    end
+
   private
 
     def perform_caching?
@@ -67,6 +79,13 @@ module Cell
 
     def fetch_from_cache_for(key, options, &block)
       cache_store.fetch(key, options, &block)
+    end
+
+    def cache_key_options(state, *args)
+      [
+        self.class.state_cache_key(state, self.class.version_procs[state].(self, *args)),
+        self.class.cache_options[state].(self, *args),
+      ]
     end
 
     def state_cached?(state)
