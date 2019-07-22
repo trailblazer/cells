@@ -15,5 +15,7 @@ matrix:
     - rvm: ruby-head
 
 before_install:
-  - gem update --system
-  - gem install bundler
+  # Apply workaround from https://github.com/colszowka/simplecov/commit/ba423820d1d1164fcc038e7b6163b8a96d1786be
+  # if `gem update --system` fail (Ruby < 2.3)
+  - gem update --system || gem i rubygems-update -v '<3' && update_rubygems
+  - gem install bundler || gem install bundler -v '1.17.3'
