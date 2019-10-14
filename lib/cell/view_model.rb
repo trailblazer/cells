@@ -136,6 +136,25 @@ module Cell
       # or: create_twin(model, options)
     end
 
+    class OutputBuffer < Array
+      def encoding
+        "UTF-8"
+      end
+
+      def <<(string)
+        super
+      end
+      alias_method :safe_append=, :<<
+      alias_method :append=, :<<
+
+      def to_s # output_buffer is returned at the end of the precompiled template.
+        join
+      end
+    end
+    def output_buffer # called from the precompiled template. FIXME: this is currently not used in Haml.
+      OutputBuffer.new # don't cache output_buffer, for every #render call we get a fresh one.
+    end
+
     module TemplateFor
       def find_template(options)
         template_options = template_options_for(options) # imported by Erb, Haml, etc.
@@ -180,7 +199,8 @@ module Cell
 
     # Computes the view name from the call stack in which `render` was invoked.
     def state_for_implicit_render(options)
-      caller(3, 1)[0].match(/`(\w+)/)[1]
+      _caller = RUBY_VERSION < "2.0" ? caller(3) : caller(3, 1) # TODO: remove case in 5.0 when dropping 1.9.
+      _caller[0].match(/`(\w+)/)[1]
     end
 
     include Layout

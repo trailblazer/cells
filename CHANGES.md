@@ -1,7 +1,3 @@
-## 4.5.0
-
-* Drop support for rubies prior 2.2.10
-
 ## 4.1.8
 
 * Fix ruby warning with undefined instance variable in codebase
