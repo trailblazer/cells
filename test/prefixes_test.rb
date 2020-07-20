@@ -42,39 +42,39 @@ class PrefixesTest < MiniTest::Spec
 
 
   describe "::controller_path" do
-    it { ::BassistCell.new(@controller).class.controller_path.must_equal "bassist" }
-    it { SingerCell.new(@controller).class.controller_path.must_equal "prefixes_test/singer" }
+    it { _(::BassistCell.new(@controller).class.controller_path).must_equal "bassist" }
+    it { _(SingerCell.new(@controller).class.controller_path).must_equal "prefixes_test/singer" }
   end
 
   describe "#_prefixes" do
-    it { ::BassistCell.new(@controller)._prefixes.must_equal  ["test/fixtures/bassist"] }
-    it { ::BassistCell::FenderCell.new(@controller)._prefixes.must_equal ["app/cells/bassist_cell/fender"] }
-    it { ::BassistCell::IbanezCell.new(@controller)._prefixes.must_equal ["test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"] }
+    it { _(::BassistCell.new(@controller)._prefixes).must_equal  ["test/fixtures/bassist"] }
+    it { _(::BassistCell::FenderCell.new(@controller)._prefixes).must_equal ["app/cells/bassist_cell/fender"] }
+    it { _(::BassistCell::IbanezCell.new(@controller)._prefixes).must_equal ["test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"] }
 
-    it { SingerCell.new(@controller)._prefixes.must_equal   ["app/cells/prefixes_test/singer"] }
-    it { BackgroundVocalsCell.new(@controller)._prefixes.must_equal ["app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"] }
-    it { ChorusCell.new(@controller)._prefixes.must_equal   ["app/cells/prefixes_test/chorus", "app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"] }
+    it { _(SingerCell.new(@controller)._prefixes).must_equal   ["app/cells/prefixes_test/singer"] }
+    it { _(BackgroundVocalsCell.new(@controller)._prefixes).must_equal ["app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"] }
+    it { _(ChorusCell.new(@controller)._prefixes).must_equal   ["app/cells/prefixes_test/chorus", "app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"] }
 
-    it { GuitaristCell.new(@controller)._prefixes.must_equal ["stringer", "app/cells/prefixes_test/singer"] }
-    it { BassistCell.new(@controller)._prefixes.must_equal ["app/cells/prefixes_test/bassist", "basser", "app/cells/prefixes_test/singer"] }
+    it { _(GuitaristCell.new(@controller)._prefixes).must_equal ["stringer", "app/cells/prefixes_test/singer"] }
+    it { _(BassistCell.new(@controller)._prefixes).must_equal ["app/cells/prefixes_test/bassist", "basser", "app/cells/prefixes_test/singer"] }
     # it { DrummerCell.new(@controller)._prefixes.must_equal ["drummer", "stringer", "prefixes_test/singer"] }
 
     # multiple view_paths.
-    it { EngineCell.prefixes.must_equal ["app/cells/engine", "/var/engine/app/cells/engine"] }
+    it { _(EngineCell.prefixes).must_equal ["app/cells/engine", "/var/engine/app/cells/engine"] }
     it do
-      InheritingFromEngineCell.prefixes.must_equal [
+      _(InheritingFromEngineCell.prefixes).must_equal [
         "app/cells/inheriting_from_engine", "/var/engine/app/cells/inheriting_from_engine",
         "app/cells/engine",                 "/var/engine/app/cells/engine"]
     end
 
     # ::_prefixes is cached.
     it do
-      WannabeCell.prefixes.must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
+      _(WannabeCell.prefixes).must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
       WannabeCell.instance_eval { def _local_prefixes; ["more"] end }
       # _prefixes is cached.
-      WannabeCell.prefixes.must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
+      _(WannabeCell.prefixes).must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
       # superclasses don't get disturbed.
-      ::BassistCell.prefixes.must_equal ["test/fixtures/bassist"]
+      _(::BassistCell.prefixes).must_equal ["test/fixtures/bassist"]
     end
   end
 
@@ -96,12 +96,12 @@ class InheritViewsTest < MiniTest::Spec
   class FunkerCell < SlapperCell
   end
 
-  it { SlapperCell.new(nil)._prefixes.must_equal ["test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"] }
-  it { FunkerCell.new(nil)._prefixes.must_equal ["test/fixtures/inherit_views_test/funker", "test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"] }
+  it { _(SlapperCell.new(nil)._prefixes).must_equal ["test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"] }
+  it { _(FunkerCell.new(nil)._prefixes).must_equal ["test/fixtures/inherit_views_test/funker", "test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"] }
 
   # test if normal cells inherit views.
-  it { cell('inherit_views_test/slapper').play.must_equal 'Doo' }
-  it { cell('inherit_views_test/funker').play.must_equal 'Doo' }
+  it { _(cell('inherit_views_test/slapper').play).must_equal 'Doo' }
+  it { _(cell('inherit_views_test/funker').play).must_equal 'Doo' }
 
 
   # TapperCell
@@ -122,12 +122,12 @@ class InheritViewsTest < MiniTest::Spec
   end
 
   # Tapper renders its play
-  it { cell('inherit_views_test/tapper').call(:play).must_equal 'Dooom!' }
+  it { _(cell('inherit_views_test/tapper').call(:play)).must_equal 'Dooom!' }
   # Tapper renders its tap
-  it { cell('inherit_views_test/tapper').call(:tap).must_equal 'Tap tap tap!' }
+  it { _(cell('inherit_views_test/tapper').call(:tap)).must_equal 'Tap tap tap!' }
 
   # Popper renders Tapper's play
-  it { cell('inherit_views_test/popper').call(:play).must_equal 'Dooom!' }
+  it { _(cell('inherit_views_test/popper').call(:play)).must_equal 'Dooom!' }
   #  Popper renders its tap
-  it { cell('inherit_views_test/popper').call(:tap).must_equal "TTttttap I'm not good enough!" }
+  it { _(cell('inherit_views_test/popper').call(:tap)).must_equal "TTttttap I'm not good enough!" }
 end
