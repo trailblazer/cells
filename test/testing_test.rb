@@ -18,18 +18,18 @@ class TestCaseTest < MiniTest::Spec
   describe "#cell" do
     subject { cell("test_case_test/song", song) }
 
-    it { subject.must_be_instance_of SongCell }
-    it { subject.model.must_equal song }
+    it { _(subject).must_be_instance_of SongCell }
+    it { _(subject.model).must_equal song }
 
-    it { cell("test_case_test/song", collection: [song, song]).().must_equal "Give It All!Give It All!" }
+    it { _(cell("test_case_test/song", collection: [song, song]).()).must_equal "Give It All!Give It All!" }
   end
 
 
   describe "#concept" do
     subject { concept("test_case_test/song/cell", song) }
 
-    it { subject.must_be_instance_of Song::Cell }
-    it { subject.model.must_equal song }
+    it { _(subject).must_be_instance_of Song::Cell }
+    it { _(subject.model).must_equal song }
   end
 end
 
@@ -49,11 +49,11 @@ class CapybaraTest < MiniTest::Spec
     before { Cell::Testing.capybara = true  } # yes, a global switch!
     after  { Cell::Testing.capybara = false }
 
-    it { subject.(:show).has_selector?('b').must_equal true }
+    it { _(subject.(:show).has_selector?('b')).must_equal true }
 
-    it { cell("capybara_test/capybara", collection: [1, 2]).().has_selector?('b').must_equal true }
+    it { _(cell("capybara_test/capybara", collection: [1, 2]).().has_selector?('b')).must_equal true }
 
     # FIXME: this kinda sucks, what if you want the string in a Capybara environment?
-    it { subject.(:show).to_s.must_match "<b>Grunt</b>" }
+    it { _(subject.(:show).to_s).must_match "<b>Grunt</b>" }
   end
 end

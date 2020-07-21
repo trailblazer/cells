@@ -5,7 +5,7 @@ class TemplatesTest < MiniTest::Spec
   Templates = Cell::Templates
 
   # existing.
-  it { Templates.new[['test/fixtures/bassist'], 'play.erb', {template_class: Cell::Erb::Template}].file.must_equal 'test/fixtures/bassist/play.erb' }
+  it { _(Templates.new[['test/fixtures/bassist'], 'play.erb', {template_class: Cell::Erb::Template}].file).must_equal 'test/fixtures/bassist/play.erb' }
 
   # not existing.
   it { assert_nil(Templates.new[['test/fixtures/bassist'], 'not-here.erb', {}]) }
@@ -32,13 +32,13 @@ class TemplatesCachingTest < MiniTest::Spec
   it do
     cell = cell("templates_caching_test/song")
 
-    cell.call(:show).must_equal 'The Great Mind Eraser'
+    _(cell.call(:show)).must_equal 'The Great Mind Eraser'
 
     SongCell.templates.instance_eval do
       def create; raise; end
     end
 
     # cached, NO new tilt template.
-    cell.call(:show).must_equal 'The Great Mind Eraser'
+    _(cell.call(:show)).must_equal 'The Great Mind Eraser'
   end
 end

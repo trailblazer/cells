@@ -1,18 +1,8 @@
 language: ruby
+before_install: gem install bundler
 rvm:
-  #- ruby-head
-  - 2.5.1
-  - 2.4.4
-  - 2.3.7
-  - 2.2.10
+  - 2.7
+  - 2.6
+  - 2.5
 
 cache: bundler
-
-matrix:
-  fast_finish: true
-  allow_failures:
-    - rvm: ruby-head
-
-before_install:
-  - gem update --system
-  - gem install bundler
