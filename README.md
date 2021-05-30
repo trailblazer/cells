@@ -2,8 +2,8 @@
 
 *View Components for Ruby and Rails.*
 
-[![Gitter Chat](https://badges.gitter.im/trailblazer/chat.svg)](https://gitter.im/trailblazer/chat)
-[![TRB Newsletter](https://img.shields.io/badge/TRB-newsletter-lightgrey.svg)](http://trailblazer.to/newsletter/)
+[![Zulip Chat](https://badges.gitter.im/trailblazer/chat.svg)](https://trailblazer.zulipchat.com/login/)
+[![TRB Newsletter](https://img.shields.io/badge/TRB-newsletter-lightgrey.svg)](https://trailblazer.to/2.0/newsletter.html)
 [![Build
 Status](https://travis-ci.org/trailblazer/cells.svg)](https://travis-ci.org/trailblazer/cells)
 [![Gem Version](https://badge.fury.io/rb/cells.svg)](http://badge.fury.io/rb/cells)
@@ -12,13 +12,13 @@ Status](https://travis-ci.org/trailblazer/cells.svg)](https://travis-ci.org/trai
 
 Cells allow you to encapsulate parts of your UI into components into _view models_. View models, or cells, are simple ruby classes that can render templates.
 
-Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, [nesting](#nested-cells), view inheritance, using Rails helpers, [asset packaging](http://trailblazer.to/gems/cells/rails.html#asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](https://github.com/trailblazer/trailblazer-cells).
+Nevertheless, a cell gives you more than just a template renderer. They allow proper OOP, polymorphic builders, [nesting](#nested-cells), view inheritance, using Rails helpers, [asset packaging](https://trailblazer.to/2.1/docs/cells.html#cells-rails-asset-pipeline) to bundle JS, CSS or images, simple distribution via gems or Rails engines, encapsulated testing, [caching](#caching), and [integrate with Trailblazer](https://github.com/trailblazer/trailblazer-cells).
 
 ## Full Documentation
 
-Cells is part of the Trailblazer framework. [Full documentation](http://trailblazer.to/gems/cells) is available on the project site.
+Cells is part of the Trailblazer framework. [Full documentation](https://trailblazer.to/2.1/docs/cells.html) is available on the project site.
 
-Cells is completely decoupled from Rails. However, Rails-specific functionality is to be found [here](http://trailblazer.to/gems/cells/rails.html).
+Cells is completely decoupled from Rails. However, Rails-specific functionality is to be found [here](https://trailblazer.to/2.1/docs/cells.html#cells-rails).
 
 ## Rendering Cells
 
@@ -151,7 +151,7 @@ Capybara.string(html).must_have_css "h3"
 
 It is completely up to you how you test, whether it's RSpec, MiniTest or whatever. All the cell does is return HTML.
 
-[In Rails, there's support](http://trailblazer.to/gems/cells/testing.html) for TestUnit, MiniTest and RSpec available, along with Capybara integration.
+[In Rails, there's support](https://trailblazer.to/2.1/docs/cells.html#cells-testing) for TestUnit, MiniTest and RSpec available, along with Capybara integration.
 
 ## Properties
 
@@ -182,7 +182,7 @@ song.title                 #=> "<script>Dangerous</script>"
 Comment::Cell.(song).title #=> &lt;script&gt;Dangerous&lt;/script&gt;
 ```
 
-Properties and escaping are [documented here](http://trailblazer.to/gems/cells/api.html#html-escaping).
+Properties and escaping are [documented here](https://trailblazer.to/2.1/docs/cells.html#cells-api-html-escaping).
 
 ## Installation
 
@@ -270,7 +270,7 @@ end
 
 ## Asset Packaging
 
-Cells can easily ship with their own JavaScript, CSS and more and be part of Rails' asset pipeline. Bundling assets into a cell allows you to implement super encapsulated widgets that are stand-alone. Asset pipeline is [documented here](http://trailblazer.to/gems/cells/rails.html#asset-pipeline).
+Cells can easily ship with their own JavaScript, CSS and more and be part of Rails' asset pipeline. Bundling assets into a cell allows you to implement super encapsulated widgets that are stand-alone. Asset pipeline is [documented here](https://trailblazer.to/2.1/docs/cells.html#cells-rails-asset-pipeline).
 
 ## Render API
 
@@ -344,7 +344,7 @@ This works both in cell views and on the instance, in states.
 
 ## View Inheritance
 
-You can not only inherit code across cell classes, but also views. This is extremely helpful if you want to override parts of your UI, only. It's [documented here](http://trailblazer.to/gems/cells/api.html#view-inheritance).
+You can not only inherit code across cell classes, but also views. This is extremely helpful if you want to override parts of your UI, only. It's [documented here](https://trailblazer.to/2.1/docs/cells.html#cells-api-view-inheritance).
 
 ## Collections
 
@@ -357,7 +357,7 @@ cell(:comment, collection: comments).()
 
 This will invoke `cell(:comment, comment).()` three times and concatenate the rendered output automatically.
 
-Learn more [about collections here](http://trailblazer.to/gems/cells/api.html#collection).
+Learn more [about collections here](https://trailblazer.to/2.1/docs/cells.html#cells-api-collection).
 
 
 ## Builder
@@ -382,7 +382,7 @@ The `#cell` helper takes care of instantiating the right cell class for you.
 cell(:comment, Post.find(1)) #=> creates a PostCell.
 ```
 
-Learn more [about builders here](http://trailblazer.to/gems/cells/api.html#builder).
+Learn more [about builders here](https://trailblazer.to/2.1/docs/cells.html#cells-api-builder).
 
 ## Caching
 
@@ -401,7 +401,7 @@ The `::cache` method will forward options to the caching engine.
 cache :show, expires_in: 10.minutes
 ```
 
-You can also compute your own cache key, use dynamic keys, cache tags, and conditionals using `:if`. Caching is documented [here](http://trailblazer.to/gems/cells/api.html#caching) and in chapter 8 of the [Trailblazer book](http://leanpub.com/trailblazer).
+You can also compute your own cache key, use dynamic keys, cache tags, and conditionals using `:if`. Caching is documented [here](https://trailblazer.to/2.1/docs/cells.html#cells-api-caching) and in chapter 8 of the [Trailblazer book](http://leanpub.com/trailblazer).
 
 
 ## The Book
@@ -422,11 +422,11 @@ The book picks up where the README leaves off. Go grab a copy and support us - i
 
 ## This is not Cells 3.x!
 
-Temporary note: This is the README and API for Cells 4. Many things have improved. If you want to upgrade, [follow this guide](https://github.com/apotonick/cells/wiki/From-Cells-3-to-Cells-4---Upgrading-Guide). When in trouble, join the [Gitter channel](https://gitter.im/trailblazer/chat).
+Temporary note: This is the README and API for Cells 4. Many things have improved. If you want to upgrade, [follow this guide](https://github.com/apotonick/cells/wiki/From-Cells-3-to-Cells-4---Upgrading-Guide). When in trouble, join the [Zulip channel](https://trailblazer.zulipchat.com/login/).
 
 ## LICENSE
 
-Copyright (c) 2007-2015, Nick Sutterer
+Copyright (c) 2007-2020, Nick Sutterer
 
 Copyright (c) 2007-2008, Solide ICT by Peter Bex and Bob Leers
 
