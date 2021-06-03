@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = ">= 2.2.10"
 
-  spec.add_dependency "declarative-builder", "< 0.2.0"
+  spec.add_dependency "declarative-builder", "~> 0.2.0"
   spec.add_dependency "declarative-option", "< 0.2.0"
   spec.add_dependency "tilt", ">= 1.4", "< 3"
   spec.add_dependency "uber", "< 0.2.0"
