@@ -1,18 +1,18 @@
 require "trailblazer/option"
 require "uber/callable"
 
-# DISCUSS: Should we move this to trb-option instead ?
-# This is identical to `Representable::Option`.
 module Cell
-  # Extend `Trailblazer::Option` to support static values as callables too.
+  # Extend `Trailblazer::Option` to make static values as callables too.
   class Option < ::Trailblazer::Option
-    def self.callable?(value)
-      [Proc, Symbol, Uber::Callable].any?{ |kind| value.is_a?(kind) }
-    end
-
     def self.build(value)
-      return ->(*) { value } unless callable?(value) # Wrap static `value` into a proc. 
-      super
+      callable = case value
+                 when Proc, Symbol, Uber::Callable
+                   value
+                 else
+                   ->(*) { value } # Make non-callable value to callable.
+                 end
+
+      super(callable)
     end
   end
 
