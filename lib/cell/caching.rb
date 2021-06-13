@@ -5,6 +5,7 @@ module Cell
     def self.included(includer)
       includer.class_eval do
         extend ClassMethods
+        extend Util
         extend Uber::InheritableAttr
         inheritable_attr :version_procs
         inheritable_attr :conditional_procs
@@ -25,7 +26,7 @@ module Cell
 
       # Computes the complete, namespaced cache key for +state+.
       def state_cache_key(state, key_parts={})
-        expand_cache_key([controller_path, state, key_parts])
+        expand_cache_key([formatted_name, state, key_parts])
       end
 
       def expire_cache_key_for(key, cache_store, *args)
@@ -36,6 +37,10 @@ module Cell
 
       def expand_cache_key(key)
         key.join("/")
+      end
+
+      def formatted_name
+        util.underscore(name)
       end
     end
 
