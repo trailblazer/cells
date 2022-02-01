@@ -111,15 +111,23 @@ module Cell
       end
 
       def render_state(*args, **kws, &block)
-        __send__(*args, **kws, &block)
+        __send__(*args, **kws, &block) # Ruby 2.7+
       end
 
       def render_template(template, options, &block)
         template.render(self, options[:locals], &block) # DISCUSS: hand locals to layout?
       end
+
+      module RubyPre2_7_RenderState
+        def render_state(*args, **kws, &block)
+          args = args + [kws] if kws.any?
+          __send__(*args, &block)
+        end
+      end
     end
 
     include Rendering
+    include Rendering::RubyPre2_7_RenderState if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.7.0')
     include Inspect
 
     def to_s
