@@ -28,9 +28,9 @@ module Cell
 
     module Helpers
       # Constantizes name if needed, call builders and returns instance.
-      def cell(name, *args, &block) # classic Rails fuzzy API.
+      def cell(name, *args, **kws, &block) # classic Rails fuzzy API.
         constant = name.is_a?(Class) ? name : class_from_cell_name(name)
-        constant.(*args, &block)
+        constant.(*args, **kws, &block)
       end
     end
     extend Helpers
@@ -88,8 +88,8 @@ module Cell
     module Rendering
       # Invokes the passed method (defaults to :show) while respecting caching.
       # In Rails, the return value gets marked html_safe.
-      def call(state=:show, *args, &block)
-        content = render_state(state, *args, &block)
+      def call(state=:show, *args, **kws, &block)
+        content = render_state(state, *args, **kws, &block)
         content.to_s
       end
 
@@ -110,8 +110,8 @@ module Cell
         render_template(template, options, &block)
       end
 
-      def render_state(*args, &block)
-        __send__(*args, &block)
+      def render_state(*args, **kws, &block)
+        __send__(*args, **kws, &block)
       end
 
       def render_template(template, options, &block)

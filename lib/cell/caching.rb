@@ -17,10 +17,10 @@ module Cell
     end
 
     module ClassMethods
-      def cache(state, *args, **kwargs, &block)
-        conditional_procs[state] = Cell::Option(kwargs.delete(:if) || true)
+      def cache(state, *args, **kws, &block)
+        conditional_procs[state] = Cell::Option(kws.delete(:if) || true)
         version_procs[state]     = Cell::Option(args.first || block)
-        cache_options[state]     = Cell::Options(kwargs)
+        cache_options[state]     = Cell::Options(kws)
       end
 
       # Computes the complete, namespaced cache key for +state+.
@@ -39,14 +39,19 @@ module Cell
       end
     end
 
-    def render_state(state, *args)
+    def render_state(state, *args, **kws)
       state = state.to_sym
-      return super(state, *args) unless cache?(state, *args)
 
-      key     = self.class.state_cache_key(state, self.class.version_procs[state].(*args, exec_context: self))
-      options = self.class.cache_options[state].(*args, exec_context: self)
+      # Before Ruby 3.0, this wasn't necessary, but since cache filters don't receive kwargs as per the "old" (existing cells version) implementation, we can make it one array.
+      cache_filter_args = args + [kws]
 
-      fetch_from_cache_for(key, options) { super(state, *args) }
+      return super(state, *args, **kws) unless cache?(state, *cache_filter_args)
+
+
+      key     = self.class.state_cache_key(state, self.class.version_procs[state].(*cache_filter_args, exec_context: self))
+      options = self.class.cache_options[state].(*cache_filter_args, exec_context: self)
+
+      fetch_from_cache_for(key, options) { super(state, *cache_filter_args) }
     end
 
     def cache_store  # we want to use DI to set a cache store in cell/rails.

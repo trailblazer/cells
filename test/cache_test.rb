@@ -67,6 +67,8 @@ class CacheTest < Minitest::Spec
   it "forwards remaining options to cache store" do
     WithOptions = Class.new(Cell::ViewModel) do
       cache :show, if: :has_changed?, expires_in: 10, tags: ->(*args) { Hash(args.first)[:tags] }
+    ## We can use kwargs in the cache key filter
+      # cache :new, expires_in: 10, tags: ->(*, my_tags:, **) { my_tags } # FIXME: allow this in Cells 5.
       include Cache
 
       CACHE_WITH_OPTIONS_STORE = Class.new(Hash) do
@@ -84,5 +86,8 @@ class CacheTest < Minitest::Spec
     _(WithOptions.new(1).()).must_equal(%{["1", {:expires_in=>10, :tags=>nil}]})
     _(WithOptions.new(2).()).must_equal(%{["1", {:expires_in=>10, :tags=>nil}]})
     _(WithOptions.new(2).(:show, tags: [:a, :b])).must_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]})
+
+    # FIXME: allow this in Cells 5.
+    # _(WithOptions.new(2).(:new, my_tags: [:a, :b])).must_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]})
   end
 end
