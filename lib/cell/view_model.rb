@@ -28,9 +28,9 @@ module Cell
 
     module Helpers
       # Constantizes name if needed, call builders and returns instance.
-      def cell(name, *args, **kws, &block) # classic Rails fuzzy API.
+      def cell(name, *args, &block) # classic Rails fuzzy API.
         constant = name.is_a?(Class) ? name : class_from_cell_name(name)
-        constant.(*args, **kws, &block)
+        constant.(*args, &block)
       end
     end
     extend Helpers
