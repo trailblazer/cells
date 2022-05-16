@@ -51,7 +51,7 @@ module Cell
       key     = self.class.state_cache_key(state, self.class.version_procs[state].(*cache_filter_args, exec_context: self))
       options = self.class.cache_options[state].(*cache_filter_args, exec_context: self)
 
-      fetch_from_cache_for(key, options) { super(state, *cache_filter_args) }
+      fetch_from_cache_for(key, options) { super(state, *args, **kws) }
     end
 
     def cache_store  # we want to use DI to set a cache store in cell/rails.
