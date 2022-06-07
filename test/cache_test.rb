@@ -90,4 +90,24 @@ class CacheTest < Minitest::Spec
     # FIXME: allow this in Cells 5.
     # _(WithOptions.new(2).(:new, my_tags: [:a, :b])).must_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]})
   end
+
+  it "forwards all arguments to renderer after cache hit" do
+    SongCell = Class.new(Cell::ViewModel) do
+      cache :show
+
+      def show(type, title:, part:, **)
+        "#{type} #{title} #{part}"
+      end
+
+      def cache_store
+        STORE
+      end
+    end
+
+    # cache miss for the first render
+    _(SongCell.new.(:show, "Album", title: "IT", part: "1")).must_equal("Album IT 1")
+
+    # cache hit for the second render
+    _(SongCell.new.(:show, "Album", title: "IT", part: "1")).must_equal("Album IT 1")
+  end
 end
