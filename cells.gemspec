@@ -12,6 +12,13 @@ Gem::Specification.new do |spec|
   spec.description = 'View Models for Ruby and Rails, replacing helpers and partials while giving you a clean view architecture with proper encapsulation.'
   spec.license     = 'MIT'
 
+  spec.metadata['bug_tracker_uri'] = "#{spec.homepage}/issues"
+  spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/HEAD/CHANGES.md"
+  spec.metadata['documentation_uri'] = 'https://trailblazer.to/2.1/docs/cells'
+  spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['source_code_uri'] = spec.homepage
+  spec.metadata['wiki_uri'] = "#{spec.homepage}/wiki"
+
   spec.files         = `git ls-files`.split("\n")
   spec.test_files    = `git ls-files -- {test}/*`.split("\n")
   spec.require_paths = ['lib']
