@@ -5,6 +5,10 @@ class TestCaseTest < MiniTest::Spec
     def show
       "Give It All!"
     end
+
+    def show_with_keyargs(text: '')
+      "Give It All! #{text}"
+    end
   end
 
   class Song
@@ -22,6 +26,7 @@ class TestCaseTest < MiniTest::Spec
     it { _(subject.model).must_equal song }
 
     it { _(cell("test_case_test/song", collection: [song, song]).()).must_equal "Give It All!Give It All!" }
+    it { _(cell("test_case_test/song").(:show_with_keyargs, text: 'with keyargs')).must_equal "Give It All! with keyargs" }
   end
 
 
@@ -41,6 +46,10 @@ class CapybaraTest < MiniTest::Spec
     def show
       "<b>Grunt</b>"
     end
+
+    def show_with_keyargs(text: '')
+      "<p>text</p>"
+    end
   end
 
   describe "capybara support" do
@@ -50,6 +59,8 @@ class CapybaraTest < MiniTest::Spec
     after  { Cell::Testing.capybara = false }
 
     it { _(subject.(:show).has_selector?('b')).must_equal true }
+
+    it { _(subject.(:show_with_keyargs, text: 'with keyargs').has_selector?('p')).must_equal true }
 
     it { _(cell("capybara_test/capybara", collection: [1, 2]).().has_selector?('b')).must_equal true }
 

@@ -43,7 +43,7 @@ module Cell
         end
       end
 
-      def call(*)
+      def call(*args, **kws)
         ::Capybara.string(super).extend(ToS)
       end
     end
