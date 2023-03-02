@@ -43,7 +43,7 @@ module Cell
       state = state.to_sym
 
       # Before Ruby 3.0, this wasn't necessary, but since cache filters don't receive kwargs as per the "old" (existing cells version) implementation, we can make it one array.
-      cache_filter_args = args + [kws]
+      cache_filter_args = args + [**kws]
 
       return super(state, *args, **kws) unless cache?(state, *cache_filter_args)
 
