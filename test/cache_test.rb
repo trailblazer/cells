@@ -110,4 +110,24 @@ class CacheTest < Minitest::Spec
     # cache hit for the second render
     _(SongCell.new.(:show, "Album", title: "IT", part: "1")).must_equal("Album IT 1")
   end
+
+  it "with cache condition helper method" do
+    WithCondition = Class.new(Cell::ViewModel) do
+      cache :show, if: :enable_cache?, expires_in: 10
+
+      def show
+        "Test"
+      end
+
+      def cache_store
+        STORE
+      end
+
+      def enable_cache?
+        true
+      end
+    end
+
+    _(WithCondition.new.(:show)).must_equal("Test")
+  end
 end
