@@ -1,10 +1,11 @@
-## 4.5.0
+## 4.2.0
 
-* Drop support for rubies prior 2.2.10
-
-## 4.1.8
-
-* Fix ruby warning with undefined instance variable in codebase
+* Add Ruby 3 support
+* Use trailblazer-option over declarative-option and upgrade declarative-builder (#492)
+* Use GitHub Actions over Travis as CI service
+* Drop support for Rubies prior to 2.2.10 and remove custom OutputBuffer class (#475)
+* Use Tilt::Cache instead of our own cache implementation (#470)
+* Fix Ruby warning with undefined instance variables (#469)
 
 ## 4.1.7
 
