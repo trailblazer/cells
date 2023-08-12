@@ -1,3 +1,5 @@
+require "tilt/template"
+
 class Cell
   def self.call(private_options={}, **options)
     # raise private_options.inspect
