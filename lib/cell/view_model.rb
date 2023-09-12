@@ -46,7 +46,13 @@ module Cell
       #   SongCell.(collection: Song.all)
       def call(model=nil, options={}, &block)
         if model.is_a?(Hash) and array = model[:collection]
-          return Collection.new(array, model.merge(options), self)
+          merged_context = (model[:context] || {}).merge(options[:context] || {})
+
+          merged_options = model.merge(options)
+          merged_options[:context] = merged_context if merged_context.any?
+          merged_options = nil if merged_options.empty?
+
+          return Collection.new(array, merged_options, self)
         end
 
         build(model, options)
