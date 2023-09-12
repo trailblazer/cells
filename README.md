@@ -408,9 +408,7 @@ You can also compute your own cache key, use dynamic keys, cache tags, and condi
 
 Cells is part of the [Trailblazer project](https://github.com/apotonick/trailblazer). Please [buy my book](https://leanpub.com/trailblazer) to support the development and to learn all the cool stuff about Cells. The book discusses many use cases of Cells.
 
-<a href="https://leanpub.com/trailblazer">
-![](https://raw.githubusercontent.com/apotonick/trailblazer/master/doc/trb.jpg)
-</a>
+[![Trailblazer Book](https://raw.githubusercontent.com/apotonick/trailblazer/master/doc/trb.jpg)](https://leanpub.com/trailblazer)
 
 * Basic view models, replacing helpers, and how to structure your view into cell components (chapter 2 and 4).
 * Advanced Cells API (chapter 4 and 6).
