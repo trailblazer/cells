@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "capybara"
   spec.add_development_dependency "cells-erb", ">= 0.0.4"
+  spec.add_development_dependency 'debug'
 end

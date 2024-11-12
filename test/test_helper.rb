@@ -1,6 +1,7 @@
 require "minitest/autorun"
 require "cells"
 require "cells-erb"
+require "debug"
 
 Cell::ViewModel.send(:include, Cell::Erb) if Cell.const_defined?(:Erb) # FIXME: should happen in inititalizer.
 
