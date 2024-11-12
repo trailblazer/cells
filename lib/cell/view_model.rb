@@ -188,7 +188,7 @@ module Cell
 
     # Computes the view name from the call stack in which `render` was invoked.
     def state_for_implicit_render(options)
-      caller(3, 1)[0].match(/`(\w+)/)[1]
+      caller(3, 1)[0].match(/`(\w+)|#(\w+)'/).captures.compact.first
     end
 
     include Layout
