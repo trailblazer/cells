@@ -11,9 +11,8 @@ class PropertyTest < Minitest::Spec
 
   let (:song) { Struct.new(:title).new("<b>She Sells And Sand Sandwiches") }
   # ::property creates automatic accessor.
-  it { SongCell.(song).title.must_equal "<b>She Sells And Sand Sandwiches</b>" }
+  it { assert_equal "<b>She Sells And Sand Sandwiches</b>", SongCell.(song).title }
 end
-
 
 class EscapedPropertyTest < Minitest::Spec
   class SongCell < Cell::ViewModel
@@ -38,11 +37,11 @@ class EscapedPropertyTest < Minitest::Spec
   end
 
   # ::property escapes, everywhere.
-  it { SongCell.(song).title.must_equal "&lt;b&gt;She Sells And Sand Sandwiches</b>" }
-  it { SongCell.(song).copyright.must_equal "&lt;a&gt;Copy&lt;/a&gt;" }
-  it { SongCell.(song).lyrics.must_equal "&lt;i&gt;Words&lt;/i&gt;" }
+  it { assert_equal "&lt;b&gt;She Sells And Sand Sandwiches</b>", SongCell.(song).title }
+  it { assert_equal "&lt;a&gt;Copy&lt;/a&gt;", SongCell.(song).copyright }
+  it { assert_equal "&lt;i&gt;Words&lt;/i&gt;", SongCell.(song).lyrics }
   # no escaping for non-strings.
-  it { SongCell.(song).artist.must_equal Object }
+  it { assert_equal Object, SongCell.(song).artist }
   # no escaping when escape: false
-  it { SongCell.(song).raw_title.must_equal "<b>She Sells And Sand Sandwiches</b>" }
+  it { assert_equal "<b>She Sells And Sand Sandwiches</b>", SongCell.(song).raw_title }
 end

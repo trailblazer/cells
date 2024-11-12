@@ -21,7 +21,6 @@ class SongCell < Cell::ViewModel
     "Right"
   end
 
-  # TODO: just pass hash.
   def with_locals
     render locals: {length: 280, title: "Shot Across The Bow"}
   end
@@ -59,57 +58,43 @@ end
 
 class RenderTest < Minitest::Spec
   # render show.haml calling method, implicit render.
-  it { SongCell.new(nil).show.must_equal "Papertiger\n" }
+  it { assert_equal "Papertiger\n", SongCell.new(nil).show }
 
   # render ivar.haml using instance variable.
-  it { SongCell.new(nil).ivar.must_equal "Carnage\n" }
+  it { assert_equal "Carnage\n", SongCell.new(nil).ivar }
 
   # render string.
-  it { SongCell.new(nil).string.must_equal "Right" }
+  it { assert_equal "Right", SongCell.new(nil).string }
 
   # #call renders :show
-  it { SongCell.new(nil).call.must_equal "Papertiger\n" }
+  it { assert_equal "Papertiger\n", SongCell.new(nil).call }
 
   # call(:form) renders :form
-  it { SongCell.new(nil).call(:with_view_name).must_equal "Man Of Steel\n" }
+  it { assert_equal "Man Of Steel\n", SongCell.new(nil).call(:with_view_name) }
 
   # works with state called `send`
-  it { SongCell.new(nil).call(:send).must_equal "send" }
+  it { assert_equal "send", SongCell.new(nil).call(:send) }
 
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
-    exception.message.must_equal "Template missing: view: `unknown.erb` prefixes: [\"test/fixtures/song\"]"
+    assert_equal "Template missing: view: `unknown.erb` prefixes: [\"test/fixtures/song\"]", exception.message
   end
 
   # allows locals
-  it { SongCell.new(nil).with_locals.must_equal "Shot Across The Bow\n280\n" }
+  it { assert_equal "Shot Across The Bow\n280\n", SongCell.new(nil).with_locals }
 
   # render :form is a shortcut.
-  it { SongCell.new(nil).with_view_name.must_equal "Man Of Steel\n" }
-
-  # :template_engine renders ERB.
-  # it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
-
-  # view: "show.html"
+  it { assert_equal "Man Of Steel\n", SongCell.new(nil).with_view_name }
 
   # allows passing in options DISCUSS: how to handle that in cache block/builder?
-  it { SongCell.new(nil).receiving_options.must_equal "default" }
-  it { SongCell.new(nil).receiving_options(:fancy).must_equal "fancy" }
-  it { SongCell.new(nil).call(:receiving_options, :fancy).must_equal "fancy" }
+  it { assert_equal "default", SongCell.new(nil).receiving_options }
+  it { assert_equal "fancy", SongCell.new(nil).receiving_options(:fancy) }
+  it { assert_equal "fancy", SongCell.new(nil).call(:receiving_options, :fancy) }
 
   # doesn't escape HTML.
-  it { SongCell.new(nil).call(:with_html).must_equal "<p>Yew!</p>" }
+  it { assert_equal "<p>Yew!</p>", SongCell.new(nil).call(:with_html) }
 
   # render {} with block
-  it { SongCell.new(nil).with_block.must_equal "Yo! Clean Sheets<p>Yew!</p>\n" }
+  it { assert_equal "Yo! Clean Sheets<p>Yew!</p>\n", SongCell.new(nil).with_block }
 end
-
-# test inheritance
-
-# test view: :bla and :bla
-# with layout and locals.
-# with layout and :text
-
-# render with format (e.g. when using ERB for one view)
-# should we allow changing the format "per run", so a cell can do .js and .haml? or should that be configurable on class level?

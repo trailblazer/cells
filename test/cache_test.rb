@@ -25,7 +25,7 @@ class CacheTest < Minitest::Spec
   end
 
   it do
-    Index.new(1).().must_equal("1")
-    Index.new(2).().must_equal("1")
+    assert_equal "1", Index.new(1).()
+    assert_equal "1", Index.new(2).()
   end
 end

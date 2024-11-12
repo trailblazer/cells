@@ -1,22 +1,14 @@
 require 'test_helper'
 
-
 class TemplatesTest < Minitest::Spec
   Templates = Cell::Templates
 
   # existing.
-  it { Templates.new[['test/fixtures/bassist'], 'play.erb', {template_class: Cell::Erb::Template}].file.must_equal 'test/fixtures/bassist/play.erb' }
+  it { assert_equal 'test/fixtures/bassist/play.erb', Templates.new[['test/fixtures/bassist'], 'play.erb', {template_class: Cell::Erb::Template}].file }
 
   # not existing.
   it { assert_nil(Templates.new[['test/fixtures/bassist'], 'not-here.erb', {}]) }
-
-
-  # different caches for different classes
-
-  # same cache for subclasses
-
 end
-
 
 class TemplatesCachingTest < Minitest::Spec
   class SongCell < Cell::ViewModel
@@ -32,13 +24,13 @@ class TemplatesCachingTest < Minitest::Spec
   it do
     cell = cell("templates_caching_test/song")
 
-    cell.call(:show).must_equal 'The Great Mind Eraser'
+    assert_equal 'The Great Mind Eraser', cell.call(:show)
 
     SongCell.templates.instance_eval do
       def create; raise; end
     end
 
     # cached, NO new tilt template.
-    cell.call(:show).must_equal 'The Great Mind Eraser'
+    assert_equal 'The Great Mind Eraser', cell.call(:show)
   end
 end
