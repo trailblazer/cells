@@ -76,12 +76,30 @@ class ConceptTest < Minitest::Spec
 
   describe "#cell (in state)" do
     # test with controller, but remove tests when we don't need it anymore.
+
     it { _(Cell::Concept.cell("record/cell", nil, context: { controller: Object }).cell("record/cell", nil)).must_be_instance_of Record::Cell }
-    it { _(Cell::Concept.cell("record/cell", nil, context: { controller: Object }).concept("record/cell", nil, tracks: 24).(:description)).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]" }
+
+    it do
+      result = Cell::Concept.cell("record/cell", nil, context: { controller: Object })
+        .concept("record/cell", nil, tracks: 24).(:description)
+
+      if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+        _(result).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]"
+      else
+        _(result).must_equal "A Tribute To Rancid, with 24 songs! [{controller: Object}]"
+      end
+    end
+
     # concept(.., collection: ..)
     it do
-      _(Cell::Concept.cell("record/cell", nil, context: { controller: Object }).
-        concept("record/cell", collection: [1,2], tracks: 24).(:description)).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]"
+      result = Cell::Concept.cell("record/cell", nil, context: { controller: Object }).
+        concept("record/cell", collection: [1,2], tracks: 24).(:description)
+
+      if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+        _(result).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]"
+      else
+        _(result).must_equal "A Tribute To Rancid, with 24 songs! [{controller: Object}]A Tribute To Rancid, with 24 songs! [{controller: Object}]"
+      end
     end
   end
 end

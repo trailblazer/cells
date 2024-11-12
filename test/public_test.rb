@@ -45,7 +45,15 @@ class PublicTest < Minitest::Spec
   end
 
   # ViewModel.cell(collection: []) passes generic options to cell.
-  it { _(Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal', context: { ready: true }).to_s).must_equal "[Object, {:genre=>\"Metal\", :context=>{:ready=>true}}][Module, {:genre=>\"Metal\", :context=>{:ready=>true}}]" }
+  it do
+    result = Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal', context: { ready: true }).to_s
+
+    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+      _(result).must_equal "[Object, {:genre=>\"Metal\", :context=>{:ready=>true}}][Module, {:genre=>\"Metal\", :context=>{:ready=>true}}]"
+    else
+      _(result).must_equal "[Object, {genre: \"Metal\", context: {ready: true}}][Module, {genre: \"Metal\", context: {ready: true}}]"
+    end
+  end
 
   # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
   # TODO: remove in 5.0.
@@ -64,7 +72,12 @@ class PublicTest < Minitest::Spec
   # #cell(collection: [], genre: "Fusion").() doesn't change options hash.
   it do
     Cell::ViewModel.cell("public_test/song", options = { genre: "Fusion", collection: [Object] }).()
-    _(options.to_s).must_equal "{:genre=>\"Fusion\", :collection=>[Object]}"
+
+    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+      _(options.to_s).must_equal "{:genre=>\"Fusion\", :collection=>[Object]}"
+    else
+      _(options.to_s).must_equal "{genre: \"Fusion\", collection: [Object]}"
+    end
   end
 
   # it do

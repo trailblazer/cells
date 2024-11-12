@@ -83,9 +83,15 @@ class CacheTest < Minitest::Spec
       end
     end
 
-    _(WithOptions.new(1).()).must_equal(%{["1", {:expires_in=>10, :tags=>nil}]})
-    _(WithOptions.new(2).()).must_equal(%{["1", {:expires_in=>10, :tags=>nil}]})
-    _(WithOptions.new(2).(:show, tags: [:a, :b])).must_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]})
+    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+      _(WithOptions.new(1).()).must_equal(%{["1", {:expires_in=>10, :tags=>nil}]})
+      _(WithOptions.new(2).()).must_equal(%{["1", {:expires_in=>10, :tags=>nil}]})
+      _(WithOptions.new(2).(:show, tags: [:a, :b])).must_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]})
+    else
+      _(WithOptions.new(1).()).must_equal(%{["1", {expires_in: 10, tags: nil}]})
+      _(WithOptions.new(2).()).must_equal(%{["1", {expires_in: 10, tags: nil}]})
+      _(WithOptions.new(2).(:show, tags: [:a, :b])).must_equal(%{["1", {expires_in: 10, tags: [:a, :b]}]})
+    end
 
     # FIXME: allow this in Cells 5.
     # _(WithOptions.new(2).(:new, my_tags: [:a, :b])).must_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]})
