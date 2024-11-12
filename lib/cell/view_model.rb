@@ -198,8 +198,7 @@ module Cell
 
     # Computes the view name from the call stack in which `render` was invoked.
     def state_for_implicit_render(options)
-      _caller = RUBY_VERSION < "2.0" ? caller(3) : caller(3, 1) # TODO: remove case in 5.0 when dropping 1.9.
-      _caller[0].match(/`(\w+)|#(\w+)'/).captures.compact.first
+      caller(3, 1)[0].match(/`(\w+)|#(\w+)'/).captures.compact.first
     end
 
     include Layout
