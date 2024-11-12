@@ -46,7 +46,7 @@ end
 # app/cells/comment/views/form inherit_views Comment::Cell, render form/show
 
 
-class ConceptTest < MiniTest::Spec
+class ConceptTest < Minitest::Spec
   describe "::controller_path" do
     it { Record::Cell.new.class.controller_path.must_equal "record" }
     it { Record::Cell::Song.new.class.controller_path.must_equal "record/song" }
@@ -81,7 +81,7 @@ class ConceptTest < MiniTest::Spec
     # concept(.., collection: ..)
     it do
       Cell::Concept.cell("record/cell", nil, context: { controller: Object }).
-        concept("record/cell", collection: [1,2], tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]" 
+        concept("record/cell", collection: [1,2], tracks: 24).(:description).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]"
     end
   end
 end

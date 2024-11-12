@@ -1,7 +1,7 @@
 # require 'test_helper'
 # require 'cell/twin'
 
-# class TwinTest < MiniTest::Spec
+# class TwinTest < Minitest::Spec
 #   class SongCell < Cell::ViewModel
 #     class Twin < Disposable::Twin
 #       property :title

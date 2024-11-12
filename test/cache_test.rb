@@ -29,4 +29,3 @@ class CacheTest < Minitest::Spec
     Index.new(2).().must_equal("1")
   end
 end
-

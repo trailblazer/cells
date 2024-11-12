@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ContextTest < MiniTest::Spec
+class ContextTest < Minitest::Spec
   class ParentCell < Cell::ViewModel
     def user
       context[:user]

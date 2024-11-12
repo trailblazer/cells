@@ -1,6 +1,6 @@
 require "test_helper"
 
-class PropertyTest < MiniTest::Spec
+class PropertyTest < Minitest::Spec
   class SongCell < Cell::ViewModel
     property :title
 
@@ -15,7 +15,7 @@ class PropertyTest < MiniTest::Spec
 end
 
 
-class EscapedPropertyTest < MiniTest::Spec
+class EscapedPropertyTest < Minitest::Spec
   class SongCell < Cell::ViewModel
     include Escaped
     property :title

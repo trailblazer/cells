@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PublicTest < MiniTest::Spec
+class PublicTest < Minitest::Spec
   class SongCell < Cell::ViewModel
     def initialize(*args)
       @initialize_args = *args

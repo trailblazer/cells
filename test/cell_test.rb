@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CellTest < MiniTest::Spec
+class CellTest < Minitest::Spec
   class SongCell < Cell::ViewModel
     self.view_paths = ['test/fixtures']
 

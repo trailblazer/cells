@@ -1,7 +1,7 @@
 require 'test_helper'
 
 
-class TemplatesTest < MiniTest::Spec
+class TemplatesTest < Minitest::Spec
   Templates = Cell::Templates
 
   # existing.
@@ -18,7 +18,7 @@ class TemplatesTest < MiniTest::Spec
 end
 
 
-class TemplatesCachingTest < MiniTest::Spec
+class TemplatesCachingTest < Minitest::Spec
   class SongCell < Cell::ViewModel
     self.view_paths = ['test/fixtures']
     # include Cell::Erb

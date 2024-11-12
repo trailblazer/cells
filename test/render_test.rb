@@ -57,7 +57,7 @@ private
   end
 end
 
-class RenderTest < MiniTest::Spec
+class RenderTest < Minitest::Spec
   # render show.haml calling method, implicit render.
   it { SongCell.new(nil).show.must_equal "Papertiger" }
 

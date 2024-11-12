@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestCaseTest < MiniTest::Spec
+class TestCaseTest < Minitest::Spec
   class SongCell < Cell::ViewModel
     def show
       "Give It All!"
@@ -36,7 +36,7 @@ end
 # capybara support
 require "capybara"
 
-class CapybaraTest < MiniTest::Spec
+class CapybaraTest < Minitest::Spec
   class CapybaraCell < Cell::ViewModel
     def show
       "<b>Grunt</b>"
