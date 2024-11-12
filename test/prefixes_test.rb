@@ -18,7 +18,7 @@ end
 class InheritingFromEngineCell < EngineCell
 end
 
-class PrefixesTest < MiniTest::Spec
+class PrefixesTest < Minitest::Spec
   class SingerCell < Cell::ViewModel
   end
 
@@ -81,7 +81,7 @@ class PrefixesTest < MiniTest::Spec
   # it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
 end
 
-class InheritViewsTest < MiniTest::Spec
+class InheritViewsTest < Minitest::Spec
   class SlapperCell < Cell::ViewModel
     self.view_paths = ['test/fixtures'] # todo: REMOVE!
     include Cell::Erb

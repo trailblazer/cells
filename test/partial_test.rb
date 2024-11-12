@@ -1,7 +1,7 @@
 require "test_helper"
 require "cell/partial"
 
-class PartialTest < MiniTest::Spec
+class PartialTest < Minitest::Spec
   class WithPartial < Cell::ViewModel
     self.view_paths = ['test/fixtures'] # doesn't exist.
     include ::Cell::Erb

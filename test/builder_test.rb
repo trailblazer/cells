@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BuilderTest < MiniTest::Spec
+class BuilderTest < Minitest::Spec
   Song = Struct.new(:title)
   Hit  = Struct.new(:title)
 

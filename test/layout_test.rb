@@ -39,7 +39,7 @@ class SongWithLayoutOnClassCell < SongWithLayoutCell
   end
 end
 
-class LayoutTest < MiniTest::Spec
+class LayoutTest < Minitest::Spec
   # render show.haml calling method.
   # same context as content view as layout call method.
   it { _(SongWithLayoutCell.new(nil).show).must_equal "Merry Xmas, <b>Papertiger</b>\n" }
