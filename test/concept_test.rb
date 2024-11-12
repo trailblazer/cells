@@ -67,11 +67,24 @@ class ConceptTest < Minitest::Spec
 
   describe "#cell (in state)" do
     it { assert_instance_of Record::Cell, Cell::Concept.cell("record/cell", nil, context: { controller: Object }).cell("record/cell", nil) }
-    it { assert_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]", Cell::Concept.cell("record/cell", nil, context: { controller: Object }).concept("record/cell", nil, tracks: 24).(:description) }
+    it do
+      result = Cell::Concept.cell("record/cell", nil, context: { controller: Object }).concept("record/cell", nil, tracks: 24).(:description)
+
+      if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+        assert_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]", result
+      else
+        assert_equal "A Tribute To Rancid, with 24 songs! [{controller: Object}]", result
+      end
+    end
 
     it do
-      assert_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]",
-        Cell::Concept.cell("record/cell", nil, context: { controller: Object }).concept("record/cell", collection: [1,2], tracks: 24).(:description)
+      result = Cell::Concept.cell("record/cell", nil, context: { controller: Object }).concept("record/cell", collection: [1,2], tracks: 24).(:description)
+
+      if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+        assert_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]", result
+      else
+        assert_equal "A Tribute To Rancid, with 24 songs! [{controller: Object}]A Tribute To Rancid, with 24 songs! [{controller: Object}]", result
+      end
     end
   end
 end

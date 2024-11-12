@@ -72,7 +72,12 @@ end
 class ExternalLayoutTest < Minitest::Spec
   it do
     result = Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).()
-    assert_equal "$layout.erb{$show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n", result
+
+    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+      assert_equal "$layout.erb{$show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n", result
+    else
+      assert_equal "$layout.erb{$show.erb, {beer: true}\n$show.erb, {beer: true}\n, {beer: true}}\n", result
+    end
   end
 
   # collection :layout

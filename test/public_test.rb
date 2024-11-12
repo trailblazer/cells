@@ -45,7 +45,15 @@ class PublicTest < Minitest::Spec
   end
 
   # ViewModel.cell(collection: []) passes generic options to cell.
-  it { assert_equal "[Object, {:genre=>\"Metal\", :context=>{:ready=>true}}][Module, {:genre=>\"Metal\", :context=>{:ready=>true}}]", Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal', context: { ready: true }).to_s }
+  it do
+    result = Cell::ViewModel.cell("public_test/song", collection: [Object, Module], genre: 'Metal', context: { ready: true }).to_s
+
+    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+      assert_equal "[Object, {:genre=>\"Metal\", :context=>{:ready=>true}}][Module, {:genre=>\"Metal\", :context=>{:ready=>true}}]", result
+    else
+      assert_equal "[Object, {genre: \"Metal\", context: {ready: true}}][Module, {genre: \"Metal\", context: {ready: true}}]", result
+    end
+  end
 
   # ViewModel.cell(collection: [], method: :detail) invokes #detail instead of #show.
   # TODO: remove in 5.0.
@@ -65,7 +73,12 @@ class PublicTest < Minitest::Spec
   it do
     options = { genre: "Fusion", collection: [Object] }
     Cell::ViewModel.cell("public_test/song", options).()
-    assert_equal "{:genre=>\"Fusion\", :collection=>[Object]}", options.to_s
+
+    if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
+      assert_equal "{:genre=>\"Fusion\", :collection=>[Object]}", options.to_s
+    else
+      assert_equal "{genre: \"Fusion\", collection: [Object]}", options.to_s
+    end
   end
 
   # cell(collection: []).join captures return value and joins it for you.
