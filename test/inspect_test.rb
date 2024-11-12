@@ -16,17 +16,17 @@ class InspectTest < Minitest::Spec
 
     inspection_s = cell.inspect
 
-    _(inspection_s).must_match '#<Cell::ViewModel:'
-    _(inspection_s).must_match "@model=#{model_obj.inspect}"
-    _(inspection_s).must_match "@title=\"Title\""
-    _(inspection_s).must_match "@options=#{options.inspect}"
+    assert_match('#<Cell::ViewModel:', inspection_s)
+    assert_match("@model=#{model_obj.inspect}", inspection_s)
+    assert_match("@title=\"Title\"", inspection_s)
+    assert_match("@options=#{options.inspect}", inspection_s)
   end
   it do
     inspection_s = Cell::ViewModel.().inspect
 
-    _(inspection_s).must_match '#<Cell::ViewModel:'
-    _(inspection_s).must_match "@model=nil"
-    _(inspection_s).must_match "@options={}"
+    assert_match('#<Cell::ViewModel:', inspection_s)
+    assert_match("@model=nil", inspection_s)
+    assert_match("@options={}", inspection_s)
   end
 
   # black list ivars
@@ -36,9 +36,9 @@ class InspectTest < Minitest::Spec
     cell.stub(:inspect_blacklist, ['model']) do
       inspection_s = cell.inspect
 
-      _(inspection_s).must_match '#<Cell::ViewModel:'
-      _(inspection_s).must_match "@model=#<InspectTest::FakeModel:#{model_obj.object_id}>"
-      _(inspection_s).must_match "@options=#{options.inspect}"
+      assert_match('#<Cell::ViewModel:', inspection_s)
+      assert_match("@model=#<InspectTest::FakeModel:#{model_obj.object_id}>", inspection_s)
+      assert_match("@options=#{options.inspect}", inspection_s)
     end
   end
 end

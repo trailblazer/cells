@@ -36,28 +36,28 @@ class BuilderTest < Minitest::Spec
   end
 
   # the original class is used when no builder matches.
-  it { _(SongCell.(Song.new("Nation States"), {})).must_be_instance_of SongCell }
+  it { assert_instance_of(SongCell, SongCell.(Song.new("Nation States"), {})) }
 
   it do
     cell = SongCell.(Hit.new("New York"), {})
-    _(cell).must_be_instance_of HitCell
-    _(cell.options).must_equal({})
+    assert_instance_of(HitCell, cell)
+    assert_equal({}, cell.options)
   end
 
   it do
     cell = SongCell.(Song.new("San Francisco"), evergreen: true)
-    _(cell).must_be_instance_of EvergreenCell
-    _(cell.options).must_equal({evergreen:true})
+    assert_instance_of(EvergreenCell, cell)
+    assert_equal({evergreen: true}, cell.options)
   end
 
   # without arguments.
-  it { _(SongCell.(Hit.new("Frenzy"))).must_be_instance_of HitCell }
+  it { assert_instance_of(HitCell, SongCell.(Hit.new("Frenzy"))) }
 
   # with collection.
-  it { _(SongCell.(collection: [Song.new("Nation States"), Hit.new("New York")]).()).must_equal "* Nation States* **New York**" }
+  it { assert_equal("* Nation States* **New York**", SongCell.(collection: [Song.new("Nation States"), Hit.new("New York")]).()) }
 
   # with Concept
   class Track < Cell::Concept
   end
-  it { _(Track.()).must_be_instance_of Track }
+  it { assert_instance_of(Track, Track.()) }
 end

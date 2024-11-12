@@ -59,50 +59,47 @@ end
 
 class RenderTest < Minitest::Spec
   # render show.haml calling method, implicit render.
-  it { _(SongCell.new(nil).show).must_equal "Papertiger\n" }
+  it { assert_equal("Papertiger\n", SongCell.new(nil).show) }
 
   # render ivar.haml using instance variable.
-  it { _(SongCell.new(nil).ivar).must_equal "Carnage\n" }
+  it { assert_equal("Carnage\n", SongCell.new(nil).ivar) }
 
   # render string.
-  it { _(SongCell.new(nil).string).must_equal "Right" }
+  it { assert_equal("Right", SongCell.new(nil).string) }
 
   # #call renders :show
-  it { _(SongCell.new(nil).call).must_equal "Papertiger\n" }
+  it { assert_equal("Papertiger\n", SongCell.new(nil).call) }
 
   # call(:form) renders :form
-  it { _(SongCell.new(nil).call(:with_view_name)).must_equal "Man Of Steel\n" }
+  it { assert_equal("Man Of Steel\n", SongCell.new(nil).call(:with_view_name)) }
 
   # works with state called `send`
-  it { _(SongCell.new(nil).call(:send)).must_equal "send" }
+  it { assert_equal("send", SongCell.new(nil).call(:send)) }
 
   # throws an exception when not found.
   it do
     exception = assert_raises(Cell::TemplateMissingError) { SongCell.new(nil).unknown }
-    _(exception.message).must_equal "Template missing: view: `unknown.erb` prefixes: [\"test/fixtures/song\"]"
+    assert_equal("Template missing: view: `unknown.erb` prefixes: [\"test/fixtures/song\"]", exception.message)
   end
 
   # allows locals
-  it { _(SongCell.new(nil).with_locals).must_equal "Shot Across The Bow\n280\n" }
+  it { assert_equal("Shot Across The Bow\n280\n", SongCell.new(nil).with_locals)  }
 
   # render :form is a shortcut.
-  it { _(SongCell.new(nil).with_view_name).must_equal "Man Of Steel\n" }
-
-  # :template_engine renders ERB.
-  # it { SongCell.new(nil).with_erb.must_equal "ERB:\n<span>\n  Papertiger\n</span>" }
+  it { assert_equal("Man Of Steel\n", SongCell.new(nil).with_view_name)  }
 
   # view: "show.html"
 
   # allows passing in options DISCUSS: how to handle that in cache block/builder?
-  it { _(SongCell.new(nil).receiving_options).must_equal "default" }
-  it { _(SongCell.new(nil).receiving_options(:fancy)).must_equal "fancy" }
-  it { _(SongCell.new(nil).call(:receiving_options, :fancy)).must_equal "fancy" }
+  it { assert_equal("default", SongCell.new(nil).receiving_options) }
+  it { assert_equal("fancy", SongCell.new(nil).receiving_options(:fancy)) }
+  it { assert_equal("fancy", SongCell.new(nil).call(:receiving_options, :fancy)) }
 
   # doesn't escape HTML.
-  it { _(SongCell.new(nil).call(:with_html)).must_equal "<p>Yew!</p>" }
+  it { assert_equal("<p>Yew!</p>", SongCell.new(nil).call(:with_html)) }
 
   # render {} with block
-  it { _(SongCell.new(nil).with_block).must_equal "Yo! Clean Sheets<p>Yew!</p>\n" }
+  it { assert_equal("Yo! Clean Sheets<p>Yew!</p>\n", SongCell.new(nil).with_block) }
 end
 
 # test inheritance

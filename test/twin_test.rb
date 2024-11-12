@@ -22,5 +22,5 @@
 
 #   let (:model) { OpenStruct.new(title: "Kenny") }
 
-#   it { SongCell.new( model, :online? => true).call.must_equal "kenny is true" }
+#   it { assert_equal("kenny is true", SongCell.new( model, :online? => true)) }
 # end

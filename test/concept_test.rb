@@ -48,45 +48,45 @@ end
 
 class ConceptTest < Minitest::Spec
   describe "::controller_path" do
-    it { _(Record::Cell.new.class.controller_path).must_equal "record" }
-    it { _(Record::Cell::Song.new.class.controller_path).must_equal "record/song" }
-    it { _(Record::Cells::Cell.new.class.controller_path).must_equal "record/cells" }
-    it { _(Record::Cells::Cell::Song.new.class.controller_path).must_equal "record/cells/song" }
+    it { assert_equal("record", Record::Cell.new.class.controller_path) }
+    it { assert_equal("record/song", Record::Cell::Song.new.class.controller_path) }
+    it { assert_equal("record/cells", Record::Cells::Cell.new.class.controller_path) }
+    it { assert_equal("record/cells/song", Record::Cells::Cell::Song.new.class.controller_path) }
   end
 
 
   describe "#_prefixes" do
-    it { _(Record::Cell.new._prefixes).must_equal       ["test/fixtures/concepts/record/views"] }
-    it { _(Record::Cell::Song.new._prefixes).must_equal ["test/fixtures/concepts/record/song/views", "test/fixtures/concepts/record/views"] }
-    it { _(Record::Cell::Hit.new._prefixes).must_equal  ["test/fixtures/concepts/record/hit/views", "test/fixtures/concepts/record/views"]  } # with inherit_views.
+    it { assert_equal(["test/fixtures/concepts/record/views"], Record::Cell.new._prefixes) }
+    it { assert_equal(["test/fixtures/concepts/record/song/views", "test/fixtures/concepts/record/views"], Record::Cell::Song.new._prefixes) }
+    it { assert_equal(["test/fixtures/concepts/record/hit/views", "test/fixtures/concepts/record/views"], Record::Cell::Hit.new._prefixes) } # with inherit_views.
   end
 
-  it { _(Record::Cell.new("Wayne").call(:show)).must_equal "Party on, Wayne!" }
+  it { assert_equal("Party on, Wayne!", Record::Cell.new("Wayne").call(:show)) }
 
 
   describe "::cell" do
-    it { _(Cell::Concept.cell("record/cell")).must_be_instance_of(      Record::Cell) }
-    it { _(Cell::Concept.cell("record/cell/song")).must_be_instance_of  Record::Cell::Song }
+    it { assert_instance_of(Record::Cell, Cell::Concept.cell("record/cell")) }
+    it { assert_instance_of(Record::Cell::Song, Cell::Concept.cell("record/cell/song")) }
     # cell("song", concept: "record/compilation") # record/compilation/cell/song
   end
 
   describe "#render" do
-    it { _(Cell::Concept.cell("record/cell/song").show).must_equal "Lalala" }
+    it { assert_equal("Lalala", Cell::Concept.cell("record/cell/song").show) }
   end
 
   describe "#cell (in state)" do
     # test with controller, but remove tests when we don't need it anymore.
 
-    it { _(Cell::Concept.cell("record/cell", nil, context: { controller: Object }).cell("record/cell", nil)).must_be_instance_of Record::Cell }
+    it { assert_instance_of(Record::Cell, Cell::Concept.cell("record/cell", nil, context: { controller: Object }).cell("record/cell", nil)) }
 
     it do
       result = Cell::Concept.cell("record/cell", nil, context: { controller: Object })
         .concept("record/cell", nil, tracks: 24).(:description)
 
       if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
-        _(result).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]"
+        assert_equal("A Tribute To Rancid, with 24 songs! [{:controller=>Object}]", result)
       else
-        _(result).must_equal "A Tribute To Rancid, with 24 songs! [{controller: Object}]"
+        assert_equal("A Tribute To Rancid, with 24 songs! [{controller: Object}]", result)
       end
     end
 
@@ -96,9 +96,9 @@ class ConceptTest < Minitest::Spec
         concept("record/cell", collection: [1,2], tracks: 24).(:description)
 
       if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
-        _(result).must_equal "A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]"
+        assert_equal("A Tribute To Rancid, with 24 songs! [{:controller=>Object}]A Tribute To Rancid, with 24 songs! [{:controller=>Object}]", result)
       else
-        _(result).must_equal "A Tribute To Rancid, with 24 songs! [{controller: Object}]A Tribute To Rancid, with 24 songs! [{controller: Object}]"
+        assert_equal("A Tribute To Rancid, with 24 songs! [{controller: Object}]A Tribute To Rancid, with 24 songs! [{controller: Object}]", result)
       end
     end
   end

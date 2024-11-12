@@ -13,8 +13,8 @@ class CellTest < Minitest::Spec
   end
 
   # #options
-  it { _(SongCell.new(nil, genre: "Punkrock").send(:options)[:genre]).must_equal "Punkrock" }
+  it { assert_equal("Punkrock", SongCell.new(nil, genre: "Punkrock").send(:options)[:genre])  }
 
   # #block
-  it { _(SongCell.new(nil, genre: "Punkrock").(:show_with_block) { "hello" }).must_equal "<b>hello</b>\n" }
+  it { assert_equal("<b>hello</b>\n", SongCell.new(nil, genre: "Punkrock").(:show_with_block) { "hello" }) }
 end

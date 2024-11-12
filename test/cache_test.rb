@@ -31,8 +31,8 @@ class CacheTest < Minitest::Spec
   it "without any options" do
     WithoutOptions = Component.()
 
-    _(WithoutOptions.new(1).()).must_equal("1")
-    _(WithoutOptions.new(2).()).must_equal("1")
+    assert_equal("1", WithoutOptions.new(1).())
+    assert_equal("1", WithoutOptions.new(2).())
   end
 
   it "with specified version" do
@@ -41,27 +41,27 @@ class CacheTest < Minitest::Spec
     # Cache invalidation using version as a proc
     WithVersionArg = Component.(version)
 
-    _(WithVersionArg.new(1).(:show, version: 1)).must_equal("1")
-    _(WithVersionArg.new(2).(:show, version: 1)).must_equal("1")
+    assert_equal("1", WithVersionArg.new(1).(:show, version: 1))
+    assert_equal("1", WithVersionArg.new(2).(:show, version: 1))
 
-    _(WithVersionArg.new(3).(:show, version: 2)).must_equal("3")
+    assert_equal("3", WithVersionArg.new(3).(:show, version: 2))
 
     # Cache invalidation using version as a block
     WithVersionBlock = Component.(&version)
 
-    _(WithVersionBlock.new(1).(:show, version: 1)).must_equal("1")
-    _(WithVersionBlock.new(2).(:show, version: 1)).must_equal("1")
+    assert_equal("1", WithVersionBlock.new(1).(:show, version: 1))
+    assert_equal("1", WithVersionBlock.new(2).(:show, version: 1))
 
-    _(WithVersionBlock.new(3).(:show, version: 2)).must_equal("3")
+    assert_equal("3", WithVersionBlock.new(3).(:show, version: 2))
   end
 
   it "with conditional" do
     WithConditional = Component.(if: :has_changed?)
 
-    _(WithConditional.new(1).()).must_equal("1")
-    _(WithConditional.new(2).()).must_equal("1")
+    assert_equal("1", WithConditional.new(1).())
+    assert_equal("1", WithConditional.new(2).())
 
-    _(WithConditional.new(3).()).must_equal("3")
+    assert_equal("3", WithConditional.new(3).())
   end
 
   it "forwards remaining options to cache store" do
@@ -84,17 +84,17 @@ class CacheTest < Minitest::Spec
     end
 
     if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
-      _(WithOptions.new(1).()).must_equal(%{["1", {:expires_in=>10, :tags=>nil}]})
-      _(WithOptions.new(2).()).must_equal(%{["1", {:expires_in=>10, :tags=>nil}]})
-      _(WithOptions.new(2).(:show, tags: [:a, :b])).must_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]})
+      assert_equal(%{["1", {:expires_in=>10, :tags=>nil}]}, WithOptions.new(1).())
+      assert_equal(%{["1", {:expires_in=>10, :tags=>nil}]}, WithOptions.new(2).())
+      assert_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]}, WithOptions.new(2).(:show, tags: [:a, :b]))
     else
-      _(WithOptions.new(1).()).must_equal(%{["1", {expires_in: 10, tags: nil}]})
-      _(WithOptions.new(2).()).must_equal(%{["1", {expires_in: 10, tags: nil}]})
-      _(WithOptions.new(2).(:show, tags: [:a, :b])).must_equal(%{["1", {expires_in: 10, tags: [:a, :b]}]})
+      assert_equal(%{["1", {expires_in: 10, tags: nil}]}, WithOptions.new(1).())
+      assert_equal(%{["1", {expires_in: 10, tags: nil}]}, WithOptions.new(2).())
+      assert_equal(%{["1", {expires_in: 10, tags: [:a, :b]}]}, WithOptions.new(2).(:show, tags: [:a, :b]))
     end
 
     # FIXME: allow this in Cells 5.
-    # _(WithOptions.new(2).(:new, my_tags: [:a, :b])).must_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]})
+    # assert_equal(%{["1", {:expires_in=>10, :tags=>[:a, :b]}]}), WithOptions.new(2).(:new, my_tags: [:a, :b]))
   end
 
   it "forwards all arguments to renderer after cache hit" do
@@ -111,9 +111,9 @@ class CacheTest < Minitest::Spec
     end
 
     # cache miss for the first render
-    _(SongCell.new.(:show, "Album", title: "IT", part: "1")).must_equal("Album IT 1")
+    assert_equal("Album IT 1", SongCell.new.(:show, "Album", title: "IT", part: "1"))
 
     # cache hit for the second render
-    _(SongCell.new.(:show, "Album", title: "IT", part: "1")).must_equal("Album IT 1")
+    assert_equal("Album IT 1", SongCell.new.(:show, "Album", title: "IT", part: "1"))
   end
 end

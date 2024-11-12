@@ -42,7 +42,7 @@ end
 class LayoutTest < Minitest::Spec
   # render show.haml calling method.
   # same context as content view as layout call method.
-  it { _(SongWithLayoutCell.new(nil).show).must_equal "Merry Xmas, <b>Papertiger</b>\n" }
+  it { assert_equal("Merry Xmas, <b>Papertiger</b>\n", SongWithLayoutCell.new(nil).show) }
 
   # raises exception when layout not found!
 
@@ -51,10 +51,10 @@ class LayoutTest < Minitest::Spec
   it {  }
 
   # with ::layout.
-  it { _(SongWithLayoutOnClassCell.new(nil).show).must_equal "Merry Xmas, <b>Papertiger</b>\n" }
+  it { assert_equal("Merry Xmas, <b>Papertiger</b>\n", SongWithLayoutOnClassCell.new(nil).show) }
 
   # with ::layout and :layout, :layout wins.
-  it { _(SongWithLayoutOnClassCell.new(nil).show_with_layout).must_equal "Happy Friday!" }
+  it { assert_equal("Happy Friday!", SongWithLayoutOnClassCell.new(nil).show_with_layout) }
 end
 
 module Comment
@@ -77,16 +77,15 @@ class ExternalLayoutTest < Minitest::Spec
     result = Comment::ShowCell.new(nil, layout: Comment::LayoutCell, context: { beer: true }).()
 
     if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('3.4.0')
-      _(result).must_equal "$layout.erb{$show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n"
+      assert_equal("$layout.erb{$show.erb, {:beer=>true}\n$show.erb, {:beer=>true}\n, {:beer=>true}}\n", result)
     else
-      _(result).must_equal "$layout.erb{$show.erb, {beer: true}\n$show.erb, {beer: true}\n, {beer: true}}\n"
+      assert_equal("$layout.erb{$show.erb, {beer: true}\n$show.erb, {beer: true}\n, {beer: true}}\n", result)
     end
   end
 
   # collection :layout
   it do
-    _(Cell::ViewModel.cell("comment/show", collection: [Object, Module], layout: Comment::LayoutCell).()).
-      must_equal "$layout.erb{$show.erb, nil\n$show.erb, nil\n$show.erb, nil\n$show.erb, nil\n, nil}
-"
+    assert_equal("$layout.erb{$show.erb, nil\n$show.erb, nil\n$show.erb, nil\n$show.erb, nil\n, nil}\n",
+      Cell::ViewModel.cell("comment/show", collection: [Object, Module], layout: Comment::LayoutCell).())
   end
 end
