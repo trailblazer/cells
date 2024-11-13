@@ -50,6 +50,11 @@ class SongCell < Cell::ViewModel
     render { "Clean Sheets" + render(:with_html) }
   end
 
+  def with_options(options)
+    @title = options[:title]
+    render
+  end
+
 private
   def title
     "Papertiger"
@@ -91,6 +96,7 @@ class RenderTest < Minitest::Spec
   it { assert_equal "default", SongCell.new(nil).receiving_options }
   it { assert_equal "fancy", SongCell.new(nil).receiving_options(:fancy) }
   it { assert_equal "fancy", SongCell.new(nil).call(:receiving_options, :fancy) }
+  it { assert_equal "A new song\n", SongCell.new(nil).call(:with_options, title: 'A new song') }
 
   # doesn't escape HTML.
   it { assert_equal "<p>Yew!</p>", SongCell.new(nil).call(:with_html) }
