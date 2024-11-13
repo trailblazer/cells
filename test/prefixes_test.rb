@@ -18,7 +18,7 @@ end
 class InheritingFromEngineCell < EngineCell
 end
 
-class PrefixesTest < MiniTest::Spec
+class PrefixesTest < Minitest::Spec
   class SingerCell < Cell::ViewModel
   end
 
@@ -40,48 +40,46 @@ class PrefixesTest < MiniTest::Spec
     end
   end
 
-
   describe "::controller_path" do
-    it { ::BassistCell.new(@controller).class.controller_path.must_equal "bassist" }
-    it { SingerCell.new(@controller).class.controller_path.must_equal "prefixes_test/singer" }
+    it { assert_equal "bassist", ::BassistCell.new(@controller).class.controller_path }
+    it { assert_equal "prefixes_test/singer", SingerCell.new(@controller).class.controller_path }
   end
 
   describe "#_prefixes" do
-    it { ::BassistCell.new(@controller)._prefixes.must_equal  ["test/fixtures/bassist"] }
-    it { ::BassistCell::FenderCell.new(@controller)._prefixes.must_equal ["app/cells/bassist_cell/fender"] }
-    it { ::BassistCell::IbanezCell.new(@controller)._prefixes.must_equal ["test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"] }
+    it { assert_equal ["test/fixtures/bassist"], ::BassistCell.new(@controller)._prefixes }
+    it { assert_equal ["app/cells/bassist_cell/fender"], ::BassistCell::FenderCell.new(@controller)._prefixes }
+    it { assert_equal ["test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"], ::BassistCell::IbanezCell.new(@controller)._prefixes }
 
-    it { SingerCell.new(@controller)._prefixes.must_equal   ["app/cells/prefixes_test/singer"] }
-    it { BackgroundVocalsCell.new(@controller)._prefixes.must_equal ["app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"] }
-    it { ChorusCell.new(@controller)._prefixes.must_equal   ["app/cells/prefixes_test/chorus", "app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"] }
+    it { assert_equal ["app/cells/prefixes_test/singer"], SingerCell.new(@controller)._prefixes }
+    it { assert_equal ["app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"], BackgroundVocalsCell.new(@controller)._prefixes }
+    it { assert_equal ["app/cells/prefixes_test/chorus", "app/cells/prefixes_test/background_vocals", "app/cells/prefixes_test/singer"], ChorusCell.new(@controller)._prefixes }
 
-    it { GuitaristCell.new(@controller)._prefixes.must_equal ["stringer", "app/cells/prefixes_test/singer"] }
-    it { BassistCell.new(@controller)._prefixes.must_equal ["app/cells/prefixes_test/bassist", "basser", "app/cells/prefixes_test/singer"] }
-    # it { DrummerCell.new(@controller)._prefixes.must_equal ["drummer", "stringer", "prefixes_test/singer"] }
+    it { assert_equal ["stringer", "app/cells/prefixes_test/singer"], GuitaristCell.new(@controller)._prefixes }
+    it { assert_equal ["app/cells/prefixes_test/bassist", "basser", "app/cells/prefixes_test/singer"], BassistCell.new(@controller)._prefixes }
 
     # multiple view_paths.
-    it { EngineCell.prefixes.must_equal ["app/cells/engine", "/var/engine/app/cells/engine"] }
+    it { assert_equal ["app/cells/engine", "/var/engine/app/cells/engine"], EngineCell.prefixes }
     it do
-      InheritingFromEngineCell.prefixes.must_equal [
+      expected = [
         "app/cells/inheriting_from_engine", "/var/engine/app/cells/inheriting_from_engine",
-        "app/cells/engine",                 "/var/engine/app/cells/engine"]
+        "app/cells/engine", "/var/engine/app/cells/engine"
+      ]
+      assert_equal expected, InheritingFromEngineCell.prefixes
     end
 
     # ::_prefixes is cached.
     it do
-      WannabeCell.prefixes.must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
+      assert_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"], WannabeCell.prefixes
       WannabeCell.instance_eval { def _local_prefixes; ["more"] end }
       # _prefixes is cached.
-      WannabeCell.prefixes.must_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"]
+      assert_equal ["test/fixtures/wannabe", "test/fixtures/bassist_cell/ibanez", "test/fixtures/bassist"], WannabeCell.prefixes
       # superclasses don't get disturbed.
-      ::BassistCell.prefixes.must_equal ["test/fixtures/bassist"]
+      assert_equal ["test/fixtures/bassist"], ::BassistCell.prefixes
     end
   end
-
-  # it { Record::Cell.new(@controller).render_state(:show).must_equal "Rock on!" }
 end
 
-class InheritViewsTest < MiniTest::Spec
+class InheritViewsTest < Minitest::Spec
   class SlapperCell < Cell::ViewModel
     self.view_paths = ['test/fixtures'] # todo: REMOVE!
     include Cell::Erb
@@ -96,13 +94,12 @@ class InheritViewsTest < MiniTest::Spec
   class FunkerCell < SlapperCell
   end
 
-  it { SlapperCell.new(nil)._prefixes.must_equal ["test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"] }
-  it { FunkerCell.new(nil)._prefixes.must_equal ["test/fixtures/inherit_views_test/funker", "test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"] }
+  it { assert_equal ["test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"], SlapperCell.new(nil)._prefixes }
+  it { assert_equal ["test/fixtures/inherit_views_test/funker", "test/fixtures/inherit_views_test/slapper", "test/fixtures/bassist"], FunkerCell.new(nil)._prefixes }
 
   # test if normal cells inherit views.
-  it { cell('inherit_views_test/slapper').play.must_equal 'Doo' }
-  it { cell('inherit_views_test/funker').play.must_equal 'Doo' }
-
+  it { assert_equal 'Doo', cell('inherit_views_test/slapper').play }
+  it { assert_equal 'Doo', cell('inherit_views_test/funker').play }
 
   # TapperCell
   class TapperCell < Cell::ViewModel
@@ -122,12 +119,12 @@ class InheritViewsTest < MiniTest::Spec
   end
 
   # Tapper renders its play
-  it { cell('inherit_views_test/tapper').call(:play).must_equal 'Dooom!' }
+  it { assert_equal 'Dooom!', cell('inherit_views_test/tapper').call(:play) }
   # Tapper renders its tap
-  it { cell('inherit_views_test/tapper').call(:tap).must_equal 'Tap tap tap!' }
+  it { assert_equal 'Tap tap tap!', cell('inherit_views_test/tapper').call(:tap) }
 
   # Popper renders Tapper's play
-  it { cell('inherit_views_test/popper').call(:play).must_equal 'Dooom!' }
+  it { assert_equal 'Dooom!', cell('inherit_views_test/popper').call(:play) }
   #  Popper renders its tap
-  it { cell('inherit_views_test/popper').call(:tap).must_equal "TTttttap I'm not good enough!" }
+  it { assert_equal "TTttttap I'm not good enough!", cell('inherit_views_test/popper').call(:tap) }
 end
