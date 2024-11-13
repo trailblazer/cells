@@ -1,3 +1,8 @@
+## 4.1.8
+
+* Ruby 3.4.0 support.
+* Drop ruby versions below 2.5
+
 ## 4.1.7
 
 * `Collection#join` can now be called without a block.
