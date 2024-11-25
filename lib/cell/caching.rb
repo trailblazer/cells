@@ -1,5 +1,3 @@
-require "declarative/options"
-
 module Cell
   module Caching
     def self.included(includer)
@@ -20,9 +18,9 @@ module Cell
       def cache(state, *args, &block)
         options = args.last.is_a?(Hash) ? args.pop : {} # I have to admit, Array#extract_options is a brilliant tool.
 
-        conditional_procs[state] = Declarative::Option(options.delete(:if) || true, instance_exec: true)
-        version_procs[state]     = Declarative::Option(args.first || block, instance_exec: true)
-        cache_options[state]     = Declarative::Options(options, instance_exec: true)
+        conditional_procs[state] = Cell::Option(options.delete(:if) || true)
+        version_procs[state]     = Cell::Option(args.first || block)
+        cache_options[state]     = Cell::Options(options)
       end
 
       # Computes the complete, namespaced cache key for +state+.
@@ -45,8 +43,8 @@ module Cell
       state = state.to_sym
       return super(state, *args) unless cache?(state, *args)
 
-      key     = self.class.state_cache_key(state, self.class.version_procs[state].(self, *args))
-      options = self.class.cache_options[state].(self, *args)
+      key     = self.class.state_cache_key(state, self.class.version_procs[state].(*args, exec_context: self))
+      options = self.class.cache_options[state].(*args, exec_context: self)
 
       fetch_from_cache_for(key, options) { super(state, *args) }
     end
@@ -56,7 +54,7 @@ module Cell
     end
 
     def cache?(state, *args)
-      perform_caching? and state_cached?(state) and self.class.conditional_procs[state].(self, *args)
+      perform_caching? and state_cached?(state) and self.class.conditional_procs[state].(*args, exec_context: self)
     end
 
   private
