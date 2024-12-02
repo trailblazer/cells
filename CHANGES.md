@@ -1,3 +1,7 @@
+## 4.1.9
+
+* declarative-option dependency replaced with trailblazer-option
+
 ## 4.1.8
 
 * Ruby 3.4.0 support.
