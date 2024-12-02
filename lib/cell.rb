@@ -12,6 +12,7 @@ module Cell
   end # Error
 end
 
+require "cell/option"
 require "cell/caching"
 require "cell/prefixes"
 require "cell/layout"
